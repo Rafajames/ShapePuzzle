@@ -57,4 +57,4 @@ As fases são salvas em arquivos `.txt` com a seguinte estrutura:
 
 ---
 
-Desenvolvido por [Rafajames](https://www.google.com/search?q=https://github.com/Rafajames)
+Desenvolvido por [Rafajames](https://github.com/Rafajames)
