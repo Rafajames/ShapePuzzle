@@ -1,0 +1,10 @@
+com\rafajames\shapegame\model\Peca.class
+com\rafajames\shapegame\ui\JanelaJogo$PainelJogo.class
+com\rafajames\shapegame\service\GerenciadorNivel.class
+com\rafajames\shapegame\ui\MouseManager.class
+com\rafajames\shapegame\Main.class
+com\rafajames\shapegame\ui\EditorFases.class
+com\rafajames\shapegame\service\GerenciadorJogo.class
+com\rafajames\shapegame\service\GerenciadorDados.class
+com\rafajames\shapegame\model\Tabuleiro.class
+com\rafajames\shapegame\ui\JanelaJogo.class
