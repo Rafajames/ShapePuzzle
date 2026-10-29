@@ -62,6 +62,7 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .tools{display:flex;gap:8px;justify-content:center;margin:18px 0 4px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:14px;border:1px solid var(--line);
   background:rgba(255,255,255,.05);color:var(--txt);font-weight:600;font-size:14px;cursor:pointer;transition:background .15s,transform .1s,opacity .15s}
+a.btn{text-decoration:none}
 .btn:hover{background:rgba(255,255,255,.11)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.35;cursor:default;pointer-events:none}
@@ -215,6 +216,12 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
     <label class="row"><span style="width:62px;color:var(--mut);font-size:14px">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
     <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button></div>
+    <h2>Sobre</h2>
+    <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
+    <div class="acts">
+      <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
+      <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
+    </div>
   </div>
 </div>
 
@@ -418,7 +425,9 @@ const ICONES = {
   rotate:'<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>',
   flip:'<path d="M12 3v18" stroke-dasharray="2 3"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/>',
   reset:'<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>',
-  edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>'
 };
 const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONES[n]}</svg>`;
 function pintarIcones(raiz = document){
