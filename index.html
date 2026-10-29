@@ -325,6 +325,27 @@ select.field{flex:1}
   </div>
 </div>
 
+<!-- Compartilhar -->
+<div class="ov" id="ov-share">
+  <div class="card">
+    <button class="ib x" data-close="share" data-i="close" aria-label="Fechar"></button>
+    <h1 id="shTitulo">Compartilhar</h1>
+    <p id="shTexto" style="white-space:pre-line;margin-top:6px"></p>
+    <h2>Link</h2>
+    <input class="field" id="shLink" readonly aria-label="Link para compartilhar">
+    <div class="acts"><button class="btn pri" id="shCopiar" data-i="copy">Copiar mensagem e link</button></div>
+    <div class="acts">
+      <button class="btn" id="shCopiarLink" data-i="link">Só o link</button>
+      <a class="btn" id="shWpp" target="_blank" rel="noopener" data-i="chat">WhatsApp</a>
+    </div>
+    <div class="acts">
+      <a class="btn" id="shTg" target="_blank" rel="noopener" data-i="send">Telegram</a>
+      <a class="btn" id="shMail" data-i="mail">E-mail</a>
+      <button class="btn" id="shMais" data-i="share" hidden>Mais apps…</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ==LOGIC-START==
 const TAM = 5;
@@ -653,7 +674,12 @@ const ICONES = {
   calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',
-  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 3 3M16 6h4v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/>'
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 3 3M16 6h4v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/>',
+  copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4V5z"/>',
+  send:'<path d="M21 3L3 11l7 3 3 7 8-18z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
 };
 const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONES[n]}</svg>`;
 function pintarIcones(raiz = document){
@@ -1263,16 +1289,33 @@ function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-
 function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
 const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
 async function copiar(t){
-  try{ await navigator.clipboard.writeText(t); toast('Copiado! É só colar numa conversa.'); }
-  catch(e){ window.prompt('Copie e compartilhe:', t); }
-}
-async function compartilhar(titulo, texto, url){
-  if (navigator.share){
-    try{ await navigator.share({title: titulo, text: texto, url}); return; }
-    catch(e){ if (e && e.name === 'AbortError') return; }
+  let ok = false;
+  try{ await navigator.clipboard.writeText(t); ok = true; }catch(e){}
+  if (!ok){
+    const a = document.createElement('textarea'); a.value = t; a.style.cssText = 'position:fixed;opacity:0;left:0;top:0';
+    document.body.appendChild(a); a.select(); try{ ok = document.execCommand('copy'); }catch(e){} a.remove();
   }
-  copiar(texto + '\n' + url);
+  if (ok) toast('Copiado! É só colar numa conversa.');
+  else { toast('Não consegui copiar sozinho: selecione o link e copie.'); const l = $('#shLink'); if (l) l.select(); }
+  return ok;
 }
+/* Painel próprio: funciona igual no celular e no computador (o compartilhar do sistema, sozinho, falha em muitos PCs). */
+let SH = null;
+function abrirCompartilhar(titulo, texto, url){
+  SH = {titulo, texto, url};
+  $('#shTitulo').textContent = titulo; $('#shTexto').textContent = texto; $('#shLink').value = url;
+  const msg = encodeURIComponent(texto + '\n' + url);
+  $('#shWpp').href = 'https://wa.me/?text=' + msg;
+  $('#shTg').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(texto);
+  $('#shMail').href = 'mailto:?subject=' + encodeURIComponent(titulo) + '&body=' + msg;
+  $('#shMais').hidden = !navigator.share;
+  abrir('share');
+}
+function compartilhar(titulo, texto, url){ abrirCompartilhar(titulo, texto, url); }
+$('#shCopiar').onclick = () => copiar(SH.texto + '\n' + SH.url);
+$('#shCopiarLink').onclick = () => copiar(SH.url);
+$('#shLink').onclick = e => e.target.select();
+$('#shMais').onclick = async () => { try{ await navigator.share({title: SH.titulo, text: SH.texto, url: SH.url}); }catch(e){} };
 function sequencia(){
   const d = new Date(); let n = 0;
   if (!dias[fmtData(d)]) d.setDate(d.getDate() - 1);
