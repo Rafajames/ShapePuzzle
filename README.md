@@ -6,7 +6,15 @@ Um jogo de quebra-cabeça lógico desenvolvido em **Java Swing**, onde o objetiv
 
 **https://rafajames.github.io/ShapePuzzle/**
 
-A versão web (`index.html`, arquivo único, sem instalação) roda no computador e no celular, com as 15 fases, editor de fases, progresso salvo no navegador e música ambiente gerada por código (Web Audio API).
+Versão web em um único `index.html` (sem instalar nada), que roda no computador e no celular:
+
+- **30 fases** (as 15 originais + 15 novas com solução única) e **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
+- **Dica**: mostra onde vai uma peça. Partidas com dica não valem recorde.
+- **Tempo, jogadas e recorde** por fase.
+- **Música gerada por código** (Web Audio API) em 3 climas — Calma, Animada e Noturna — que mudam sozinhos a cada 10 fases ou ficam fixos à sua escolha.
+- **Compartilhar**: o jogo, o seu resultado e as fases que você criar, por link (sem enviar arquivo).
+- **Instalar como app** e jogar offline (PWA).
+- **Editor de fases** com exportação/importação `.txt` no mesmo formato da versão Java.
 
 ## 🚀 Funcionalidades
 

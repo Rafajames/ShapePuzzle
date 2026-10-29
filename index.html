@@ -5,14 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0c0c12">
 <meta name="description" content="Shape Puzzle — quebra-cabeça lógico: preencha o tabuleiro 5x5 com as peças e cubra cada estrela com a cor certa.">
+<meta property="og:title" content="Shape Puzzle">
+<meta property="og:description" content="Quebra-cabeça lógico: preencha o tabuleiro 5x5 e cubra cada estrela com a cor certa. 30 fases, fase do dia e editor.">
+<meta property="og:image" content="https://rafajames.github.io/ShapePuzzle/icon-512.png">
+<meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shape Puzzle">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Shape Puzzle</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0c12'/%3E%3Crect x='10' y='10' width='20' height='20' rx='5' fill='%2300beff'/%3E%3Crect x='34' y='10' width='20' height='20' rx='5' fill='%23ff3296'/%3E%3Crect x='10' y='34' width='20' height='20' rx='5' fill='%2328e628'/%3E%3Crect x='34' y='34' width='20' height='20' rx='5' fill='%23ffc800'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{
   --bg:#0c0c12; --panel:#1a1a2b; --line:#2c2c44; --txt:#e8e8f4; --mut:#8c8ca8;
   --accent:#7c6cff; --cell:64px; --mini:30px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{margin:0;min-height:100%}
 body{
   background:radial-gradient(120% 70% at 50% 0%,#1d1d3c 0%,var(--bg) 62%) fixed;
@@ -21,11 +32,12 @@ body{
   user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow-x:hidden;
 }
 button{font-family:inherit}
+em{display:contents;font-style:normal}
 #app{max-width:560px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 16px 36px}
 svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
 /* topo */
-.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
 .ib{width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .1s,opacity .15s}
 .ib:hover{background:rgba(255,255,255,.1)}
 .ib:active{transform:scale(.94)}
@@ -36,6 +48,13 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 #titulo{min-width:118px;text-align:center;line-height:1.15}
 #titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px}
 #titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+
+/* estatísticas */
+.stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:13px;font-weight:600;color:#c9c9de;font-variant-numeric:tabular-nums}
+.pill svg.i{width:15px;height:15px}
+.pill.rec{color:#ffd84d;border-color:rgba(255,216,77,.35)}
+.pill.dc{color:#9ecbff}
 
 /* tabuleiro */
 #boardWrap{display:flex;justify-content:center}
@@ -57,12 +76,14 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .cell.gok::after,.cell.gbad::after{content:"";position:absolute;inset:4%;border-radius:24%;pointer-events:none}
 .cell.gok::after{background:rgba(255,255,255,.22);outline:2px solid rgba(255,255,255,.55)}
 .cell.gbad::after{background:rgba(255,60,80,.28);outline:2px solid rgba(255,90,110,.65)}
+.cell.dica::before{content:"";position:absolute;inset:6%;border-radius:24%;pointer-events:none;z-index:1;
+  border:2px dashed var(--c);background:color-mix(in srgb,var(--c) 24%,transparent);animation:pulse 1s infinite}
+.cell.alerta .fill{outline:3px solid #ff5a6e;animation:pulse .7s infinite}
 
 /* botões */
 .tools{display:flex;gap:8px;justify-content:center;margin:18px 0 4px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(255,255,255,.05);color:var(--txt);font-weight:600;font-size:14px;cursor:pointer;transition:background .15s,transform .1s,opacity .15s}
-a.btn{text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 15px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--txt);font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;transition:background .15s,transform .1s,opacity .15s}
 .btn:hover{background:rgba(255,255,255,.11)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.35;cursor:default;pointer-events:none}
@@ -105,6 +126,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .row{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:15px}
 .row input[type=range]{flex:1;accent-color:var(--accent)}
 .row input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+.row .rl{width:62px;color:var(--mut);font-size:14px;flex:none}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .acts .btn{flex:1}
 
@@ -112,6 +134,15 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .how{list-style:none;padding:0;margin:16px 0 20px;display:grid;gap:10px}
 .how li{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#c9c9de;line-height:1.45}
 .how b{flex:none;width:26px;height:26px;border-radius:9px;background:rgba(124,108,255,.18);color:#b5adff;display:grid;place-items:center;font-size:13px}
+#splashMsg{margin:0 0 14px;padding:10px 12px;border-radius:12px;background:rgba(31,209,138,.12);border:1px solid rgba(31,209,138,.4);color:#7af0b8;font-size:14px;text-align:center}
+
+.daily{display:flex;align-items:center;gap:12px;width:100%;margin-top:16px;padding:14px;border-radius:16px;border:1px solid rgba(124,108,255,.55);
+  background:linear-gradient(135deg,rgba(124,108,255,.24),rgba(79,140,255,.12));color:var(--txt);cursor:pointer;text-align:left;transition:transform .1s,filter .15s}
+.daily:hover{filter:brightness(1.15)}
+.daily:active{transform:scale(.98)}
+.daily .dtx{flex:1;display:flex;flex-direction:column;gap:2px;font-size:16px}
+.daily small{color:var(--mut);font-size:12px}
+.daily .tag{font-size:12px;font-weight:700;color:#7af0b8;white-space:nowrap}
 
 .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .tile{position:relative;aspect-ratio:1;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--txt);font-weight:700;font-size:17px;cursor:pointer;display:grid;place-items:center;transition:background .15s,transform .1s}
@@ -131,6 +162,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .sw{width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:var(--c);cursor:pointer;box-shadow:0 0 14px color-mix(in srgb,var(--c) 50%,transparent);transition:transform .1s}
 .sw.on{border-color:#fff;transform:scale(1.1)}
 .field{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--txt);font-size:15px;font-family:inherit;user-select:text;-webkit-user-select:text}
+select.field{flex:1}
 #edInfo{font-size:13px;color:var(--mut);text-align:center;margin:12px 0 4px;min-height:18px}
 #edInfo.ok{color:#5af0a0}
 
@@ -142,6 +174,8 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .vit{text-align:center;overflow:hidden}
 .vit .big{width:68px;height:68px;border-radius:50%;margin:2px auto 14px;display:grid;place-items:center;background:linear-gradient(135deg,#1fd18a,#00beff);color:#05121a}
 .vit .big svg.i{width:36px;height:36px;stroke-width:2.6}
+.vit .res{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.vit .badge{font-size:13px;font-weight:700;color:#ffd84d;margin-top:8px}
 
 @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -156,17 +190,24 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
     <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
     <div class="nav">
       <button class="ib" id="btnPrev" data-i="left" aria-label="Fase anterior"></button>
-      <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 15</span></div>
+      <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 30</span></div>
       <button class="ib" id="btnNext" data-i="right" aria-label="Próxima fase"></button>
     </div>
     <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
   </header>
 
   <main>
+    <div class="stats">
+      <span class="pill"><em data-i="clock"></em><span id="stTempo">0:00</span></span>
+      <span class="pill"><em data-i="swap"></em><span id="stJog">0 jogadas</span></span>
+      <span class="pill rec" id="pRec" hidden><em data-i="trophy"></em><span id="stRec"></span></span>
+      <span class="pill dc" id="pDica" hidden><em data-i="bulb"></em><span id="stDica"></span></span>
+    </div>
     <div id="boardWrap"><div id="board"></div></div>
     <div class="tools">
       <button class="btn" id="btnGirar" data-i="rotate">Girar <kbd>R</kbd></button>
       <button class="btn" id="btnFlip" data-i="flip">Espelhar <kbd>T</kbd></button>
+      <button class="btn" id="btnDica" data-i="bulb">Dica <kbd>H</kbd></button>
       <button class="btn" id="btnReset" data-i="reset">Reiniciar</button>
     </div>
     <section class="reserva">
@@ -191,6 +232,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
       <li><b>2</b><span>Gire e espelhe a peça para ela caber (botões abaixo do tabuleiro ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
       <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
     </ul>
+    <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px">Jogar</button>
     <p style="text-align:center;margin-top:12px;font-size:12px">♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.</p>
   </div>
@@ -202,6 +244,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
     <h1>Fases</h1>
     <p>Complete uma fase para liberar a próxima.</p>
+    <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
     <h2>Fases do jogo</h2>
     <div class="tiles" id="tiles"></div>
     <h2>Minhas fases</h2>
@@ -213,8 +256,20 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
     <input type="file" id="fileImp" accept=".txt,text/plain" hidden>
     <h2>Som</h2>
     <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
-    <label class="row"><span style="width:62px;color:var(--mut);font-size:14px">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
+    <label class="row"><span class="rl">Estilo</span>
+      <select class="field" id="selHumor">
+        <option value="auto">Automático (por fase)</option>
+        <option value="calma">Calma</option>
+        <option value="animada">Animada</option>
+        <option value="noturna">Noturna</option>
+      </select></label>
+    <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
+    <div id="blocoInstalar" hidden>
+      <h2>Instalar</h2>
+      <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
+      <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
+    </div>
     <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button></div>
     <h2>Sobre</h2>
     <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
@@ -222,6 +277,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
       <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
       <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
     </div>
+    <div class="acts"><button class="btn" id="btnCompJogo" data-i="share">Compartilhar o jogo</button></div>
   </div>
 </div>
 
@@ -231,6 +287,8 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
     <div class="big" data-i="check"></div>
     <h1 id="winTitulo">Fase concluída!</h1>
     <p id="winTexto"></p>
+    <div class="res" id="winRes"></div>
+    <div class="badge" id="winBadge"></div>
     <div class="acts" id="winActs"></div>
   </div>
 </div>
@@ -258,6 +316,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
       <button class="btn" id="edTestar" data-i="play">Testar</button>
     </div>
     <div class="acts">
+      <button class="btn" id="edCompartilhar" data-i="share">Compartilhar</button>
       <button class="btn" id="edExportar" data-i="download">Exportar .txt</button>
       <button class="btn" id="edLimpar" data-i="trash">Limpar</button>
     </div>
@@ -268,6 +327,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 // ==LOGIC-START==
 const TAM = 5;
 const COR = {1:'#00beff', 6:'#28e628', 11:'#ff3296', 16:'#ffc800'};
+const CORES_IDS = [1, 6, 11, 16];
 
 /* Mesma leitura do GerenciadorJogo.reconstruirMatriz (inclui o regex de números com sinal). */
 function reconstruirMatriz(dados){
@@ -343,6 +403,7 @@ function colocar(j, p, px, py){
   for (let i = 0; i < p.formato.length; i++) for (let k = 0; k < p.formato[0].length; k++)
     if (p.formato[i][k]) j.grade[py + i][px + k] = idu;
   j.reserva = j.reserva.filter(q => q !== p);
+  return idu;
 }
 function remover(j, x, y){
   const idu = j.grade[y][x];
@@ -366,7 +427,7 @@ function concluido(j){
   return true;
 }
 
-/* Editor: gera o mesmo formato .txt do EditorFases.java (com o modo Médio corrigido). */
+/* ---------- Editor: gera o mesmo formato .txt do EditorFases.java (com o modo Médio corrigido) ---------- */
 function gerarTexto(grid, dif){
   const vis = Array.from({length: TAM}, () => Array(TAM).fill(false));
   const pecas = [];
@@ -398,10 +459,157 @@ function faseValida(texto){
   for (const p of pecas) for (const r of p.formato) for (const v of r) n += v ? 1 : 0;
   return n === TAM * TAM;
 }
+
+/* ---------- Solver (poda por estrela) ---------- */
+function orientacoes(f){
+  const vistos = new Set(), out = [];
+  let g = f;
+  for (let fl = 0; fl < 2; fl++){
+    for (let r = 0; r < 4; r++){
+      const k = JSON.stringify(g);
+      if (!vistos.has(k)){ vistos.add(k); out.push(g); }
+      g = girar(g);
+    }
+    g = inverter(g);
+  }
+  return out;
+}
+const chaveCanon = f => orientacoes(f).map(o => JSON.stringify(o)).sort()[0];
+
+/* occ: matriz TAMxTAM (verdadeiro = casa ocupada). Conta soluções até `limite`. */
+function buscar(occ, pecas, gab, limite, maxNos){
+  const g = occ.map(r => r.map(v => v ? 1 : 0));
+  const n = pecas.length, usado = Array(n).fill(false);
+  const ori = pecas.map(p => orientacoes(p.formato));
+  const chave = pecas.map(p => p.id + '|' + chaveCanon(p.formato));
+  let cont = 0, nos = 0, estourou = false, primeira = null;
+  const atual = [];
+  const rec = () => {
+    if (cont >= limite || estourou) return;
+    if (++nos > maxNos){ estourou = true; return; }
+    let ey = -1, ex = -1;
+    for (let y = 0; y < TAM && ey < 0; y++) for (let x = 0; x < TAM; x++) if (!g[y][x]){ ey = y; ex = x; break; }
+    if (ey < 0){ cont++; if (!primeira) primeira = atual.slice(); return; }
+    const vistas = new Set();
+    for (let k = 0; k < n; k++){
+      if (usado[k] || vistas.has(chave[k])) continue;
+      vistas.add(chave[k]);
+      const id = pecas[k].id;
+      for (const o of ori[k]){
+        const px = ex - o[0].indexOf(1), py = ey;
+        let ok = true;
+        for (let i = 0; i < o.length && ok; i++) for (let j = 0; j < o[0].length; j++){
+          if (!o[i][j]) continue;
+          const ax = px + j, ay = py + i;
+          if (ax < 0 || ax >= TAM || ay >= TAM || g[ay][ax] || (gab[ay][ax] && gab[ay][ax] !== id)){ ok = false; break; }
+        }
+        if (!ok) continue;
+        for (let i = 0; i < o.length; i++) for (let j = 0; j < o[0].length; j++) if (o[i][j]) g[py + i][px + j] = 1;
+        usado[k] = true; atual.push({k, o, px, py});
+        rec();
+        atual.pop(); usado[k] = false;
+        for (let i = 0; i < o.length; i++) for (let j = 0; j < o[0].length; j++) if (o[i][j]) g[py + i][px + j] = 0;
+        if (cont >= limite || estourou) return;
+      }
+    }
+  };
+  rec();
+  return {n: cont, nos, estourou, primeira};
+}
+
+/* Dica: resolve a partir do estado atual e devolve uma peça da reserva com seu lugar. */
+function dicaDe(j){
+  for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
+    const idu = j.grade[y][x], est = j.gab[y][x];
+    if (idu && est){ const p = j.mapa.get(idu); if (p && p.id !== est) return {tipo: 'conflito'}; }
+  }
+  const occ = j.grade.map(r => r.map(v => v !== 0));
+  const r = buscar(occ, j.reserva, j.gab, 1, 400000);
+  if (!r.primeira) return {tipo: r.estourou ? 'demorou' : 'impossivel'};
+  const cobre = c => { for (let i = 0; i < c.o.length; i++) for (let k = 0; k < c.o[0].length; k++) if (c.o[i][k] && j.gab[c.py + i][c.px + k]) return true; return false; };
+  const esc = r.primeira.find(cobre) || r.primeira[0];
+  return {tipo: 'ok', peca: j.reserva[esc.k], o: esc.o, px: esc.px, py: esc.py};
+}
+
+/* ---------- Gerador determinístico de fases ---------- */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function embaralhar(arr, rng){
+  for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr;
+}
+function gerarTiling(rng){
+  for (let tent = 0; tent < 300; tent++){
+    const dono = Array.from({length: TAM}, () => Array(TAM).fill(-1));
+    const pecas = []; let ok = true;
+    for (let y = 0; y < TAM && ok; y++) for (let x = 0; x < TAM && ok; x++){
+      if (dono[y][x] >= 0) continue;
+      const r = rng(), alvo = r < 0.12 ? 2 : r < 0.5 ? 3 : r < 0.96 ? 4 : 5;
+      const cel = [[x, y]]; dono[y][x] = pecas.length;
+      while (cel.length < alvo){
+        const cand = [];
+        for (const [cx, cy] of cel) for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+          const nx = cx + dx, ny = cy + dy;
+          if (nx >= 0 && nx < TAM && ny >= 0 && ny < TAM && dono[ny][nx] < 0 && !cand.some(c => c[0] === nx && c[1] === ny)) cand.push([nx, ny]);
+        }
+        if (!cand.length) break;
+        const c = cand[Math.floor(rng() * cand.length)];
+        dono[c[1]][c[0]] = pecas.length; cel.push(c);
+      }
+      if (cel.length < 2) ok = false;
+      pecas.push(cel);
+    }
+    if (ok && pecas.length >= 6 && pecas.length <= 9) return pecas;
+  }
+  return null;
+}
+/* Gera uma fase com solução única e o mínimo de estrelas que mantém essa unicidade. */
+function gerarFase(seed, opts = {}){
+  const minEstrelas = opts.minEstrelas || 0;
+  const rng = mulberry32(seed);
+  const vazio = Array.from({length: TAM}, () => Array(TAM).fill(false));
+  for (let t = 0; t < 600; t++){
+    const tl = gerarTiling(rng); if (!tl) continue;
+    const saco = [];
+    const cor = tl.map(() => { if (!saco.length) saco.push(...embaralhar(CORES_IDS.slice(), rng)); return saco.pop(); });
+    if (new Set(cor).size < 3) continue;
+    const cheio = Array.from({length: TAM}, () => Array(TAM).fill(0));
+    tl.forEach((cel, i) => cel.forEach(([cx, cy]) => { cheio[cy][cx] = cor[i]; }));
+    const ordemPecas = embaralhar(tl.map((_, i) => i), rng);
+    const linhas = ordemPecas.map(i => {
+      const [x0, y0] = tl[i][0];
+      return cor[i] + ':' + tl[i].map(([cx, cy]) => (cx - x0) + '-' + (cy - y0) + ';').join('');
+    });
+    const pecas = parseFase('PECAS_CUSTOM:\n' + linhas.join('\n')).pecas;
+    const r0 = buscar(vazio, pecas, cheio, 2, 80000);
+    if (r0.n !== 1 || r0.estourou) continue;
+    const gab = cheio.map(r => r.slice());
+    let estrelas = TAM * TAM;
+    const cels = [];
+    for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++) cels.push([x, y]);
+    for (const [cx, cy] of embaralhar(cels, rng)){
+      if (estrelas <= minEstrelas) break;
+      const v = gab[cy][cx]; gab[cy][cx] = 0;
+      const r = buscar(vazio, pecas, gab, 2, 80000);
+      if (r.n !== 1 || r.estourou) gab[cy][cx] = v; else estrelas--;
+    }
+    const med = buscar(vazio, pecas, gab, 2, 600000);
+    const text = 'GABARITO:\n' + gab.map(r => r.join(',')).join('\n') + '\nPECAS_CUSTOM:\n' + linhas.join('\n') + '\n';
+    return {text, estrelas, nos: med.nos, pecas: pecas.length, seed};
+  }
+  return null;
+}
+
 // ==LOGIC-END==
 
 /* ======================= Fases embutidas ======================= */
-const BUILTIN = [{"nome": "fase01", "text": "GABARITO:\n6,6,1,1,1\n6,11,11,11,1\n16,16,11,16,6\n16,1,16,16,6\n1,1,16,6,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;1-1;\n16:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;0-2;-1-2;\n1:0-0;0-1;-1-1;\n"}, {"nome": "fase02", "text": "GABARITO:\n6,6,6,11,11\n16,1,1,11,16\n16,1,11,16,16\n16,11,11,16,1\n6,6,6,1,1\nPECAS_CUSTOM:\n6:0-0;1-0;2-0;\n11:0-0;1-0;0-1;\n16:0-0;0-1;0-2;\n1:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;\n6:0-0;1-0;2-0;\n"}, {"nome": "fase03", "text": "GABARITO:\n11,11,16,16,6\n11,16,16,6,6\n6,6,11,1,6\n6,11,11,1,1\n6,11,16,16,16\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;0-1;0-2;\n11:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"}, {"nome": "fase04", "text": "GABARITO:\n6,1,1,6,6\n6,6,1,16,6\n16,6,16,16,16\n16,1,1,1,11\n16,16,11,11,11\nPECAS_CUSTOM:\n6:0-0;0-1;1-1;1-2;\n1:0-0;1-0;1-1;\n6:0-0;1-0;1-1;\n16:0-0;0-1;1-1;-1-1;\n16:0-0;0-1;0-2;1-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n"}, {"nome": "fase05", "text": "GABARITO:\n6,6,16,11,1\n6,16,16,11,1\n6,16,6,11,1\n1,6,6,6,16\n1,1,16,16,16\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;1-1;-1-1;\n1:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-2-1;\n"}, {"nome": "fase06", "text": "GABARITO:\n16,0,1,0,11\n0,6,0,0,0\n0,0,0,0,1\n11,0,16,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;0-2;\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;1-1;\n1:0-0;0-1;-1-1;0-2;\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;-1-1;\n"}, {"nome": "fase07", "text": "GABARITO:\n6,0,16,0,11\n0,0,0,0,0\n1,0,6,0,0\n0,0,16,0,0\n11,0,0,0,0\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n11:0-0;0-1;-1-1;\n1:0-0;1-0;1-1;0-1;\n6:0-0;1-0;2-0;\n16:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;3-0;\n"}, {"nome": "fase08", "text": "GABARITO:\n11,0,1,16,0\n0,0,0,0,0\n0,0,11,0,0\n6,0,0,1,0\n16,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;0-2;\n1:0-0;0-1;-1-1;-1-2;\n16:0-0;1-0;1-1;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;1-0;1-1;0-1;\n16:0-0;1-0;2-0;\n"}, {"nome": "fase09", "text": "GABARITO:\n1,0,11,16,0\n0,0,0,0,6\n6,0,0,1,0\n16,0,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;0-2;\n16:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n6:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;0-2;\n16:0-0;0-1;1-1;2-1;\n"}, {"nome": "fase10", "text": "GABARITO:\n16,6,0,11,0\n0,0,0,1,0\n6,0,16,0,0\n0,1,0,11,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;\n11:0-0;1-0;1-1;\n"}, {"nome": "fase11", "text": "GABARITO:\n1,0,0,11,0\n16,0,0,0,0\n0,6,0,0,16\n11,0,1,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;1-1;0-1;\n16:0-0;1-0;0-1;\n6:0-0;1-0;2-0;2-1;\n16:0-0;0-1;0-2;-1-2;\n11:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n"}, {"nome": "fase12", "text": "GABARITO:\n16,0,11,0,0\n0,6,0,0,1\n1,0,0,11,0\n6,0,0,0,0\n0,0,16,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;0-1;0-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n6:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"}, {"nome": "fase13", "text": "GABARITO:\n1,0,11,0,0\n0,6,0,0,16\n6,16,11,0,0\n0,0,0,0,0\n0,0,1,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n16:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;0-1;0-2;\n11:0-0;1-0;1-1;0-1;\n1:0-0;1-0;2-0;\n"}, {"nome": "fase14", "text": "GABARITO:\n16,0,0,11,0\n6,0,1,6,0\n1,0,0,0,1\n0,0,0,0,0\n0,11,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n6:0-0;1-0;1-1;1-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n11:0-0;1-0;2-0;\n"}, {"nome": "fase15", "text": "GABARITO:\n16,0,1,6,11\n0,0,0,0,0\n6,16,0,0,0\n0,0,11,0,6\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n6:0-0;0-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;0-2;\n16:0-0;1-0;2-0;3-0;\n11:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;\n"}];
+const BUILTIN = /*LEVELS-START*/[{"nome":"fase01","text":"GABARITO:\n6,6,1,1,1\n6,11,11,11,1\n16,16,11,16,6\n16,1,16,16,6\n1,1,16,6,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;1-1;\n16:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;0-2;-1-2;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase02","text":"GABARITO:\n6,6,6,11,11\n16,1,1,11,16\n16,1,11,16,16\n16,11,11,16,1\n6,6,6,1,1\nPECAS_CUSTOM:\n6:0-0;1-0;2-0;\n11:0-0;1-0;0-1;\n16:0-0;0-1;0-2;\n1:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;\n6:0-0;1-0;2-0;\n"},{"nome":"fase03","text":"GABARITO:\n11,11,16,16,6\n11,16,16,6,6\n6,6,11,1,6\n6,11,11,1,1\n6,11,16,16,16\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;0-1;0-2;\n11:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase04","text":"GABARITO:\n6,1,1,6,6\n6,6,1,16,6\n16,6,16,16,16\n16,1,1,1,11\n16,16,11,11,11\nPECAS_CUSTOM:\n6:0-0;0-1;1-1;1-2;\n1:0-0;1-0;1-1;\n6:0-0;1-0;1-1;\n16:0-0;0-1;1-1;-1-1;\n16:0-0;0-1;0-2;1-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase05","text":"GABARITO:\n6,6,16,11,1\n6,16,16,11,1\n6,16,6,11,1\n1,6,6,6,16\n1,1,16,16,16\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;1-1;-1-1;\n1:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase06","text":"GABARITO:\n16,0,1,0,11\n0,6,0,0,0\n0,0,0,0,1\n11,0,16,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;0-2;\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;1-1;\n1:0-0;0-1;-1-1;0-2;\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;-1-1;\n"},{"nome":"fase07","text":"GABARITO:\n6,0,16,0,11\n0,0,0,0,0\n1,0,6,0,0\n0,0,16,0,0\n11,0,0,0,0\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n11:0-0;0-1;-1-1;\n1:0-0;1-0;1-1;0-1;\n6:0-0;1-0;2-0;\n16:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;3-0;\n"},{"nome":"fase08","text":"GABARITO:\n11,0,1,16,0\n0,0,0,0,0\n0,0,11,0,0\n6,0,0,1,0\n16,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;0-2;\n1:0-0;0-1;-1-1;-1-2;\n16:0-0;1-0;1-1;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;1-0;1-1;0-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase09","text":"GABARITO:\n1,0,11,16,0\n0,0,0,0,6\n6,0,0,1,0\n16,0,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;0-2;\n16:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n6:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;0-2;\n16:0-0;0-1;1-1;2-1;\n"},{"nome":"fase10","text":"GABARITO:\n16,6,0,11,0\n0,0,0,1,0\n6,0,16,0,0\n0,1,0,11,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;\n11:0-0;1-0;1-1;\n"},{"nome":"fase11","text":"GABARITO:\n1,0,0,11,0\n16,0,0,0,0\n0,6,0,0,16\n11,0,1,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;1-1;0-1;\n16:0-0;1-0;0-1;\n6:0-0;1-0;2-0;2-1;\n16:0-0;0-1;0-2;-1-2;\n11:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase12","text":"GABARITO:\n16,0,11,0,0\n0,6,0,0,1\n1,0,0,11,0\n6,0,0,0,0\n0,0,16,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;0-1;0-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n6:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase13","text":"GABARITO:\n1,0,11,0,0\n0,6,0,0,16\n6,16,11,0,0\n0,0,0,0,0\n0,0,1,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n16:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;0-1;0-2;\n11:0-0;1-0;1-1;0-1;\n1:0-0;1-0;2-0;\n"},{"nome":"fase14","text":"GABARITO:\n16,0,0,11,0\n6,0,1,6,0\n1,0,0,0,1\n0,0,0,0,0\n0,11,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n6:0-0;1-0;1-1;1-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n11:0-0;1-0;2-0;\n"},{"nome":"fase15","text":"GABARITO:\n16,0,1,6,11\n0,0,0,0,0\n6,16,0,0,0\n0,0,11,0,6\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n6:0-0;0-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;0-2;\n16:0-0;1-0;2-0;3-0;\n11:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;\n"},{"nome":"fase16","text":"GABARITO:\n0,0,6,6,0\n11,16,0,0,0\n0,6,11,0,0\n0,6,0,0,0\n1,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;0-1;0-2;\n16:0-0;1-0;\n6:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n1:0-0;0-1;0-2;0-3;\n"},{"nome":"fase17","text":"GABARITO:\n0,0,1,0,0\n0,16,0,6,0\n0,0,0,0,0\n1,1,6,0,0\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;1-0;2-0;\n6:0-0;0-1;1-0;0-2;\n11:0-0;0-1;0-2;\n1:0-0;1-0;0-1;1-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;1-1;\n"},{"nome":"fase18","text":"GABARITO:\n0,1,0,0,11\n6,0,0,0,0\n0,0,0,11,0\n16,0,0,6,1\n0,16,0,0,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n6:0-0;0-1;1-0;\n1:0-0;1-0;2-0;1-1;3-0;\n16:0-0;1-0;\n6:0-0;0-1;1-1;2-1;\n16:0-0;0-1;1-0;1-1;\n11:0-0;0-1;0-2;-1-2;\n"},{"nome":"fase19","text":"GABARITO:\n0,0,0,1,0\n16,0,0,0,0\n0,11,11,11,0\n0,0,0,16,0\n0,0,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n16:0-0;0-1;\n11:0-0;1-0;0-1;0-2;\n1:0-0;1-0;2-0;1-1;\n6:0-0;0-1;1-1;1-0;\n16:0-0;0-1;0-2;1-0;\n"},{"nome":"fase20","text":"GABARITO:\n0,16,0,11,11\n16,0,0,0,0\n0,6,0,0,0\n6,0,6,1,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;2-0;\n6:0-0;0-1;1-0;\n6:0-0;0-1;1-1;2-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;-1-1;0-2;-1-2;\n"},{"nome":"fase21","text":"GABARITO:\n0,0,1,0,0\n0,0,1,0,6\n11,0,0,0,0\n0,0,16,0,0\n6,0,16,1,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n11:0-0;1-0;0-1;1-1;\n16:0-0;0-1;-1-1;\n16:0-0;0-1;1-0;\n6:0-0;0-1;0-2;\n11:0-0;0-1;1-0;1-1;\n6:0-0;1-0;\n1:0-0;0-1;1-0;\n"},{"nome":"fase22","text":"GABARITO:\n0,0,0,0,0\n0,6,6,0,16\n0,1,11,0,11\n6,16,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n6:0-0;0-1;1-1;\n6:0-0;1-0;\n1:0-0;0-1;0-2;1-2;\n16:0-0;1-0;0-1;1-1;\n16:0-0;1-0;1-1;2-0;\n1:0-0;0-1;-1-1;\n11:0-0;1-0;2-0;\n"},{"nome":"fase23","text":"GABARITO:\n0,0,0,1,0\n0,11,0,1,0\n0,0,0,0,0\n0,0,0,0,1\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;0-2;\n1:0-0;1-0;1-1;0-1;\n16:0-0;0-1;1-0;2-0;\n6:0-0;0-1;0-2;\n6:0-0;0-1;1-1;1-2;\n11:0-0;0-1;0-2;\n11:0-0;0-1;-1-1;1-1;\n"},{"nome":"fase24","text":"GABARITO:\n0,0,16,0,0\n0,0,1,0,6\n0,6,0,11,0\n0,0,1,1,0\n0,0,0,1,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-0;2-0;\n1:0-0;0-1;\n1:0-0;1-0;1-1;1-2;\n11:0-0;0-1;-1-1;1-1;\n6:0-0;1-0;0-1;\n6:0-0;0-1;0-2;\n11:0-0;0-1;0-2;\n16:0-0;0-1;\n"},{"nome":"fase25","text":"GABARITO:\n0,6,0,0,0\n0,6,0,0,1\n0,0,0,0,1\n0,0,0,1,0\n0,0,1,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;0-2;0-3;\n16:0-0;1-0;\n6:0-0;0-1;0-2;1-2;\n11:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;1-1;0-1;\n"},{"nome":"fase26","text":"GABARITO:\n16,0,0,0,0\n6,0,0,0,11\n0,0,0,0,0\n6,0,0,0,11\n0,11,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;\n16:0-0;0-1;0-2;1-2;\n16:0-0;1-0;2-0;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;1-1;\n11:0-0;0-1;0-2;\n"},{"nome":"fase27","text":"GABARITO:\n0,6,0,0,0\n0,0,0,16,16\n0,0,0,0,0\n11,16,0,6,0\n0,0,11,0,1\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;1-1;\n11:0-0;0-1;1-1;2-1;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;\n11:0-0;0-1;1-0;\n16:0-0;1-0;\n"},{"nome":"fase28","text":"GABARITO:\n0,0,0,0,11\n0,0,6,0,11\n0,6,0,0,0\n16,0,11,0,0\n0,0,0,1,6\nPECAS_CUSTOM:\n11:0-0;1-0;1-1;1-2;\n6:0-0;0-1;\n16:0-0;0-1;0-2;\n11:0-0;1-0;0-1;\n6:0-0;0-1;1-0;1-1;\n16:0-0;1-0;0-1;2-0;\n1:0-0;1-0;\n1:0-0;0-1;0-2;\n"},{"nome":"fase29","text":"GABARITO:\n0,0,0,0,0\n0,0,6,6,0\n1,11,0,0,0\n0,1,0,0,0\n6,0,0,16,11\nPECAS_CUSTOM:\n1:0-0;1-0;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;1-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;\n11:0-0;1-0;0-1;1-1;1-2;\n"},{"nome":"fase30","text":"GABARITO:\n0,0,11,0,0\n0,0,0,0,0\n0,0,0,0,0\n0,6,11,0,0\n16,0,1,0,6\nPECAS_CUSTOM:\n6:0-0;1-0;\n11:0-0;1-0;1-1;0-1;\n6:0-0;0-1;1-0;0-2;\n1:0-0;1-0;\n11:0-0;1-0;1-1;\n1:0-0;0-1;0-2;0-3;\n16:0-0;0-1;1-0;0-2;\n16:0-0;0-1;\n"}]/*LEVELS-END*/;
 
 /* ======================= Utilidades ======================= */
 const $ = s => document.querySelector(s);
@@ -415,7 +623,6 @@ const ICONES = {
   close:'<path d="M6 6l12 12M18 6L6 18"/>',
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-  plus:'<path d="M12 5v14M5 12h14"/>',
   download:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
   upload:'<path d="M12 16V5M7 9l5-5 5 5M5 20h14"/>',
   trash:'<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',
@@ -427,7 +634,13 @@ const ICONES = {
   reset:'<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>',
   edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-  code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>'
+  code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 3 3M16 6h4v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/>'
 };
 const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONES[n]}</svg>`;
 function pintarIcones(raiz = document){
@@ -436,10 +649,16 @@ function pintarIcones(raiz = document){
 let toastT = 0;
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2300);
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600);
 }
 const abrir = id => $('#ov-' + id).classList.add('on');
 const fechar = id => $('#ov-' + id).classList.remove('on');
+const fmtTempo = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const fmtJog = n => n + (n === 1 ? ' jogada' : ' jogadas');
+const pad2 = n => String(n).padStart(2, '0');
+const fmtData = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+const dataHoje = () => fmtData(new Date());
+const dataCurta = iso => iso.slice(8, 10) + '/' + iso.slice(5, 7);
 
 function pecaEl(formato, id, tam){
   const el = document.createElement('div');
@@ -455,18 +674,40 @@ function pecaEl(formato, id, tam){
 }
 
 /* ======================= Áudio (tudo gerado por código) ======================= */
+const HUMORES = {
+  calma: {
+    bpm: 66, padV: 0.035, filtro: 900, tipo: 'triangle', decay: 2.2, prob: [0.7, 0.5, 0.3], pulso: false,
+    acordes: [
+      {bass:45, pad:[57,60,64,67], arp:[64,67,69,72,76,79,81]},   // Am7
+      {bass:41, pad:[53,57,60,64], arp:[60,64,65,69,72,76,77]},   // Fmaj7
+      {bass:48, pad:[55,60,64,71], arp:[64,67,71,72,76,79,83]},   // Cmaj7
+      {bass:43, pad:[55,59,62,64], arp:[62,64,67,71,74,76,79]}    // G6
+    ]
+  },
+  animada: {
+    bpm: 100, padV: 0.03, filtro: 1500, tipo: 'triangle', decay: 1.1, prob: [0.88, 0.7, 0.5], pulso: true,
+    acordes: [
+      {bass:48, pad:[55,60,64,67], arp:[60,64,67,72,76,79,84]},   // C
+      {bass:43, pad:[55,59,62,67], arp:[62,67,71,74,79,83,86]},   // G
+      {bass:45, pad:[57,60,64,69], arp:[60,64,69,72,76,81,84]},   // Am
+      {bass:41, pad:[53,57,60,65], arp:[60,65,69,72,77,81,84]}    // F
+    ]
+  },
+  noturna: {
+    bpm: 54, padV: 0.04, filtro: 700, tipo: 'sine', decay: 3, prob: [0.5, 0.34, 0.2], pulso: false,
+    acordes: [
+      {bass:38, pad:[53,57,60,64], arp:[62,65,69,72,76,77,81]},   // Dm9
+      {bass:46, pad:[58,62,65,69], arp:[62,65,69,70,74,77,81]},   // Bbmaj7
+      {bass:43, pad:[55,58,62,65], arp:[62,65,67,70,74,77,79]},   // Gm9
+      {bass:45, pad:[57,62,64,67], arp:[62,64,67,69,74,76,79]}    // A7sus
+    ]
+  }
+};
 const Som = (() => {
   let ctx = null, out = null, reverbIn = null, sfxBus = null, sess = null, timer = null, nextT = 0, step = 0, mi = 2;
   let musicaOn = store.get('musica', true), sfxOn = store.get('sfx', true), vol = store.get('vol', 0.55);
-  const EIGHTH = 60 / 66 / 2;
+  let humorDesejado = 'calma';
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
-  // Am7 – Fmaj7 – Cmaj7 – G6 (tudo na mesma escala, então qualquer nota soa bem)
-  const ACORDES = [
-    {bass:45, pad:[57,60,64,67], arp:[64,67,69,72,76,79,81]},
-    {bass:41, pad:[53,57,60,64], arp:[60,64,65,69,72,76,77]},
-    {bass:48, pad:[55,60,64,71], arp:[64,67,71,72,76,79,83]},
-    {bass:43, pad:[55,59,62,64], arp:[62,64,67,71,74,76,79]}
-  ];
 
   function impulso(seg = 3, decay = 2.6){
     const sr = ctx.sampleRate, len = Math.floor(sr * seg), b = ctx.createBuffer(2, len, sr);
@@ -490,14 +731,13 @@ const Som = (() => {
   }
 
   function pad(ch, t){
-    const bus = sess && sess.bus; if (!bus) return;
-    const dur = 16 * EIGHTH;
+    const M = sess.M, bus = sess.bus, dur = 16 * sess.E;
     for (const n of ch.pad){
       const g = ctx.createGain(), f = ctx.createBiquadFilter();
-      f.type = 'lowpass'; f.frequency.value = 900; f.Q.value = 0.3;
+      f.type = 'lowpass'; f.frequency.value = M.filtro; f.Q.value = 0.3;
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.035, t + 2.2);
-      g.gain.setValueAtTime(0.035, t + dur - 0.2);
+      g.gain.linearRampToValueAtTime(M.padV, t + Math.min(2.2, dur * 0.4));
+      g.gain.setValueAtTime(M.padV, t + dur - 0.2);
       g.gain.linearRampToValueAtTime(0.0001, t + dur + 2.5);
       [['triangle', -5], ['sine', 5]].forEach(([tipo, det]) => {
         const o = ctx.createOscillator(); o.type = tipo; o.frequency.value = mtof(n); o.detune.value = det;
@@ -507,33 +747,41 @@ const Som = (() => {
     }
   }
   function baixo(ch, t){
-    const bus = sess && sess.bus; if (!bus) return;
-    const dur = 16 * EIGHTH, o = ctx.createOscillator(), g = ctx.createGain();
+    const bus = sess.bus, dur = 16 * sess.E, o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; o.frequency.value = mtof(ch.bass);
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.1, t + 1.2);
+    g.gain.linearRampToValueAtTime(0.1, t + 1.0);
     g.gain.setValueAtTime(0.1, t + dur - 0.3);
     g.gain.linearRampToValueAtTime(0.0001, t + dur + 1.5);
     o.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + 1.7);
   }
+  function pulso(ch, t){
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = mtof(ch.bass + 12);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.075, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+    o.connect(g); g.connect(sess.bus); o.start(t); o.stop(t + 0.3);
+  }
   function pluck(m, t, v){
-    if (!sess) return;
+    const M = sess.M;
     const g = ctx.createGain(), o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g2 = ctx.createGain();
-    o1.type = 'triangle'; o1.frequency.value = mtof(m);
+    o1.type = M.tipo; o1.frequency.value = mtof(m);
     o2.type = 'sine'; o2.frequency.value = mtof(m) * 2; g2.gain.value = 0.3;
     g.gain.setValueAtTime(0.0001, t);
     g.gain.linearRampToValueAtTime(v, t + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + M.decay);
     o1.connect(g); o2.connect(g2); g2.connect(g);
     g.connect(sess.bus);
     const ds = ctx.createGain(); ds.gain.value = 0.45; g.connect(ds); ds.connect(sess.delayIn);
-    o1.start(t); o2.start(t); o1.stop(t + 2.3); o2.stop(t + 2.3);
+    o1.start(t); o2.start(t); o1.stop(t + M.decay + 0.1); o2.stop(t + M.decay + 0.1);
   }
   function passo(s, t){
-    const ch = ACORDES[Math.floor(s / 16) % ACORDES.length], pos = s % 16;
+    const M = sess.M, ch = M.acordes[Math.floor(s / 16) % M.acordes.length], pos = s % 16;
     if (pos === 0){ pad(ch, t); baixo(ch, t); if (mi >= ch.arp.length) mi = ch.arp.length - 1; }
+    if (M.pulso && pos % 2 === 0) pulso(ch, t);
     if (pos >= 14 && Math.random() < 0.6) return;
-    const prob = pos % 4 === 0 ? 0.7 : pos % 2 === 0 ? 0.5 : 0.3;
+    const prob = pos % 4 === 0 ? M.prob[0] : pos % 2 === 0 ? M.prob[1] : M.prob[2];
     if (Math.random() < prob){
       const passos = [-2, -1, -1, 0, 1, 1, 2];
       mi = Math.max(0, Math.min(ch.arp.length - 1, mi + passos[(Math.random() * passos.length) | 0]));
@@ -543,21 +791,22 @@ const Som = (() => {
   function agendar(){
     if (!ctx || !sess) return;
     if (nextT < ctx.currentTime) nextT = ctx.currentTime + 0.05;
-    while (nextT < ctx.currentTime + 0.7){ passo(step, nextT); nextT += EIGHTH; step++; }
+    while (nextT < ctx.currentTime + 0.7){ passo(step, nextT); nextT += sess.E; step++; }
   }
-  function iniciarMusica(){
+  function iniciarMusica(h){
     if (!ctx || timer) return;
+    const M = HUMORES[h] || HUMORES.calma, E = 60 / M.bpm / 2;
     const bus = ctx.createGain(); bus.gain.setValueAtTime(0.0001, ctx.currentTime);
     bus.gain.linearRampToValueAtTime(vol * 0.5, ctx.currentTime + 2);
     bus.connect(out);
     const send = ctx.createGain(); send.gain.value = 0.5; bus.connect(send); send.connect(reverbIn);
-    const dl = ctx.createDelay(2); dl.delayTime.value = EIGHTH * 1.5;
+    const dl = ctx.createDelay(2); dl.delayTime.value = E * 1.5;
     const fb = ctx.createGain(); fb.gain.value = 0.38;
     const dlp = ctx.createBiquadFilter(); dlp.type = 'lowpass'; dlp.frequency.value = 2200;
     const delayIn = ctx.createGain();
     delayIn.connect(dl); dl.connect(dlp); dlp.connect(fb); fb.connect(dl); dlp.connect(bus);
-    sess = {bus, send, nodes: [dl, fb, dlp, delayIn], delayIn};
-    nextT = ctx.currentTime + 0.15; step = 0;
+    sess = {bus, send, nodes: [dl, fb, dlp, delayIn], delayIn, M, E, humor: h};
+    nextT = ctx.currentTime + 0.15; step = 0; mi = 2;
     timer = setInterval(agendar, 120); agendar();
   }
   function pararMusica(){
@@ -587,14 +836,21 @@ const Som = (() => {
   });
 
   return {
-    iniciar(){ if (!init()) return; ctx.resume(); if (musicaOn) iniciarMusica(); },
+    iniciar(){ if (!init()) return; ctx.resume(); if (musicaOn) iniciarMusica(humorDesejado); },
     musica: () => musicaOn,
     sfx: () => sfxOn,
     volume: () => vol,
+    humorAtual: () => sess ? sess.humor : humorDesejado,
     setMusica(on){
       musicaOn = on; store.set('musica', on);
       if (!ctx) return;
-      if (on){ ctx.resume(); iniciarMusica(); } else pararMusica();
+      if (on){ ctx.resume(); iniciarMusica(humorDesejado); } else pararMusica();
+    },
+    aplicarHumor(h){
+      humorDesejado = HUMORES[h] ? h : 'calma';
+      if (!ctx || !musicaOn) return;
+      if (sess && sess.humor === humorDesejado) return;
+      pararMusica(); iniciarMusica(humorDesejado);
     },
     setSfx(on){ sfxOn = on; store.set('sfx', on); },
     setVolume(v){ vol = v; store.set('vol', v); if (sess) sess.bus.gain.setTargetAtTime(v * 0.5, ctx.currentTime, 0.05); },
@@ -603,6 +859,7 @@ const Som = (() => {
     flip:    () => tom(620, {f2:420, dur:.07, vol:.10, tipo:'triangle'}),
     soltar:  () => tom(500, {f2:300, dur:.10, vol:.10}),
     invalido:() => tom(190, {f2:130, dur:.16, vol:.07, tipo:'sawtooth'}),
+    dica(){ tom(784, {dur:.35, vol:.12, tipo:'triangle'}); tom(1175, {t:.09, dur:.45, vol:.10, tipo:'triangle'}); },
     encaixar(){ tom(300, {dur:.14, vol:.22}); tom(450, {t:.05, dur:.2, vol:.18}); tom(110, {f2:70, dur:.12, vol:.25}); },
     vitoria(){ [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => { tom(f, {tipo:'triangle', dur:1.1, vol:.16, t:i * .11}); tom(f * 2, {dur:.8, vol:.04, t:i * .11}); }); }
   };
@@ -611,33 +868,81 @@ const Som = (() => {
 /* ======================= Estado do jogo ======================= */
 let custom = store.get('custom', []);
 let prog = store.get('prog', {max: 0, done: []});
-const S = {cur: null, jogo: null, sel: null, drag: null, hover: null, ghost: [], venceu: false, cell: 64};
+let recs = store.get('rec', {});
+let dias = store.get('dias', {});
+let humorPref = store.get('humor', 'auto');
+const S = {cur: null, jogo: null, sel: null, drag: null, hover: null, ghost: [], venceu: false, cell: 64,
+  jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0};
 
+const cacheDia = {};
+function faseDoDia(data){
+  if (!cacheDia[data]){
+    const f = gerarFase(parseInt(data.replace(/-/g, ''), 10), {minEstrelas: 7});
+    cacheDia[data] = {nome: 'dia ' + data, text: f.text};
+  }
+  return cacheDia[data];
+}
 function faseDe(cur){
   if (cur.k === 'b') return BUILTIN[cur.i];
   if (cur.k === 'c') return custom[cur.i];
+  if (cur.k === 'd') return faseDoDia(cur.data);
   return cur;
 }
+function chaveFase(cur){
+  if (cur.k === 'b') return 'b:' + BUILTIN[cur.i].nome;
+  if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
+  if (cur.k === 'd') return 'd:' + cur.data;
+  return null;
+}
+function humorDaFase(cur){
+  if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
+  if (cur.k === 'd') return 'animada';
+  return 'calma';
+}
+function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref); }
+
 function carregar(cur){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text);
-  S.sel = null; S.drag = null; S.venceu = false;
-  removerFlutuante(); limparGhost();
+  S.sel = null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
+  S.t = {acum: 0, ult: performance.now(), ativo: false};
+  removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
-  renderTudo();
+  renderTudo(); aplicarHumor();
 }
-function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDica(); }
+function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDica(); renderStats(); }
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
   if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = 'de ' + BUILTIN.length; }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = 'fase personalizada'; }
+  else if (c.k === 'd'){ t1.textContent = 'Fase do dia'; t2.textContent = dataCurta(c.data); }
+  else if (c.shared){ t1.textContent = c.nome; t2.textContent = 'fase compartilhada'; }
   else { t1.textContent = 'Teste'; t2.textContent = c.nome || 'sua fase'; }
   $('#btnPrev').disabled = !(c.k === 'b' && c.i > 0);
   const podeProx = c.k === 'b' && c.i < BUILTIN.length - 1 && c.i + 1 <= prog.max;
   $('#btnNext').disabled = !podeProx;
   $('#btnNext').classList.toggle('glow', podeProx && S.venceu);
 }
+
+/* ---- relógio e estatísticas ---- */
+const deveRodar = () => S.t.ativo && !S.venceu && !document.hidden && !document.querySelector('.ov.on');
+const tempoMs = () => S.t.acum;
+function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
+function tick(){
+  const a = performance.now();
+  if (deveRodar()) S.t.acum += a - S.t.ult;
+  S.t.ult = a;
+  renderStats();
+}
+function renderStats(){
+  $('#stTempo').textContent = fmtTempo(tempoMs());
+  $('#stJog').textContent = fmtJog(S.jog);
+  const k = S.cur && chaveFase(S.cur), r = k && recs[k];
+  $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;
+  $('#pDica').hidden = !S.dicas; $('#stDica').textContent = S.dicas + (S.dicas === 1 ? ' dica' : ' dicas');
+}
+setInterval(tick, 250);
 
 /* ---- tabuleiro ---- */
 function montarBoard(){
@@ -680,6 +985,7 @@ function renderReserva(){
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
   $('#contagem').textContent = S.jogo.reserva.length ? S.jogo.reserva.length + ' restantes' : '';
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
+  $('#btnDica').disabled = S.venceu;
 }
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
@@ -711,6 +1017,33 @@ function sobreposto(f, gx, gy){
   return false;
 }
 
+/* ---- dica ---- */
+function limparDica(){
+  clearTimeout(S.dicaTimer);
+  S.dicaCels.forEach(c => c.classList.remove('dica', 'alerta')); S.dicaCels = [];
+}
+function acaoDica(){
+  if (S.venceu || S.drag) return;
+  limparDica();
+  const r = dicaDe(S.jogo);
+  if (r.tipo === 'ok'){
+    S.dicas++; iniciaTempo(); Som.dica();
+    for (let i = 0; i < r.o.length; i++) for (let k = 0; k < r.o[0].length; k++){
+      if (!r.o[i][k]) continue;
+      const c = cellEl(r.px + k, r.py + i); c.style.setProperty('--c', COR[r.peca.id]); c.classList.add('dica'); S.dicaCels.push(c);
+    }
+    selecionar(r.peca); renderStats();
+    toast('A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
+  } else {
+    const idu = S.ultimaIdu && S.jogo.mapa.has(S.ultimaIdu) ? S.ultimaIdu : 0;
+    if (idu) for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
+    Som.invalido();
+    toast(r.tipo === 'demorou' ? 'Não consegui calcular essa dica agora. Tente tirar uma peça.'
+        : 'Com as peças atuais não há solução — tire alguma (a última colocada está destacada).');
+  }
+  S.dicaTimer = setTimeout(limparDica, 3800);
+}
+
 /* ---- ações ---- */
 function tremer(){
   const b = $('#board'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
@@ -720,37 +1053,64 @@ function tentarColocar(p, gx, gy){
     if (sobreposto(p.formato, gx, gy)){ tremer(); Som.invalido(); }
     return false;
   }
-  colocar(S.jogo, p, gx, gy);
+  limparDica(); iniciaTempo();
+  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.jog++;
   S.sel = null; limparGhost();
   Som.encaixar();
-  renderBoard(); renderReserva(); renderDica();
+  renderBoard(); renderReserva(); renderDica(); renderStats();
   if (concluido(S.jogo)) vencer();
   return true;
 }
 function vencer(){
+  tick();
   S.venceu = true;
   $('#board').classList.add('win');
-  const c = S.cur;
+  const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
+  let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   if (c.k === 'b'){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
     prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
     store.set('prog', prog);
   }
-  renderTitulo(); renderDica();
+  if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
+  if (k && !S.dicas){
+    if (!recs[k]) recs[k] = {t, j};
+    else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
+    store.set('rec', recs);
+  }
+  renderTitulo(); renderDica(); renderStats(); renderReserva();
   setTimeout(() => Som.vitoria(), 120);
-  setTimeout(mostrarVitoria, 900);
+  setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior}), 900);
 }
-function mostrarVitoria(){
+function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = ultima ? 'Você dominou todas as formas!' : (c.k === 't' ? 'Fase de teste concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = ultima ? 'Todas as fases completas. Que tal criar as suas?' : (c.k === 't' ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem. Pronto para a próxima?');
+  $('#winTitulo').textContent = ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : (c.k === 't' ? 'Fase concluída!' : 'Fase concluída!');
+  $('#winTexto').textContent = ultima ? 'As 30 fases estão completas. Que tal criar as suas?'
+    : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
+    : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!';
+  const r = $('#winRes'); r.innerHTML = '';
+  const pill = (icone, txt) => { const s = document.createElement('span'); s.className = 'pill'; s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
+  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', S.dicas + (S.dicas === 1 ? ' dica' : ' dicas'));
+  const k = chaveFase(c);
+  $('#winBadge').textContent = !k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
+    : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
+    : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j);
   acts.innerHTML = '';
-  const add = (txt, cls, fn) => { const b = document.createElement('button'); b.className = 'btn ' + cls; b.textContent = txt; b.onclick = () => { fechar('win'); fn(); }; acts.appendChild(b); };
+  const add = (txt, cls, fn, icone) => { const b = document.createElement('button'); b.className = 'btn ' + cls; if (icone) b.innerHTML = ic(icone); b.append(txt); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
-  if (c.k === 't') add('Voltar ao editor', 'pri', () => abrir('editor'));
+  if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
+  if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
-  add('Jogar de novo', '', () => carregar(S.cur));
+  const compartilharRes = () => {
+    const base = urlBase();
+    if (c.k === 'd') compartilhar('Shape Puzzle', `Shape Puzzle — Fase do dia ${dataCurta(c.data)}\n⏱ ${fmtTempo(res.t)} · ${fmtJog(res.j)}${S.dicas ? ' · ' + S.dicas + (S.dicas === 1 ? ' dica' : ' dicas') : ''}\n🔥 Sequência: ${sequencia()} ${sequencia() === 1 ? 'dia' : 'dias'}\nConsegue mais rápido?`, base);
+    else if (c.k === 'b') compartilhar('Shape Puzzle', `Passei da fase ${c.i + 1} do Shape Puzzle em ${fmtTempo(res.t)} (${fmtJog(res.j)})! Tenta aí:`, base);
+    else compartilhar('Shape Puzzle', `Tente a fase "${c.k === 'c' ? custom[c.i].nome : c.nome}" que eu criei no Shape Puzzle!`, urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
+  };
+  compartilharRes.fecha = false;
+  add(c.k === 'd' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
+  const jn = () => carregar(S.cur); add('Jogar de novo', '', jn);
   if (c.k !== 't') add('Fases', '', abrirMenu);
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
   Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
@@ -803,7 +1163,7 @@ function atualizarGhostHover(){
 function iniciarDrag(e, piece, origem){
   const jaSel = S.sel === piece;
   S.drag = {piece, pid: e.pointerId, tipo: e.pointerType, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, moved: false, origem, jaSel};
-  limparGhost();
+  limparGhost(); iniciaTempo();
   selecionar(piece);
 }
 
@@ -820,7 +1180,7 @@ $('#board').addEventListener('pointerdown', e => {
   e.preventDefault();
   if (S.jogo.grade[c.y][c.x]){
     const p = remover(S.jogo, c.x, c.y);
-    if (p){ S.jogo.reserva.push(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
+    if (p){ limparDica(); S.jogo.reserva.push(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
   } else if (S.sel){
     const f = S.sel.formato;
     tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
@@ -863,15 +1223,52 @@ window.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if (k === 'r') acaoGirar();
   else if (k === 't') acaoFlip();
+  else if (k === 'h') acaoDica();
   else if (k === 'e' && S.hover && !S.venceu && S.jogo.grade[S.hover.y][S.hover.x]){
     const p = remover(S.jogo, S.hover.x, S.hover.y);
-    if (p){ S.jogo.reserva.push(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
+    if (p){ limparDica(); S.jogo.reserva.push(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
   }
 });
+
+/* ---- compartilhar ---- */
+const urlBase = () => location.origin + location.pathname;
+function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
+const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
+async function copiar(t){
+  try{ await navigator.clipboard.writeText(t); toast('Copiado! É só colar numa conversa.'); }
+  catch(e){ window.prompt('Copie e compartilhe:', t); }
+}
+async function compartilhar(titulo, texto, url){
+  if (navigator.share){
+    try{ await navigator.share({title: titulo, text: texto, url}); return; }
+    catch(e){ if (e && e.name === 'AbortError') return; }
+  }
+  copiar(texto + '\n' + url);
+}
+function sequencia(){
+  const d = new Date(); let n = 0;
+  if (!dias[fmtData(d)]) d.setDate(d.getDate() - 1);
+  while (dias[fmtData(d)]){ n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function lerLink(){
+  const h = new URLSearchParams(location.hash.slice(1)), f = h.get('f');
+  if (!f) return null;
+  try{
+    const text = deb64u(f);
+    if (!faseValida(text)) throw new Error('inválida');
+    const nome = (h.get('n') || 'fase compartilhada').slice(0, 30);
+    history.replaceState(null, '', location.pathname + location.search);
+    return {k: 't', nome, text, shared: true};
+  }catch(e){ toast('Link de fase inválido'); return null; }
+}
+window.addEventListener('hashchange', () => { const l = lerLink(); if (l){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); carregar(l); toast('Fase compartilhada aberta'); } });
 
 /* ---- botões do topo / ferramentas ---- */
 $('#btnGirar').onclick = acaoGirar;
 $('#btnFlip').onclick = acaoFlip;
+$('#btnDica').onclick = acaoDica;
 $('#btnReset').onclick = () => carregar(S.cur);
 $('#btnPrev').onclick = () => { if (S.cur.k === 'b' && S.cur.i > 0) carregar({k: 'b', i: S.cur.i - 1}); };
 $('#btnNext').onclick = () => { if (S.cur.k === 'b') carregar({k: 'b', i: S.cur.i + 1}); };
@@ -884,9 +1281,14 @@ function iconeMusica(){
 $('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-$('#btnJogar').onclick = () => { Som.iniciar(); fechar('splash'); iconeMusica(); };
+$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); };
 
 /* ---- menu ---- */
+function renderDiario(){
+  const hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
+  $('#diaSub').textContent = dataCurta(hoje) + ' · um desafio novo por dia' + (seq ? ' · 🔥 ' + seq + (seq === 1 ? ' dia' : ' dias') : '');
+  $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : 'Jogar';
+}
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
   BUILTIN.forEach((f, i) => {
@@ -898,8 +1300,9 @@ function abrirMenu(){
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
   });
-  renderCustom();
+  renderDiario(); renderCustom(); atualizarInstalar();
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
+  $('#selHumor').value = humorPref;
   abrir('menu');
 }
 function renderCustom(){
@@ -911,17 +1314,24 @@ function renderCustom(){
     r.firstChild.textContent = f.nome;
     const mk = (icone, label, fn) => { const b = document.createElement('button'); b.className = 'ib'; b.setAttribute('aria-label', label); b.innerHTML = ic(icone); b.onclick = fn; r.appendChild(b); };
     mk('play', 'Jogar', () => { fechar('menu'); carregar({k: 'c', i}); });
+    mk('share', 'Compartilhar', () => compartilhar('Shape Puzzle', `Tente a fase "${f.nome}" que eu criei no Shape Puzzle!`, urlFase(f.text, f.nome)));
     mk('download', 'Exportar', () => baixar(f.nome, f.text));
     mk('trash', 'Apagar', () => { if (confirm('Apagar a fase "' + f.nome + '"?')){ custom.splice(i, 1); store.set('custom', custom); if (S.cur.k === 'c') carregar({k: 'b', i: 0}); renderCustom(); } });
     l.appendChild(r);
   });
 }
+$('#btnDia').onclick = () => {
+  fechar('menu'); toast('Preparando a fase do dia…');
+  setTimeout(() => carregar({k: 'd', data: dataHoje()}), 30);
+};
 $('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica(); };
 $('#chkSfx').onchange = e => Som.setSfx(e.target.checked);
 $('#rngVol').oninput = e => Som.setVolume(e.target.value / 100);
-$('#btnZerar').onclick = () => { if (confirm('Zerar o progresso das fases?')){ prog = {max: 0, done: []}; store.set('prog', prog); carregar({k: 'b', i: 0}); abrirMenu(); } };
+$('#selHumor').onchange = e => { humorPref = e.target.value; store.set('humor', humorPref); aplicarHumor(); };
+$('#btnZerar').onclick = () => { if (confirm('Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)')){ prog = {max: 0, done: []}; store.set('prog', prog); carregar({k: 'b', i: 0}); abrirMenu(); } };
 $('#btnCriar').onclick = () => { fechar('menu'); abrirEditor(); };
 $('#btnImportar').onclick = () => $('#fileImp').click();
+$('#btnCompJogo').onclick = () => compartilhar('Shape Puzzle', 'Joga esse quebra-cabeça comigo: Shape Puzzle!', urlBase());
 $('#fileImp').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   const texto = await f.text();
@@ -941,11 +1351,30 @@ function baixar(nome, texto){
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
+/* ---- instalar como app ---- */
+let promptInstalar = null;
+const emApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const ehIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function atualizarInstalar(){
+  const mostrarBtn = !!promptInstalar && !emApp(), mostrarIOS = ehIOS() && !emApp() && !promptInstalar;
+  $('#btnInstalar').hidden = !mostrarBtn; $('#dicaIOS').hidden = !mostrarIOS;
+  $('#blocoInstalar').hidden = !(mostrarBtn || mostrarIOS);
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); promptInstalar = e; atualizarInstalar(); });
+window.addEventListener('appinstalled', () => { promptInstalar = null; atualizarInstalar(); toast('Jogo instalado!'); });
+$('#btnInstalar').onclick = async () => {
+  if (!promptInstalar) return;
+  promptInstalar.prompt();
+  try{ await promptInstalar.userChoice; }catch(e){}
+  promptInstalar = null; atualizarInstalar();
+};
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+
 /* ---- editor ---- */
 const E = {grid: Array.from({length: TAM}, () => Array(TAM).fill(0)), cor: 1, modo: null};
 function montarEditor(){
   const pal = $('#pal'); pal.innerHTML = '';
-  for (const id of [1, 6, 11, 16]){
+  for (const id of CORES_IDS){
     const b = document.createElement('button'); b.className = 'sw' + (E.cor === id ? ' on' : ''); b.style.setProperty('--c', COR[id]);
     b.setAttribute('aria-label', 'Cor ' + id); b.onclick = () => { E.cor = id; montarEditor(); }; pal.appendChild(b);
   }
@@ -962,7 +1391,7 @@ function renderEditor(){
   const info = $('#edInfo'), faltam = TAM * TAM - n;
   info.className = faltam ? '' : 'ok';
   info.textContent = faltam ? `Faltam ${faltam} casas para preencher` : 'Tabuleiro completo — pronto para salvar ou testar';
-  ['#edSalvar', '#edTestar', '#edExportar'].forEach(s => $(s).disabled = faltam > 0);
+  ['#edSalvar', '#edTestar', '#edExportar', '#edCompartilhar'].forEach(s => $(s).disabled = faltam > 0);
 }
 function abrirEditor(){ montarEditor(); abrir('editor'); }
 function celulaEditor(cx, cy){
@@ -987,6 +1416,7 @@ const edNome = () => ($('#edNome').value.trim().replace(/[\\/:*?"<>|]/g, '') || 
 $('#edLimpar').onclick = () => { E.grid = Array.from({length: TAM}, () => Array(TAM).fill(0)); renderEditor(); };
 $('#edSalvar').onclick = () => { salvarCustom(edNome(), edTexto()); toast('Fase "' + edNome() + '" salva em Minhas fases'); };
 $('#edExportar').onclick = () => baixar(edNome(), edTexto());
+$('#edCompartilhar').onclick = () => compartilhar('Shape Puzzle', `Tente a fase "${edNome()}" que eu criei no Shape Puzzle!`, urlFase(edTexto(), edNome()));
 $('#edTestar').onclick = () => { fechar('editor'); carregar({k: 't', nome: edNome(), text: edTexto()}); };
 
 /* ======================= Início ======================= */
@@ -1000,14 +1430,15 @@ addEventListener('resize', ajustar);
 ajustar();
 pintarIcones();
 montarBoard();
-// logo da abertura
 (() => {
   const l = $('#logo');
   [[[[1,1],[1,0]], 1], [[[1,1,1],[0,1,0]], 11], [[[1,0],[1,1]], 6], [[[1,1],[1,0]], 16]].forEach(([f, id]) => l.appendChild(pecaEl(f, id, 'mini')));
 })();
 iconeMusica();
-carregar({k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
-window.__sp = {S, carregar, tentarColocar, BUILTIN};
+const linkInicial = lerLink();
+if (linkInicial) $('#splashMsg').hidden = false;
+carregar(linkInicial || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
 </body>
 </html>
