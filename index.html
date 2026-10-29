@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0c12">
 <meta name="description" content="Shape Puzzle — quebra-cabeça lógico: preencha o tabuleiro 5x5 com as peças e cubra cada estrela com a cor certa.">
 <meta property="og:title" content="Shape Puzzle">
-<meta property="og:description" content="Quebra-cabeça lógico: preencha o tabuleiro 5x5 e cubra cada estrela com a cor certa. 30 fases, fase do dia e editor.">
+<meta property="og:description" content="Quebra-cabeça lógico: preencha o tabuleiro 5x5 e cubra cada estrela com a cor certa. 50 fases, fase do dia e editor.">
 <meta property="og:image" content="https://rafajames.github.io/ShapePuzzle/icon-512.png">
 <meta property="og:type" content="website">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,6 +48,7 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 #titulo{min-width:118px;text-align:center;line-height:1.15}
 #titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px}
 #titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+@media (max-width:350px){.top{gap:4px}.nav{gap:4px}.top .ib{width:40px;height:40px;border-radius:12px}#titulo{min-width:92px}#titulo .t1{font-size:16px}}
 
 /* estatísticas */
 .stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap}
@@ -62,7 +63,7 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
   display:grid;border-radius:16px;overflow:hidden;position:relative;background:#1a1a2a;touch-action:none;
   box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.55),0 0 60px rgba(124,108,255,.1);
 }
-#board{grid-template-columns:repeat(5,var(--cell));grid-auto-rows:var(--cell)}
+#board{grid-template-columns:repeat(var(--n,5),var(--cell));grid-auto-rows:var(--cell)}
 #edBoard{--ecell:min(56px,calc((100vw - 110px)/5));grid-template-columns:repeat(5,var(--ecell));grid-auto-rows:var(--ecell);width:max-content;margin:0 auto}
 #board.shake{animation:shake .28s}
 #board.win .fill{animation:pulse 1.2s infinite}
@@ -247,6 +248,7 @@ select.field{flex:1}
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
     <h2>Fases do jogo</h2>
     <div class="tiles" id="tiles"></div>
+    <p class="vazio2" style="margin-top:10px">Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.</p>
     <h2>Minhas fases</h2>
     <div id="customList"></div>
     <div class="acts">
@@ -347,18 +349,18 @@ function reconstruirMatriz(dados){
 }
 
 function parseFase(texto){
-  const gab = Array.from({length: TAM}, () => Array(TAM).fill(0));
-  const pecas = [];
-  let modo = '', y = 0;
+  const linhasG = [], pecas = [];
+  let modo = '', fila = 0;
   for (let linha of String(texto).split(/\r?\n/)){
     linha = linha.trim();
     if (!linha) continue;
     const up = linha.toUpperCase();
-    if (up === 'GABARITO:'){ modo = 'g'; y = 0; continue; }
+    const mf = /^FILA:\s*(\d+)$/.exec(up);
+    if (mf){ fila = parseInt(mf[1], 10) || 0; continue; }
+    if (up === 'GABARITO:'){ modo = 'g'; continue; }
     if (up.startsWith('PECAS')){ modo = 'p'; continue; }
-    if (modo === 'g' && y < TAM){
-      linha.split(',').slice(0, TAM).forEach((v, x) => { gab[y][x] = parseInt(v.trim(), 10) || 0; });
-      y++;
+    if (modo === 'g'){
+      linhasG.push(linha.split(',').map(v => parseInt(v.trim(), 10) || 0));
     } else if (modo === 'p' && linha.includes(':')){
       const i = linha.indexOf(':');
       const id = parseInt(linha.slice(0, i).trim(), 10);
@@ -366,7 +368,10 @@ function parseFase(texto){
       pecas.push({id, formato: reconstruirMatriz(linha.slice(i + 1).trim())});
     }
   }
-  return {gab, pecas};
+  /* O tamanho vem da própria fase (5×5 nas clássicas; 6×6 e 7×7 nas novas). */
+  const n = Math.min(9, Math.max(TAM, linhasG.length, linhasG.length ? linhasG[0].length : 0));
+  const gab = Array.from({length: n}, (_, y) => Array.from({length: n}, (_, x) => (linhasG[y] && linhasG[y][x]) || 0));
+  return {gab, pecas, n, fila};
 }
 
 function girar(f){
@@ -379,21 +384,24 @@ function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
 function novoJogo(texto){
-  const {gab, pecas} = parseFase(texto);
+  const {gab, pecas, n, fila} = parseFase(texto);
   return {
+    n, fila, total: pecas.length,
     gab,
-    grade: Array.from({length: TAM}, () => Array(TAM).fill(0)),
+    grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
     contador: 1000,
     reserva: pecas.map(p => ({uid: _uid++, id: p.id, formato: p.formato.map(r => r.slice())}))
   };
 }
+/* Peças visíveis: todas, ou só as `fila` primeiras quando a fase usa o modo "em fila". */
+const visiveis = j => j.fila ? j.reserva.slice(0, j.fila) : j.reserva;
 
 function podeColocar(j, f, px, py){
   for (let i = 0; i < f.length; i++) for (let k = 0; k < f[0].length; k++){
     if (!f[i][k]) continue;
     const ax = px + k, ay = py + i;
-    if (ax < 0 || ax >= TAM || ay < 0 || ay >= TAM || j.grade[ay][ax] !== 0) return false;
+    if (ax < 0 || ax >= j.n || ay < 0 || ay >= j.n || j.grade[ay][ax] !== 0) return false;
   }
   return true;
 }
@@ -410,11 +418,11 @@ function remover(j, x, y){
   if (idu < 1000) return null;
   const p = j.mapa.get(idu);
   j.mapa.delete(idu);
-  for (let i = 0; i < TAM; i++) for (let k = 0; k < TAM; k++) if (j.grade[i][k] === idu) j.grade[i][k] = 0;
+  for (let i = 0; i < j.n; i++) for (let k = 0; k < j.n; k++) if (j.grade[i][k] === idu) j.grade[i][k] = 0;
   return p || null;
 }
 function concluido(j){
-  for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
+  for (let y = 0; y < j.n; y++) for (let x = 0; x < j.n; x++){
     const cor = j.gab[y][x];
     if (cor !== 0){
       const idu = j.grade[y][x];
@@ -453,11 +461,11 @@ function gerarTexto(grid, dif){
   return t;
 }
 function faseValida(texto){
-  const {pecas} = parseFase(texto);
+  const {pecas, n: lado} = parseFase(texto);
   if (!pecas.length) return false;
   let n = 0;
   for (const p of pecas) for (const r of p.formato) for (const v of r) n += v ? 1 : 0;
-  return n === TAM * TAM;
+  return n === lado * lado;
 }
 
 /* ---------- Solver (poda por estrela) ---------- */
@@ -476,9 +484,10 @@ function orientacoes(f){
 }
 const chaveCanon = f => orientacoes(f).map(o => JSON.stringify(o)).sort()[0];
 
-/* occ: matriz TAMxTAM (verdadeiro = casa ocupada). Conta soluções até `limite`. */
+/* occ: matriz NxN (verdadeiro = casa ocupada). Conta soluções até `limite`. */
 function buscar(occ, pecas, gab, limite, maxNos){
   const g = occ.map(r => r.map(v => v ? 1 : 0));
+  const N = occ.length;
   const n = pecas.length, usado = Array(n).fill(false);
   const ori = pecas.map(p => orientacoes(p.formato));
   const chave = pecas.map(p => p.id + '|' + chaveCanon(p.formato));
@@ -488,7 +497,7 @@ function buscar(occ, pecas, gab, limite, maxNos){
     if (cont >= limite || estourou) return;
     if (++nos > maxNos){ estourou = true; return; }
     let ey = -1, ex = -1;
-    for (let y = 0; y < TAM && ey < 0; y++) for (let x = 0; x < TAM; x++) if (!g[y][x]){ ey = y; ex = x; break; }
+    for (let y = 0; y < N && ey < 0; y++) for (let x = 0; x < N; x++) if (!g[y][x]){ ey = y; ex = x; break; }
     if (ey < 0){ cont++; if (!primeira) primeira = atual.slice(); return; }
     const vistas = new Set();
     for (let k = 0; k < n; k++){
@@ -501,7 +510,7 @@ function buscar(occ, pecas, gab, limite, maxNos){
         for (let i = 0; i < o.length && ok; i++) for (let j = 0; j < o[0].length; j++){
           if (!o[i][j]) continue;
           const ax = px + j, ay = py + i;
-          if (ax < 0 || ax >= TAM || ay >= TAM || g[ay][ax] || (gab[ay][ax] && gab[ay][ax] !== id)){ ok = false; break; }
+          if (ax < 0 || ax >= N || ay >= N || g[ay][ax] || (gab[ay][ax] && gab[ay][ax] !== id)){ ok = false; break; }
         }
         if (!ok) continue;
         for (let i = 0; i < o.length; i++) for (let j = 0; j < o[0].length; j++) if (o[i][j]) g[py + i][px + j] = 1;
@@ -519,7 +528,7 @@ function buscar(occ, pecas, gab, limite, maxNos){
 
 /* Dica: resolve a partir do estado atual e devolve uma peça da reserva com seu lugar. */
 function dicaDe(j){
-  for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
+  for (let y = 0; y < j.n; y++) for (let x = 0; x < j.n; x++){
     const idu = j.grade[y][x], est = j.gab[y][x];
     if (idu && est){ const p = j.mapa.get(idu); if (p && p.id !== est) return {tipo: 'conflito'}; }
   }
@@ -527,7 +536,8 @@ function dicaDe(j){
   const r = buscar(occ, j.reserva, j.gab, 1, 400000);
   if (!r.primeira) return {tipo: r.estourou ? 'demorou' : 'impossivel'};
   const cobre = c => { for (let i = 0; i < c.o.length; i++) for (let k = 0; k < c.o[0].length; k++) if (c.o[i][k] && j.gab[c.py + i][c.px + k]) return true; return false; };
-  const esc = r.primeira.find(cobre) || r.primeira[0];
+  /* Em fila, a dica é sempre sobre a peça da vez (a primeira da fila). */
+  const esc = j.fila ? (r.primeira.find(c => c.k === 0) || r.primeira[0]) : (r.primeira.find(cobre) || r.primeira[0]);
   return {tipo: 'ok', peca: j.reserva[esc.k], o: esc.o, px: esc.px, py: esc.py};
 }
 
@@ -544,11 +554,11 @@ function embaralhar(arr, rng){
   for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
   return arr;
 }
-function gerarTiling(rng){
+function gerarTiling(rng, n = TAM, pMin = 6, pMax = 9){
   for (let tent = 0; tent < 300; tent++){
-    const dono = Array.from({length: TAM}, () => Array(TAM).fill(-1));
+    const dono = Array.from({length: n}, () => Array(n).fill(-1));
     const pecas = []; let ok = true;
-    for (let y = 0; y < TAM && ok; y++) for (let x = 0; x < TAM && ok; x++){
+    for (let y = 0; y < n && ok; y++) for (let x = 0; x < n && ok; x++){
       if (dono[y][x] >= 0) continue;
       const r = rng(), alvo = r < 0.12 ? 2 : r < 0.5 ? 3 : r < 0.96 ? 4 : 5;
       const cel = [[x, y]]; dono[y][x] = pecas.length;
@@ -556,7 +566,7 @@ function gerarTiling(rng){
         const cand = [];
         for (const [cx, cy] of cel) for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
           const nx = cx + dx, ny = cy + dy;
-          if (nx >= 0 && nx < TAM && ny >= 0 && ny < TAM && dono[ny][nx] < 0 && !cand.some(c => c[0] === nx && c[1] === ny)) cand.push([nx, ny]);
+          if (nx >= 0 && nx < n && ny >= 0 && ny < n && dono[ny][nx] < 0 && !cand.some(c => c[0] === nx && c[1] === ny)) cand.push([nx, ny]);
         }
         if (!cand.length) break;
         const c = cand[Math.floor(rng() * cand.length)];
@@ -565,43 +575,46 @@ function gerarTiling(rng){
       if (cel.length < 2) ok = false;
       pecas.push(cel);
     }
-    if (ok && pecas.length >= 6 && pecas.length <= 9) return pecas;
+    if (ok && pecas.length >= pMin && pecas.length <= pMax) return pecas;
   }
   return null;
 }
 /* Gera uma fase com solução única e o mínimo de estrelas que mantém essa unicidade. */
 function gerarFase(seed, opts = {}){
   const minEstrelas = opts.minEstrelas || 0;
+  const n = opts.n || TAM, pMin = opts.pMin || 6, pMax = opts.pMax || 9, fila = opts.fila || 0;
+  const orc = opts.orc || 80000, orcMed = opts.orcMed || 600000, leitura = opts.ordem === 'leitura';
   const rng = mulberry32(seed);
-  const vazio = Array.from({length: TAM}, () => Array(TAM).fill(false));
+  const vazio = Array.from({length: n}, () => Array(n).fill(false));
   for (let t = 0; t < 600; t++){
-    const tl = gerarTiling(rng); if (!tl) continue;
+    const tl = gerarTiling(rng, n, pMin, pMax); if (!tl) continue;
     const saco = [];
     const cor = tl.map(() => { if (!saco.length) saco.push(...embaralhar(CORES_IDS.slice(), rng)); return saco.pop(); });
     if (new Set(cor).size < 3) continue;
-    const cheio = Array.from({length: TAM}, () => Array(TAM).fill(0));
+    const cheio = Array.from({length: n}, () => Array(n).fill(0));
     tl.forEach((cel, i) => cel.forEach(([cx, cy]) => { cheio[cy][cx] = cor[i]; }));
-    const ordemPecas = embaralhar(tl.map((_, i) => i), rng);
+    const ordemPecas = leitura ? tl.map((_, i) => i) : embaralhar(tl.map((_, i) => i), rng);
     const linhas = ordemPecas.map(i => {
       const [x0, y0] = tl[i][0];
       return cor[i] + ':' + tl[i].map(([cx, cy]) => (cx - x0) + '-' + (cy - y0) + ';').join('');
     });
     const pecas = parseFase('PECAS_CUSTOM:\n' + linhas.join('\n')).pecas;
-    const r0 = buscar(vazio, pecas, cheio, 2, 80000);
+    const r0 = buscar(vazio, pecas, cheio, 2, orc);
     if (r0.n !== 1 || r0.estourou) continue;
     const gab = cheio.map(r => r.slice());
-    let estrelas = TAM * TAM;
+    let estrelas = n * n;
     const cels = [];
-    for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++) cels.push([x, y]);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) cels.push([x, y]);
     for (const [cx, cy] of embaralhar(cels, rng)){
       if (estrelas <= minEstrelas) break;
       const v = gab[cy][cx]; gab[cy][cx] = 0;
-      const r = buscar(vazio, pecas, gab, 2, 80000);
+      const r = buscar(vazio, pecas, gab, 2, orc);
       if (r.n !== 1 || r.estourou) gab[cy][cx] = v; else estrelas--;
     }
-    const med = buscar(vazio, pecas, gab, 2, 600000);
-    const text = 'GABARITO:\n' + gab.map(r => r.join(',')).join('\n') + '\nPECAS_CUSTOM:\n' + linhas.join('\n') + '\n';
-    return {text, estrelas, nos: med.nos, pecas: pecas.length, seed};
+    const med = buscar(vazio, pecas, gab, 2, orcMed);
+    const text = (fila ? 'FILA: ' + fila + '\n' : '') + 'GABARITO:\n' + gab.map(r => r.join(',')).join('\n') + '\nPECAS_CUSTOM:\n' + linhas.join('\n') + '\n';
+    const um = opts.medir ? buscar(vazio, pecas, gab, 1, 3e6) : null;
+    return {text, estrelas, nos: med.nos, pecas: pecas.length, seed, n, fila, unica: med.n === 1 && !med.estourou, nosPrimeira: um ? um.nos : 0};
   }
   return null;
 }
@@ -609,7 +622,7 @@ function gerarFase(seed, opts = {}){
 // ==LOGIC-END==
 
 /* ======================= Fases embutidas ======================= */
-const BUILTIN = /*LEVELS-START*/[{"nome":"fase01","text":"GABARITO:\n6,6,1,1,1\n6,11,11,11,1\n16,16,11,16,6\n16,1,16,16,6\n1,1,16,6,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;1-1;\n16:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;0-2;-1-2;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase02","text":"GABARITO:\n6,6,6,11,11\n16,1,1,11,16\n16,1,11,16,16\n16,11,11,16,1\n6,6,6,1,1\nPECAS_CUSTOM:\n6:0-0;1-0;2-0;\n11:0-0;1-0;0-1;\n16:0-0;0-1;0-2;\n1:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;\n6:0-0;1-0;2-0;\n"},{"nome":"fase03","text":"GABARITO:\n11,11,16,16,6\n11,16,16,6,6\n6,6,11,1,6\n6,11,11,1,1\n6,11,16,16,16\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;0-1;0-2;\n11:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase04","text":"GABARITO:\n6,1,1,6,6\n6,6,1,16,6\n16,6,16,16,16\n16,1,1,1,11\n16,16,11,11,11\nPECAS_CUSTOM:\n6:0-0;0-1;1-1;1-2;\n1:0-0;1-0;1-1;\n6:0-0;1-0;1-1;\n16:0-0;0-1;1-1;-1-1;\n16:0-0;0-1;0-2;1-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase05","text":"GABARITO:\n6,6,16,11,1\n6,16,16,11,1\n6,16,6,11,1\n1,6,6,6,16\n1,1,16,16,16\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;1-1;-1-1;\n1:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase06","text":"GABARITO:\n16,0,1,0,11\n0,6,0,0,0\n0,0,0,0,1\n11,0,16,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;0-2;\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;1-1;\n1:0-0;0-1;-1-1;0-2;\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;-1-1;\n"},{"nome":"fase07","text":"GABARITO:\n6,0,16,0,11\n0,0,0,0,0\n1,0,6,0,0\n0,0,16,0,0\n11,0,0,0,0\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n11:0-0;0-1;-1-1;\n1:0-0;1-0;1-1;0-1;\n6:0-0;1-0;2-0;\n16:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;3-0;\n"},{"nome":"fase08","text":"GABARITO:\n11,0,1,16,0\n0,0,0,0,0\n0,0,11,0,0\n6,0,0,1,0\n16,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;0-2;\n1:0-0;0-1;-1-1;-1-2;\n16:0-0;1-0;1-1;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;1-0;1-1;0-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase09","text":"GABARITO:\n1,0,11,16,0\n0,0,0,0,6\n6,0,0,1,0\n16,0,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;0-2;\n16:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n6:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;0-2;\n16:0-0;0-1;1-1;2-1;\n"},{"nome":"fase10","text":"GABARITO:\n16,6,0,11,0\n0,0,0,1,0\n6,0,16,0,0\n0,1,0,11,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;\n11:0-0;1-0;1-1;\n"},{"nome":"fase11","text":"GABARITO:\n1,0,0,11,0\n16,0,0,0,0\n0,6,0,0,16\n11,0,1,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;1-1;0-1;\n16:0-0;1-0;0-1;\n6:0-0;1-0;2-0;2-1;\n16:0-0;0-1;0-2;-1-2;\n11:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase12","text":"GABARITO:\n16,0,11,0,0\n0,6,0,0,1\n1,0,0,11,0\n6,0,0,0,0\n0,0,16,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;0-1;0-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n6:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase13","text":"GABARITO:\n1,0,11,0,0\n0,6,0,0,16\n6,16,11,0,0\n0,0,0,0,0\n0,0,1,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n16:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;0-1;0-2;\n11:0-0;1-0;1-1;0-1;\n1:0-0;1-0;2-0;\n"},{"nome":"fase14","text":"GABARITO:\n16,0,0,11,0\n6,0,1,6,0\n1,0,0,0,1\n0,0,0,0,0\n0,11,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n6:0-0;1-0;1-1;1-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n11:0-0;1-0;2-0;\n"},{"nome":"fase15","text":"GABARITO:\n16,0,1,6,11\n0,0,0,0,0\n6,16,0,0,0\n0,0,11,0,6\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n6:0-0;0-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;0-2;\n16:0-0;1-0;2-0;3-0;\n11:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;\n"},{"nome":"fase16","text":"GABARITO:\n0,0,6,6,0\n11,16,0,0,0\n0,6,11,0,0\n0,6,0,0,0\n1,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;0-1;0-2;\n16:0-0;1-0;\n6:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n1:0-0;0-1;0-2;0-3;\n"},{"nome":"fase17","text":"GABARITO:\n0,0,1,0,0\n0,16,0,6,0\n0,0,0,0,0\n1,1,6,0,0\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;1-0;2-0;\n6:0-0;0-1;1-0;0-2;\n11:0-0;0-1;0-2;\n1:0-0;1-0;0-1;1-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;1-1;\n"},{"nome":"fase18","text":"GABARITO:\n0,1,0,0,11\n6,0,0,0,0\n0,0,0,11,0\n16,0,0,6,1\n0,16,0,0,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n6:0-0;0-1;1-0;\n1:0-0;1-0;2-0;1-1;3-0;\n16:0-0;1-0;\n6:0-0;0-1;1-1;2-1;\n16:0-0;0-1;1-0;1-1;\n11:0-0;0-1;0-2;-1-2;\n"},{"nome":"fase19","text":"GABARITO:\n0,0,0,1,0\n16,0,0,0,0\n0,11,11,11,0\n0,0,0,16,0\n0,0,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n16:0-0;0-1;\n11:0-0;1-0;0-1;0-2;\n1:0-0;1-0;2-0;1-1;\n6:0-0;0-1;1-1;1-0;\n16:0-0;0-1;0-2;1-0;\n"},{"nome":"fase20","text":"GABARITO:\n0,16,0,11,11\n16,0,0,0,0\n0,6,0,0,0\n6,0,6,1,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;2-0;\n6:0-0;0-1;1-0;\n6:0-0;0-1;1-1;2-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;-1-1;0-2;-1-2;\n"},{"nome":"fase21","text":"GABARITO:\n0,0,1,0,0\n0,0,1,0,6\n11,0,0,0,0\n0,0,16,0,0\n6,0,16,1,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n11:0-0;1-0;0-1;1-1;\n16:0-0;0-1;-1-1;\n16:0-0;0-1;1-0;\n6:0-0;0-1;0-2;\n11:0-0;0-1;1-0;1-1;\n6:0-0;1-0;\n1:0-0;0-1;1-0;\n"},{"nome":"fase22","text":"GABARITO:\n0,0,0,0,0\n0,6,6,0,16\n0,1,11,0,11\n6,16,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n6:0-0;0-1;1-1;\n6:0-0;1-0;\n1:0-0;0-1;0-2;1-2;\n16:0-0;1-0;0-1;1-1;\n16:0-0;1-0;1-1;2-0;\n1:0-0;0-1;-1-1;\n11:0-0;1-0;2-0;\n"},{"nome":"fase23","text":"GABARITO:\n0,0,0,1,0\n0,11,0,1,0\n0,0,0,0,0\n0,0,0,0,1\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;0-2;\n1:0-0;1-0;1-1;0-1;\n16:0-0;0-1;1-0;2-0;\n6:0-0;0-1;0-2;\n6:0-0;0-1;1-1;1-2;\n11:0-0;0-1;0-2;\n11:0-0;0-1;-1-1;1-1;\n"},{"nome":"fase24","text":"GABARITO:\n0,0,16,0,0\n0,0,1,0,6\n0,6,0,11,0\n0,0,1,1,0\n0,0,0,1,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-0;2-0;\n1:0-0;0-1;\n1:0-0;1-0;1-1;1-2;\n11:0-0;0-1;-1-1;1-1;\n6:0-0;1-0;0-1;\n6:0-0;0-1;0-2;\n11:0-0;0-1;0-2;\n16:0-0;0-1;\n"},{"nome":"fase25","text":"GABARITO:\n0,6,0,0,0\n0,6,0,0,1\n0,0,0,0,1\n0,0,0,1,0\n0,0,1,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;0-2;0-3;\n16:0-0;1-0;\n6:0-0;0-1;0-2;1-2;\n11:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;1-1;0-1;\n"},{"nome":"fase26","text":"GABARITO:\n16,0,0,0,0\n6,0,0,0,11\n0,0,0,0,0\n6,0,0,0,11\n0,11,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;\n16:0-0;0-1;0-2;1-2;\n16:0-0;1-0;2-0;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;1-1;\n11:0-0;0-1;0-2;\n"},{"nome":"fase27","text":"GABARITO:\n0,6,0,0,0\n0,0,0,16,16\n0,0,0,0,0\n11,16,0,6,0\n0,0,11,0,1\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;1-1;\n11:0-0;0-1;1-1;2-1;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;\n11:0-0;0-1;1-0;\n16:0-0;1-0;\n"},{"nome":"fase28","text":"GABARITO:\n0,0,0,0,11\n0,0,6,0,11\n0,6,0,0,0\n16,0,11,0,0\n0,0,0,1,6\nPECAS_CUSTOM:\n11:0-0;1-0;1-1;1-2;\n6:0-0;0-1;\n16:0-0;0-1;0-2;\n11:0-0;1-0;0-1;\n6:0-0;0-1;1-0;1-1;\n16:0-0;1-0;0-1;2-0;\n1:0-0;1-0;\n1:0-0;0-1;0-2;\n"},{"nome":"fase29","text":"GABARITO:\n0,0,0,0,0\n0,0,6,6,0\n1,11,0,0,0\n0,1,0,0,0\n6,0,0,16,11\nPECAS_CUSTOM:\n1:0-0;1-0;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;1-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;\n11:0-0;1-0;0-1;1-1;1-2;\n"},{"nome":"fase30","text":"GABARITO:\n0,0,11,0,0\n0,0,0,0,0\n0,0,0,0,0\n0,6,11,0,0\n16,0,1,0,6\nPECAS_CUSTOM:\n6:0-0;1-0;\n11:0-0;1-0;1-1;0-1;\n6:0-0;0-1;1-0;0-2;\n1:0-0;1-0;\n11:0-0;1-0;1-1;\n1:0-0;0-1;0-2;0-3;\n16:0-0;0-1;1-0;0-2;\n16:0-0;0-1;\n"}]/*LEVELS-END*/;
+const BUILTIN = /*LEVELS-START*/[{"nome":"fase01","text":"GABARITO:\n6,6,1,1,1\n6,11,11,11,1\n16,16,11,16,6\n16,1,16,16,6\n1,1,16,6,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;1-1;\n16:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;0-2;-1-2;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase02","text":"GABARITO:\n6,6,6,11,11\n16,1,1,11,16\n16,1,11,16,16\n16,11,11,16,1\n6,6,6,1,1\nPECAS_CUSTOM:\n6:0-0;1-0;2-0;\n11:0-0;1-0;0-1;\n16:0-0;0-1;0-2;\n1:0-0;1-0;0-1;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;\n6:0-0;1-0;2-0;\n"},{"nome":"fase03","text":"GABARITO:\n11,11,16,16,6\n11,16,16,6,6\n6,6,11,1,6\n6,11,11,1,1\n6,11,16,16,16\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;0-1;0-2;\n11:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase04","text":"GABARITO:\n6,1,1,6,6\n6,6,1,16,6\n16,6,16,16,16\n16,1,1,1,11\n16,16,11,11,11\nPECAS_CUSTOM:\n6:0-0;0-1;1-1;1-2;\n1:0-0;1-0;1-1;\n6:0-0;1-0;1-1;\n16:0-0;0-1;1-1;-1-1;\n16:0-0;0-1;0-2;1-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase05","text":"GABARITO:\n6,6,16,11,1\n6,16,16,11,1\n6,16,6,11,1\n1,6,6,6,16\n1,1,16,16,16\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;1-1;-1-1;\n1:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-2-1;\n"},{"nome":"fase06","text":"GABARITO:\n16,0,1,0,11\n0,6,0,0,0\n0,0,0,0,1\n11,0,16,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;0-2;\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;-1-2;\n6:0-0;0-1;1-1;\n1:0-0;0-1;-1-1;0-2;\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;-1-1;\n"},{"nome":"fase07","text":"GABARITO:\n6,0,16,0,11\n0,0,0,0,0\n1,0,6,0,0\n0,0,16,0,0\n11,0,0,0,0\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;\n16:0-0;1-0;0-1;-1-1;\n11:0-0;0-1;-1-1;\n1:0-0;1-0;1-1;0-1;\n6:0-0;1-0;2-0;\n16:0-0;1-0;2-0;2-1;\n11:0-0;1-0;2-0;3-0;\n"},{"nome":"fase08","text":"GABARITO:\n11,0,1,16,0\n0,0,0,0,0\n0,0,11,0,0\n6,0,0,1,0\n16,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;0-2;\n1:0-0;0-1;-1-1;-1-2;\n16:0-0;1-0;1-1;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;1-0;1-1;0-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase09","text":"GABARITO:\n1,0,11,16,0\n0,0,0,0,6\n6,0,0,1,0\n16,0,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;0-1;-1-1;0-2;\n16:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n6:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;0-2;\n16:0-0;0-1;1-1;2-1;\n"},{"nome":"fase10","text":"GABARITO:\n16,6,0,11,0\n0,0,0,1,0\n6,0,16,0,0\n0,1,0,11,0\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;\n11:0-0;1-0;1-1;\n"},{"nome":"fase11","text":"GABARITO:\n1,0,0,11,0\n16,0,0,0,0\n0,6,0,0,16\n11,0,1,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;2-0;2-1;\n11:0-0;1-0;1-1;0-1;\n16:0-0;1-0;0-1;\n6:0-0;1-0;2-0;2-1;\n16:0-0;0-1;0-2;-1-2;\n11:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n"},{"nome":"fase12","text":"GABARITO:\n16,0,11,0,0\n0,6,0,0,1\n1,0,0,11,0\n6,0,0,0,0\n0,0,16,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n1:0-0;0-1;0-2;\n1:0-0;1-0;2-0;\n11:0-0;0-1;-1-1;-2-1;\n6:0-0;0-1;1-1;\n16:0-0;1-0;2-0;\n"},{"nome":"fase13","text":"GABARITO:\n1,0,11,0,0\n0,6,0,0,16\n6,16,11,0,0\n0,0,0,0,0\n0,0,1,0,0\nPECAS_CUSTOM:\n1:0-0;1-0;0-1;\n11:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n16:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;0-1;0-2;\n11:0-0;1-0;1-1;0-1;\n1:0-0;1-0;2-0;\n"},{"nome":"fase14","text":"GABARITO:\n16,0,0,11,0\n6,0,1,6,0\n1,0,0,0,1\n0,0,0,0,0\n0,11,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n6:0-0;1-0;1-1;1-2;\n1:0-0;0-1;0-2;\n6:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n1:0-0;0-1;0-2;\n11:0-0;1-0;2-0;\n"},{"nome":"fase15","text":"GABARITO:\n16,0,1,6,11\n0,0,0,0,0\n6,16,0,0,0\n0,0,11,0,6\n0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;0-1;\n1:0-0;0-1;-1-1;\n6:0-0;0-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;0-2;\n16:0-0;1-0;2-0;3-0;\n11:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;-1-1;\n"},{"nome":"fase16","text":"GABARITO:\n0,0,6,6,0\n11,16,0,0,0\n0,6,11,0,0\n0,6,0,0,0\n1,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n16:0-0;0-1;1-1;\n6:0-0;1-0;1-1;\n11:0-0;1-0;0-1;0-2;\n16:0-0;1-0;\n6:0-0;1-0;1-1;\n1:0-0;0-1;1-1;\n1:0-0;0-1;0-2;0-3;\n"},{"nome":"fase17","text":"GABARITO:\n0,0,1,0,0\n0,16,0,6,0\n0,0,0,0,0\n1,1,6,0,0\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;1-0;2-0;\n6:0-0;0-1;1-0;0-2;\n11:0-0;0-1;0-2;\n1:0-0;1-0;0-1;1-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;1-1;\n"},{"nome":"fase18","text":"GABARITO:\n0,1,0,0,11\n6,0,0,0,0\n0,0,0,11,0\n16,0,0,6,1\n0,16,0,0,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n6:0-0;0-1;1-0;\n1:0-0;1-0;2-0;1-1;3-0;\n16:0-0;1-0;\n6:0-0;0-1;1-1;2-1;\n16:0-0;0-1;1-0;1-1;\n11:0-0;0-1;0-2;-1-2;\n"},{"nome":"fase19","text":"GABARITO:\n0,0,0,1,0\n16,0,0,0,0\n0,11,11,11,0\n0,0,0,16,0\n0,0,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;0-1;\n6:0-0;0-1;0-2;0-3;\n16:0-0;0-1;\n11:0-0;1-0;0-1;0-2;\n1:0-0;1-0;2-0;1-1;\n6:0-0;0-1;1-1;1-0;\n16:0-0;0-1;0-2;1-0;\n"},{"nome":"fase20","text":"GABARITO:\n0,16,0,11,11\n16,0,0,0,0\n0,6,0,0,0\n6,0,6,1,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;2-0;\n6:0-0;0-1;1-0;\n6:0-0;0-1;1-1;2-1;\n11:0-0;1-0;2-0;\n16:0-0;1-0;0-1;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;-1-1;0-2;-1-2;\n"},{"nome":"fase21","text":"GABARITO:\n0,0,1,0,0\n0,0,1,0,6\n11,0,0,0,0\n0,0,16,0,0\n6,0,16,1,0\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n11:0-0;1-0;0-1;1-1;\n16:0-0;0-1;-1-1;\n16:0-0;0-1;1-0;\n6:0-0;0-1;0-2;\n11:0-0;0-1;1-0;1-1;\n6:0-0;1-0;\n1:0-0;0-1;1-0;\n"},{"nome":"fase22","text":"GABARITO:\n0,0,0,0,0\n0,6,6,0,16\n0,1,11,0,11\n6,16,0,0,0\n0,0,0,0,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n6:0-0;0-1;1-1;\n6:0-0;1-0;\n1:0-0;0-1;0-2;1-2;\n16:0-0;1-0;0-1;1-1;\n16:0-0;1-0;1-1;2-0;\n1:0-0;0-1;-1-1;\n11:0-0;1-0;2-0;\n"},{"nome":"fase23","text":"GABARITO:\n0,0,0,1,0\n0,11,0,1,0\n0,0,0,0,0\n0,0,0,0,1\n0,0,11,11,0\nPECAS_CUSTOM:\n1:0-0;0-1;0-2;\n1:0-0;1-0;1-1;0-1;\n16:0-0;0-1;1-0;2-0;\n6:0-0;0-1;0-2;\n6:0-0;0-1;1-1;1-2;\n11:0-0;0-1;0-2;\n11:0-0;0-1;-1-1;1-1;\n"},{"nome":"fase24","text":"GABARITO:\n0,0,16,0,0\n0,0,1,0,6\n0,6,0,11,0\n0,0,1,1,0\n0,0,0,1,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-0;2-0;\n1:0-0;0-1;\n1:0-0;1-0;1-1;1-2;\n11:0-0;0-1;-1-1;1-1;\n6:0-0;1-0;0-1;\n6:0-0;0-1;0-2;\n11:0-0;0-1;0-2;\n16:0-0;0-1;\n"},{"nome":"fase25","text":"GABARITO:\n0,6,0,0,0\n0,6,0,0,1\n0,0,0,0,1\n0,0,0,1,0\n0,0,1,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;-1-1;-1-2;\n1:0-0;0-1;0-2;0-3;\n16:0-0;1-0;\n6:0-0;0-1;0-2;1-2;\n11:0-0;1-0;1-1;\n1:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;1-1;0-1;\n"},{"nome":"fase26","text":"GABARITO:\n16,0,0,0,0\n6,0,0,0,11\n0,0,0,0,0\n6,0,0,0,11\n0,11,0,16,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n1:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;\n16:0-0;0-1;0-2;1-2;\n16:0-0;1-0;2-0;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;1-1;\n11:0-0;0-1;0-2;\n"},{"nome":"fase27","text":"GABARITO:\n0,6,0,0,0\n0,0,0,16,16\n0,0,0,0,0\n11,16,0,6,0\n0,0,11,0,1\nPECAS_CUSTOM:\n1:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;1-1;\n11:0-0;0-1;1-1;2-1;\n6:0-0;1-0;0-1;\n6:0-0;1-0;0-1;\n11:0-0;0-1;1-0;\n16:0-0;1-0;\n"},{"nome":"fase28","text":"GABARITO:\n0,0,0,0,11\n0,0,6,0,11\n0,6,0,0,0\n16,0,11,0,0\n0,0,0,1,6\nPECAS_CUSTOM:\n11:0-0;1-0;1-1;1-2;\n6:0-0;0-1;\n16:0-0;0-1;0-2;\n11:0-0;1-0;0-1;\n6:0-0;0-1;1-0;1-1;\n16:0-0;1-0;0-1;2-0;\n1:0-0;1-0;\n1:0-0;0-1;0-2;\n"},{"nome":"fase29","text":"GABARITO:\n0,0,0,0,0\n0,0,6,6,0\n1,11,0,0,0\n0,1,0,0,0\n6,0,0,16,11\nPECAS_CUSTOM:\n1:0-0;1-0;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;1-1;\n11:0-0;0-1;\n6:0-0;0-1;1-1;\n16:0-0;0-1;-1-1;-1-2;\n6:0-0;1-0;\n11:0-0;1-0;0-1;1-1;1-2;\n"},{"nome":"fase30","text":"GABARITO:\n0,0,11,0,0\n0,0,0,0,0\n0,0,0,0,0\n0,6,11,0,0\n16,0,1,0,6\nPECAS_CUSTOM:\n6:0-0;1-0;\n11:0-0;1-0;1-1;0-1;\n6:0-0;0-1;1-0;0-2;\n1:0-0;1-0;\n11:0-0;1-0;1-1;\n1:0-0;0-1;0-2;0-3;\n16:0-0;0-1;1-0;0-2;\n16:0-0;0-1;\n"},{"nome":"fase31","text":"GABARITO:\n0,0,0,16,16,1\n6,0,0,0,16,1\n16,0,0,11,0,0\n16,0,6,0,0,1\n0,6,6,11,0,1\n0,6,6,0,11,0\nPECAS_CUSTOM:\n11:0-0;1-0;\n11:0-0;0-1;-1-1;\n6:0-0;0-1;1-0;-1-1;0-2;\n1:0-0;0-1;0-2;-1-2;\n1:0-0;0-1;1-1;1-0;\n16:0-0;0-1;1-1;\n6:0-0;0-1;1-1;\n6:0-0;1-0;1-1;2-0;\n11:0-0;0-1;1-1;2-1;\n16:0-0;1-0;2-0;2-1;\n"},{"nome":"fase32","text":"GABARITO:\n0,16,0,0,6,0\n0,0,11,0,6,6\n0,0,11,16,0,0\n11,0,0,1,6,6\n0,11,0,6,0,0\n11,11,0,0,0,1\nPECAS_CUSTOM:\n1:0-0;1-0;1-1;\n1:0-0;0-1;0-2;1-0;\n6:0-0;0-1;-1-1;-1-2;\n1:0-0;1-0;\n16:0-0;1-0;\n11:0-0;0-1;1-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;1-0;0-1;\n11:0-0;1-0;0-1;1-1;\n11:0-0;0-1;-1-1;\n6:0-0;1-0;1-1;0-1;\n"},{"nome":"fase33","text":"GABARITO:\n0,0,0,0,6,6\n0,11,0,0,0,0\n16,0,0,16,0,0\n0,6,1,16,0,0\n6,0,0,0,11,0\n0,6,1,11,0,0\nPECAS_CUSTOM:\n11:0-0;0-1;0-2;-1-2;\n16:0-0;1-0;0-1;0-2;\n1:0-0;1-0;1-1;1-2;\n6:0-0;0-1;1-0;2-0;\n16:0-0;0-1;\n1:0-0;0-1;0-2;\n6:0-0;0-1;-1-1;\n6:0-0;0-1;-1-1;-1-2;\n11:0-0;0-1;0-2;-1-1;\n16:0-0;0-1;1-0;0-2;\n"},{"nome":"fase34","text":"GABARITO:\n0,0,0,0,0,1\n0,16,11,0,0,6\n0,0,0,0,16,0\n0,0,0,0,0,0\n1,0,0,16,0,0\n0,16,0,11,0,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;0-2;\n16:0-0;0-1;0-2;-1-2;\n11:0-0;0-1;0-2;\n16:0-0;0-1;0-2;\n6:0-0;0-1;-1-1;\n16:0-0;1-0;\n1:0-0;1-0;1-1;2-0;\n11:0-0;0-1;0-2;1-2;\n6:0-0;0-1;0-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;1-1;\n"},{"nome":"fase35","text":"GABARITO:\n0,0,0,0,16,16\n11,0,0,0,0,0\n0,6,0,16,0,0\n0,11,1,6,0,0\n0,0,6,0,6,0\n0,0,11,0,0,11\nPECAS_CUSTOM:\n11:0-0;0-1;\n1:0-0;0-1;0-2;\n6:0-0;1-0;2-0;\n1:0-0;0-1;0-2;\n16:0-0;1-0;0-1;0-2;\n16:0-0;1-0;\n6:0-0;0-1;1-0;0-2;\n11:0-0;1-0;2-0;3-0;\n6:0-0;0-1;1-1;\n11:0-0;0-1;1-1;\n16:0-0;1-0;2-0;0-1;0-2;\n"},{"nome":"fase36","text":"FILA: 3\nGABARITO:\n0,0,0,0,0,0\n0,1,1,0,11,6\n11,0,0,0,0,1\n11,6,6,0,0,0\n0,0,0,0,1,6\n11,0,16,0,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n6:0-0;0-1;\n1:0-0;1-0;2-0;\n16:0-0;0-1;-1-1;0-2;\n11:0-0;0-1;0-2;0-3;\n6:0-0;0-1;1-1;1-2;2-2;\n1:0-0;1-0;1-1;0-1;\n16:0-0;0-1;1-1;2-1;\n1:0-0;0-1;\n6:0-0;0-1;\n"},{"nome":"fase37","text":"FILA: 3\nGABARITO:\n1,0,0,0,0,0\n0,0,0,0,0,0\n0,16,0,0,0,16\n0,0,1,0,0,11\n0,0,0,1,0,0\n6,0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;1-2;\n6:0-0;0-1;1-1;0-2;\n1:0-0;1-0;1-1;\n6:0-0;0-1;1-1;1-2;\n11:0-0;1-0;1-1;0-1;\n11:0-0;1-0;1-1;2-0;\n16:0-0;1-0;2-0;\n1:0-0;0-1;1-1;1-2;\n6:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;\n"},{"nome":"fase38","text":"FILA: 2\nGABARITO:\n0,0,0,0,16,0\n0,0,16,0,0,1\n0,0,0,6,0,11\n1,0,0,0,0,0\n0,16,0,11,6,0\n0,16,6,0,6,0\nPECAS_CUSTOM:\n6:0-0;0-1;-1-1;-2-1;\n11:0-0;0-1;0-2;1-0;\n11:0-0;0-1;0-2;0-3;\n11:0-0;0-1;-1-1;\n1:0-0;0-1;-1-1;-2-1;\n6:0-0;0-1;1-1;1-2;2-1;\n16:0-0;1-0;2-0;0-1;\n1:0-0;0-1;\n16:0-0;0-1;0-2;-1-2;\n6:0-0;0-1;\n"},{"nome":"fase39","text":"FILA: 2\nGABARITO:\n0,0,0,0,1,0\n0,0,16,0,0,0\n0,0,0,16,0,11\n11,1,0,0,0,1\n0,0,0,0,1,0\n6,0,0,0,0,1\nPECAS_CUSTOM:\n6:0-0;1-0;2-0;\n16:0-0;1-0;\n16:0-0;1-0;2-0;\n6:0-0;1-0;2-0;\n16:0-0;0-1;-1-1;\n6:0-0;1-0;2-0;\n11:0-0;0-1;1-0;0-2;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;-1-1;\n1:0-0;1-0;1-1;1-2;\n1:0-0;0-1;1-1;2-1;\n"},{"nome":"fase40","text":"FILA: 1\nGABARITO:\n16,16,0,0,1,0\n6,0,0,0,0,11\n0,0,0,0,11,0\n16,0,0,1,0,0\n11,0,11,0,0,0\n0,0,0,16,1,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n6:0-0;0-1;0-2;\n1:0-0;0-1;\n11:0-0;0-1;0-2;-1-2;0-3;\n6:0-0;0-1;1-0;2-0;\n16:0-0;1-0;0-1;-1-1;\n11:0-0;0-1;1-1;\n1:0-0;1-0;1-1;1-2;\n11:0-0;1-0;1-1;0-1;\n6:0-0;0-1;\n16:0-0;1-0;\n"},{"nome":"fase41","text":"GABARITO:\n0,6,0,0,16,0,11\n0,0,6,16,11,0,0\n0,16,0,0,11,1,0\n0,1,0,11,11,1,0\n0,0,16,0,0,0,0\n11,1,16,0,6,16,16\n0,0,16,16,0,16,16\nPECAS_CUSTOM:\n6:0-0;0-1;1-0;\n16:0-0;1-0;0-1;\n16:0-0;1-0;2-0;0-1;\n6:0-0;0-1;1-1;1-0;\n11:0-0;0-1;1-1;\n16:0-0;1-0;0-1;1-1;\n1:0-0;0-1;1-1;1-2;\n11:0-0;0-1;0-2;\n11:0-0;0-1;0-2;-1-1;\n1:0-0;0-1;\n11:0-0;0-1;0-2;\n16:0-0;0-1;0-2;1-2;\n1:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;0-1;0-2;\n"},{"nome":"fase42","text":"GABARITO:\n0,11,0,1,0,0,0\n0,11,6,0,0,6,16\n0,16,0,0,0,16,0\n0,0,0,0,0,0,0\n0,6,0,11,0,0,1\n0,0,6,0,0,0,0\n0,16,0,0,0,0,0\nPECAS_CUSTOM:\n16:0-0;0-1;1-1;\n16:0-0;0-1;0-2;-1-2;\n16:0-0;0-1;1-1;-1-1;\n1:0-0;1-0;2-0;\n11:0-0;1-0;1-1;\n1:0-0;0-1;0-2;-1-2;\n6:0-0;1-0;1-1;2-1;\n6:0-0;0-1;1-1;0-2;\n11:0-0;0-1;0-2;0-3;\n11:0-0;1-0;2-0;3-0;\n11:0-0;0-1;1-0;1-1;\n1:0-0;0-1;1-1;2-1;2-2;\n6:0-0;1-0;0-1;\n"},{"nome":"fase43","text":"FILA: 3\nGABARITO:\n0,0,16,0,1,0,0\n0,11,6,0,0,0,6\n11,0,0,11,0,0,6\n0,11,0,0,0,0,0\n16,0,11,11,16,1,0\n0,0,6,0,0,16,0\n16,0,0,6,1,0,1\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;3-0;\n1:0-0;1-0;\n6:0-0;0-1;-1-1;0-2;-1-2;\n11:0-0;1-0;\n6:0-0;1-0;2-0;\n11:0-0;1-0;1-1;2-0;3-0;\n1:0-0;0-1;-1-1;\n16:0-0;0-1;0-2;0-3;\n11:0-0;0-1;1-1;\n1:0-0;1-0;0-1;\n6:0-0;0-1;1-1;2-1;\n16:0-0;0-1;1-1;\n1:0-0;0-1;0-2;-1-2;-2-2;\n6:0-0;1-0;2-0;\n"},{"nome":"fase44","text":"FILA: 3\nGABARITO:\n0,1,0,11,16,0,1\n0,1,1,0,0,0,0\n0,0,0,0,0,0,0\n0,1,0,0,0,6,11\n11,0,0,0,0,6,0\n0,11,6,0,0,0,0\n0,0,0,6,0,0,0\nPECAS_CUSTOM:\n1:0-0;0-1;1-0;1-1;\n6:0-0;0-1;0-2;1-2;\n6:0-0;1-0;\n1:0-0;0-1;1-0;1-1;\n1:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;0-2;\n11:0-0;0-1;0-2;1-2;\n16:0-0;1-0;\n6:0-0;0-1;1-1;1-0;\n16:0-0;1-0;1-1;\n11:0-0;0-1;0-2;0-3;\n11:0-0;0-1;1-1;1-2;\n16:0-0;0-1;-1-1;1-1;\n6:0-0;0-1;0-2;\n"},{"nome":"fase45","text":"FILA: 2\nGABARITO:\n0,0,6,1,11,0,16\n6,0,0,1,11,0,11\n0,1,0,0,11,0,0\n0,0,0,0,0,16,0\n0,16,0,0,11,0,6\n11,0,0,1,0,0,0\n11,0,0,0,0,0,16\nPECAS_CUSTOM:\n6:0-0;1-0;1-1;2-0;\n1:0-0;0-1;0-2;0-3;\n11:0-0;0-1;1-1;2-1;\n16:0-0;1-0;\n6:0-0;0-1;0-2;\n1:0-0;0-1;-1-1;\n11:0-0;0-1;0-2;-1-2;\n16:0-0;1-0;1-1;0-1;\n1:0-0;1-0;1-1;1-2;\n16:0-0;1-0;1-1;1-2;\n6:0-0;1-0;0-1;-1-1;-1-2;\n11:0-0;0-1;\n1:0-0;0-1;-1-1;\n16:0-0;0-1;-1-1;\n"},{"nome":"fase46","text":"FILA: 2\nGABARITO:\n0,1,6,0,0,16,0\n1,0,1,0,0,0,0\n0,0,0,0,0,0,6\n0,0,0,11,0,16,0\n6,1,0,0,0,16,0\n0,0,1,0,0,0,0\n0,0,0,0,0,1,1\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;2-1;\n1:0-0;1-0;0-1;0-2;\n1:0-0;1-0;2-0;\n16:0-0;1-0;2-0;0-1;\n6:0-0;0-1;0-2;\n11:0-0;0-1;\n1:0-0;0-1;0-2;\n11:0-0;1-0;2-0;0-1;\n11:0-0;0-1;1-1;2-1;\n11:0-0;0-1;0-2;1-1;\n1:0-0;1-0;0-1;1-1;\n16:0-0;0-1;-1-1;0-2;\n6:0-0;1-0;1-1;\n6:0-0;1-0;0-1;\n"},{"nome":"fase47","text":"FILA: 1\nGABARITO:\n0,0,11,0,0,0,0\n6,0,0,1,16,0,1\n0,1,0,6,11,11,0\n0,0,0,6,0,11,0\n6,0,1,16,0,11,0\n0,0,1,16,0,0,11\n0,0,1,0,0,11,0\nPECAS_CUSTOM:\n6:0-0;0-1;0-2;1-1;0-3;\n11:0-0;1-0;2-0;\n16:0-0;0-1;1-1;\n1:0-0;1-0;1-1;1-2;\n1:0-0;1-0;0-1;-1-1;\n6:0-0;0-1;\n11:0-0;1-0;0-1;\n16:0-0;0-1;0-2;0-3;\n1:0-0;0-1;0-2;\n11:0-0;0-1;1-0;\n6:0-0;0-1;0-2;\n16:0-0;0-1;1-0;\n11:0-0;0-1;0-2;-1-2;\n16:0-0;1-0;0-1;\n1:0-0;1-0;\n"},{"nome":"fase48","text":"FILA: 1\nGABARITO:\n0,0,0,11,0,0,0\n0,16,0,6,0,0,0\n0,0,0,0,1,0,0\n16,11,6,0,0,1,0\n0,0,0,0,16,0,0\n0,0,0,11,0,0,0\n0,0,16,11,0,16,11\nPECAS_CUSTOM:\n16:0-0;0-1;0-2;1-2;\n16:0-0;1-0;2-0;\n11:0-0;1-0;2-0;\n16:0-0;0-1;1-1;0-2;\n16:0-0;0-1;0-2;\n6:0-0;0-1;0-2;0-3;\n6:0-0;1-0;1-1;0-1;\n1:0-0;0-1;0-2;\n11:0-0;1-0;1-1;\n11:0-0;0-1;0-2;\n1:0-0;1-0;1-1;\n1:0-0;0-1;1-1;0-2;\n6:0-0;1-0;0-1;1-1;\n11:0-0;0-1;0-2;0-3;\n"},{"nome":"fase49","text":"FILA: 1\nGABARITO:\n0,16,0,0,1,6,0\n0,11,0,0,0,0,0\n0,1,0,0,0,1,6\n0,0,16,11,0,0,1\n11,6,1,0,6,0,0\n0,0,0,6,0,0,1\n0,0,0,0,0,0,0\nPECAS_CUSTOM:\n1:0-0;0-1;1-1;0-2;\n6:0-0;0-1;0-2;\n16:0-0;1-0;\n1:0-0;0-1;0-2;1-2;\n6:0-0;0-1;\n16:0-0;1-0;1-1;\n16:0-0;1-0;2-0;3-0;\n6:0-0;1-0;1-1;0-1;\n11:0-0;1-0;\n11:0-0;0-1;\n11:0-0;1-0;0-1;-1-1;\n1:0-0;0-1;0-2;\n6:0-0;0-1;\n11:0-0;0-1;0-2;\n1:0-0;0-1;0-2;-1-2;\n16:0-0;0-1;-1-1;\n"},{"nome":"fase50","text":"FILA: 1\nGABARITO:\n0,0,0,0,11,0,0\n0,0,11,16,0,0,0\n11,1,1,0,11,0,16\n11,0,6,0,0,0,0\n0,0,0,0,0,11,0\n0,0,0,6,0,11,0\n11,1,0,0,16,0,0\nPECAS_CUSTOM:\n16:0-0;1-0;2-0;\n16:0-0;0-1;\n11:0-0;0-1;0-2;\n11:0-0;0-1;1-1;-1-1;\n6:0-0;0-1;1-0;-1-1;\n1:0-0;0-1;0-2;\n11:0-0;0-1;0-2;0-3;\n1:0-0;1-0;0-1;\n6:0-0;1-0;0-1;1-1;\n6:0-0;0-1;-1-1;-1-2;\n11:0-0;1-0;0-1;2-0;\n1:0-0;1-0;2-0;\n6:0-0;1-0;1-1;0-1;\n16:0-0;0-1;\n16:0-0;1-0;\n"}]/*LEVELS-END*/;
 
 /* ======================= Utilidades ======================= */
 const $ = s => document.querySelector(s);
@@ -871,8 +884,9 @@ let prog = store.get('prog', {max: 0, done: []});
 let recs = store.get('rec', {});
 let dias = store.get('dias', {});
 let humorPref = store.get('humor', 'auto');
+{ const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, BUILTIN.length - 1)); }
 const S = {cur: null, jogo: null, sel: null, drag: null, hover: null, ghost: [], venceu: false, cell: 64,
-  jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0};
+  n: TAM, ultFila: 0, jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0};
 
 const cacheDia = {};
 function faseDoDia(data){
@@ -904,17 +918,26 @@ function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.c
 function carregar(cur){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text);
-  S.sel = null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
+  if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
+  ajustar();
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
   S.t = {acum: 0, ult: performance.now(), ativo: false};
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
-  renderTudo(); aplicarHumor();
+  renderTudo(); aplicarHumor(); avisoFila();
 }
+function avisoFila(){
+  const f = S.jogo.fila;
+  if (f && S.ultFila !== f) toast(f === 1 ? 'Uma peça por vez: você só vê a peça da vez. Tirar uma peça do tabuleiro a coloca de volta na frente.'
+                                        : 'Peças em fila: só as próximas ' + f + ' aparecem. Tirar uma peça do tabuleiro a coloca de volta na frente.');
+  S.ultFila = f;
+}
+const rotuloModo = j => (j.n > TAM ? j.n + '×' + j.n : '') + (j.fila ? (j.n > TAM ? ' · ' : '') + (j.fila === 1 ? '1 por vez' : 'fila de ' + j.fila) : '');
 function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDica(); renderStats(); }
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
-  if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = 'de ' + BUILTIN.length; }
+  if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = rotuloModo(S.jogo) || 'de ' + BUILTIN.length; }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = 'fase personalizada'; }
   else if (c.k === 'd'){ t1.textContent = 'Fase do dia'; t2.textContent = dataCurta(c.data); }
   else if (c.shared){ t1.textContent = c.nome; t2.textContent = 'fase compartilhada'; }
@@ -946,17 +969,17 @@ setInterval(tick, 250);
 
 /* ---- tabuleiro ---- */
 function montarBoard(){
-  const b = $('#board'); b.innerHTML = '';
-  for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
+  const b = $('#board'); b.innerHTML = ''; b.style.setProperty('--n', S.n);
+  for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
     const c = document.createElement('div'); c.className = 'cell';
     c.innerHTML = '<div class="star"></div><div class="fill"></div>';
     b.appendChild(c);
   }
 }
-function cellEl(x, y){ return $('#board').children[y * TAM + x]; }
+function cellEl(x, y){ return $('#board').children[y * S.n + x]; }
 function renderBoard(){
   const j = S.jogo;
-  for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
+  for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
     const c = cellEl(x, y), star = c.children[0], fill = c.children[1];
     const idu = j.grade[y][x], est = j.gab[y][x];
     if (idu){ const p = j.mapa.get(idu); fill.style.display = 'block'; fill.style.setProperty('--c', COR[p ? p.id : 1]); }
@@ -968,14 +991,14 @@ function renderBoard(){
 function celulaEm(cx, cy){
   const r = $('#board').getBoundingClientRect();
   const x = Math.floor((cx - r.left) / S.cell), y = Math.floor((cy - r.top) / S.cell);
-  return (x >= 0 && y >= 0 && x < TAM && y < TAM) ? {x, y} : null;
+  return (x >= 0 && y >= 0 && x < S.n && y < S.n) ? {x, y} : null;
 }
 
 /* ---- reserva ---- */
 function renderReserva(){
   const el = $('#reserva'); el.innerHTML = '';
   const arrastando = S.drag && S.drag.moved ? S.drag.piece : null;
-  for (const p of S.jogo.reserva){
+  for (const p of visiveis(S.jogo)){
     const w = document.createElement('div');
     w.className = 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '');
     w.dataset.uid = p.uid;
@@ -983,7 +1006,8 @@ function renderReserva(){
     el.appendChild(w);
   }
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
-  $('#contagem').textContent = S.jogo.reserva.length ? S.jogo.reserva.length + ' restantes' : '';
+  { const j = S.jogo, resta = j.reserva.length;
+    $('#contagem').textContent = !resta ? '' : j.fila ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + ' restantes'; }
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
   $('#btnDica').disabled = S.venceu;
 }
@@ -991,12 +1015,15 @@ function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
   if (S.venceu) t = 'Fase concluída!';
+  else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';
   else if (S.sel) t = toque ? 'Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).'
                              : 'Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).';
   else t = toque ? 'Arraste uma peça para o tabuleiro, ou toque nela para selecionar.'
                  : 'Arraste uma peça para o tabuleiro. Clique numa peça já encaixada para tirá-la (ou passe o mouse e aperte E).';
   $('#dica').textContent = t;
 }
+/* Peça tirada do tabuleiro: volta à reserva; em fila, volta para a frente. */
+function devolver(p){ if (S.jogo.fila) S.jogo.reserva.unshift(p); else S.jogo.reserva.push(p); }
 function selecionar(p){ S.sel = p; renderReserva(); renderDica(); }
 
 /* ---- fantasma (pré-visualização do encaixe) ---- */
@@ -1007,13 +1034,13 @@ function mostrarGhost(p, gx, gy){
   for (let i = 0; i < f.length; i++) for (let k = 0; k < f[0].length; k++){
     if (!f[i][k]) continue;
     const ax = gx + k, ay = gy + i;
-    if (ax < 0 || ax >= TAM || ay < 0 || ay >= TAM) continue;
+    if (ax < 0 || ax >= S.n || ay < 0 || ay >= S.n) continue;
     const c = cellEl(ax, ay); c.classList.add(ok ? 'gok' : 'gbad'); S.ghost.push(c);
   }
 }
 function sobreposto(f, gx, gy){
   for (let i = 0; i < f.length; i++) for (let k = 0; k < f[0].length; k++)
-    if (f[i][k] && gx + k >= 0 && gx + k < TAM && gy + i >= 0 && gy + i < TAM) return true;
+    if (f[i][k] && gx + k >= 0 && gx + k < S.n && gy + i >= 0 && gy + i < S.n) return true;
   return false;
 }
 
@@ -1036,7 +1063,7 @@ function acaoDica(){
     toast('A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
   } else {
     const idu = S.ultimaIdu && S.jogo.mapa.has(S.ultimaIdu) ? S.ultimaIdu : 0;
-    if (idu) for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
+    if (idu) for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
     Som.invalido();
     toast(r.tipo === 'demorou' ? 'Não consegui calcular essa dica agora. Tente tirar uma peça.'
         : 'Com as peças atuais não há solução — tire alguma (a última colocada está destacada).');
@@ -1055,7 +1082,7 @@ function tentarColocar(p, gx, gy){
   }
   limparDica(); iniciaTempo();
   S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.jog++;
-  S.sel = null; limparGhost();
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
   Som.encaixar();
   renderBoard(); renderReserva(); renderDica(); renderStats();
   if (concluido(S.jogo)) vencer();
@@ -1086,7 +1113,7 @@ function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
   $('#winTitulo').textContent = ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : (c.k === 't' ? 'Fase concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = ultima ? 'As 30 fases estão completas. Que tal criar as suas?'
+  $('#winTexto').textContent = ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!';
   const r = $('#winRes'); r.innerHTML = '';
@@ -1180,7 +1207,7 @@ $('#board').addEventListener('pointerdown', e => {
   e.preventDefault();
   if (S.jogo.grade[c.y][c.x]){
     const p = remover(S.jogo, c.x, c.y);
-    if (p){ limparDica(); S.jogo.reserva.push(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
+    if (p){ limparDica(); devolver(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
   } else if (S.sel){
     const f = S.sel.formato;
     tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
@@ -1226,7 +1253,7 @@ window.addEventListener('keydown', e => {
   else if (k === 'h') acaoDica();
   else if (k === 'e' && S.hover && !S.venceu && S.jogo.grade[S.hover.y][S.hover.x]){
     const p = remover(S.jogo, S.hover.x, S.hover.y);
-    if (p){ limparDica(); S.jogo.reserva.push(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
+    if (p){ limparDica(); devolver(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
   }
 });
 
@@ -1422,7 +1449,7 @@ $('#edTestar').onclick = () => { fechar('editor'); carregar({k: 't', nome: edNom
 /* ======================= Início ======================= */
 function ajustar(){
   const w = Math.min(innerWidth, 560) - 32;
-  S.cell = Math.max(44, Math.min(68, Math.floor(w / 5)));
+  S.cell = Math.max(34, Math.min(68, Math.floor(w / S.n)));
   const r = document.documentElement.style;
   r.setProperty('--cell', S.cell + 'px'); r.setProperty('--mini', Math.round(S.cell * 0.5) + 'px');
 }

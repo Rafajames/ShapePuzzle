@@ -8,13 +8,14 @@ Um jogo de quebra-cabeça lógico desenvolvido em **Java Swing**, onde o objetiv
 
 Versão web em um único `index.html` (sem instalar nada), que roda no computador e no celular:
 
-- **30 fases** (as 15 originais + 15 novas com solução única) e **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
+- **50 fases** com dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas 3, 2 ou 1 peças da fila (as outras entram conforme você encaixa). Todas as fases novas têm solução única.
+- **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
 - **Dica**: mostra onde vai uma peça. Partidas com dica não valem recorde.
 - **Tempo, jogadas e recorde** por fase.
 - **Música gerada por código** (Web Audio API) em 3 climas — Calma, Animada e Noturna — que mudam sozinhos a cada 10 fases ou ficam fixos à sua escolha.
 - **Compartilhar**: o jogo, o seu resultado e as fases que você criar, por link (sem enviar arquivo).
 - **Instalar como app** e jogar offline (PWA).
-- **Editor de fases** com exportação/importação `.txt` no mesmo formato da versão Java.
+- **Editor de fases** com exportação/importação `.txt` no mesmo formato da versão Java (o editor cria fases 5×5).
 
 ## 🚀 Funcionalidades
 
