@@ -2,6 +2,12 @@
 
 Um jogo de quebra-cabeça lógico desenvolvido em **Java Swing**, onde o objetivo é preencher um tabuleiro 5x5 utilizando peças de diferentes formatos. O projeto conta com um **Editor de Fases** integrado que permite criar desafios com diferentes níveis de dificuldade.
 
+## 🌐 Jogar online
+
+**https://rafajames.github.io/ShapePuzzle/**
+
+A versão web (`index.html`, arquivo único, sem instalação) roda no computador e no celular, com as 15 fases, editor de fases, progresso salvo no navegador e música ambiente gerada por código (Web Audio API).
+
 ## 🚀 Funcionalidades
 
 - **Mecânicas de Jogo:**
