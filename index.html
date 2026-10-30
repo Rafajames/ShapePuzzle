@@ -33,7 +33,7 @@ body{
 }
 button{font-family:inherit}
 em{display:contents;font-style:normal}
-#app{max-width:560px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 16px 36px}
+#app{max-width:560px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 16px max(14px,env(safe-area-inset-bottom))}
 svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
 /* topo */
@@ -58,7 +58,16 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .pill.dc{color:#9ecbff}
 
 /* tabuleiro */
-#boardWrap{display:flex;justify-content:center}
+#boardWrap{position:relative;width:max-content;margin:0 auto}
+#selo{position:absolute;top:-15px;right:-8px;z-index:3;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;
+  background:linear-gradient(135deg,#1fd18a,#00beff);color:#05121a;font-weight:800;font-size:14px;white-space:nowrap;pointer-events:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 18px rgba(31,209,138,.45);transform:rotate(4deg);animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+#selo svg.i{width:15px;height:15px;stroke-width:3}
+@keyframes pop{from{opacity:0;transform:rotate(4deg) scale(.4)}to{opacity:1;transform:rotate(4deg) scale(1)}}
+body.compacto .top{margin-bottom:6px}body.compacto .stats{margin-bottom:6px;gap:6px}body.compacto .pill{padding:4px 9px;font-size:12px}
+body.compacto .tools{margin:8px 0 0;gap:6px}body.compacto .tools .btn{padding:8px 9px;font-size:12px;gap:5px;flex:1;border-radius:12px}body.compacto .tools svg.i{width:17px;height:17px}
+body.compacto .reserva{margin-top:8px;padding:8px}body.compacto .reserva h2{margin-bottom:6px}body.compacto .pw{padding:5px}body.compacto #reserva{gap:4px}body.compacto #dica{display:none}
+@media (max-height:760px){.top{margin-bottom:8px}.stats{margin-bottom:8px}.tools{margin:10px 0 0}.reserva{margin-top:10px;padding:10px}.pw{padding:7px}#reserva{gap:6px;min-height:0}#dica{margin-top:6px}}
 #board,#edBoard{
   display:grid;border-radius:16px;overflow:hidden;position:relative;background:#1a1a2a;touch-action:none;
   box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.55),0 0 60px rgba(124,108,255,.1);
@@ -103,7 +112,7 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .pw.sel{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(124,108,255,.2)}
 .pw.hide{opacity:.2}
 .vazio{color:var(--mut);font-size:14px;padding:8px 4px}
-#dica{margin:12px 2px 0;font-size:13px;color:var(--mut);line-height:1.45;min-height:19px}
+#dica{margin:12px 2px 0;font-size:13px;color:var(--mut);line-height:1.45;min-height:19px;max-height:38px;overflow:hidden}
 
 /* peças */
 .pg{display:grid;grid-template-columns:repeat(var(--w),var(--s));grid-auto-rows:var(--s)}
@@ -218,7 +227,7 @@ details.cfg summary{cursor:pointer;font-weight:600}
       <span class="pill rec" id="pRec" hidden><em data-i="trophy"></em><span id="stRec"></span></span>
       <span class="pill dc" id="pDica" hidden><em data-i="bulb"></em><span id="stDica"></span></span>
     </div>
-    <div id="boardWrap"><div id="board"></div></div>
+    <div id="boardWrap"><div id="board"></div><div id="selo" hidden></div></div>
     <div class="tools">
       <button class="btn" id="btnGirar" data-i="rotate">Girar <kbd>R</kbd></button>
       <button class="btn" id="btnFlip" data-i="flip">Espelhar <kbd>T</kbd></button>
@@ -1085,13 +1094,13 @@ function carregar(cur, manter){
   const antes = manter ? {t: S.t, jog: S.jog} : null;
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text);
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
-  ajustar();
+  $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
   S.t = {acum: 0, ult: performance.now(), ativo: cur.k === 'x'};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
-  renderTudo(); aplicarHumor(); avisoFila();
+  renderTudo(); ajustar(); aplicarHumor(); avisoFila();
 }
 function avisoFila(){
   const f = S.jogo.fila;
@@ -1262,6 +1271,9 @@ function vencer(){
   tick();
   S.venceu = true;
   $('#board').classList.add('win');
+  const cv = S.cur, selo = $('#selo');
+  selo.innerHTML = ic('check'); selo.append(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome);
+  selo.hidden = false;
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   if (c.k === 'b'){
@@ -1282,7 +1294,7 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = c.k === 'x' ? 'Fase do campeonato concluída!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : (c.k === 't' ? 'Fase concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!';
   $('#winTexto').textContent = c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!';
@@ -1889,11 +1901,19 @@ function vitoriaCamp(c, res, add){
 
 
 /* ======================= Início ======================= */
+/* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){
-  const w = Math.min(innerWidth, 560) - 32;
-  S.cell = Math.max(34, Math.min(68, Math.floor(w / S.n)));
   const r = document.documentElement.style;
-  r.setProperty('--cell', S.cell + 'px'); r.setProperty('--mini', Math.round(S.cell * 0.5) + 'px');
+  const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); };
+  const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
+  const cheio = () => document.documentElement.scrollHeight > innerHeight + 1;
+  const achar = (compacto, min) => { document.body.classList.toggle('compacto', compacto); let c = c0; pos(c); while (c > min && cheio()){ c -= 2; pos(c); } return c; };
+  const normal = achar(false, 30), normalCheio = cheio();
+  if (normalCheio || normal < 38){      /* tela baixa: tenta o modo compacto e fica com o que der o tabuleiro maior */
+    const comp = achar(true, 22), compCabe = !cheio();
+    if (compCabe && (normalCheio || comp > normal)) return;
+    achar(false, 30);
+  }
 }
 addEventListener('resize', ajustar);
 ajustar();
