@@ -5,44 +5,80 @@
     "c": {
       "$id": {
         ".read": true,
-        ".write": "!data.exists() && newData.exists() && $id.length === 6",
-        ".validate": "newData.hasChildren(['nome', 'org', 'max', 'modo', 'fim', 'criado', 'fases'])",
-        "nome": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 40" },
-        "org": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
-        "max": { ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 200" },
-        "modo": { ".validate": "newData.val() === 'melhor' || newData.val() === 'primeira'" },
-        "fim": { ".validate": "newData.isNumber() && newData.val() >= 0" },
-        "criado": { ".validate": "newData.isNumber()" },
+        ".write": "auth != null && $id.length === 6 && ((!data.exists() && newData.child('uid').val() === auth.uid) || (data.exists() && data.child('uid').val() === auth.uid && (!newData.exists() || (!root.child('p').child($id).exists() && newData.child('uid').val() === auth.uid && newData.child('criado').val() === data.child('criado').val()))))",
+        ".validate": "newData.hasChildren(['nome', 'org', 'max', 'modo', 'fim', 'criado', 'fases', 'uid'])",
+        "uid": {
+          ".validate": "newData.isString() && newData.val().length <= 64"
+        },
+        "nome": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 40"
+        },
+        "org": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
+        },
+        "max": {
+          ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 200"
+        },
+        "modo": {
+          ".validate": "newData.val() === 'melhor' || newData.val() === 'primeira'"
+        },
+        "fim": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "criado": {
+          ".validate": "newData.isNumber()"
+        },
         "fases": {
           ".validate": "newData.hasChildren()",
           "$i": {
-            ".validate": "newData.hasChildren(['nome', 'text'])",
-            "nome": { ".validate": "newData.isString() && newData.val().length <= 30" },
-            "text": { ".validate": "newData.isString() && newData.val().length <= 2000" },
-            "$outro": { ".validate": false }
+            ".validate": "newData.hasChildren(['nome', 'text']) && $i.matches(/^[0-9]$/)",
+            "nome": {
+              ".validate": "newData.isString() && newData.val().length <= 30"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().length <= 2000"
+            },
+            "$outro": {
+              ".validate": false
+            }
           }
         },
-        "$outro": { ".validate": false }
+        "$outro": {
+          ".validate": false
+        }
       }
     },
     "p": {
       "$id": {
         ".read": true,
+        ".write": "auth != null && !newData.exists() && root.child('c').child($id).child('uid').val() === auth.uid",
         "$key": {
-          ".write": "!data.exists() && newData.exists() && root.child('c').child($id).exists()",
+          ".write": "!data.exists() && newData.hasChildren(['n', 'ts']) && !newData.hasChild('f') && root.child('c').child($id).exists()",
           ".validate": "$key.length >= 2 && $key.length <= 24",
-          "n": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
-          "ts": { ".validate": "newData.isNumber()" },
+          "n": {
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
+          },
+          "ts": {
+            ".validate": "newData.isNumber()"
+          },
           "f": {
             "$i": {
               ".write": "root.child('p').child($id).child($key).child('n').exists() && root.child('c').child($id).exists() && (root.child('c').child($id).child('fim').val() === 0 || now <= root.child('c').child($id).child('fim').val()) && (!data.exists() || (root.child('c').child($id).child('modo').val() === 'melhor' && newData.child('t').val() < data.child('t').val()))",
               ".validate": "newData.hasChildren(['t', 'j']) && $i.matches(/^[0-9]$/)",
-              "t": { ".validate": "newData.isNumber() && newData.val() >= 500 && newData.val() <= 86400000" },
-              "j": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5000" },
-              "$outro": { ".validate": false }
+              "t": {
+                ".validate": "newData.isNumber() && newData.val() >= 500 && newData.val() <= 86400000"
+              },
+              "j": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5000"
+              },
+              "$outro": {
+                ".validate": false
+              }
             }
           },
-          "$outro": { ".validate": false }
+          "$outro": {
+            ".validate": false
+          }
         }
       }
     }

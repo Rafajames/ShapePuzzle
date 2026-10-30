@@ -357,15 +357,23 @@ main{touch-action:pan-y}
     <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
     <h2>Seu nome</h2>
     <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
+    <div id="cpOrg">
+      <h2>Para criar campeonatos</h2>
+      <p id="cpOrgInfo">Na primeira vez você cria uma senha de organizador. Depois o aparelho é reconhecido e a senha só volta a ser pedida se você limpar os dados do navegador ou usar outro aparelho. Quem só joga não precisa de senha.</p>
+      <input class="field" id="cpSenha" type="password" placeholder="Senha de organizador (mínimo 6 caracteres)" autocomplete="current-password" style="margin-top:10px">
+      <input class="field" id="cpSenha2" type="password" placeholder="Repita a senha para criar a conta" autocomplete="new-password" hidden style="margin-top:8px">
+    </div>
+    <div class="row" id="cpOrgOk" hidden><span style="flex:1" id="cpOrgNome"></span><button class="btn sm" id="cpSair">Trocar</button></div>
     <div class="acts"><button class="btn pri" id="cpCriar" data-i="trophy">Criar campeonato</button></div>
     <h2>Entrar com um código</h2>
     <div class="row"><input class="field cod" id="cpCodigo" maxlength="6" placeholder="ABC234" autocapitalize="characters" autocomplete="off"><button class="btn" id="cpEntrar">Entrar</button></div>
     <h2>Meus campeonatos</h2>
     <div id="cpLista"></div>
     <p id="cpAviso" class="aviso"></p>
-    <details class="cfg" id="cpCfg"><summary>Banco de dados (para quem cria campeonatos)</summary>
-      <p style="margin:8px 0">Os campeonatos ficam guardados em um banco gratuito (Firebase). Quem só recebe o convite não precisa configurar nada. Quem cria precisa colar aqui o endereço do próprio banco — o passo a passo está em CAMPEONATOS.md no repositório do jogo.</p>
+    <details class="cfg" id="cpCfg"><summary>Avançado: usar outro banco de dados</summary>
+      <p style="margin:8px 0">O jogo já usa o banco oficial. Só preencha isto se quiser usar um banco seu (veja CAMPEONATOS.md).</p>
       <input class="field" id="cpDb" placeholder="https://seu-projeto-default-rtdb.firebaseio.com" autocapitalize="off" spellcheck="false">
+      <input class="field" id="cpChave" placeholder="Chave da API do app web (apiKey)" autocapitalize="off" spellcheck="false" style="margin-top:8px">
       <div class="acts"><button class="btn sm" id="cpDbSalvar">Salvar endereço</button></div>
     </details>
   </div>
@@ -375,14 +383,13 @@ main{touch-action:pan-y}
 <div class="ov" id="ov-criar">
   <div class="card">
     <button class="ib x" data-close="criar" data-i="close" aria-label="Fechar"></button>
-    <h1>Novo campeonato</h1>
+    <h1 id="crTitulo">Novo campeonato</h1>
     <p>Escolha as fases, o número de pessoas e envie o convite.</p>
     <h2>Nome do campeonato</h2>
     <input class="field" id="crNome" maxlength="40" placeholder="Ex.: Copa da família">
     <label class="row"><span class="rl">Pessoas</span><input class="field" id="crMax" type="number" min="2" max="200" value="10" inputmode="numeric"></label>
     <label class="row"><span class="rl">Vale</span><select class="field" id="crModo"><option value="melhor">O melhor tempo de cada fase</option><option value="primeira">Só a primeira vez que concluir</option></select></label>
     <label class="row"><span class="rl">Prazo</span><select class="field" id="crPrazo"><option value="0">Sem prazo</option><option value="1">1 dia</option><option value="3">3 dias</option><option value="7">7 dias</option><option value="30">30 dias</option></select></label>
-    <label class="row"><input type="checkbox" id="crJogo" checked> Eu também vou jogar</label>
     <h2>Fases (<span id="crQtd">0</span>/10)</h2>
     <div id="crFases"></div>
     <div class="row"><select class="field" id="crFonte"></select><button class="btn sm" id="crAdd">Adicionar</button></div>
@@ -402,6 +409,18 @@ main{touch-action:pan-y}
     <button class="ib x" data-close="lobby" data-i="close" aria-label="Fechar"></button>
     <h1 id="lbTitulo">Campeonato</h1>
     <p id="lbSub"></p>
+    <div id="lbOrg" hidden>
+      <h2>Organizador</h2>
+      <div class="acts"><button class="btn" id="lbEditar" data-i="edit">Editar</button><button class="btn danger" id="lbExcluir" data-i="trash">Excluir</button></div>
+      <p id="lbOrgInfo" class="aviso"></p>
+    </div>
+    <div id="lbSouOrg" hidden>
+      <button class="btn sm" id="lbSouOrgBtn">Sou o organizador</button>
+      <div id="lbSouOrgForm" hidden>
+        <input class="field" id="lbSenha" type="password" placeholder="Senha de organizador" autocomplete="current-password" style="margin-top:10px">
+        <div class="acts"><button class="btn pri sm" id="lbSenhaOk">Entrar como organizador</button></div>
+      </div>
+    </div>
     <div id="lbEntrar" hidden>
       <h2>Entrar no campeonato</h2>
       <input class="field" id="lbNome" maxlength="20" placeholder="Seu nome" autocomplete="nickname">
@@ -762,11 +781,12 @@ function montarCampeonato(o, agora){
   if (!nomeValido(org)) return {erro: 'Informe o seu nome.'};
   if (!(max >= 2 && max <= 200)) return {erro: 'O número de pessoas deve ficar entre 2 e 200.'};
   if (o.modo !== 'melhor' && o.modo !== 'primeira') return {erro: 'Escolha como o resultado vale.'};
+  if (typeof o.uid !== 'string' || !o.uid || o.uid.length > 64) return {erro: 'Entre como organizador para criar o campeonato.'};
   if (!o.fases || o.fases.length < 1) return {erro: 'Adicione pelo menos uma fase.'};
   if (o.fases.length > MAX_FASES_CAMP) return {erro: 'No máximo ' + MAX_FASES_CAMP + ' fases.'};
   for (const f of o.fases) if (!f || !faseValida(f.text) || f.text.length > 2000) return {erro: 'Uma das fases é inválida.'};
   const dias = parseInt(o.prazoDias, 10) || 0;
-  return {camp: {nome, org, max, modo: o.modo, fim: dias > 0 ? agora + dias * 86400000 : 0, criado: agora,
+  return {camp: {nome, org, max, modo: o.modo, fim: dias > 0 ? agora + dias * 86400000 : 0, criado: agora, uid: o.uid,
     fases: o.fases.map((f, i) => ({nome: String(f.nome || 'Fase ' + (i + 1)).replace(/[<>]/g, '').slice(0, 30), text: f.text}))}};
 }
 const listaDe = x => !x ? [] : Array.isArray(x) ? x : Object.keys(x).sort((a, b) => a - b).map(k => x[k]);
@@ -782,6 +802,15 @@ function rankear(camp, jogadores){
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
   return lista;
 }
+const emailOrganizador = nome => normalizarNome(nome) + '@organizador.shapepuzzle.app';
+const MSG_AUTH = {
+  EMAIL_EXISTS: 'Esse nome de organizador já tem conta. Use a senha dele ou escolha outro nome.',
+  INVALID_LOGIN_CREDENTIALS: 'Nome ou senha não conferem.', INVALID_PASSWORD: 'Nome ou senha não conferem.', EMAIL_NOT_FOUND: 'Nome ou senha não conferem.',
+  WEAK_PASSWORD: 'A senha precisa ter pelo menos 6 caracteres.', TOO_MANY_ATTEMPTS_TRY_LATER: 'Muitas tentativas. Espere alguns minutos e tente de novo.',
+  OPERATION_NOT_ALLOWED: 'O login por e-mail/senha não está ligado no Firebase (Authentication → Método de login → E-mail/senha).',
+  API_KEY_INVALID: 'A chave do app web está errada.', INVALID_EMAIL: 'Esse nome não pode ser usado. Use letras e números.'
+};
+const msgAuth = cod => MSG_AUTH[String(cod || '').split(' ')[0]] || 'Não consegui entrar agora. Tente de novo.';
 function lerConviteHash(hash, dbSalvo){
   const h = new URLSearchParams(String(hash || '').replace(/^#/, ''));
   const id = (h.get('c') || '').toUpperCase();
@@ -1694,20 +1723,23 @@ $('#edCompartilhar').onclick = () => compartilhar('Shape Puzzle', `Tente a fase 
 $('#edTestar').onclick = () => { fechar('editor'); carregar({k: 't', nome: edNome(), text: edTexto()}); };
 
 /* ======================= Campeonatos ======================= */
-const NUVEM_PADRAO = '';   // endereço do banco Firebase do jogo (CAMPEONATOS.md); vazio = cada organizador usa o seu
+const NUVEM_PADRAO = 'https://shapepuzzle-76162-default-rtdb.firebaseio.com';   // banco oficial do jogo (o endereço e a chave abaixo são públicos; quem protege os dados são as regras)
+const NUVEM_CHAVE = 'AIzaSyBkKDk5wqXbPr_hPNW4g14Qite7IpUS-DA';
 let cpNome = store.get('cpnome', '');
 let cpMeus = store.get('cpmeus', []);
 let cpDb = dbValido(store.get('cpdb', '')) || dbValido(NUVEM_PADRAO);
+let cpChave = String(store.get('cpchave', '') || NUVEM_CHAVE);
+let cpAuth = store.get('cpauth', null);   // {uid, key, refresh, token, exp}: o aparelho reconhecido
 let cpPend = store.get('cppend', []);
 const CP = {id: null, db: '', camp: null, jogs: {}, timer: 0, convite: null, fases: []};
 const cpKey = () => normalizarNome(cpNome);
 const erroNuvem = cod => Object.assign(new Error(cod), {cod});
 const MSG_NUVEM = {negado: 'O banco de dados recusou o pedido (as regras de segurança foram publicadas?).', rede: 'Sem conexão com o banco de dados.', tempo: 'O banco de dados demorou demais para responder.', http: 'O banco de dados retornou um erro.'};
-const msgNuvem = e => MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
-async function nuvem(db, metodo, caminho, corpo){
+const msgNuvem = e => e && e.cod === 'auth' ? msgAuth(e.auth) : MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
+async function nuvem(db, metodo, caminho, corpo, token){
   const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
   try{
-    const r = await fetch(db + '/' + caminho + '.json', {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal: ctl.signal, cache: 'no-store'});
+    const r = await fetch(db + '/' + caminho + '.json' + (token ? '?auth=' + encodeURIComponent(token) : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal: ctl.signal, cache: 'no-store'});
     if (r.status === 401 || r.status === 403) throw erroNuvem('negado');
     if (!r.ok) throw erroNuvem('http');
     return await r.json();
@@ -1726,6 +1758,42 @@ function lerConvite(){
 }
 CP.convite = lerConvite();
 window.addEventListener('hashchange', () => { const c = lerConvite(); if (c){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); abrirLobby(c.id, c.db); } });
+
+/* ---- login do organizador: nome + senha (Firebase Auth, sem e-mail de verdade) ---- */
+async function authChamar(url, corpo){
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
+  try{
+    const r = await fetch(url, {method: 'POST', body: JSON.stringify(corpo), signal: ctl.signal, headers: {'Content-Type': 'application/json'}});
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error('auth'), {cod: 'auth', auth: (j.error && j.error.message) || 'ERRO'});
+    return j;
+  }catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
+  finally{ clearTimeout(to); }
+}
+function guardarAuth(j, key, nome){
+  cpAuth = {uid: j.localId, key, nome, refresh: j.refreshToken, token: j.idToken, exp: Date.now() + (parseInt(j.expiresIn, 10) || 3600) * 1000};
+  store.set('cpauth', cpAuth);
+}
+async function authEntrar(nome, senha, criar){
+  const key = normalizarNome(nome);
+  const j = await authChamar(`https://identitytoolkit.googleapis.com/v1/accounts:${criar ? 'signUp' : 'signInWithPassword'}?key=${encodeURIComponent(cpChave)}`,
+    {email: emailOrganizador(nome), password: senha, returnSecureToken: true});
+  guardarAuth(j, key, limparNome(nome)); return cpAuth;
+}
+/* token válido (renova sozinho enquanto o aparelho é reconhecido); null se precisa da senha de novo */
+async function tokenOrganizador(){
+  if (!cpAuth) return null;
+  if (cpAuth.exp - Date.now() > 60000) return cpAuth.token;
+  try{
+    const j = await authChamar('https://securetoken.googleapis.com/v1/token?key=' + encodeURIComponent(cpChave), {grant_type: 'refresh_token', refresh_token: cpAuth.refresh});
+    cpAuth.token = j.id_token; cpAuth.refresh = j.refresh_token || cpAuth.refresh; cpAuth.exp = Date.now() + (parseInt(j.expires_in, 10) || 3600) * 1000; store.set('cpauth', cpAuth);
+    return cpAuth.token;
+  }catch(e){
+    if (e.cod === 'auth'){ cpAuth = null; store.set('cpauth', null); return null; }
+    throw e;
+  }
+}
+const souDono = () => !!(cpAuth && CP.camp && CP.camp.uid === cpAuth.uid);
 
 /* resultados guardados quando não há internet */
 async function cpEnviarUm(p){
@@ -1759,10 +1827,18 @@ function renderCpLista(){
     l.appendChild(d);
   });
 }
-function abrirCamps(){
-  $('#cpNome').value = cpNome; $('#cpDb').value = cpDb; $('#cpCfg').open = !cpDb && !cpMeus.length;
-  aviso('#cpAviso', ''); renderCpLista(); cpDescarregar(); abrir('camps');
+function renderOrg(){
+  const logado = !!cpAuth;
+  $('#cpOrg').hidden = logado; $('#cpOrgOk').hidden = !logado;
+  if (logado){ $('#cpNome').value = cpAuth.nome; cpNome = cpAuth.nome; store.set('cpnome', cpNome); $('#cpOrgNome').textContent = 'Organizador: ' + cpAuth.nome + ' ✓ (este aparelho é reconhecido)'; }
+  $('#cpNome').disabled = logado;
+  $('#cpSenha').value = ''; $('#cpSenha2').value = ''; $('#cpSenha2').hidden = true;
 }
+function abrirCamps(){
+  $('#cpNome').value = cpNome; $('#cpDb').value = cpDb; $('#cpChave').value = cpChave === NUVEM_CHAVE ? '' : cpChave; $('#cpCfg').open = !cpDb && !cpMeus.length;
+  renderOrg(); aviso('#cpAviso', ''); renderCpLista(); cpDescarregar(); abrir('camps');
+}
+$('#cpSair').onclick = () => { cpAuth = null; store.set('cpauth', null); $('#cpNome').disabled = false; renderOrg(); aviso('#cpAviso', 'Saiu do modo organizador neste aparelho. Os campeonatos que você criou continuam no ar.', 'ok'); };
 function exigirNome(sel, av){
   const n = limparNome($(sel).value);
   if (!nomeValido(n)){ aviso(av, 'Digite o seu nome (pelo menos 2 letras).', 'erro'); $(sel).focus(); return false; }
@@ -1771,12 +1847,39 @@ function exigirNome(sel, av){
 $('#cpDbSalvar').onclick = () => {
   const v = dbValido($('#cpDb').value);
   if (!v){ aviso('#cpAviso', 'Endereço inválido. Ele deve começar com https:// e terminar em firebaseio.com ou firebasedatabase.app.', 'erro'); return; }
-  cpDb = v; store.set('cpdb', v); $('#cpDb').value = v; aviso('#cpAviso', 'Endereço salvo.', 'ok');
+  const k = $('#cpChave').value.trim();
+  if (k && !/^[A-Za-z0-9_-]{20,80}$/.test(k)){ aviso('#cpAviso', 'A chave da API parece errada.', 'erro'); return; }
+  if (v !== cpDb || (k || NUVEM_CHAVE) !== cpChave){ cpAuth = null; store.set('cpauth', null); }
+  cpDb = v; store.set('cpdb', v); cpChave = k || NUVEM_CHAVE; store.set('cpchave', k);
+  $('#cpDb').value = v; renderOrg(); aviso('#cpAviso', 'Salvo.', 'ok');
 };
-$('#cpCriar').onclick = () => {
-  if (!exigirNome('#cpNome', '#cpAviso')) return;
-  if (!cpDb){ $('#cpCfg').open = true; aviso('#cpAviso', 'Primeiro cole o endereço do seu banco de dados (veja CAMPEONATOS.md).', 'erro'); return; }
-  fechar('camps'); abrirCriar();
+/* primeira vez: cria a conta de organizador (nome + senha). Depois o aparelho é reconhecido sozinho. */
+async function entrarOrganizador(){
+  const senha = $('#cpSenha').value, confirmando = !$('#cpSenha2').hidden;
+  if (senha.length < 6) throw {cod: 'auth', auth: 'WEAK_PASSWORD'};
+  if (!confirmando){
+    try{ await authEntrar(cpNome, senha, false); return; }
+    catch(e){
+      if (e.cod === 'auth' && /INVALID_LOGIN_CREDENTIALS|EMAIL_NOT_FOUND|INVALID_PASSWORD/.test(e.auth)){
+        $('#cpSenha2').hidden = false; $('#cpSenha2').focus();
+        aviso('#cpAviso', 'Não achei essa conta. Se é a sua primeira vez, repita a senha no campo abaixo para criá-la. Se você já tem conta, confira o nome e a senha.', 'erro');
+        throw {cod: 'tratado'};
+      }
+      throw e;
+    }
+  }
+  if ($('#cpSenha2').value !== senha){ aviso('#cpAviso', 'As duas senhas precisam ser iguais.', 'erro'); throw {cod: 'tratado'}; }
+  await authEntrar(cpNome, senha, true);
+}
+$('#cpCriar').onclick = async () => {
+  if (!cpAuth && !exigirNome('#cpNome', '#cpAviso')) return;
+  if (!cpDb || !cpChave){ $('#cpCfg').open = true; aviso('#cpAviso', 'Informe o endereço do banco e a chave da API (veja CAMPEONATOS.md).', 'erro'); return; }
+  const btn = $('#cpCriar'); btn.disabled = true; aviso('#cpAviso', '');
+  try{
+    if (!(await tokenOrganizador())) await entrarOrganizador();
+    renderOrg(); fechar('camps'); abrirCriar();
+  }catch(e){ if (e.cod !== 'tratado') aviso('#cpAviso', msgNuvem(e), 'erro'); }
+  btn.disabled = false;
 };
 $('#cpEntrar').onclick = () => {
   const id = $('#cpCodigo').value.trim().toUpperCase();
@@ -1790,7 +1893,17 @@ $('#cpEntrar').onclick = () => {
 const CR = {fases: []};
 const PRESETS = {3: [3, 10, 18], 5: [2, 9, 16, 24, 33], 8: [2, 6, 11, 16, 21, 27, 34, 41]};
 const SORTEIOS = {facil: {nome: 'Sorteada (fácil)', o: {n: 5, minEstrelas: 14}}, medio: {nome: 'Sorteada (média)', o: {n: 5, minEstrelas: 7}}, dificil: {nome: 'Sorteada (difícil)', o: {n: 6, minEstrelas: 10, fila: 3}}};
-function abrirCriar(){
+function abrirCriar(edit){
+  CR.edit = edit ? {id: CP.id, criado: edit.criado, fim: edit.fim, org: edit.org} : null;
+  $('#crTitulo').textContent = edit ? 'Editar campeonato' : 'Novo campeonato';
+  $('#crCriar').lastChild.textContent = edit ? 'Salvar alterações' : 'Criar campeonato';
+  const pz = $('#crPrazo'); [...pz.querySelectorAll('[value=keep]')].forEach(o => o.remove());
+  if (edit){
+    CR.fases = edit.fases.map(f => ({nome: f.nome, text: f.text}));
+    $('#crNome').value = edit.nome; $('#crMax').value = edit.max; $('#crModo').value = edit.modo;
+    if (edit.fim){ pz.insertBefore(new Option('Manter o prazo atual', 'keep'), pz.firstChild); pz.value = 'keep'; } else pz.value = '0';
+  } else if (CR.fases.length && CR.veioDeEdicao){ CR.fases = []; }
+  CR.veioDeEdicao = !!edit;
   const sel = $('#crFonte'); sel.innerHTML = '';
   const grupo = (rot, itens) => { if (!itens.length) return; const g = document.createElement('optgroup'); g.label = rot; itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
   grupo('Sortear uma nova fase', [['g:facil', 'Fácil (5×5)'], ['g:medio', 'Média (5×5)'], ['g:dificil', 'Difícil (6×6, fila)']]);
@@ -1824,20 +1937,25 @@ $('#crAdd').onclick = () => {
 };
 document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { CR.fases = PRESETS[b.dataset.preset].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text})); renderCriar(); });
 $('#crCriar').onclick = async () => {
-  const m = montarCampeonato({nome: $('#crNome').value, org: cpNome, max: $('#crMax').value, modo: $('#crModo').value, prazoDias: $('#crPrazo').value, fases: CR.fases}, Date.now());
-  if (m.erro){ aviso('#crInfo', m.erro, 'erro'); return; }
-  const btn = $('#crCriar'); btn.disabled = true; aviso('#crInfo', 'Criando…');
+  const btn = $('#crCriar'); btn.disabled = true;
   try{
-    let id = '';
-    for (let t = 0; t < 4 && !id; t++){ const c = novoCodigo(); if (!(await nuvem(cpDb, 'GET', 'c/' + c))) id = c; }
+    const token = await tokenOrganizador();
+    if (!token){ aviso('#crInfo', 'A sessão de organizador acabou. Feche, abra Campeonatos e entre com a senha.', 'erro'); btn.disabled = false; return; }
+    const edit = CR.edit, prazo = $('#crPrazo').value;
+    const m = montarCampeonato({nome: $('#crNome').value, org: edit ? edit.org : cpAuth.nome, max: $('#crMax').value, modo: $('#crModo').value, prazoDias: prazo === 'keep' ? 0 : prazo, fases: CR.fases, uid: cpAuth.uid}, Date.now());
+    if (m.erro){ aviso('#crInfo', m.erro, 'erro'); btn.disabled = false; return; }
+    aviso('#crInfo', edit ? 'Salvando…' : 'Criando…');
+    let id = edit ? edit.id : '';
+    if (edit){
+      m.camp.criado = edit.criado; if (prazo === 'keep') m.camp.fim = edit.fim;
+    } else for (let t = 0; t < 4 && !id; t++){ const c = novoCodigo(); if (!(await nuvem(cpDb, 'GET', 'c/' + c))) id = c; }
     if (!id) throw erroNuvem('http');
-    await nuvem(cpDb, 'PUT', 'c/' + id, m.camp);
-    if ($('#crJogo').checked) await nuvem(cpDb, 'PUT', `p/${id}/${cpKey()}`, {n: cpNome, ts: Date.now()});
+    await nuvem(cpDb, 'PUT', 'c/' + id, m.camp, token);
     lembrarCamp(id, cpDb, m.camp.nome, true);
-    CR.fases = []; $('#crNome').value = '';
+    CR.fases = []; CR.veioDeEdicao = false; $('#crNome').value = '';
     fechar('criar'); await abrirLobby(id, cpDb);
-    toast('Campeonato criado! Toque em Convidar para enviar o link.');
-  }catch(e){ aviso('#crInfo', msgNuvem(e), 'erro'); }
+    toast(edit ? 'Campeonato atualizado.' : 'Campeonato criado! Toque em Convidar para enviar o link.');
+  }catch(e){ aviso('#crInfo', e && e.cod === 'negado' ? (CR.edit ? 'Não deu para salvar: alguém já entrou no campeonato (ou a sessão acabou).' : 'O banco recusou. As regras de segurança foram publicadas?') : msgNuvem(e), 'erro'); }
   btn.disabled = false;
 };
 
@@ -1874,6 +1992,10 @@ function renderLobby(){
   $('#lbSub').append(`Organizado por ${c.org} · ${n} de ${c.max} pessoas · ${c.fases.length} ${c.fases.length === 1 ? 'fase' : 'fases'} · ${prazoTxt(c.fim)} · ${c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez'} · código `);
   const cod = document.createElement('span'); cod.className = 'cod'; cod.textContent = CP.id; $('#lbSub').appendChild(cod);
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
+  const dono = souDono(), vazio = n === 0;
+  $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid; if (dono){ $('#lbSouOrgForm').hidden = true; }
+  $('#lbEditar').disabled = !vazio;
+  $('#lbOrgInfo').textContent = vazio ? 'Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.' : 'Já tem gente no campeonato: não dá mais para editar, só excluir.';
   if (!eu && encerrado) $('#lbEntrar').hidden = true;
   if (!eu && n >= c.max) aviso('#lbAviso', 'Este campeonato já está com todas as vagas preenchidas.', 'erro');
   const l = $('#lbFases'); l.innerHTML = '';
@@ -1909,6 +2031,28 @@ $('#lbEntrarBtn').onclick = async () => {
     }
     lembrarCamp(CP.id, CP.db, c.nome, cpMeus.some(x => x.id === CP.id && x.org));
     await atualizarLobby(); aviso('#lbAviso', '');
+  }catch(e){ aviso('#lbAviso', msgNuvem(e), 'erro'); }
+};
+$('#lbSouOrgBtn').onclick = () => { $('#lbSouOrgForm').hidden = !$('#lbSouOrgForm').hidden; };
+$('#lbSenhaOk').onclick = async () => {
+  const c = CP.camp; if (!c) return;
+  try{
+    await authEntrar(c.org, $('#lbSenha').value, false);
+    if (cpAuth.uid !== c.uid){ cpAuth = null; store.set('cpauth', null); aviso('#lbAviso', 'Essa conta de organizador não é a dona deste campeonato.', 'erro'); return; }
+    $('#lbSenha').value = ''; aviso('#lbAviso', 'Pronto: você está como organizador neste aparelho.', 'ok'); renderLobby();
+  }catch(e){ aviso('#lbAviso', msgNuvem(e), 'erro'); }
+};
+$('#lbEditar').onclick = () => { if (CP.camp && souDono()){ fechar('lobby'); abrirCriar(CP.camp); } };
+$('#lbExcluir').onclick = async () => {
+  const c = CP.camp; if (!c || !souDono()) return;
+  if (!confirm('Excluir o campeonato "' + c.nome + '"? O ranking e todos os resultados serão apagados e não dá para desfazer.')) return;
+  try{
+    const token = await tokenOrganizador();
+    if (!token){ renderLobby(); aviso('#lbAviso', 'A sessão de organizador acabou. Entre com a senha de novo.', 'erro'); return; }
+    await nuvem(CP.db, 'DELETE', 'p/' + CP.id, undefined, token);
+    await nuvem(CP.db, 'DELETE', 'c/' + CP.id, undefined, token);
+    cpMeus = cpMeus.filter(x => x.id !== CP.id); store.set('cpmeus', cpMeus);
+    clearInterval(CP.timer); fechar('lobby'); toast('Campeonato excluído.');
   }catch(e){ aviso('#lbAviso', msgNuvem(e), 'erro'); }
 };
 $('#lbAtualizar').onclick = async () => { aviso('#lbAviso', 'Atualizando…'); await atualizarLobby(); if ($('#lbAviso').textContent === 'Atualizando…') aviso('#lbAviso', ''); };

@@ -2,37 +2,48 @@
 
 O jogo permite criar **campeonatos**: o organizador escolhe as fases, o número de pessoas e o prazo, manda o link, e cada participante entra **só com o nome** (sem e-mail e sem senha). Depois de jogar, todos veem a posição no ranking.
 
-Para guardar os campeonatos e os resultados é preciso um banco de dados. O jogo usa o **Firebase Realtime Database**, que tem plano gratuito e não pede cartão para o uso básico. **Só quem cria campeonatos precisa fazer a configuração abaixo, uma vez.** Quem recebe o convite não configura nada: o link já leva o endereço do banco.
+Os campeonatos ficam no **Firebase** (banco gratuito do Google). O banco oficial do jogo já está ligado no código (`NUVEM_PADRAO` e `NUVEM_CHAVE` no `index.html`); o endereço e a chave do app web **não são segredo** — quem protege os dados são as regras do banco (`firebase-rules.json`).
 
-## Configurar (uns 5 minutos)
+## Configuração do banco (uma vez, por quem mantém o jogo)
 
-1. Entre em <https://console.firebase.google.com> com uma conta Google e clique em **Criar um projeto** (pode desligar o Google Analytics).
-2. No menu do projeto, abra **Criação → Realtime Database** e clique em **Criar banco de dados**. Escolha a região e, quando perguntar, o modo **bloqueado** (as regras do passo 3 substituem esse modo).
-3. Abra a aba **Regras**, apague o conteúdo, cole o conteúdo do arquivo [`firebase-rules.json`](firebase-rules.json) e clique em **Publicar**.
-4. Na aba **Dados**, copie o endereço que aparece no topo, parecido com `https://nome-do-projeto-default-rtdb.firebaseio.com`.
-5. No jogo: menu (☰) → **Campeonatos** → abra **Banco de dados**, cole o endereço e toque em **Salvar endereço**.
+1. **Realtime Database** → aba **Regras** → cole o conteúdo de [`firebase-rules.json`](firebase-rules.json) → **Publicar**.
+2. **Authentication** → **Método de login** → ative **E-mail/senha** (não precisa ligar o "link por e-mail"). É isso que permite a senha de organizador.
+3. Plano **Spark** (gratuito). Não ative o plano pago sem necessidade: no gratuito, se o uso passar do limite, o banco só para até o mês virar, sem cobrança.
 
-Pronto: toque em **Criar campeonato**, monte as fases e use **Convidar** para mandar o link pelo WhatsApp, Telegram, e-mail ou copiando.
+Sempre que o arquivo de regras mudar, publique de novo na aba **Regras**.
 
-> Opcional: para que todo mundo que abrir o jogo use o mesmo banco (sem cada organizador configurar o seu), coloque o endereço na constante `NUVEM_PADRAO` do `index.html` e publique de novo.
+## Para o organizador
 
-## Como funciona
+- **Primeira vez:** em *Campeonatos*, digite seu nome, crie uma **senha de organizador** (mínimo 6 caracteres) e repita-a. O nome vira a sua conta de organizador (não é pedido e-mail).
+- **Depois:** o aparelho fica reconhecido e a senha não é pedida de novo. Se você limpar os dados do navegador ou usar outro aparelho, abra o campeonato e toque em **Sou o organizador**, ou crie um novo e digite a mesma senha.
+- **Esqueceu a senha?** Não há recuperação por e-mail (não existe e-mail de verdade). Use outro nome de organizador, ou apague a conta em *Authentication → Usuários* no console.
+- **Editar:** enquanto **ninguém** entrou no campeonato (nem o próprio organizador), dá para mudar nome, fases, número de pessoas, prazo e modo. Quando a primeira pessoa entra, fica travado, para ninguém mudar as regras com gente jogando.
+- **Excluir:** o organizador pode excluir o campeonato quando quiser. Isso apaga também o ranking e os participantes.
 
-- Cada campeonato tem um **código de 6 letras/números** (ex.: `K7M2QX`). O link do convite já contém o código e o endereço do banco.
-- Quem entra informa um nome. O nome vira a identidade da pessoa naquele campeonato (`Ana`, `ana` e `ANA` são a mesma pessoa). Se duas pessoas usarem o mesmo nome, vão dividir a mesma conta — por isso use nomes diferentes, como "Ana S." e "Ana M.".
-- O ranking ordena por **fases concluídas** (mais é melhor), depois **tempo total** (menor), depois **jogadas**. Quem concluiu todas as fases aparece à frente de quem concluiu só algumas.
-- Dois jeitos de valer o resultado: **o melhor tempo de cada fase** (dá para melhorar) ou **só a primeira vez que concluir**.
-- No campeonato **não há dicas**, o **cronômetro começa ao abrir a fase** e não para com o menu aberto, e limpar o tabuleiro não zera o tempo.
+## Para quem participa
+
+Abra o link do convite (ou digite o código de 6 letras em *Campeonatos*), digite o nome e jogue. `Ana`, `ana` e `ANA` são a mesma pessoa; se duas pessoas usarem o mesmo nome, vão dividir a conta — use nomes diferentes, como "Ana S." e "Ana M.".
+
+## Regras do jogo
+
+- O ranking ordena por **fases concluídas** (mais é melhor), depois **tempo total** (menor), depois **jogadas**.
+- Dois modos: **o melhor tempo de cada fase** (dá para melhorar) ou **só a primeira vez que concluir**.
+- Não há dicas, o cronômetro começa ao abrir a fase e **não para** com o menu aberto, e limpar o tabuleiro não zera o tempo.
 - Sem internet, o resultado fica guardado no aparelho e é enviado quando a conexão volta.
-- A sala atualiza o ranking sozinha a cada 10 segundos enquanto está aberta.
+- A sala atualiza o ranking sozinha a cada 10 segundos.
+
+## Apagar dados dentro do Firebase
+
+Pelo console você pode tudo, sem passar pelas regras:
+
+- **Um campeonato:** *Realtime Database → Dados* → expanda `c` e `p`, passe o mouse sobre o código e clique no **X** (apague nos dois lugares).
+- **Todos os campeonatos:** apague os nós `c` e `p`.
+- **Todo o banco:** menu ⋮ da aba Dados → **Excluir banco de dados** (ou *Configurações do projeto → Excluir projeto*). O jogo continua funcionando para jogar; só os campeonatos deixam de existir.
 
 ## Limites (leia antes de apostar prêmio)
 
-É um sistema simples, pensado para diversão entre pessoas que se conhecem:
-
-- **Dá para trapacear.** O resultado é calculado no aparelho de quem joga e enviado ao banco; alguém que entenda de navegador consegue enviar um tempo falso. As regras recusam valores impossíveis (menos de 0,5 s, por exemplo), mas não provam que a partida aconteceu.
-- **O limite de pessoas é conferido pelo jogo**, não pelo banco. Se duas pessoas entrarem exatamente ao mesmo tempo na última vaga, as duas podem entrar.
+- **Dá para trapacear.** O tempo é calculado no aparelho de quem joga. As regras recusam valores impossíveis (menos de 0,5 s, por exemplo), mas não provam que a partida aconteceu.
+- **O limite de pessoas é conferido pelo jogo**, não pelo banco: se duas pessoas entrarem ao mesmo tempo na última vaga, as duas podem entrar.
 - **Quem tem o link vê o campeonato inteiro** (nomes, tempos e fases). Não use nomes completos nem dados pessoais.
-- **Quem tem o endereço do banco** (ele aparece no link) pode criar campeonatos nele. Use um banco só para o jogo e acompanhe o uso no console do Firebase.
-- Não há como recuperar um nome "perdido" nem trocar de nome no meio do campeonato: quem entrar com outro nome vira outra pessoa.
-- O prazo é conferido pelo banco com o relógio dele; o jogo também esconde o botão de jogar depois do prazo.
+- **Qualquer pessoa pode criar uma conta de organizador** e criar campeonatos; não há limite por pessoa. Acompanhe o uso no console. Se um dia virar abuso, dá para exigir um código de convite de organizador ou restringir a chave da API (*Google Cloud → Credenciais*).
+- O prazo é conferido pelo banco com o relógio dele.
