@@ -45,10 +45,10 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .ib.glow{background:linear-gradient(135deg,#1fd18a,#00beff);border-color:transparent;color:#05121a;animation:pulse 1.4s infinite}
 .ib.off{color:var(--mut)}
 .nav{display:flex;align-items:center;gap:6px}
-#titulo{min-width:118px;text-align:center;line-height:1.15}
-#titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px}
-#titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px}
-@media (max-width:350px){.top{gap:4px}.nav{gap:4px}.top .ib{width:40px;height:40px;border-radius:12px}#titulo{min-width:92px}#titulo .t1{font-size:16px}}
+#titulo{flex:1;min-width:0;text-align:center;line-height:1.15;padding:0 4px}
+#titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:350px){.top{gap:4px}.nav{gap:4px}.top .ib{width:40px;height:40px;border-radius:12px}#titulo .t1{font-size:16px}}
 
 /* estatísticas */
 .stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap}
@@ -206,18 +206,20 @@ details.cfg summary{cursor:pointer;font-weight:600}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (pointer:coarse){.tools{display:none}}
+main{touch-action:pan-y}
 </style>
 </head>
 <body>
 <div id="app">
   <header class="top">
     <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
+    <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 50</span></div>
     <div class="nav">
-      <button class="ib" id="btnPrev" data-i="left" aria-label="Fase anterior"></button>
-      <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 30</span></div>
-      <button class="ib" id="btnNext" data-i="right" aria-label="Próxima fase"></button>
+      <button class="ib" id="btnDica" data-i="bulb" aria-label="Dica (H)" title="Dica (H)"></button>
+      <button class="ib" id="btnReset" data-i="reset" aria-label="Reiniciar" title="Reiniciar"></button>
+      <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
     </div>
-    <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
   </header>
 
   <main>
@@ -231,8 +233,6 @@ details.cfg summary{cursor:pointer;font-weight:600}
     <div class="tools">
       <button class="btn" id="btnGirar" data-i="rotate">Girar <kbd>R</kbd></button>
       <button class="btn" id="btnFlip" data-i="flip">Espelhar <kbd>T</kbd></button>
-      <button class="btn" id="btnDica" data-i="bulb">Dica <kbd>H</kbd></button>
-      <button class="btn" id="btnReset" data-i="reset">Reiniciar</button>
     </div>
     <section class="reserva">
       <h2><span>Peças</span><span id="contagem"></span></h2>
@@ -253,7 +253,7 @@ details.cfg summary{cursor:pointer;font-weight:600}
     <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
     <ul class="how">
       <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
-      <li><b>2</b><span>Gire e espelhe a peça para ela caber (botões abaixo do tabuleiro ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+      <li><b>2</b><span>Gire e espelhe a peça para ela caber (no celular: deslize para os lados para girar e dê dois toques para espelhar; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
       <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
     </ul>
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
@@ -500,10 +500,12 @@ function girar(f){
 function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
+const FILA_PADRAO = 4;   /* sem "FILA:" na fase, aparecem 4 peças por vez */
 function novoJogo(texto){
-  const {gab, pecas, n, fila} = parseFase(texto);
+  const {gab, pecas, n, fila: filaFase} = parseFase(texto);
+  const filaAuto = !filaFase && pecas.length > FILA_PADRAO, fila = filaFase || (filaAuto ? FILA_PADRAO : 0);
   return {
-    n, fila, total: pecas.length,
+    n, fila, filaAuto, total: pecas.length,
     gab,
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
@@ -1104,11 +1106,15 @@ function carregar(cur, manter){
 }
 function avisoFila(){
   const f = S.jogo.fila;
+  if (S.jogo.filaAuto){
+    if (!store.get('avFila4', false)){ store.set('avFila4', true); toast('Aparecem 4 peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.'); }
+    S.ultFila = f; return;
+  }
   if (f && S.ultFila !== f) toast(f === 1 ? 'Uma peça por vez: você só vê a peça da vez. Tirar uma peça do tabuleiro a coloca de volta na frente.'
                                         : 'Peças em fila: só as próximas ' + f + ' aparecem. Tirar uma peça do tabuleiro a coloca de volta na frente.');
   S.ultFila = f;
 }
-const rotuloModo = j => (j.n > TAM ? j.n + '×' + j.n : '') + (j.fila ? (j.n > TAM ? ' · ' : '') + (j.fila === 1 ? '1 por vez' : 'fila de ' + j.fila) : '');
+const rotuloModo = j => (j.n > TAM ? j.n + '×' + j.n : '') + (j.fila && !j.filaAuto ? (j.n > TAM ? ' · ' : '') + (j.fila === 1 ? '1 por vez' : 'fila de ' + j.fila) : '');
 function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDica(); renderStats(); }
 
 function renderTitulo(){
@@ -1119,10 +1125,6 @@ function renderTitulo(){
   else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = 'Fase ' + (c.idx + 1) + ' de ' + c.total; }
   else if (c.shared){ t1.textContent = c.nome; t2.textContent = 'fase compartilhada'; }
   else { t1.textContent = 'Teste'; t2.textContent = c.nome || 'sua fase'; }
-  $('#btnPrev').disabled = !(c.k === 'b' && c.i > 0);
-  const podeProx = c.k === 'b' && c.i < BUILTIN.length - 1 && c.i + 1 <= prog.max;
-  $('#btnNext').disabled = !podeProx;
-  $('#btnNext').classList.toggle('glow', podeProx && S.venceu);
   $('#btnDica').disabled = c.k === 'x';
 }
 
@@ -1185,7 +1187,7 @@ function renderReserva(){
   }
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
   { const j = S.jogo, resta = j.reserva.length;
-    $('#contagem').textContent = !resta ? '' : j.fila ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + ' restantes'; }
+    $('#contagem').textContent = !resta ? '' : j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes'); }
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
   $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
 }
@@ -1193,6 +1195,7 @@ function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
   if (S.venceu) t = 'Fase concluída!';
+  else if (toque) t = S.sel ? 'Deslize para os lados para girar · dois toques espelham · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, deslize para girar e dê dois toques para espelhar.';
   else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';
   else if (S.sel) t = toque ? 'Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).'
                              : 'Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).';
@@ -1239,7 +1242,7 @@ function acaoDica(){
       const c = cellEl(r.px + k, r.py + i); c.style.setProperty('--c', COR[r.peca.id]); c.classList.add('dica'); S.dicaCels.push(c);
     }
     selecionar(r.peca); renderStats();
-    toast('A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
+    toast(matchMedia('(pointer:coarse)').matches ? 'A peça selecionada vai nesse lugar. Deslize para girar e dê dois toques para espelhar.' : 'A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
   } else {
     const idu = S.ultimaIdu && S.jogo.mapa.has(S.ultimaIdu) ? S.ultimaIdu : 0;
     if (idu) for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
@@ -1394,9 +1397,10 @@ $('#board').addEventListener('pointerdown', e => {
     const p = remover(S.jogo, c.x, c.y);
     if (p){ limparDica(); devolver(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
   } else if (S.sel){
+    if (e.pointerType !== 'mouse'){ gestoInicio(e, 'tabuleiro', c); return; }
     const f = S.sel.formato;
     tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
-  }
+  } else gestoInicio(e, 'tabuleiro', c);
 });
 $('#board').addEventListener('pointerleave', () => { S.hover = null; if (!S.drag) limparGhost(); });
 window.addEventListener('pointermove', e => {
@@ -1419,6 +1423,8 @@ function fimDrag(e, cancelado){
   if (d.moved && !cancelado){
     const {gx, gy} = gridDeOrigem(origemFlut(d));
     if (!tentarColocar(d.piece, gx, gy) && !sobreposto(d.piece.formato, gx, gy)) Som.soltar();
+  } else if (!d.moved && d.origem === 'reserva' && d.tipo !== 'mouse' && toqueDuplo(d.x0, d.y0)){
+    S.sel = d.piece; S.drag = null; S.sel.formato = inverter(S.sel.formato); Som.flip();
   } else if (!d.moved && d.jaSel && d.origem === 'reserva'){
     S.sel = null;
   }
@@ -1426,6 +1432,46 @@ function fimDrag(e, cancelado){
 }
 window.addEventListener('pointerup', e => fimDrag(e, false));
 window.addEventListener('pointercancel', e => fimDrag(e, true));
+
+/* ---- gestos no celular: deslizar gira 90°, dois toques espelham ---- */
+let G = null, ULT_TOQUE = null;
+const SWIPE_MIN = 34;
+function girarAntihorario(f){ return girar(girar(girar(f))); }
+function gestoInicio(e, zona, cel){
+  if (e.pointerType === 'mouse' || S.venceu) return false;
+  G = {id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now(), zona, cel};
+  return true;
+}
+function toqueDuplo(x, y){
+  const a = performance.now(), u = ULT_TOQUE;
+  ULT_TOQUE = {t: a, x, y};
+  if (u && a - u.t < 380 && Math.hypot(x - u.x, y - u.y) < 46){ ULT_TOQUE = null; return true; }
+  return false;
+}
+document.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || S.drag || document.querySelector('.ov.on')) return;
+  if (e.target.closest('.pw,#board,button,a,input,select,textarea')) return;
+  gestoInicio(e, 'fundo');
+});
+function fimGesto(e, cancelado){
+  const g = G; if (!g || e.pointerId !== g.id) return;
+  G = null; if (cancelado || S.venceu) return;
+  const dx = e.clientX - g.x0, dy = e.clientY - g.y0, dt = performance.now() - g.t0;
+  if (Math.abs(dx) >= SWIPE_MIN && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 900){
+    if (!S.sel){ toast('Toque numa peça para selecionar e deslize para girar'); return; }
+    S.sel.formato = dx > 0 ? girar(S.sel.formato) : girarAntihorario(S.sel.formato);
+    Som.girar(); aposTransformar(); return;
+  }
+  if (Math.hypot(dx, dy) < 12 && dt < 450){
+    if (g.zona === 'tabuleiro' && S.sel){
+      const f = S.sel.formato; tentarColocar(S.sel, g.cel.x - Math.floor(f[0].length / 2), g.cel.y - Math.floor(f.length / 2));
+    } else if (g.zona === 'fundo' && S.sel && toqueDuplo(e.clientX, e.clientY)){
+      S.sel.formato = inverter(S.sel.formato); Som.flip(); aposTransformar();
+    }
+  }
+}
+window.addEventListener('pointerup', e => fimGesto(e, false));
+window.addEventListener('pointercancel', e => fimGesto(e, true));
 
 /* ---- teclado ---- */
 window.addEventListener('keydown', e => {
@@ -1499,8 +1545,6 @@ $('#btnGirar').onclick = acaoGirar;
 $('#btnFlip').onclick = acaoFlip;
 $('#btnDica').onclick = acaoDica;
 $('#btnReset').onclick = () => { if (S.cur.k === 'x'){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
-$('#btnPrev').onclick = () => { if (S.cur.k === 'b' && S.cur.i > 0) carregar({k: 'b', i: S.cur.i - 1}); };
-$('#btnNext').onclick = () => { if (S.cur.k === 'b') carregar({k: 'b', i: S.cur.i + 1}); };
 $('#btnMenu').onclick = () => abrirMenu();
 function iconeMusica(){
   const b = $('#btnMusica'); b.classList.toggle('off', !Som.musica());
@@ -1905,6 +1949,7 @@ function vitoriaCamp(c, res, add){
 function ajustar(){
   const r = document.documentElement.style;
   const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); };
+  pos(30); void document.body.offsetWidth;   /* encolhe antes de medir: um tabuleiro largo demais faz o celular alargar a janela */
   const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
   const cheio = () => document.documentElement.scrollHeight > innerHeight + 1;
   const achar = (compacto, min) => { document.body.classList.toggle('compacto', compacto); let c = c0; pos(c); while (c > min && cheio()){ c -= 2; pos(c); } return c; };
