@@ -1,0 +1,50 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "c": {
+      "$id": {
+        ".read": true,
+        ".write": "!data.exists() && newData.exists() && $id.length === 6",
+        ".validate": "newData.hasChildren(['nome', 'org', 'max', 'modo', 'fim', 'criado', 'fases'])",
+        "nome": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 40" },
+        "org": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
+        "max": { ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 200" },
+        "modo": { ".validate": "newData.val() === 'melhor' || newData.val() === 'primeira'" },
+        "fim": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "criado": { ".validate": "newData.isNumber()" },
+        "fases": {
+          ".validate": "newData.hasChildren()",
+          "$i": {
+            ".validate": "newData.hasChildren(['nome', 'text'])",
+            "nome": { ".validate": "newData.isString() && newData.val().length <= 30" },
+            "text": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+            "$outro": { ".validate": false }
+          }
+        },
+        "$outro": { ".validate": false }
+      }
+    },
+    "p": {
+      "$id": {
+        ".read": true,
+        "$key": {
+          ".write": "!data.exists() && newData.exists() && root.child('c').child($id).exists()",
+          ".validate": "$key.length >= 2 && $key.length <= 24",
+          "n": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20" },
+          "ts": { ".validate": "newData.isNumber()" },
+          "f": {
+            "$i": {
+              ".write": "root.child('p').child($id).child($key).child('n').exists() && root.child('c').child($id).exists() && (root.child('c').child($id).child('fim').val() === 0 || now <= root.child('c').child($id).child('fim').val()) && (!data.exists() || (root.child('c').child($id).child('modo').val() === 'melhor' && newData.child('t').val() < data.child('t').val()))",
+              ".validate": "newData.hasChildren(['t', 'j']) && $i.matches(/^[0-9]$/)",
+              "t": { ".validate": "newData.isNumber() && newData.val() >= 500 && newData.val() <= 86400000" },
+              "j": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5000" },
+              "$outro": { ".validate": false }
+            }
+          },
+          "$outro": { ".validate": false }
+        }
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 - **Tempo, jogadas e recorde** por fase.
 - **Música gerada por código** (Web Audio API) em 3 climas — Calma, Animada e Noturna — que mudam sozinhos a cada 10 fases ou ficam fixos à sua escolha.
 - **Compartilhar**: o jogo, o seu resultado e as fases que você criar, por link (sem enviar arquivo).
+- **Campeonatos com ranking**: crie um desafio com as fases que quiser, defina o número de pessoas e o prazo e mande o link; cada participante entra só com o nome e vê a sua posição no ranking. Precisa de um banco gratuito (Firebase) configurado uma vez por quem cria — veja [CAMPEONATOS.md](CAMPEONATOS.md).
 - **Instalar como app** e jogar offline (PWA).
 - **Editor de fases** com exportação/importação `.txt` no mesmo formato da versão Java (o editor cria fases 5×5).
 
