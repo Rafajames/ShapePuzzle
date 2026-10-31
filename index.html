@@ -66,8 +66,8 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 @keyframes pop{from{opacity:0;transform:rotate(4deg) scale(.4)}to{opacity:1;transform:rotate(4deg) scale(1)}}
 body.compacto .top{margin-bottom:6px}body.compacto .stats{margin-bottom:6px;gap:6px}body.compacto .pill{padding:4px 9px;font-size:12px}
 body.compacto .tools{margin:8px 0 0;gap:6px}body.compacto .tools .btn{padding:8px 9px;font-size:12px;gap:5px;flex:1;border-radius:12px}body.compacto .tools svg.i{width:17px;height:17px}
-body.compacto .reserva{margin-top:8px;padding:8px}body.compacto .reserva h2{margin-bottom:6px}body.compacto .pw{padding:5px}body.compacto #reserva{gap:4px}body.compacto #dica{display:none}
-@media (max-height:760px){.top{margin-bottom:8px}.stats{margin-bottom:8px}.tools{margin:10px 0 0}.reserva{margin-top:10px;padding:10px}.pw{padding:7px}#reserva{gap:6px;min-height:0}#dica{margin-top:6px}}
+body.compacto .reserva{margin-top:8px;padding:8px}body.compacto .reserva h2{margin-bottom:6px}body.compacto .pw{padding:5px}body.compacto #reserva,body.compacto .rp{gap:4px}body.compacto #dica{display:none}
+@media (max-height:760px){.top{margin-bottom:8px}.stats{margin-bottom:8px}.tools{margin:10px 0 0}.reserva{margin-top:10px;padding:10px}.pw{padding:7px}#reserva,.rp{gap:6px}#reserva{min-height:0}#dica{margin-top:6px}}
 #board,#edBoard{
   display:grid;border-radius:16px;overflow:hidden;position:relative;background:#1a1a2a;touch-action:none;
   box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.55),0 0 60px rgba(124,108,255,.1);
@@ -106,7 +106,8 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 /* reserva */
 .reserva{margin-top:18px;padding:14px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
 .reserva h2{margin:0 0 10px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);font-weight:700;display:flex;justify-content:space-between}
-#reserva{display:flex;flex-wrap:wrap;gap:10px;min-height:64px;align-items:flex-start}
+#reserva{display:flex;flex-direction:column;gap:10px;min-height:64px;align-items:center}
+.rp{display:flex;flex-wrap:nowrap;gap:10px;justify-content:center;align-items:flex-start}
 .pw{padding:10px;border-radius:14px;border:1.5px solid transparent;background:rgba(255,255,255,.03);cursor:grab;touch-action:none;transition:background .15s,border-color .15s}
 .pw:hover{background:rgba(255,255,255,.08)}
 .pw.sel{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(124,108,255,.2)}
@@ -1226,19 +1227,38 @@ function celulaEm(cx, cy){
 }
 
 /* ---- reserva ---- */
+/* Cada fileira cabe inteira na largura: se as peças ficarem largas demais, todas encolhem juntas. */
+function fitFileiras(){
+  const el = $('#reserva'); if (!el) return;
+  el.style.removeProperty('--mini');
+  const disp = el.clientWidth; if (!disp) return;
+  const gap = parseFloat(getComputedStyle(el.querySelector('.rp') || el).columnGap) || 0;
+  for (let t = 0; t < 5; t++){
+    const need = Math.max(0, ...[...el.querySelectorAll('.rp')].map(r => [...r.children].reduce((a, c) => a + c.offsetWidth, 0) + gap * Math.max(0, r.children.length - 1)));
+    if (need <= disp) break;
+    const mini = parseFloat(getComputedStyle(el).getPropertyValue('--mini')) || 30;
+    el.style.setProperty('--mini', Math.max(10, Math.floor(mini * disp / need * 0.96)) + 'px');
+  }
+}
 function renderReserva(){
   const el = $('#reserva'); el.innerHTML = '';
   const arrastando = S.drag && S.drag.moved ? S.drag.piece : null;
-  for (const p of visiveis(S.jogo)){
+  const vis = visiveis(S.jogo), n = vis.length;
+  /* centralizadas: até 3 numa fileira; 4 = 2+2; 5 = 3+2; 6 = 3+3 */
+  const cima = n <= 3 ? n : Math.ceil(n / 2);
+  let fileira = null;
+  vis.forEach((p, i) => {
+    if (i === 0 || i === cima){ fileira = document.createElement('div'); fileira.className = 'rp'; el.appendChild(fileira); }
     const w = document.createElement('div');
     w.className = 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '');
     w.dataset.uid = p.uid;
     w.appendChild(pecaEl(p.formato, p.id, 'mini'));
-    el.appendChild(w);
-  }
+    fileira.appendChild(w);
+  });
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
   { const j = S.jogo, resta = j.reserva.length;
     $('#contagem').textContent = !resta ? '' : j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes'); }
+  fitFileiras();
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
   $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
 }
@@ -2127,7 +2147,7 @@ function vitoriaCamp(c, res, add){
 /* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){
   const r = document.documentElement.style;
-  const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); };
+  const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); fitFileiras(); };
   pos(30); void document.body.offsetWidth;   /* encolhe antes de medir: um tabuleiro largo demais faz o celular alargar a janela */
   const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
   const cheio = () => document.documentElement.scrollHeight > innerHeight + 1;
