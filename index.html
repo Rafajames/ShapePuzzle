@@ -296,7 +296,7 @@ main{touch-action:pan-y}
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
       <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
     </div>
-    <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button></div>
+    <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
     <h2>Sobre</h2>
     <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
     <div class="acts">
@@ -437,6 +437,18 @@ main{touch-action:pan-y}
       <button class="btn" id="lbAtualizar" data-i="reset">Atualizar</button>
       <button class="btn" id="lbConvidar" data-i="share">Convidar</button>
     </div>
+  </div>
+</div>
+
+<!-- Modo de teste -->
+<div class="ov" id="ov-teste">
+  <div class="card">
+    <button class="ib x" data-close="teste" data-i="close" aria-label="Fechar"></button>
+    <h1>Modo de teste</h1>
+    <p>Para quem cria e confere as fases: libera todas as fases do menu, sem mexer no seu progresso e sem gravar recordes.</p>
+    <input class="field" id="tsSenha" type="password" placeholder="Senha" autocomplete="off" style="margin-top:14px">
+    <p class="aviso" id="tsAviso"></p>
+    <div class="acts"><button class="btn pri" id="tsEntrar" data-i="lock">Entrar</button></div>
   </div>
 </div>
 
@@ -1092,6 +1104,13 @@ let recs = store.get('rec', {});
 let dias = store.get('dias', {});
 let humorPref = store.get('humor', 'auto');
 { const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, BUILTIN.length - 1)); }
+/* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
+const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
+let modoTeste = store.get('teste', false) === true;
+async function hashSenha(t){
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('shapepuzzle-teste:' + t));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
 const S = {cur: null, jogo: null, sel: null, drag: null, hover: null, ghost: [], venceu: false, cell: 64,
   n: TAM, ultFila: 0, jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0};
 
@@ -1151,7 +1170,7 @@ function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDic
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
-  if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = rotuloModo(S.jogo) || 'de ' + BUILTIN.length; }
+  if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = (modoTeste ? 'teste · ' : '') + (rotuloModo(S.jogo) || 'de ' + BUILTIN.length); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = 'fase personalizada'; }
   else if (c.k === 'd'){ t1.textContent = 'Fase do dia'; t2.textContent = dataCurta(c.data); }
   else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = 'Fase ' + (c.idx + 1) + ' de ' + c.total; }
@@ -1311,13 +1330,13 @@ function vencer(){
   selo.hidden = false;
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
-  if (c.k === 'b'){
+  if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
     prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
     store.set('prog', prog);
   }
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
-  if (k && !S.dicas){
+  if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
     store.set('rec', recs);
@@ -1597,7 +1616,7 @@ function renderDiario(){
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
   BUILTIN.forEach((f, i) => {
-    const feito = prog.done.includes(i), trancada = i > prog.max;
+    const feito = prog.done.includes(i), trancada = i > prog.max && !modoTeste;
     const b = document.createElement('button');
     b.className = 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : '');
     b.disabled = trancada;
@@ -1605,7 +1624,7 @@ function abrirMenu(){
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
   });
-  renderDiario(); renderCustom(); atualizarInstalar();
+  renderDiario(); renderCustom(); atualizarInstalar(); renderTeste();
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
   $('#selHumor').value = humorPref;
   abrir('menu');
@@ -1633,6 +1652,19 @@ $('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica()
 $('#chkSfx').onchange = e => Som.setSfx(e.target.checked);
 $('#rngVol').oninput = e => Som.setVolume(e.target.value / 100);
 $('#selHumor').onchange = e => { humorPref = e.target.value; store.set('humor', humorPref); aplicarHumor(); };
+function renderTeste(){ const b = $('#btnTeste'); b.lastChild.textContent = modoTeste ? 'Sair do modo de teste' : 'Modo de teste'; }
+$('#btnTeste').onclick = () => {
+  if (modoTeste){ modoTeste = false; store.set('teste', false); renderTeste(); abrirMenu(); renderTitulo(); toast('Modo de teste desligado.'); return; }
+  $('#tsSenha').value = ''; aviso('#tsAviso', ''); fechar('menu'); abrir('teste'); setTimeout(() => $('#tsSenha').focus(), 50);
+};
+async function entrarTeste(){
+  if (!(window.crypto && crypto.subtle)){ aviso('#tsAviso', 'Este navegador não permite conferir a senha aqui (precisa de conexão segura, https).', 'erro'); return; }
+  const h = await hashSenha($('#tsSenha').value);
+  if (h !== TESTE_HASH){ aviso('#tsAviso', 'Senha incorreta.', 'erro'); return; }
+  modoTeste = true; store.set('teste', true); fechar('teste'); renderTeste(); renderTitulo(); abrirMenu(); toast('Modo de teste ligado: todas as fases liberadas.');
+}
+$('#tsEntrar').onclick = entrarTeste;
+$('#tsSenha').addEventListener('keydown', e => { if (e.key === 'Enter') entrarTeste(); });
 $('#btnZerar').onclick = () => { if (confirm('Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)')){ prog = {max: 0, done: []}; store.set('prog', prog); carregar({k: 'b', i: 0}); abrirMenu(); } };
 $('#btnCriar').onclick = () => { fechar('menu'); abrirEditor(); };
 $('#btnCamp').onclick = () => { fechar('menu'); abrirCamps(); };
