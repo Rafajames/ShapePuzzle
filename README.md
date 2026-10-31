@@ -76,3 +76,7 @@ As fases são salvas em arquivos `.txt` com a seguinte estrutura:
 ---
 
 Desenvolvido por [Rafajames](https://github.com/Rafajames)
+
+## Testes automáticos
+
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos e tutorial). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).

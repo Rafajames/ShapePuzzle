@@ -208,6 +208,21 @@ details.cfg summary{cursor:pointer;font-weight:600}
 @keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (pointer:coarse){.tools{display:none}}
+@media (pointer:fine){#blocoTuto{display:none}}
+#dica.tuto{color:#fff;font-weight:700;font-size:14px}
+#mao{position:fixed;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;z-index:85;pointer-events:none;display:none;
+  background:rgba(255,255,255,.38);border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.45)}
+#mao.on{display:block}
+#mao.toque{animation:maoToque 1.8s infinite}
+#mao.duplo{animation:maoDuplo 2.1s infinite}
+#mao.desliza{animation:maoDesliza 2s infinite}
+@keyframes maoToque{0%{opacity:0;transform:scale(1.3)}15%{opacity:1;transform:scale(1.3)}30%{transform:scale(.8)}50%{transform:scale(1.3);opacity:1}75%,100%{opacity:0}}
+@keyframes maoDuplo{0%{opacity:0;transform:scale(1.3)}10%{opacity:1}18%{transform:scale(.8)}28%{transform:scale(1.3)}36%{transform:scale(.8)}46%{transform:scale(1.3);opacity:1}70%,100%{opacity:0}}
+@keyframes maoDesliza{0%{opacity:0;transform:translateX(-55px)}15%{opacity:1;transform:translateX(-55px) scale(.85)}70%{opacity:1;transform:translateX(55px) scale(.85)}90%,100%{opacity:0;transform:translateX(55px)}}
+.pg.a-giro{animation:aGiro .3s ease-out}
+.pg.a-flip{animation:aFlip .3s ease-out}
+@keyframes aGiro{from{transform:rotate(-90deg) scale(.8)}to{transform:none}}
+@keyframes aFlip{from{transform:scaleX(-1)}to{transform:none}}
 main{touch-action:pan-y}
 </style>
 </head>
@@ -239,11 +254,13 @@ main{touch-action:pan-y}
       <h2><span>Peças</span><span id="contagem"></span></h2>
       <div id="reserva"></div>
       <p id="dica"></p>
+      <button class="btn sm" id="tutoPular" hidden style="width:100%;margin-top:8px">Entendi, pular o tutorial</button>
     </section>
   </main>
 </div>
 
 <div id="flut" hidden></div>
+<div id="mao" aria-hidden="true"></div>
 <div id="toast"></div>
 
 <!-- Abertura -->
@@ -297,6 +314,7 @@ main{touch-action:pan-y}
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
       <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
     </div>
+    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
     <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
     <h2>Sobre</h2>
     <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
@@ -884,8 +902,8 @@ function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('on');
   clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600);
 }
-const abrir = id => $('#ov-' + id).classList.add('on');
-const fechar = id => $('#ov-' + id).classList.remove('on');
+const abrir = id => { $('#ov-' + id).classList.add('on'); if (window.atualizarTuto) atualizarTuto(); };
+const fechar = id => { $('#ov-' + id).classList.remove('on'); if (window.atualizarTuto) atualizarTuto(); };
 const fmtTempo = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 const fmtJog = n => n + (n === 1 ? ' jogada' : ' jogadas');
 const pad2 = n => String(n).padStart(2, '0');
@@ -1153,7 +1171,7 @@ function carregar(cur, manter){
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
-  renderTudo(); ajustar(); aplicarHumor(); avisoFila();
+  renderTudo(); ajustar(); atualizarTuto(); aplicarHumor(); avisoFila();
 }
 function avisoFila(){
   const f = S.jogo.fila;
@@ -1252,20 +1270,25 @@ function renderReserva(){
     const w = document.createElement('div');
     w.className = 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '');
     w.dataset.uid = p.uid;
-    w.appendChild(pecaEl(p.formato, p.id, 'mini'));
+    const pe = pecaEl(p.formato, p.id, 'mini');
+    if (S.anim && S.sel === p) pe.classList.add(S.anim === 'giro' ? 'a-giro' : 'a-flip');
+    w.appendChild(pe);
     fileira.appendChild(w);
   });
+  S.anim = null;
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
   { const j = S.jogo, resta = j.reserva.length;
     $('#contagem').textContent = !resta ? '' : j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes'); }
-  fitFileiras();
+  fitFileiras(); atualizarTuto();
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
   $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
 }
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
-  if (S.venceu) t = 'Fase concluída!';
+  $('#dica').classList.toggle('tuto', tutoAtivo());
+  if (tutoAtivo()) t = TUTO_TXT[passoTuto()];
+  else if (S.venceu) t = 'Fase concluída!';
   else if (toque) t = S.sel ? 'Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.';
   else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';
   else if (S.sel) t = toque ? 'Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).'
@@ -1410,11 +1433,11 @@ function mostrarVitoria(res){
 
 function acaoGirar(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = girar(p.formato); Som.girar(); aposTransformar();
+  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; aposTransformar();
 }
 function acaoFlip(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = inverter(p.formato); Som.flip(); aposTransformar();
+  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; aposTransformar();
 }
 function aposTransformar(){
   renderReserva();
@@ -1495,7 +1518,7 @@ function fimDrag(e, cancelado){
     const {gx, gy} = gridDeOrigem(origemFlut(d));
     if (!tentarColocar(d.piece, gx, gy) && !sobreposto(d.piece.formato, gx, gy)) Som.soltar();
   } else if (!d.moved && d.origem === 'reserva' && d.tipo !== 'mouse' && toqueDuplo(d.x0, d.y0)){
-    S.sel = d.piece; S.drag = null; S.sel.formato = girar(S.sel.formato); Som.girar();
+    S.sel = d.piece; S.drag = null; S.sel.formato = girar(S.sel.formato); Som.girar(); S.anim = 'giro'; marcarTuto('giro');
   } else if (!d.moved && d.jaSel && d.origem === 'reserva' && d.tipo === 'mouse'){
     S.sel = null;
   }
@@ -1531,18 +1554,44 @@ function fimGesto(e, cancelado){
   if (Math.abs(dx) >= SWIPE_MIN && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 900){
     if (!S.sel){ toast('Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.'); return; }
     S.sel.formato = inverter(S.sel.formato);
-    Som.flip(); aposTransformar(); return;
+    Som.flip(); S.anim = 'flip'; marcarTuto('esp'); aposTransformar(); return;
   }
   if (Math.hypot(dx, dy) < 12 && dt < 450){
     if (g.zona === 'tabuleiro' && S.sel){
       const f = S.sel.formato; tentarColocar(S.sel, g.cel.x - Math.floor(f[0].length / 2), g.cel.y - Math.floor(f.length / 2));
     } else if (g.zona === 'fundo' && S.sel && toqueDuplo(e.clientX, e.clientY)){
-      S.sel.formato = girar(S.sel.formato); Som.girar(); aposTransformar();
+      S.sel.formato = girar(S.sel.formato); Som.girar(); S.anim = 'giro'; marcarTuto('giro'); aposTransformar();
     }
   }
 }
 window.addEventListener('pointerup', e => fimGesto(e, false));
 window.addEventListener('pointercancel', e => fimGesto(e, true));
+
+/* ---- tutorial dos gestos (só no celular): mostra o que fazer, passo a passo ---- */
+let tuto = Object.assign({sel: false, giro: false, esp: false, fim: false}, store.get('tuto', {}));
+const TUTO_TXT = {sel: 'Toque numa peça para selecioná-la.', giro: 'Agora dê dois toques rápidos na peça para girá-la.', esp: 'Muito bem! Agora deslize o dedo por aqui, fora da peça, para espelhá-la.'};
+const tutoAtivo = () => matchMedia('(pointer:coarse)').matches && !tuto.fim && !S.venceu;
+const passoTuto = () => !S.sel ? 'sel' : !tuto.giro ? 'giro' : 'esp';
+function marcarTuto(k){
+  if (tuto[k]) return;
+  tuto[k] = true;
+  if (tuto.giro && tuto.esp){ tuto.fim = true; toast('Isso mesmo! Agora é só encaixar as peças no tabuleiro.'); }
+  store.set('tuto', tuto);
+}
+function atualizarTuto(){
+  const mao = $('#mao'), pular = $('#tutoPular'); if (!mao) return;
+  const ativo = tutoAtivo();
+  pular.hidden = !ativo;
+  if (S.sel && !tuto.sel){ tuto.sel = true; store.set('tuto', tuto); }
+  const alvo = ativo && !S.drag && !document.querySelector('.ov.on') ? document.querySelector(passoTuto() === 'sel' ? '#reserva .pw' : passoTuto() === 'giro' ? '#reserva .pw.sel' : '#dica') : null;
+  if (!alvo){ mao.className = ''; mao.dataset.passo = ''; return; }
+  const r = alvo.getBoundingClientRect(), passo = passoTuto();
+  mao.style.left = (r.left + r.width / 2) + 'px'; mao.style.top = (r.top + r.height / 2) + 'px';
+  if (mao.dataset.passo !== passo){ mao.className = ''; void mao.offsetWidth; mao.dataset.passo = passo; }
+  mao.className = 'on ' + (passo === 'sel' ? 'toque' : passo === 'giro' ? 'duplo' : 'desliza');
+}
+$('#tutoPular').onclick = () => { tuto.fim = true; store.set('tuto', tuto); atualizarTuto(); renderDica(); toast('Tudo bem! Você pode rever o tutorial no menu.'); };
+$('#btnTuto').onclick = () => { tuto = {sel: false, giro: false, esp: false, fim: false}; store.set('tuto', tuto); fechar('menu'); S.sel = null; renderReserva(); renderDica(); ajustar(); atualizarTuto(); };
 
 /* ---- teclado ---- */
 window.addEventListener('keydown', e => {
@@ -2159,7 +2208,8 @@ function ajustar(){
     achar(false, 30);
   }
 }
-addEventListener('resize', ajustar);
+addEventListener('scroll', () => atualizarTuto(), true);
+addEventListener('resize', () => { ajustar(); atualizarTuto(); });
 ajustar();
 pintarIcones();
 montarBoard();

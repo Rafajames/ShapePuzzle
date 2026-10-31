@@ -1,0 +1,7 @@
+{
+  "name": "shapepuzzle",
+  "private": true,
+  "description": "Shape Puzzle - testes automáticos",
+  "scripts": { "test": "bash tests/rodar.sh" },
+  "devDependencies": { "targaryen": "3.1.0" }
+}

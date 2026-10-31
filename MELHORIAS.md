@@ -3,9 +3,9 @@
 Lista de ideias discutidas, por prioridade. Marque aqui o que for sendo feito.
 
 ## Mais importantes
-1. **Tutorial dos gestos** — mãozinha animada nas primeiras fases (toque seleciona, dois toques giram, deslizar espelha); some depois de alguns usos e pode ser reaberta no menu; animação de giro/espelho da peça. _Em andamento._
+1. **Tutorial dos gestos** — mãozinha animada guiando passo a passo no celular (toque seleciona, dois toques giram, deslizar espelha); some depois de alguns usos e pode ser reaberta no menu; animação de giro/espelho da peça. _Feito._
 2. **Botão Desfazer** — desfaz a última jogada em vez de só reiniciar a fase.
-3. **Testes automáticos no repositório** — rodar os testes no GitHub a cada publicação; consertar o teste instável. _Em andamento._
+3. **Testes automáticos no repositório** — rodar os testes no GitHub a cada publicação; consertar o teste instável. _Feito._
 4. **Conferir os campeonatos de ponta a ponta** — teste real com duas pessoas no Firebase; tela de diagnóstico (banco / login / regras).
 
 ## Boas, menos urgentes
