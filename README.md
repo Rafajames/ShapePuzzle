@@ -80,3 +80,10 @@ Desenvolvido por [Rafajames](https://github.com/Rafajames)
 ## Testes automáticos
 
 A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos e tutorial). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+
+## Extras de jogo
+
+- **Desfazer**: botão no topo (ou tecla Z) tira a última peça encaixada.
+- **Peças por vez**: no menu, escolha de 2 a 6 ou "Todas" (fases com fila própria e campeonatos mantêm a regra delas).
+- **Estrelas**: cada fase vale até 3 estrelas (sem dica e sem recolocar peças = 3). Aparecem ao vencer e no menu.
+- **Vibração leve** no celular (pode desligar no menu).

@@ -195,11 +195,17 @@ details.cfg summary{cursor:pointer;font-weight:600}
   padding:11px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
-.conf{position:absolute;left:50%;top:40%;width:9px;height:14px;border-radius:2px;opacity:0;animation:conf 1.3s ease-out forwards}
+.conf{pointer-events:none;position:absolute;left:50%;top:40%;width:9px;height:14px;border-radius:2px;opacity:0;animation:conf 1.3s ease-out forwards}
 .vit{text-align:center;overflow:hidden}
 .vit .big{width:68px;height:68px;border-radius:50%;margin:2px auto 14px;display:grid;place-items:center;background:linear-gradient(135deg,#1fd18a,#00beff);color:#05121a}
 .vit .big svg.i{width:36px;height:36px;stroke-width:2.6}
 .vit .res{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.estrelas{display:flex;justify-content:center;gap:6px;margin:-4px 0 10px}
+.estrelas svg.i{width:38px;height:38px;fill:none;stroke:#5b5b78;stroke-width:1.6;stroke-linejoin:round;transform:scale(.9)}
+.estrelas svg.i.on{fill:#ffd84d;stroke:#ffd84d;animation:estPop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:var(--d,0s)}
+@keyframes estPop{0%{transform:scale(.2) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.estTxt{font-size:13px;color:var(--mut);margin:-2px 0 8px}
+.tile .est{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:9px;line-height:1;color:#ffd84d;letter-spacing:1px}
 .vit .badge{font-size:13px;font-weight:700;color:#ffd84d;margin-top:8px}
 
 @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
@@ -232,6 +238,7 @@ main{touch-action:pan-y}
     <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
     <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 50</span></div>
     <div class="nav">
+      <button class="ib" id="btnDesfazer" data-i="undo" aria-label="Desfazer (Z)" title="Desfazer (Z)" disabled></button>
       <button class="ib" id="btnDica" data-i="bulb" aria-label="Dica (H)" title="Dica (H)"></button>
       <button class="ib" id="btnReset" data-i="reset" aria-label="Reiniciar" title="Reiniciar"></button>
       <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
@@ -298,6 +305,16 @@ main{touch-action:pan-y}
       <button class="btn" id="btnImportar" data-i="upload">Importar .txt</button>
     </div>
     <input type="file" id="fileImp" accept=".txt,text/plain" hidden>
+    <h2>Jogo</h2>
+    <label class="row"><span class="rl">Peças por vez</span>
+      <select class="field" id="selPecas">
+        <option value="auto">Automático (por fase)</option>
+        <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+        <option value="5">5</option><option value="6">6</option>
+        <option value="99">Todas</option>
+      </select></label>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
+    <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
     <h2>Som</h2>
     <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
     <label class="row"><span class="rl">Estilo</span>
@@ -331,6 +348,7 @@ main{touch-action:pan-y}
   <div class="card vit" id="cardWin">
     <div class="big" data-i="check"></div>
     <h1 id="winTitulo">Fase concluída!</h1>
+    <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
     <p id="winTexto"></p>
     <div class="res" id="winRes"></div>
     <div class="badge" id="winBadge"></div>
@@ -557,7 +575,7 @@ function novoJogo(texto, filaPadrao = FILA_PADRAO){
   const {gab, pecas, n, fila: filaFase} = parseFase(texto);
   const filaAuto = !filaFase && pecas.length > filaPadrao, fila = filaFase || (filaAuto ? filaPadrao : 0);
   return {
-    n, fila, filaAuto, total: pecas.length,
+    n, fila, filaAuto, filaFixa: !!filaFase, total: pecas.length,
     gab,
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
@@ -877,6 +895,8 @@ const ICONES = {
   noteoff:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path d="M3 3l18 18"/>',
   rotate:'<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>',
   flip:'<path d="M12 3v18" stroke-dasharray="2 3"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/>',
+  star:'<path d="M12 3.2l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.2l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
   reset:'<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>',
   edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
@@ -1122,6 +1142,22 @@ let prog = store.get('prog', {max: 0, done: []});
 let recs = store.get('rec', {});
 let dias = store.get('dias', {});
 let humorPref = store.get('humor', 'auto');
+/* nº de peças por vez escolhido pelo jogador: 'auto' (por dificuldade), 2..6 ou 99 (todas) */
+let vibraOn = store.get('vibra', true) !== false;
+const vibrar = p => { if (vibraOn && navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} };
+let estrelasFase = store.get('est', {});
+/* 3 estrelas: sem dica e sem recolocar peças; 2: sem dica e até 50% de jogadas a mais; 1: concluiu */
+function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
+let pecasPref = store.get('pecas', 'auto');
+if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
+const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : FILA_PADRAO;
+function aplicarPecas(){
+  const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
+  const f = filaPadraoDe(S.cur);
+  j.filaAuto = j.total > f; j.fila = j.filaAuto ? f : 0;
+  if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
+  S.ultFila = j.fila; limparGhost(); renderTudo(); ajustar(); atualizarTuto();
+}
 { const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, BUILTIN.length - 1)); }
 /* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
 const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
@@ -1131,7 +1167,7 @@ async function hashSenha(t){
   return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
 }
 const S = {cur: null, jogo: null, sel: null, drag: null, hover: null, ghost: [], venceu: false, cell: 64,
-  n: TAM, ultFila: 0, jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0};
+  n: TAM, ultFila: 0, jog: 0, dicas: 0, t: {acum: 0, ult: 0, ativo: false}, dicaCels: [], dicaTimer: 0, ultimaIdu: 0, hist: []};
 
 const cacheDia = {};
 function faseDoDia(data){
@@ -1163,10 +1199,10 @@ function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.c
 function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
-  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, cur.k === 'b' ? filaDaFase(cur.i) : FILA_PADRAO);
+  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
-  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = [];
   S.t = {acum: 0, ult: performance.now(), ativo: cur.k === 'x'};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
@@ -1175,6 +1211,7 @@ function carregar(cur, manter){
 }
 function avisoFila(){
   const f = S.jogo.fila;
+  if (pecasPref !== 'auto' && S.jogo.filaAuto){ S.ultFila = f; return; }
   if (S.jogo.filaAuto){
     const ch = 'avFila' + f;
     if (!store.get(ch, false)){ store.set(ch, true); toast('Agora aparecem ' + f + ' peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.'); }
@@ -1259,7 +1296,7 @@ function fitFileiras(){
   }
 }
 function renderReserva(){
-  const el = $('#reserva'); el.innerHTML = '';
+  const el = $('#reserva'); el.innerHTML = ''; atualizarDesfazer();
   const arrastando = S.drag && S.drag.moved ? S.drag.piece : null;
   const vis = visiveis(S.jogo), n = vis.length;
   /* centralizadas: até 3 numa fileira; 4 = 2+2; 5 = 3+2; 6 = 3+3 */
@@ -1319,6 +1356,22 @@ function sobreposto(f, gx, gy){
   return false;
 }
 
+/* ---- desfazer: tira do tabuleiro a última peça encaixada (e devolve à seleção) ---- */
+const podeDesfazer = () => !S.venceu && S.hist.some(i => S.jogo.mapa.has(i));
+function atualizarDesfazer(){ const b = $('#btnDesfazer'); if (b) b.disabled = !podeDesfazer(); }
+function acaoDesfazer(){
+  if (S.venceu || S.drag) return;
+  let idu = 0;
+  while (S.hist.length){ const i = S.hist.pop(); if (S.jogo.mapa.has(i)){ idu = i; break; } }
+  if (!idu){ atualizarDesfazer(); return; }
+  let p = null;
+  for (let y = 0; y < S.n && !p; y++) for (let x = 0; x < S.n && !p; x++) if (S.jogo.grade[y][x] === idu) p = remover(S.jogo, x, y);
+  if (!p){ atualizarDesfazer(); return; }
+  limparDica(); devolver(p); S.sel = p;
+  S.ultimaIdu = S.hist.length ? S.hist[S.hist.length - 1] : 0;
+  Som.pegar(); vibrar(10); renderBoard(); renderReserva(); renderDica(); renderStats(); atualizarGhostHover();
+}
+
 /* ---- dica ---- */
 function limparDica(){
   clearTimeout(S.dicaTimer);
@@ -1353,30 +1406,32 @@ function tremer(){
 }
 function tentarColocar(p, gx, gy){
   if (!podeColocar(S.jogo, p.formato, gx, gy)){
-    if (sobreposto(p.formato, gx, gy)){ tremer(); Som.invalido(); }
+    if (sobreposto(p.formato, gx, gy)){ tremer(); Som.invalido(); vibrar([25, 40, 25]); }
     return false;
   }
   limparDica(); iniciaTempo();
-  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.jog++;
+  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
-  Som.encaixar();
+  Som.encaixar(); vibrar(14);
   renderBoard(); renderReserva(); renderDica(); renderStats();
   if (concluido(S.jogo)) vencer();
   return true;
 }
 function vencer(){
   tick();
-  S.venceu = true;
+  S.venceu = true; atualizarDesfazer();
   $('#board').classList.add('win');
   const cv = S.cur, selo = $('#selo');
   selo.innerHTML = ic('check'); selo.append(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome);
   selo.hidden = false;
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
+  const est = estrelasDe(j, S.jogo.total, S.dicas);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
     prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
     store.set('prog', prog);
+    if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
   if (k && !S.dicas && !modoTeste){
@@ -1385,8 +1440,8 @@ function vencer(){
     store.set('rec', recs);
   }
   renderTitulo(); renderDica(); renderStats(); renderReserva();
-  setTimeout(() => Som.vitoria(), 120);
-  setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior}), 900);
+  setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
+  setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
 }
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
@@ -1395,6 +1450,9 @@ function mostrarVitoria(res){
   $('#winTexto').textContent = c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!';
+  const re = $('#winEstrelas'); re.innerHTML = '';
+  for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
+  re.setAttribute('aria-label', res.est + (res.est === 1 ? ' estrela' : ' estrelas') + ' de 3');
   const r = $('#winRes'); r.innerHTML = '';
   const pill = (icone, txt) => { const s = document.createElement('span'); s.className = 'pill'; s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
   pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', S.dicas + (S.dicas === 1 ? ' dica' : ' dicas'));
@@ -1602,6 +1660,7 @@ window.addEventListener('keydown', e => {
   if (k === 'r') acaoGirar();
   else if (k === 't') acaoFlip();
   else if (k === 'h') acaoDica();
+  else if (k === 'z') acaoDesfazer();
   else if (k === 'e' && S.hover && !S.venceu && S.jogo.grade[S.hover.y][S.hover.x]){
     const p = remover(S.jogo, S.hover.x, S.hover.y);
     if (p){ limparDica(); devolver(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
@@ -1664,6 +1723,7 @@ window.addEventListener('hashchange', () => { const l = lerLink(); if (l){ docum
 $('#btnGirar').onclick = acaoGirar;
 $('#btnFlip').onclick = acaoFlip;
 $('#btnDica').onclick = acaoDica;
+$('#btnDesfazer').onclick = acaoDesfazer;
 $('#btnReset').onclick = () => { if (S.cur.k === 'x'){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
 $('#btnMenu').onclick = () => abrirMenu();
 function iconeMusica(){
@@ -1689,13 +1749,15 @@ function abrirMenu(){
     const b = document.createElement('button');
     b.className = 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : '');
     b.disabled = trancada;
-    b.innerHTML = `<span>${i + 1}</span>` + (feito ? ic('check') : '') + (trancada ? ic('lock') : '');
+    b.innerHTML = `<span>${i + 1}</span>` + (feito ? ic('check') : '') + (trancada ? ic('lock') : '') + (feito && estrelasFase[i] ? `<span class="est" aria-label="${estrelasFase[i]} de 3 estrelas">${'★'.repeat(estrelasFase[i])}</span>` : '');
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
   });
   renderDiario(); renderCustom(); atualizarInstalar(); renderTeste();
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
   $('#selHumor').value = humorPref;
+  $('#selPecas').value = String(pecasPref);
+  $('#chkVibra').checked = vibraOn; $('#rowVibra').hidden = !navigator.vibrate;
   abrir('menu');
 }
 function renderCustom(){
@@ -1718,8 +1780,10 @@ $('#btnDia').onclick = () => {
   setTimeout(() => carregar({k: 'd', data: dataHoje()}), 30);
 };
 $('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica(); };
+$('#chkVibra').onchange = e => { vibraOn = e.target.checked; store.set('vibra', vibraOn); if (vibraOn) vibrar(30); };
 $('#chkSfx').onchange = e => Som.setSfx(e.target.checked);
 $('#rngVol').oninput = e => Som.setVolume(e.target.value / 100);
+$('#selPecas').onchange = e => { pecasPref = e.target.value === 'auto' ? 'auto' : +e.target.value; store.set('pecas', pecasPref); aplicarPecas(); toast(pecasPref === 'auto' ? 'Peças por vez: automático, de acordo com a fase.' : pecasPref === 99 ? 'Agora todas as peças aparecem de uma vez.' : 'Agora aparecem ' + pecasPref + ' peças por vez.'); };
 $('#selHumor').onchange = e => { humorPref = e.target.value; store.set('humor', humorPref); aplicarHumor(); };
 function renderTeste(){ const b = $('#btnTeste'); b.lastChild.textContent = modoTeste ? 'Sair do modo de teste' : 'Modo de teste'; }
 $('#btnTeste').onclick = () => {
