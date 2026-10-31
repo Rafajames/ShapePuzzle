@@ -253,7 +253,7 @@ main{touch-action:pan-y}
     <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
     <ul class="how">
       <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
-      <li><b>2</b><span>Gire e espelhe a peça para ela caber (no celular: deslize para os lados para girar e dê dois toques para espelhar; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+      <li><b>2</b><span>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
       <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
     </ul>
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
@@ -519,10 +519,12 @@ function girar(f){
 function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
-const FILA_PADRAO = 4;   /* sem "FILA:" na fase, aparecem 4 peças por vez */
-function novoJogo(texto){
+const FILA_PADRAO = 4;   /* fases fora da lista (do dia, criadas, compartilhadas) mostram 4 peças por vez */
+/* Fases da lista: começam com 6 peças à vista e vão diminuindo até 3 (fases com "FILA:" própria mantêm a delas). */
+const filaDaFase = i => i < 10 ? 6 : i < 20 ? 5 : i < 30 ? 4 : 3;
+function novoJogo(texto, filaPadrao = FILA_PADRAO){
   const {gab, pecas, n, fila: filaFase} = parseFase(texto);
-  const filaAuto = !filaFase && pecas.length > FILA_PADRAO, fila = filaFase || (filaAuto ? FILA_PADRAO : 0);
+  const filaAuto = !filaFase && pecas.length > filaPadrao, fila = filaFase || (filaAuto ? filaPadrao : 0);
   return {
     n, fila, filaAuto, total: pecas.length,
     gab,
@@ -1123,7 +1125,7 @@ function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.c
 function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
-  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text);
+  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, cur.k === 'b' ? filaDaFase(cur.i) : FILA_PADRAO);
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0;
@@ -1136,7 +1138,8 @@ function carregar(cur, manter){
 function avisoFila(){
   const f = S.jogo.fila;
   if (S.jogo.filaAuto){
-    if (!store.get('avFila4', false)){ store.set('avFila4', true); toast('Aparecem 4 peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.'); }
+    const ch = 'avFila' + f;
+    if (!store.get(ch, false)){ store.set(ch, true); toast('Agora aparecem ' + f + ' peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.'); }
     S.ultFila = f; return;
   }
   if (f && S.ultFila !== f) toast(f === 1 ? 'Uma peça por vez: você só vê a peça da vez. Tirar uma peça do tabuleiro a coloca de volta na frente.'
@@ -1224,7 +1227,7 @@ function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
   if (S.venceu) t = 'Fase concluída!';
-  else if (toque) t = S.sel ? 'Deslize para os lados para girar · dois toques espelham · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, deslize para girar e dê dois toques para espelhar.';
+  else if (toque) t = S.sel ? 'Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.';
   else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';
   else if (S.sel) t = toque ? 'Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).'
                              : 'Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).';
@@ -1271,7 +1274,7 @@ function acaoDica(){
       const c = cellEl(r.px + k, r.py + i); c.style.setProperty('--c', COR[r.peca.id]); c.classList.add('dica'); S.dicaCels.push(c);
     }
     selecionar(r.peca); renderStats();
-    toast(matchMedia('(pointer:coarse)').matches ? 'A peça selecionada vai nesse lugar. Deslize para girar e dê dois toques para espelhar.' : 'A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
+    toast(matchMedia('(pointer:coarse)').matches ? 'A peça selecionada vai nesse lugar. Dois toques giram e deslizar o dedo espelha.' : 'A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
   } else {
     const idu = S.ultimaIdu && S.jogo.mapa.has(S.ultimaIdu) ? S.ultimaIdu : 0;
     if (idu) for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
@@ -1453,8 +1456,8 @@ function fimDrag(e, cancelado){
     const {gx, gy} = gridDeOrigem(origemFlut(d));
     if (!tentarColocar(d.piece, gx, gy) && !sobreposto(d.piece.formato, gx, gy)) Som.soltar();
   } else if (!d.moved && d.origem === 'reserva' && d.tipo !== 'mouse' && toqueDuplo(d.x0, d.y0)){
-    S.sel = d.piece; S.drag = null; S.sel.formato = inverter(S.sel.formato); Som.flip();
-  } else if (!d.moved && d.jaSel && d.origem === 'reserva'){
+    S.sel = d.piece; S.drag = null; S.sel.formato = girar(S.sel.formato); Som.girar();
+  } else if (!d.moved && d.jaSel && d.origem === 'reserva' && d.tipo === 'mouse'){
     S.sel = null;
   }
   renderReserva(); renderDica();
@@ -1462,7 +1465,7 @@ function fimDrag(e, cancelado){
 window.addEventListener('pointerup', e => fimDrag(e, false));
 window.addEventListener('pointercancel', e => fimDrag(e, true));
 
-/* ---- gestos no celular: deslizar gira 90°, dois toques espelham ---- */
+/* ---- gestos no celular: dois toques giram 90°, deslizar espelha ---- */
 let G = null, ULT_TOQUE = null;
 const SWIPE_MIN = 34;
 function girarAntihorario(f){ return girar(girar(girar(f))); }
@@ -1487,15 +1490,15 @@ function fimGesto(e, cancelado){
   G = null; if (cancelado || S.venceu) return;
   const dx = e.clientX - g.x0, dy = e.clientY - g.y0, dt = performance.now() - g.t0;
   if (Math.abs(dx) >= SWIPE_MIN && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 900){
-    if (!S.sel){ toast('Toque numa peça para selecionar e deslize para girar'); return; }
-    S.sel.formato = dx > 0 ? girar(S.sel.formato) : girarAntihorario(S.sel.formato);
-    Som.girar(); aposTransformar(); return;
+    if (!S.sel){ toast('Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.'); return; }
+    S.sel.formato = inverter(S.sel.formato);
+    Som.flip(); aposTransformar(); return;
   }
   if (Math.hypot(dx, dy) < 12 && dt < 450){
     if (g.zona === 'tabuleiro' && S.sel){
       const f = S.sel.formato; tentarColocar(S.sel, g.cel.x - Math.floor(f[0].length / 2), g.cel.y - Math.floor(f.length / 2));
     } else if (g.zona === 'fundo' && S.sel && toqueDuplo(e.clientX, e.clientY)){
-      S.sel.formato = inverter(S.sel.formato); Som.flip(); aposTransformar();
+      S.sel.formato = girar(S.sel.formato); Som.girar(); aposTransformar();
     }
   }
 }

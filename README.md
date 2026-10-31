@@ -10,8 +10,8 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 
 - **50 fases** com dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas 3, 2 ou 1 peças da fila (as outras entram conforme você encaixa). Todas as fases novas têm solução única.
 - **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
-- **4 peças por vez**: só as 4 próximas peças aparecem; ao encaixar uma, a seguinte entra (algumas fases do final usam fila de 1 a 3).
-- **No celular**: deslize para a direita ou para a esquerda para girar a peça 90°, dê dois toques para espelhar. No computador ficam os botões e as teclas R e T.
+- **Peças por vez**: nas primeiras 10 fases aparecem 6 peças; depois 5, 4 e, da fase 31 em diante, 3 (algumas fases do final usam fila de 1 a 3). Ao encaixar uma, a seguinte entra.
+- **No celular**: dois toques giram a peça 90° e deslizar o dedo espelha. No computador ficam os botões e as teclas R e T.
 - **Dica**: mostra onde vai uma peça. Partidas com dica não valem recorde.
 - **Tempo, jogadas e recorde** por fase.
 - **Música gerada por código** (Web Audio API) em 3 climas — Calma, Animada e Noturna — que mudam sozinhos a cada 10 fases ou ficam fixos à sua escolha.
