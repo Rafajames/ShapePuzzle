@@ -53,9 +53,16 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 - **Ver a solução**: mostra todas as peças no lugar, uma de cada vez; qualquer toque ou tecla encerra. Conta como dica (sem recorde e sem 3 estrelas). Não existe em campeonatos.
 - **QR code**: em qualquer painel de compartilhar, o botão "Mostrar QR code" gera o código na hora, sem internet (biblioteca MIT embutida no `index.html`).
 
+## Atualização do jogo
+
+- Quem instalou o jogo (ou deixou aberto) recebe um aviso **"Tem uma versão nova do jogo"** com o botão **Atualizar o jogo**. O jogo confere sozinho ao abrir, ao voltar para ele e a cada 30 minutos.
+- Também dá para conferir na hora em **Menu → Atualização → Verificar atualizações** (o menu mostra a versão atual).
+- Ao atualizar, o jogo apaga o cache e recarrega; o progresso, as estrelas e os ajustes ficam guardados. A fase em andamento recomeça, e durante um campeonato a atualização espera.
+- **Para publicar uma versão nova:** aumente a constante `VERSAO` no `index.html` (formato `AAAA.MM.DD.N`, ex.: `2026.11.02.1`). Sem isso, o jogo não percebe que há novidade. O GitHub Pages pode levar alguns minutos para mostrar o arquivo novo.
+
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução e QR code). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução, QR code e atualização). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
 
 ## Extras de jogo
 

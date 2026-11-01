@@ -30,6 +30,8 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 7. **Conquistas e medalhas** guardadas no aparelho. _A ver._
 8. **Modo dois jogadores no mesmo aparelho**, **modo criança**, **backup do progresso por código/arquivo**, **efeitos sonoros e mais músicas**. _A ver._
 
+9. **Atualização do jogo instalado** — aviso de versão nova + botão "Verificar atualizações" no menu. _Feito._ (A cada publicação, aumentar `VERSAO` no `index.html`.)
+
 ## Para pensar com cuidado
 10. **Tempo de campeonato à prova de trapaça** — guardar a sequência de jogadas e conferir se resolve a fase.
 11. **Limite de campeonatos por organizador.**

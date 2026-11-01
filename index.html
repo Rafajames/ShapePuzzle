@@ -251,6 +251,11 @@ details.cfg summary{cursor:pointer;font-weight:600}
 #toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:120;background:var(--toast);border:1px solid var(--line);color:var(--txt);
   padding:11px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+#upd{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:110;width:min(94vw,460px);display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  padding:12px 14px;border-radius:16px;background:var(--card1);border:1px solid var(--accent);box-shadow:0 12px 40px var(--shc);color:var(--txt);font-size:14px;animation:fade .25s}
+#upd span{flex:1 1 100%;line-height:1.4}
+#upd .btn{flex:1}
+#updMsg.ok{color:var(--ok)}#updMsg.erro{color:var(--bad)}#updMsg{color:var(--mut)}
 
 .conf{pointer-events:none;position:absolute;left:50%;top:40%;width:9px;height:14px;border-radius:2px;opacity:0;animation:conf 1.3s ease-out forwards}
 .vit{text-align:center;overflow:hidden}
@@ -364,6 +369,11 @@ body.rm #mao.on{opacity:1}
 <div id="flut" hidden></div>
 <div id="mao" aria-hidden="true"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="upd" role="status" hidden>
+  <span id="updTxt"></span>
+  <button class="btn sm pri" id="updSim" data-i="download">Atualizar o jogo</button>
+  <button class="btn sm" id="updNao">Depois</button>
+</div>
 <div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- Abertura -->
@@ -447,6 +457,10 @@ body.rm #mao.on{opacity:1}
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
       <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
     </div>
+    <h2>Atualização</h2>
+    <p id="verTxt" style="margin:0 0 4px"></p>
+    <div class="acts" style="margin-top:8px"><button class="btn" id="btnAtualizar" data-i="reset" style="width:100%">Verificar atualizações</button></div>
+    <p id="updMsg" role="status" aria-live="polite" style="margin:8px 0 0;font-size:13px;min-height:18px"></p>
     <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
     <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
     <h2>Sobre</h2>
@@ -1019,6 +1033,19 @@ en: {
   "Pôr do sol": "Sunset",
   "Com alto contraste ligado, o tema escuro é usado.": "With high contrast on, the dark theme is used.",
   "Tema alterado.": "Theme changed.",
+  "Atualização": "Update",
+  "Verificar atualizações": "Check for updates",
+  "Depois": "Later",
+  "Atualizar o jogo": "Update the game",
+  "Atualizar agora": "Update now",
+  "Versão {v}": "Version {v}",
+  "Procurando…": "Checking…",
+  "Versão nova encontrada! Toque em Atualizar agora.": "New version found! Tap Update now.",
+  "Você já está com a versão mais recente.": "You already have the latest version.",
+  "Não deu para verificar agora. Confira a conexão com a internet.": "Couldn't check right now. Check your internet connection.",
+  "Tem uma versão nova do jogo.": "There is a new version of the game.",
+  "A fase em andamento recomeça ao atualizar.": "The level in progress restarts when you update.",
+  "Termine o campeonato antes de atualizar.": "Finish the tournament before updating.",
 },
 es: {
   "Girar": "Girar",
@@ -1386,6 +1413,19 @@ es: {
   "Pôr do sol": "Atardecer",
   "Com alto contraste ligado, o tema escuro é usado.": "Con el alto contraste activado se usa el tema oscuro.",
   "Tema alterado.": "Tema cambiado.",
+  "Atualização": "Actualización",
+  "Verificar atualizações": "Buscar actualizaciones",
+  "Depois": "Después",
+  "Atualizar o jogo": "Actualizar el juego",
+  "Atualizar agora": "Actualizar ahora",
+  "Versão {v}": "Versión {v}",
+  "Procurando…": "Buscando…",
+  "Versão nova encontrada! Toque em Atualizar agora.": "¡Versión nueva encontrada! Toca Actualizar ahora.",
+  "Você já está com a versão mais recente.": "Ya tienes la versión más reciente.",
+  "Não deu para verificar agora. Confira a conexão com a internet.": "No se pudo comprobar ahora. Revisa tu conexión a internet.",
+  "Tem uma versão nova do jogo.": "Hay una versión nueva del juego.",
+  "A fase em andamento recomeça ao atualizar.": "El nivel en curso se reinicia al actualizar.",
+  "Termine o campeonato antes de atualizar.": "Termina el torneo antes de actualizar.",
 }
 };
 /*DICT-END*/
@@ -1837,6 +1877,7 @@ function registrarI18n(){
 function aplicarIdioma(){
   document.documentElement.lang = LANG_HTML[lang];
   if (window.__pronto){ rotuloTabuleiro(); renderSelo(); if (S.jogo) renderBoard(); }
+  if (window.__pronto){ renderAtualizacao(); msgAtualizacao(''); if (Upd.nova && !$('#upd').hidden) $('#updTxt').textContent = textoAvisoAtualizacao(); }
   REG.txt = REG.txt.filter(r => r.n.isConnected);
   for (const r of REG.txt){
     if (r.n.data !== r.shown && r.n.data !== r.orig) continue;      /* o jogo mudou esse texto sozinho: ele cuida da tradução */
@@ -2923,6 +2964,7 @@ function abrirMenu(){
   $('#selHumor').value = humorPref;
   $('#selPecas').value = String(pecasPref);
   $('#chkVibra').checked = vibraOn; $('#rowVibra').hidden = !navigator.vibrate;
+  renderAtualizacao(); msgAtualizacao('');
   $('#selIdioma').value = lang; $('#selTema').value = tema; $('#chkDalt').checked = !!a11y.dalt; $('#chkCont').checked = !!a11y.cont; $('#chkTexto').checked = !!a11y.texto; $('#chkMov').checked = !!a11y.mov;
   abrir('menu');
 }
@@ -3016,6 +3058,69 @@ $('#btnInstalar').onclick = async () => {
   promptInstalar = null; atualizarInstalar();
 };
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* ======================= Atualização do jogo =======================
+   VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
+const VERSAO = '2026.11.01.1';
+const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
+function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
+const Upd = {nova: null, ultimo: 0, dispensada: ''};
+async function versaoRemota(){
+  const r = await fetch(location.pathname + '?chk=' + Date.now(), {cache: 'no-store'});
+  if (!r.ok) throw new Error('http ' + r.status);
+  const m = (await r.text()).match(/const VERSAO = '([^']+)'/);
+  if (!m) throw new Error('sem versão');
+  return m[1];
+}
+/* Devolve 'nova' | 'atual' | 'erro'. Em modo silencioso só mostra o aviso quando há versão nova. */
+async function verificarAtualizacao(silencioso){
+  Upd.ultimo = Date.now();
+  let v;
+  try{ v = await versaoRemota(); }catch(e){ return 'erro'; }
+  if (versaoMaior(v, VERSAO)){
+    Upd.nova = v;
+    if (!silencioso || Upd.dispensada !== v) mostrarAvisoAtualizacao();
+    return 'nova';
+  }
+  Upd.nova = null; $('#upd').hidden = true;
+  return 'atual';
+}
+function textoAvisoAtualizacao(){
+  return tr('Tem uma versão nova do jogo.') + (S && S.jog > 0 && !S.venceu ? ' ' + tr('A fase em andamento recomeça ao atualizar.') : '');
+}
+function mostrarAvisoAtualizacao(){
+  $('#updTxt').textContent = textoAvisoAtualizacao(); $('#upd').hidden = false;
+  anunciar(tr('Tem uma versão nova do jogo.'));
+}
+async function aplicarAtualizacao(){
+  if (S.cur && S.cur.k === 'x' && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
+  try{
+    await fetch(location.pathname, {cache: 'reload'});                      // atualiza o cache do navegador
+    if ('caches' in window){ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg) await reg.update();
+  }catch(e){}
+  location.reload();
+}
+function renderAtualizacao(){
+  $('#verTxt').textContent = tr('Versão {v}', {v: VERSAO});
+  const b = $('#btnAtualizar'); b.lastChild.textContent = tr(Upd.nova ? 'Atualizar agora' : 'Verificar atualizações');
+}
+function msgAtualizacao(txt, cls){ const m = $('#updMsg'); m.textContent = txt ? tr(txt) : ''; m.className = cls || ''; }
+$('#btnAtualizar').onclick = async () => {
+  if (Upd.nova){ aplicarAtualizacao(); return; }
+  const b = $('#btnAtualizar'); b.disabled = true; msgAtualizacao('Procurando…');
+  const r = await verificarAtualizacao(false); b.disabled = false;
+  if (r === 'nova'){ msgAtualizacao('Versão nova encontrada! Toque em Atualizar agora.', 'ok'); renderAtualizacao(); }
+  else if (r === 'atual') msgAtualizacao('Você já está com a versão mais recente.', 'ok');
+  else msgAtualizacao('Não deu para verificar agora. Confira a conexão com a internet.', 'erro');
+};
+$('#updSim').onclick = aplicarAtualizacao;
+$('#updNao').onclick = () => { Upd.dispensada = Upd.nova || ''; $('#upd').hidden = true; };
+if (location.protocol.startsWith('http')){
+  setTimeout(() => verificarAtualizacao(true), 5000);
+  setInterval(() => verificarAtualizacao(true), 30 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - Upd.ultimo > 10 * 60 * 1000) verificarAtualizacao(true); });
+}
 
 /* ---- editor ---- */
 const E = {grid: Array.from({length: TAM}, () => Array(TAM).fill(0)), cor: 1, modo: null};

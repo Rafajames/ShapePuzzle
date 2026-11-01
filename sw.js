@@ -1,5 +1,5 @@
 // Service worker do Shape Puzzle: funciona offline e sempre tenta pegar a versão mais nova primeiro.
-const CACHE = 'shapepuzzle-v1';
+const CACHE = 'shapepuzzle-v2';
 const ARQUIVOS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -10,9 +10,10 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== 'GET' || url.origin !== location.origin || url.searchParams.has('chk')) return;  // 'chk' = verificação de atualização: vai direto à rede
   e.respondWith(
-    fetch(req).then(res => {
+    fetch(req, {cache: 'no-cache'}).then(res => {
       if (res && res.ok){ const copia = res.clone(); caches.open(CACHE).then(c => c.put(req, copia)); }
       return res;
     }).catch(() => caches.match(req, {ignoreSearch: true}).then(r => r || caches.match('index.html')))
