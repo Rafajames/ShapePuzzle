@@ -26,7 +26,7 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 3. **QR code ao compartilhar** — botão "Mostrar QR code" no painel de compartilhar (jogo, fase por link, resultado). _Feito._
 4. **Modo infinito** — fases novas geradas sozinhas, com solução garantida e vários níveis. _Depois._
 5. **Estatísticas pessoais** — fases feitas, estrelas, tempo total e melhores marcas. _Depois._
-6. **Temas e cores das peças** — claro/escuro e paletas, além do modo daltônico. _Depois._
+6. **Temas** — Automático (segue o aparelho), Escuro, Claro, Oceano, Floresta e Pôr do sol, em Menu → Tema. _Feito._ Cores diferentes para as peças ficam para depois.
 7. **Conquistas e medalhas** guardadas no aparelho. _A ver._
 8. **Modo dois jogadores no mesmo aparelho**, **modo criança**, **backup do progresso por código/arquivo**, **efeitos sonoros e mais músicas**. _A ver._
 

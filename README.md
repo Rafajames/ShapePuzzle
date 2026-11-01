@@ -39,8 +39,9 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 | `java-original/` | Primeira versão em Java Swing — não é usada pelo jogo web ([veja o README dela](java-original/README.md)) |
 | `MELHORIAS.md` | Lista de ideias e o que já foi feito |
 
-## Acessibilidade e idiomas
+## Temas, acessibilidade e idiomas
 
+- Menu → **Tema**: Automático (segue o claro/escuro do aparelho), Escuro (padrão), Claro, Oceano, Floresta e Pôr do sol. A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.
 - Menu → **Acessibilidade**: modo para daltônicos (um símbolo em cada cor), alto contraste, texto maior e reduzir animações (segue também a configuração do aparelho).
 - **Teclado**: setas movem o cursor no tabuleiro, `1`–`6` escolhe a peça, `R` gira, `T` espelha, `Enter`/`Espaço` encaixa ou tira a peça, `Z` desfaz, `P` pega a peça.
 - **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
@@ -54,7 +55,7 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, acessibilidade, dica, solução e QR code). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução e QR code). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
 
 ## Extras de jogo
 
