@@ -1,4 +1,7 @@
 node_modules/
 tests/saida/
-target/
 __pycache__/
+# Java (versão original)
+target/
+java-original/target/
+*.class
