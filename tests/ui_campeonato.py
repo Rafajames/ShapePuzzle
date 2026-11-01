@@ -87,7 +87,7 @@ def handler(route, req):
     route.fulfill(status=400, headers=h, body='{}')
 
 def novo(browser, w=390, h=844):
-    ctx = browser.new_context(viewport={'width': w, 'height': h}, device_scale_factor=2)
+    ctx = browser.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, device_scale_factor=2)
     ctx.grant_permissions(['clipboard-read', 'clipboard-write'], origin='http://127.0.0.1:8765')
     ctx.route(re.compile(r'https://.*\.firebaseio\.com/.*'), handler)
     ctx.route(re.compile(r'https://(identitytoolkit|securetoken)\.googleapis\.com/.*'), auth_handler)

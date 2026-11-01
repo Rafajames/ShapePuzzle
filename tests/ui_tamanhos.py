@@ -11,7 +11,7 @@ def check(c, m):
     print(('  ok   ' if c else '  FALHA ') + m)
     if not c: falhas.append(m)
 def novo(b, w=390, h=844, init=None):
-    ctx = b.new_context(viewport={'width': w, 'height': h}, device_scale_factor=2)
+    ctx = b.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, device_scale_factor=2)
     if init: ctx.add_init_script(init)
     pg = ctx.new_page()
     pg.on('pageerror', lambda e: erros.append('pageerror: ' + str(e)))

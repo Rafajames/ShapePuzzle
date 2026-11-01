@@ -13,7 +13,7 @@ RES="""() => { const j=S.jogo; const occ=j.grade.map(r=>r.map(v=>v!==0)); const 
  let g=0; while(pl.length && g++<200){ const vis=visiveis(S.jogo).map(p=>p.uid); const i=pl.findIndex(x=>vis.includes(x.uid)); const st=pl.splice(i,1)[0];
    const p=S.jogo.reserva.find(q=>q.uid===st.uid); p.formato=st.o; tentarColocar(p,st.px,st.py);} }"""
 with sync_playwright() as pw:
-    b=pw.chromium.launch(); ctx=b.new_context(viewport={'width':390,'height':844}); pg=ctx.new_page()
+    b=pw.chromium.launch(); ctx=b.new_context(locale='pt-BR', viewport={'width':390,'height':844}); pg=ctx.new_page()
     pg.on('pageerror',lambda e:erros.append(str(e)))
     pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
     check(pg.locator('#tiles .tile').nth(39).is_disabled(),'fase 40 trancada no início')

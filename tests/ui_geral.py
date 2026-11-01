@@ -14,7 +14,7 @@ def check(cond, msg):
     if not cond: falhas.append(msg)
 
 def novo(browser, **kw):
-    ctx = browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=2, **kw)
+    ctx = browser.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}, device_scale_factor=2, **kw)
     ctx.grant_permissions(['clipboard-read', 'clipboard-write'], origin='http://127.0.0.1:8765')
     pg = ctx.new_page()
     pg.on('pageerror', lambda e: erros.append('pageerror: ' + str(e)))

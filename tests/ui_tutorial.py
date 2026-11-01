@@ -10,7 +10,7 @@ def check(c, m):
     if not c: falhas.append(m)
 with sync_playwright() as pw:
     b = pw.chromium.launch()
-    ctx = b.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=2, has_touch=True, is_mobile=True)
+    ctx = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}, device_scale_factor=2, has_touch=True, is_mobile=True)
     pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e)))
     cdp = ctx.new_cdp_session(pg)
     def toque(x, y):
@@ -56,14 +56,14 @@ with sync_playwright() as pw:
     check(pg.evaluate("tuto.fim") is True and not pg.is_visible('#tutoPular'), 'pular encerra o tutorial')
     print('Telas pequenas')
     for w, h in [(320, 568), (360, 640), (390, 844)]:
-        c2 = b.new_context(viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); p2 = c2.new_page(); p2.on('pageerror', lambda e: erros.append(str(e)))
+        c2 = b.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); p2 = c2.new_page(); p2.on('pageerror', lambda e: erros.append(str(e)))
         p2.goto(URL); p2.click('#btnJogar'); p2.wait_for_timeout(400)
         for i in (0, 14, 35):
             p2.evaluate("carregar({k:'b',i:%d})" % i); p2.wait_for_timeout(200)
             check(p2.evaluate("document.documentElement.scrollHeight") <= h, f'{w}x{h} fase {i+1}: sem rolagem com tutorial')
         c2.close()
     print('Computador (mouse)')
-    c3 = b.new_context(viewport={'width': 1200, 'height': 800}); p3 = c3.new_page(); p3.on('pageerror', lambda e: erros.append(str(e)))
+    c3 = b.new_context(locale='pt-BR', viewport={'width': 1200, 'height': 800}); p3 = c3.new_page(); p3.on('pageerror', lambda e: erros.append(str(e)))
     p3.goto(URL); p3.click('#btnJogar'); p3.wait_for_timeout(400)
     check(not p3.evaluate("document.querySelector('#mao').classList.contains('on')") and not p3.is_visible('#tutoPular'), 'tutorial não aparece no computador')
     b.close()

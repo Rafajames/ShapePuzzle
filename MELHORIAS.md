@@ -9,11 +9,15 @@ Lista de ideias discutidas, por prioridade. Marque aqui o que for sendo feito.
 4. **Conferir os campeonatos de ponta a ponta** — teste real com duas pessoas no Firebase; tela de diagnóstico (banco / login / regras).
 
 ## Boas, menos urgentes
-5. **Modo para daltônicos** — um símbolo em cada cor, ligável no menu.
+5. **Modo para daltônicos** — um símbolo em cada cor, ligável no menu. _Feito (menu → Acessibilidade)._
 6. **Escolher quantas peças aparecem** — ajuste opcional (hoje: 6 → 3 conforme a dificuldade). _Feito (menu → Peças por vez)._
 7. **Campeonato mais fácil de divulgar** — QR code do convite e botão "compartilhar ranking" (texto para WhatsApp).
 8. **Editor de fases maior** — fases 6×6 e 7×7 e escolha de quantas peças aparecem por vez.
 9. **Vibração leve no celular** e uma estrela de desempenho por fase (tempo/jogadas). _Feito: 3 estrelas = sem dica e sem recolocar peças; 2 = até 50% de jogadas a mais; 1 = o resto. Vibração liga/desliga no menu._
+
+## Feito a pedido (fora da lista)
+- **Acessibilidade** — jogar só com o teclado (setas, 1–6 escolhe peça, R/T gira/espelha, Enter/Espaço encaixa, Z desfaz), leitor de tela (rótulos e avisos de cada jogada), alto contraste, texto maior, reduzir animações e zoom liberado. _Feito (menu → Acessibilidade)._
+- **Idiomas** — Português, English e Español; o jogo escolhe pelo idioma do aparelho e dá para trocar no menu. _Feito._
 
 ## Para pensar com cuidado
 10. **Tempo de campeonato à prova de trapaça** — guardar a sequência de jogadas e conferir se resolve a fase.

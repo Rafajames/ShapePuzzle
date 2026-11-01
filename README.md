@@ -77,9 +77,16 @@ As fases são salvas em arquivos `.txt` com a seguinte estrutura:
 
 Desenvolvido por [Rafajames](https://github.com/Rafajames)
 
+## Acessibilidade e idiomas
+
+- Menu → **Acessibilidade**: modo para daltônicos (um símbolo em cada cor), alto contraste, texto maior e reduzir animações (segue também a configuração do aparelho).
+- **Teclado**: setas movem o cursor no tabuleiro, `1`–`6` escolhe a peça, `R` gira, `T` espelha, `Enter`/`Espaço` encaixa ou tira a peça, `Z` desfaz, `P` pega a peça.
+- **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
+- **Idiomas**: Português, English e Español, escolhidos pelo idioma do aparelho e trocáveis em Menu → Idioma. As traduções ficam no bloco `DICT` do `index.html`; `tests/idiomas.js` confere se nada ficou sem tradução.
+
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos e tutorial). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas e acessibilidade). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
 
 ## Extras de jogo
 

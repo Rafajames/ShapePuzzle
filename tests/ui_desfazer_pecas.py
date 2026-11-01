@@ -12,7 +12,7 @@ COLOCA = "(()=>{const r=dicaDe(S.jogo); if(r.tipo!=='ok') return false; r.peca.f
 FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')"
 with sync_playwright() as pw:
     b = pw.chromium.launch()
-    ctx = b.new_context(viewport={'width': 1280, 'height': 720}); ctx.add_init_script("try{" + FIM + "}catch(e){}")
+    ctx = b.new_context(locale='pt-BR', viewport={'width': 1280, 'height': 720}); ctx.add_init_script("try{" + FIM + "}catch(e){}")
     pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e)))
     pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(400)
     pg.evaluate("carregar({k:'b',i:0})"); pg.wait_for_timeout(200)
@@ -84,7 +84,7 @@ with sync_playwright() as pw:
 
     print('Telas pequenas (celular)')
     for w, h in [(320, 568), (360, 640), (390, 844)]:
-        c2 = b.new_context(viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); c2.add_init_script("try{" + FIM + "}catch(e){}")
+        c2 = b.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); c2.add_init_script("try{" + FIM + "}catch(e){}")
         p2 = c2.new_page(); p2.on('pageerror', lambda e: erros.append(str(e)))
         p2.goto(URL); p2.click('#btnJogar'); p2.wait_for_timeout(400)
         for i in (0, 14, 35):

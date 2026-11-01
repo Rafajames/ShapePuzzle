@@ -12,7 +12,7 @@ RES="""() => { const j=S.jogo; const occ=j.grade.map(r=>r.map(v=>v!==0)); const 
 with sync_playwright() as pw:
     b=pw.chromium.launch()
     for (w,h) in [(320,568),(360,640),(390,844),(412,915),(768,1024),(1366,768),(1280,720),(1920,1080)]:
-        ctx=b.new_context(viewport={'width':w,'height':h}); pg=ctx.new_page()
+        ctx=b.new_context(locale='pt-BR', viewport={'width':w,'height':h}); pg=ctx.new_page()
         erros=[]; pg.on('pageerror',lambda e:erros.append(str(e)))
         pg.goto(URL); pg.click('#btnJogar')
         linha=[]

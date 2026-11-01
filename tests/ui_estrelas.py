@@ -23,7 +23,7 @@ def jogar_ate_vencer(pg, extra=0, dica=False):
     pg.wait_for_selector('#ov-win.on', timeout=5000); pg.wait_for_timeout(200)
 with sync_playwright() as pw:
     b = pw.chromium.launch()
-    ctx = b.new_context(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
+    ctx = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
     ctx.add_init_script("try{" + FIM + "}catch(e){}; " + VIB)
     pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e)))
     pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(400)
@@ -64,7 +64,7 @@ with sync_playwright() as pw:
     print('Telas pequenas: vitória sem estourar')
     ctx.close()
     for w, h in [(320, 568), (360, 640)]:
-        c2 = b.new_context(viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); c2.add_init_script("try{" + FIM + "}catch(e){}")
+        c2 = b.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, has_touch=True, is_mobile=True); c2.add_init_script("try{" + FIM + "}catch(e){}")
         p2 = c2.new_page(); p2.on('pageerror', lambda e: erros.append(str(e)))
         p2.goto(URL); p2.click('#btnJogar'); p2.wait_for_timeout(400)
         jogar_ate_vencer(p2)
@@ -74,7 +74,7 @@ with sync_playwright() as pw:
         check(not p2.is_visible('#rowVibra') or True, 'sem erro de vibração em aparelho sem suporte')
         c2.close()
     print('Aparelho sem suporte a vibração (iPhone)')
-    c3 = b.new_context(viewport={'width': 390, 'height': 844}); c3.add_init_script("try{" + FIM + "}catch(e){}; Object.defineProperty(navigator,'vibrate',{value:undefined,configurable:true});")
+    c3 = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}); c3.add_init_script("try{" + FIM + "}catch(e){}; Object.defineProperty(navigator,'vibrate',{value:undefined,configurable:true});")
     p3 = c3.new_page(); p3.on('pageerror', lambda e: erros.append(str(e)))
     p3.goto(URL); p3.click('#btnJogar'); p3.wait_for_timeout(400)
     p3.evaluate("carregar({k:'b',i:0})"); p3.evaluate(COLOCA)

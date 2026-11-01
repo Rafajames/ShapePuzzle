@@ -12,7 +12,7 @@ def check(c,m):
 with sync_playwright() as pw:
     b=pw.chromium.launch()
     for (w,h) in [(390,844),(320,568),(1280,720)]:
-        ctx=b.new_context(viewport={'width':w,'height':h},has_touch=w<500,is_mobile=w<500); ctx.add_init_script("try{localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')}catch(e){}"); pg=ctx.new_page(); pg.on('pageerror',lambda e:erros.append(str(e)))
+        ctx=b.new_context(locale='pt-BR', viewport={'width':w,'height':h},has_touch=w<500,is_mobile=w<500); ctx.add_init_script("try{localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')}catch(e){}"); pg=ctx.new_page(); pg.on('pageerror',lambda e:erros.append(str(e)))
         pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(200)
         print(f'{w}x{h}')
         for n,esperado in [(1,[1]),(2,[2]),(3,[3]),(4,[2,2]),(5,[3,2]),(6,[3,3])]:

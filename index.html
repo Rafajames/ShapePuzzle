@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0c0c12">
 <meta name="description" content="Shape Puzzle — quebra-cabeça lógico: preencha o tabuleiro 5x5 com as peças e cubra cada estrela com a cor certa.">
 <meta property="og:title" content="Shape Puzzle">
@@ -230,6 +230,44 @@ details.cfg summary{cursor:pointer;font-weight:600}
 @keyframes aGiro{from{transform:rotate(-90deg) scale(.8)}to{transform:none}}
 @keyframes aFlip{from{transform:scaleX(-1)}to{transform:none}}
 main{touch-action:pan-y}
+
+/* ---- acessibilidade ---- */
+.sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px rgba(124,108,255,.85)}
+#board:focus-visible{outline-offset:5px;border-radius:16px}
+.cell.cur{outline:3px solid #fff;outline-offset:-3px;z-index:2}
+.cell.cur::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 6px rgba(124,108,255,.8);pointer-events:none}
+[data-s="1"]{--sym:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4 21 20H3z' fill='%23101018' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")}
+[data-s="6"]{--sym:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23101018' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")}
+[data-s="11"]{--sym:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='5' y='5' width='14' height='14' rx='1' fill='%23101018' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")}
+[data-s="16"]{--sym:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 21 12 12 21 3 12z' fill='%23101018' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")}
+body.dalt .pc[data-s]::after,body.dalt .fill[data-s]::after,body.dalt .star[data-s]::after,body.dalt .sw[data-s]::after{content:"";position:absolute;inset:20%;background:var(--sym) center/contain no-repeat;pointer-events:none}
+body.dalt .pc[data-s],body.dalt .sw[data-s]{position:relative}
+body.dalt .star{width:46%;height:46%}
+body.dalt .star[data-s]::after{inset:12%}
+body.cont{--line:#a8a8cc;--mut:#d6d6ec;--txt:#fff;--bg:#000;background:#000}
+body.cont .card{background:#0a0a14;border-color:#c8c8e8}
+body.cont .btn,body.cont .ib,body.cont .pill,body.cont .tile,body.cont .field,body.cont .reserva,body.cont .daily{border-color:#b8b8dc;background:#12122a}
+body.cont .btn.pri{background:#4a3df0;color:#fff}
+body.cont .cell{background:#0c0c16;box-shadow:inset 0 0 0 1px #7878a4}
+body.cont .cell:nth-child(odd){background:#171728}
+body.cont .star{box-shadow:0 0 0 3px #fff}
+body.cont .fill,body.cont .pc{box-shadow:inset 0 0 0 2px rgba(0,0,0,.65)}
+body.cont .pw.sel{border:3px solid #fff}
+body.cont .cell.gok::after{outline:3px solid #fff}
+body.cont .cell.gbad::after{outline:3px solid #ff6b81}
+body.cont #toast{background:#000;border-color:#fff}
+body.cont #dica,body.cont .card p,body.cont .vazio2{color:#e4e4f4}
+body.tg .card p,body.tg .row,body.tg .how li,body.tg details.cfg,body.tg .vazio2{font-size:17px}
+body.tg .row .rl{font-size:16px;width:78px}
+body.tg .btn{font-size:17px}body.tg .btn.sm{font-size:16px}
+body.tg .pill{font-size:16px;padding:7px 12px}
+body.tg #dica{font-size:16px;max-height:54px}
+body.tg #titulo .t1{font-size:21px}body.tg #titulo .t2{font-size:14px}
+body.tg .card h1{font-size:30px}body.tg .card h2{font-size:14px}body.tg .reserva h2{font-size:14px}
+body.tg .field{font-size:17px}body.tg .tile{font-size:20px}body.tg .daily small{font-size:14px}body.tg #toast{font-size:17px}
+body.rm *,body.rm *::before,body.rm *::after{animation:none!important;transition:none!important}
+body.rm #mao.on{opacity:1}
 </style>
 </head>
 <body>
@@ -252,7 +290,7 @@ main{touch-action:pan-y}
       <span class="pill rec" id="pRec" hidden><em data-i="trophy"></em><span id="stRec"></span></span>
       <span class="pill dc" id="pDica" hidden><em data-i="bulb"></em><span id="stDica"></span></span>
     </div>
-    <div id="boardWrap"><div id="board"></div><div id="selo" hidden></div></div>
+    <div id="boardWrap"><div id="board" role="group" tabindex="0"></div><div id="selo" hidden></div></div>
     <div class="tools">
       <button class="btn" id="btnGirar" data-i="rotate">Girar <kbd>R</kbd></button>
       <button class="btn" id="btnFlip" data-i="flip">Espelhar <kbd>T</kbd></button>
@@ -268,7 +306,8 @@ main{touch-action:pan-y}
 
 <div id="flut" hidden></div>
 <div id="mao" aria-hidden="true"></div>
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- Abertura -->
 <div class="ov on" id="ov-splash">
@@ -278,7 +317,7 @@ main{touch-action:pan-y}
     <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
     <ul class="how">
       <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
-      <li><b>2</b><span>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+      <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
       <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
     </ul>
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
@@ -315,6 +354,16 @@ main{touch-action:pan-y}
       </select></label>
     <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
     <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
+    <label class="row"><span class="rl">Idioma</span>
+      <select class="field" id="selIdioma"><option value="pt">Português</option><option value="en">English</option><option value="es">Español</option></select></label>
+    <h2>Acessibilidade</h2>
+    <label class="row"><input type="checkbox" id="chkDalt"> Símbolos nas cores (para daltônicos)</label>
+    <label class="row"><input type="checkbox" id="chkCont"> Alto contraste</label>
+    <label class="row"><input type="checkbox" id="chkTexto"> Texto maior</label>
+    <label class="row"><input type="checkbox" id="chkMov"> Reduzir animações e confetes</label>
+    <details class="cfg" id="ajudaTeclado"><summary>Jogar só com o teclado</summary>
+      <p data-th style="margin:8px 0"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> movem o cursor no tabuleiro · <kbd>1</kbd> a <kbd>6</kbd> ou <kbd>P</kbd> escolhem a peça · <kbd>R</kbd> gira · <kbd>T</kbd> espelha · <kbd>Enter</kbd> ou <kbd>Espaço</kbd> encaixa a peça (ou tira a que está na casa) · <kbd>Z</kbd> desfaz · <kbd>H</kbd> dica · <kbd>Esc</kbd> solta a peça.</p>
+    </details>
     <h2>Som</h2>
     <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
     <label class="row"><span class="rl">Estilo</span>
@@ -427,7 +476,7 @@ main{touch-action:pan-y}
     <label class="row"><span class="rl">Pessoas</span><input class="field" id="crMax" type="number" min="2" max="200" value="10" inputmode="numeric"></label>
     <label class="row"><span class="rl">Vale</span><select class="field" id="crModo"><option value="melhor">O melhor tempo de cada fase</option><option value="primeira">Só a primeira vez que concluir</option></select></label>
     <label class="row"><span class="rl">Prazo</span><select class="field" id="crPrazo"><option value="0">Sem prazo</option><option value="1">1 dia</option><option value="3">3 dias</option><option value="7">7 dias</option><option value="30">30 dias</option></select></label>
-    <h2>Fases (<span id="crQtd">0</span>/10)</h2>
+    <h2><span>Fases</span> (<span id="crQtd">0</span>/10)</h2>
     <div id="crFases"></div>
     <div class="row"><select class="field" id="crFonte"></select><button class="btn sm" id="crAdd">Adicionar</button></div>
     <div class="acts">
@@ -510,6 +559,688 @@ main{touch-action:pan-y}
   </div>
 </div>
 
+<script>
+/*DICT-START*/
+window.DICT = {
+en: {
+  "Girar": "Rotate",
+  "Espelhar": "Flip",
+  "Peças": "Pieces",
+  "Entendi, pular o tutorial": "Got it, skip the tutorial",
+  "Preencha todo o tabuleiro 5×5 com as peças.": "Fill the whole 5×5 board with the pieces.",
+  "Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.": "Drag the pieces onto the board — or tap a piece and then the square where you want it.",
+  "Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).": "Rotate and flip the piece so it fits (on a phone: double-tap rotates the piece and swiping flips it; on a computer: buttons or the <kbd>R</kbd> and <kbd>T</kbd> keys).",
+  "Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.": "Each star must be covered by a piece of the same color. Tap a piece that is already placed to remove it.",
+  "Alguém compartilhou uma fase com você! Toque em Jogar para abrir.": "Someone shared a level with you! Tap Play to open it.",
+  "Jogar": "Play",
+  "♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.": "♪ With ambient music — you can turn it off with the button at the top. On iPhone, turn off silent mode.",
+  "Fases": "Levels",
+  "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
+  "Fase do dia": "Daily level",
+  "Campeonatos": "Tournaments",
+  "Desafie amigos, família e grupos com ranking": "Challenge friends, family and groups with a leaderboard",
+  "Fases do jogo": "Game levels",
+  "Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.": "From level 31 on, the board grows (6×6 and 7×7) and, in some levels, only the next pieces in the queue appear.",
+  "Minhas fases": "My levels",
+  "Criar fase": "Create level",
+  "Importar .txt": "Import .txt",
+  "Jogo": "Game",
+  "Peças por vez": "Pieces at a time",
+  "Automático (por fase)": "Automatic (per level)",
+  "Todas": "All",
+  "Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.": "How many pieces show up in the selection. Levels with their own queue and tournaments keep their own rule.",
+  "Vibração leve no celular": "Light vibration on phones",
+  "Idioma": "Language",
+  "Acessibilidade": "Accessibility",
+  "Símbolos nas cores (para daltônicos)": "Symbols on colors (for color blindness)",
+  "Alto contraste": "High contrast",
+  "Texto maior": "Larger text",
+  "Reduzir animações e confetes": "Reduce animations and confetti",
+  "Jogar só com o teclado": "Play with the keyboard only",
+  "<kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> movem o cursor no tabuleiro · <kbd>1</kbd> a <kbd>6</kbd> ou <kbd>P</kbd> escolhem a peça · <kbd>R</kbd> gira · <kbd>T</kbd> espelha · <kbd>Enter</kbd> ou <kbd>Espaço</kbd> encaixa a peça (ou tira a que está na casa) · <kbd>Z</kbd> desfaz · <kbd>H</kbd> dica · <kbd>Esc</kbd> solta a peça.": "<kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> move the cursor on the board · <kbd>1</kbd> to <kbd>6</kbd> or <kbd>P</kbd> choose the piece · <kbd>R</kbd> rotates · <kbd>T</kbd> flips · <kbd>Enter</kbd> or <kbd>Space</kbd> places the piece (or removes the one on the square) · <kbd>Z</kbd> undoes · <kbd>H</kbd> hint · <kbd>Esc</kbd> drops the piece.",
+  "Som": "Sound",
+  "Música": "Music",
+  "Estilo": "Style",
+  "Calma": "Calm",
+  "Animada": "Upbeat",
+  "Noturna": "Night",
+  "Volume": "Volume",
+  "Efeitos sonoros": "Sound effects",
+  "Instalar": "Install",
+  "Instalar o jogo no aparelho": "Install the game on your device",
+  "No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.": "On iPhone: tap Share, then “Add to Home Screen”.",
+  "Rever o tutorial dos gestos": "Replay the gesture tutorial",
+  "Zerar progresso": "Reset progress",
+  "Modo de teste": "Test mode",
+  "Sair do modo de teste": "Exit test mode",
+  "Sobre": "About",
+  "— criado por": "— created by",
+  "Código do jogo": "Game code",
+  "Compartilhar o jogo": "Share the game",
+  "Fase concluída!": "Level complete!",
+  "Pinte as 25 casas com as peças da solução. Peças da mesma cor não podem se encostar.": "Paint the 25 squares with the pieces of the solution. Pieces of the same color cannot touch.",
+  "Cor da peça": "Piece color",
+  "Dificuldade das estrelas": "Star difficulty",
+  "Fácil — todas as estrelas": "Easy — all stars",
+  "Médio — início e fim de cada peça": "Medium — start and end of each piece",
+  "Difícil — uma estrela por peça": "Hard — one star per piece",
+  "Nome": "Name",
+  "Salvar": "Save",
+  "Testar": "Test",
+  "Compartilhar": "Share",
+  "Exportar .txt": "Export .txt",
+  "Limpar": "Clear",
+  "Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.": "Create a challenge with your levels, send the link and see the leaderboard. No email or password needed: just your name.",
+  "Seu nome": "Your name",
+  "Para criar campeonatos": "To create tournaments",
+  "Na primeira vez você cria uma senha de organizador. Depois o aparelho é reconhecido e a senha só volta a ser pedida se você limpar os dados do navegador ou usar outro aparelho. Quem só joga não precisa de senha.": "The first time you create an organizer password. After that the device is recognized and the password is only asked again if you clear the browser data or use another device. Players who only play don't need a password.",
+  "Trocar": "Switch",
+  "Criar campeonato": "Create tournament",
+  "Entrar com um código": "Join with a code",
+  "Entrar": "Join",
+  "Meus campeonatos": "My tournaments",
+  "Avançado: usar outro banco de dados": "Advanced: use another database",
+  "O jogo já usa o banco oficial. Só preencha isto se quiser usar um banco seu (veja CAMPEONATOS.md).": "The game already uses the official database. Only fill this in if you want to use your own (see CAMPEONATOS.md).",
+  "Salvar endereço": "Save address",
+  "Novo campeonato": "New tournament",
+  "Escolha as fases, o número de pessoas e envie o convite.": "Choose the levels, the number of people and send the invitation.",
+  "Nome do campeonato": "Tournament name",
+  "Pessoas": "People",
+  "Vale": "Scoring",
+  "O melhor tempo de cada fase": "Best time of each level",
+  "Só a primeira vez que concluir": "Only the first completion",
+  "Prazo": "Deadline",
+  "Sem prazo": "No deadline",
+  "{n} dia": "{n} day",
+  "{n} dias": "{n} days",
+  "Adicionar": "Add",
+  "Sugestão: 3 fases": "Suggestion: 3 levels",
+  "{n} fase": "{n} level",
+  "{n} fases": "{n} levels",
+  "Campeonato": "Tournament",
+  "Organizador": "Organizer",
+  "Editar": "Edit",
+  "Excluir": "Delete",
+  "Sou o organizador": "I'm the organizer",
+  "Entrar como organizador": "Sign in as organizer",
+  "Entrar no campeonato": "Join the tournament",
+  "Ranking": "Leaderboard",
+  "Atualizar": "Refresh",
+  "Convidar": "Invite",
+  "Para quem cria e confere as fases: libera todas as fases do menu, sem mexer no seu progresso e sem gravar recordes.": "For those who create and check levels: unlocks all levels in the menu, without touching your progress and without saving records.",
+  "Link": "Link",
+  "Copiar mensagem e link": "Copy message and link",
+  "Só o link": "Link only",
+  "E-mail": "Email",
+  "Mais apps…": "More apps…",
+  "Fases e opções": "Levels and options",
+  "Desfazer (Z)": "Undo (Z)",
+  "Dica (H)": "Hint (H)",
+  "Reiniciar": "Restart",
+  "Fechar": "Close",
+  "minha-fase": "my-level",
+  "Como você aparece no ranking": "How you appear on the leaderboard",
+  "Senha de organizador (mínimo 6 caracteres)": "Organizer password (at least 6 characters)",
+  "Repita a senha para criar a conta": "Repeat the password to create the account",
+  "Chave da API do app web (apiKey)": "Web app API key (apiKey)",
+  "Ex.: Copa da família": "E.g.: Family Cup",
+  "Senha de organizador": "Organizer password",
+  "Senha": "Password",
+  "Link para compartilhar": "Link to share",
+  "Dê um nome ao campeonato.": "Give the tournament a name.",
+  "Informe o seu nome.": "Enter your name.",
+  "O número de pessoas deve ficar entre 2 e 200.": "The number of people must be between 2 and 200.",
+  "Escolha como o resultado vale.": "Choose how the result counts.",
+  "Entre como organizador para criar o campeonato.": "Sign in as organizer to create the tournament.",
+  "Adicione pelo menos uma fase.": "Add at least one level.",
+  "No máximo {n} fases.": "At most {n} levels.",
+  "Uma das fases é inválida.": "One of the levels is invalid.",
+  "Esse nome de organizador já tem conta. Use a senha dele ou escolha outro nome.": "That organizer name already has an account. Use its password or choose another name.",
+  "Nome ou senha não conferem.": "Name or password don't match.",
+  "A senha precisa ter pelo menos 6 caracteres.": "The password needs at least 6 characters.",
+  "Muitas tentativas. Espere alguns minutos e tente de novo.": "Too many attempts. Wait a few minutes and try again.",
+  "O login por e-mail/senha não está ligado no Firebase (Authentication → Método de login → E-mail/senha).": "Email/password sign-in is not turned on in Firebase (Authentication → Sign-in method → Email/Password).",
+  "A chave do app web está errada.": "The web app key is wrong.",
+  "Esse nome não pode ser usado. Use letras e números.": "That name can't be used. Use letters and numbers.",
+  "Não consegui entrar agora. Tente de novo.": "I couldn't sign in right now. Try again.",
+  "Peça {cor}, {n} casas": "{cor} piece, {n} squares",
+  "Linha {y}, coluna {x}: peça {cor} sobre a estrela {est}": "Row {y}, column {x}: {cor} piece on the {est} star",
+  "Linha {y}, coluna {x}: peça {cor}": "Row {y}, column {x}: {cor} piece",
+  "Linha {y}, coluna {x}: vazia, estrela {est}": "Row {y}, column {x}: empty, {est} star",
+  "Linha {y}, coluna {x}: vazia": "Row {y}, column {x}: empty",
+  "Tabuleiro {n} por {n}. Setas movem o cursor, Enter encaixa a peça.": "Board {n} by {n}. Arrow keys move the cursor, Enter places the piece.",
+  "azul": "blue",
+  "verde": "green",
+  "rosa": "pink",
+  "amarela": "yellow",
+  "selecionada": "selected",
+  "bloqueada": "locked",
+  "concluída": "completed",
+  "Cor": "Color",
+  "organizador": "organizer",
+  "Agora aparecem {n} peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.": "Now {n} pieces show at a time: when you place one, the next one comes in. Removing a piece from the board puts it back at the front.",
+  "Uma peça por vez: você só vê a peça da vez. Tirar uma peça do tabuleiro a coloca de volta na frente.": "One piece at a time: you only see the current piece. Removing a piece from the board puts it back at the front.",
+  "Peças em fila: só as próximas {n} aparecem. Tirar uma peça do tabuleiro a coloca de volta na frente.": "Queued pieces: only the next {n} appear. Removing a piece from the board puts it back at the front.",
+  "1 por vez": "1 at a time",
+  "fila de {n}": "queue of {n}",
+  "Fase {n}": "Level {n}",
+  "de {n}": "of {n}",
+  "teste": "test",
+  "fase personalizada": "custom level",
+  "fase compartilhada": "shared level",
+  "Teste": "Test",
+  "sua fase": "your level",
+  "Fase {a} de {b}": "Level {a} of {b}",
+  "Todas as peças estão no tabuleiro.": "All pieces are on the board.",
+  "Peça {a} de {b}": "Piece {a} of {b}",
+  "{n} restante": "{n} left",
+  "{n} restantes": "{n} left",
+  "{n} jogada": "{n} move",
+  "{n} jogadas": "{n} moves",
+  "{n} dica": "{n} hint",
+  "{n} dicas": "{n} hints",
+  "Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.": "Double-tap rotates · swiping flips · tap a square to place.",
+  "Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.": "Tap a piece to select it. Then double-tap to rotate and swipe to flip.",
+  "Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.": "Queued pieces: place the current piece to see the next one. You can take a placed piece off by tapping it.",
+  "Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).": "Piece selected — use Rotate/Flip and tap a square to place it (or drag).",
+  "Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).": "Piece selected — R rotates, T flips. Click a square to place it (or drag).",
+  "Arraste uma peça para o tabuleiro, ou toque nela para selecionar.": "Drag a piece onto the board, or tap it to select.",
+  "Arraste uma peça para o tabuleiro. Clique numa peça já encaixada para tirá-la (ou passe o mouse e aperte E).": "Drag a piece onto the board. Click a placed piece to remove it (or hover and press E).",
+  "Toque numa peça para selecioná-la.": "Tap a piece to select it.",
+  "Agora dê dois toques rápidos na peça para girá-la.": "Now double-tap the piece to rotate it.",
+  "Muito bem! Agora deslize o dedo por aqui, fora da peça, para espelhá-la.": "Great! Now swipe here, outside the piece, to flip it.",
+  "Isso mesmo! Agora é só encaixar as peças no tabuleiro.": "Exactly! Now just place the pieces on the board.",
+  "Tudo bem! Você pode rever o tutorial no menu.": "No problem! You can replay the tutorial from the menu.",
+  "Última peça desfeita.": "Last piece undone.",
+  "Dicas ficam desligadas nos campeonatos.": "Hints are turned off in tournaments.",
+  "A peça selecionada vai nesse lugar. Dois toques giram e deslizar o dedo espelha.": "The selected piece goes there. Double-tap rotates and swiping flips.",
+  "A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.": "The selected piece goes there. Rotate/flip until it fits.",
+  "Dica: {peca}. Encaixe com o canto superior esquerdo na linha {y}, coluna {x}.": "Hint: {peca}. Place it with its top-left corner at row {y}, column {x}.",
+  "Não consegui calcular essa dica agora. Tente tirar uma peça.": "I couldn't work out that hint right now. Try removing a piece.",
+  "Com as peças atuais não há solução — tire alguma (a última colocada está destacada).": "With the current pieces there is no solution — remove one (the last one placed is highlighted).",
+  "Não cabe aí.": "It doesn't fit there.",
+  "Peça encaixada. Falta 1 peça.": "Piece placed. 1 piece left.",
+  "Peça encaixada. Faltam {n} peças.": "Piece placed. {n} pieces left.",
+  "Peça encaixada.": "Piece placed.",
+  "Peça devolvida.": "Piece returned.",
+  "Peça girada.": "Piece rotated.",
+  "Peça espelhada.": "Piece flipped.",
+  "Selecione uma peça primeiro": "Select a piece first",
+  "Escolha uma peça primeiro (teclas 1 a 6).": "Choose a piece first (keys 1 to 6).",
+  "a peça cabe aqui": "the piece fits here",
+  "a peça não cabe aqui": "the piece doesn't fit here",
+  "Fase {n} concluída!": "Level {n} complete!",
+  "Você dominou todas as formas!": "You mastered all the shapes!",
+  "Fase do dia concluída!": "Daily level complete!",
+  "Enviando o seu resultado…": "Sending your result…",
+  "As {n} fases estão completas. Que tal criar as suas?": "All {n} levels are complete. How about creating your own?",
+  "Volte amanhã para um novo desafio.": "Come back tomorrow for a new challenge.",
+  "Sua fase tem solução. Pode salvar e compartilhar.": "Your level has a solution. You can save and share it.",
+  "Mandou bem!": "Nicely done!",
+  "1 estrela de 3": "1 star out of 3",
+  "{n} estrelas de 3": "{n} stars out of 3",
+  "Com dica — esta partida não conta para recorde.": "With a hint — this game does not count for a record.",
+  "Novo recorde de tempo e de jogadas!": "New record for time and moves!",
+  "Novo recorde de tempo!": "New time record!",
+  "Novo recorde de jogadas!": "New moves record!",
+  "Primeiro registro desta fase.": "First record for this level.",
+  "Seu recorde: {t} · {j}": "Your record: {t} · {j}",
+  "Próxima fase": "Next level",
+  "Voltar ao editor": "Back to the editor",
+  "Salvar em Minhas fases": "Save to My levels",
+  "Fase salva em Minhas fases": "Level saved to My levels",
+  "Compartilhar resultado": "Share result",
+  "Desafiar um amigo": "Challenge a friend",
+  "Compartilhar fase": "Share level",
+  "Jogar de novo": "Play again",
+  "Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?": "Shape Puzzle — Daily level {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Streak: {seq}\nCan you do it faster?",
+  "Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:": "I beat level {n} of Shape Puzzle in {tempo} ({jog})! Give it a try:",
+  "Tente a fase \"{nome}\" que eu criei no Shape Puzzle!": "Try the level \"{nome}\" that I made in Shape Puzzle!",
+  "Joga esse quebra-cabeça comigo: Shape Puzzle!": "Play this puzzle with me: Shape Puzzle!",
+  "Shape Puzzle — campeonato": "Shape Puzzle — tournament",
+  "Venha disputar o campeonato \"{nome}\" no Shape Puzzle! {fases}, ganha quem for mais rápido. Código: {id}": "Come compete in the tournament \"{nome}\" on Shape Puzzle! {fases}, the fastest wins. Code: {id}",
+  "Copiado! É só colar numa conversa.": "Copied! Just paste it into a chat.",
+  "Não consegui copiar sozinho: selecione o link e copie.": "Couldn't copy automatically: select the link and copy it.",
+  "Link de fase inválido": "Invalid level link",
+  "Fase compartilhada aberta": "Shared level opened",
+  "Tabuleiro limpo. O tempo do campeonato continua correndo.": "Board cleared. The tournament clock keeps running.",
+  "um desafio novo por dia": "a new challenge every day",
+  "Você ainda não criou nenhuma fase.": "You haven't created any levels yet.",
+  "Apagar a fase \"{nome}\"?": "Delete the level \"{nome}\"?",
+  "Apagar": "Delete",
+  "Abrir": "Open",
+  "Remover": "Remove",
+  "Tirar da lista": "Remove from list",
+  "Exportar": "Export",
+  "Preparando a fase do dia…": "Preparing the daily level…",
+  "Peças por vez: automático, de acordo com a fase.": "Pieces at a time: automatic, based on the level.",
+  "Agora todas as peças aparecem de uma vez.": "Now all pieces show at once.",
+  "Agora aparecem {n} peças por vez.": "Now {n} pieces show at a time.",
+  "Modo de teste desligado.": "Test mode off.",
+  "Senha incorreta.": "Wrong password.",
+  "Este navegador não permite conferir a senha aqui (precisa de conexão segura, https).": "This browser can't check the password here (it needs a secure connection, https).",
+  "Modo de teste ligado: todas as fases liberadas.": "Test mode on: all levels unlocked.",
+  "Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)": "Reset level progress? (Your records and created levels stay saved.)",
+  "Arquivo de fase inválido": "Invalid level file",
+  "Fase importada": "Level imported",
+  "Jogo instalado!": "Game installed!",
+  "Faltam {n} casas para preencher": "{n} squares left to fill",
+  "Tabuleiro completo — pronto para salvar ou testar": "Board complete — ready to save or test",
+  "Fase \"{nome}\" salva em Minhas fases": "Level \"{nome}\" saved to My levels",
+  "Digite o seu nome (pelo menos 2 letras).": "Enter your name (at least 2 letters).",
+  "Endereço inválido. Ele deve começar com https:// e terminar em firebaseio.com ou firebasedatabase.app.": "Invalid address. It must start with https:// and end with firebaseio.com or firebasedatabase.app.",
+  "A chave da API parece errada.": "The API key looks wrong.",
+  "Salvo.": "Saved.",
+  "Saiu do modo organizador neste aparelho. Os campeonatos que você criou continuam no ar.": "Signed out of organizer mode on this device. The tournaments you created are still live.",
+  "Não achei essa conta. Se é a sua primeira vez, repita a senha no campo abaixo para criá-la. Se você já tem conta, confira o nome e a senha.": "I couldn't find that account. If it's your first time, repeat the password in the field below to create it. If you already have an account, check the name and password.",
+  "As duas senhas precisam ser iguais.": "Both passwords must match.",
+  "Informe o endereço do banco e a chave da API (veja CAMPEONATOS.md).": "Enter the database address and the API key (see CAMPEONATOS.md).",
+  "O código tem 6 letras/números, como ABC234.": "The code has 6 letters/numbers, like ABC234.",
+  "Sem o endereço do banco não dá para entrar por código. Peça o link do convite ao organizador.": "Without the database address you can't join by code. Ask the organizer for the invite link.",
+  "Sorteada (fácil)": "Random (easy)",
+  "Sorteada (média)": "Random (medium)",
+  "Sorteada (difícil)": "Random (hard)",
+  "Editar campeonato": "Edit tournament",
+  "Salvar alterações": "Save changes",
+  "Manter o prazo atual": "Keep the current deadline",
+  "Sortear uma nova fase": "Draw a new level",
+  "Fácil (5×5)": "Easy (5×5)",
+  "Média (5×5)": "Medium (5×5)",
+  "Difícil (6×6, fila)": "Hard (6×6, queue)",
+  "Não consegui sortear agora. Tente de novo.": "I couldn't draw one right now. Try again.",
+  "A sessão de organizador acabou. Feche, abra Campeonatos e entre com a senha.": "The organizer session has ended. Close this, open Tournaments and sign in with your password.",
+  "Salvando…": "Saving…",
+  "Criando…": "Creating…",
+  "Campeonato atualizado.": "Tournament updated.",
+  "Campeonato criado! Toque em Convidar para enviar o link.": "Tournament created! Tap Invite to send the link.",
+  "Não deu para salvar: alguém já entrou no campeonato (ou a sessão acabou).": "Couldn't save: someone has already joined the tournament (or the session ended).",
+  "O banco recusou. As regras de segurança foram publicadas?": "The database refused. Were the security rules published?",
+  "Carregando…": "Loading…",
+  "Não encontrei esse campeonato. Confira o código.": "I couldn't find that tournament. Check the code.",
+  "sem prazo": "no deadline",
+  "prazo encerrado": "deadline over",
+  "até": "until",
+  "Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código": "Organized by {org} · {n} of {max} people · {fases} · {prazo} · {modo} · code",
+  "vale o melhor tempo": "best time counts",
+  "vale a primeira vez": "first attempt counts",
+  "Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.": "You can edit while nobody has joined. Once someone joins (including you), you can only delete.",
+  "Já tem gente no campeonato: não dá mais para editar, só excluir.": "People have already joined: it can no longer be edited, only deleted.",
+  "Este campeonato já está com todas as vagas preenchidas.": "This tournament is already full.",
+  "Ainda não jogada": "Not played yet",
+  "Melhorar": "Improve",
+  "Feita": "Done",
+  "Ninguém entrou ainda.": "Nobody has joined yet.",
+  "{n}º": "#{n}",
+  "Prazo encerrado. Esse é o resultado final.": "Deadline over. This is the final result.",
+  "O prazo já acabou.": "The deadline has already passed.",
+  "Essa conta de organizador não é a dona deste campeonato.": "That organizer account doesn't own this tournament.",
+  "Pronto: você está como organizador neste aparelho.": "Done: you're now the organizer on this device.",
+  "Excluir o campeonato \"{nome}\"? O ranking e todos os resultados serão apagados e não dá para desfazer.": "Delete the tournament \"{nome}\"? The leaderboard and all results will be erased and this cannot be undone.",
+  "A sessão de organizador acabou. Entre com a senha de novo.": "The organizer session has ended. Sign in with your password again.",
+  "Campeonato excluído.": "Tournament deleted.",
+  "Atualizando…": "Refreshing…",
+  "O prazo deste campeonato acabou.": "The deadline for this tournament has passed.",
+  "Valendo! O tempo já está correndo e as dicas ficam desligadas.": "It counts! The clock is running and hints are turned off.",
+  "O prazo acabou: este resultado não entra no ranking.": "The deadline has passed: this result is not added to the leaderboard.",
+  "Resultado enviado! Veja a sua posição no ranking.": "Result sent! Check your position on the leaderboard.",
+  "Neste campeonato vale só o primeiro resultado de cada fase.": "In this tournament only the first result of each level counts.",
+  "Você já tinha um tempo melhor nesta fase — ele continua valendo.": "You already had a better time on this level — it still counts.",
+  "Sem conexão: guardei o seu resultado e envio quando voltar.": "No connection: I saved your result and will send it when you are back online.",
+  "Não consegui enviar: {m}": "Couldn't send: {m}",
+  "Próxima fase do campeonato": "Next tournament level",
+  "Ver ranking": "View leaderboard",
+  "Você foi convidado para um campeonato! Toque em Jogar para ver.": "You've been invited to a tournament! Tap Play to see it.",
+  "Você ainda não está em nenhum campeonato.": "You're not in any tournament yet.",
+  "Organizador: {nome} ✓ (este aparelho é reconhecido)": "Organizer: {nome} ✓ (this device is recognized)",
+  "O banco de dados recusou o pedido (as regras de segurança foram publicadas?).": "The database refused the request (were the security rules published?).",
+  "Sem conexão com o banco de dados.": "No connection to the database.",
+  "O banco de dados demorou demais para responder.": "The database took too long to respond.",
+  "O banco de dados retornou um erro.": "The database returned an error.",
+  "Algo deu errado. Tente de novo.": "Something went wrong. Try again.",
+  "Dia {data}": "Day {data}",
+  "Fase {a}/{b}": "Level {a}/{b}",
+},
+es: {
+  "Girar": "Girar",
+  "Espelhar": "Voltear",
+  "Peças": "Piezas",
+  "Entendi, pular o tutorial": "Entendido, saltar el tutorial",
+  "Preencha todo o tabuleiro 5×5 com as peças.": "Rellena todo el tablero de 5×5 con las piezas.",
+  "Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.": "Arrastra las piezas al tablero, o toca una pieza y luego la casilla donde quieres encajarla.",
+  "Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).": "Gira y voltea la pieza para que quepa (en el móvil: dos toques giran la pieza y deslizar el dedo la voltea; en el ordenador: botones o las teclas <kbd>R</kbd> y <kbd>T</kbd>).",
+  "Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.": "Cada estrella debe estar cubierta por una pieza del mismo color. Toca una pieza ya colocada para quitarla.",
+  "Alguém compartilhou uma fase com você! Toque em Jogar para abrir.": "¡Alguien compartió un nivel contigo! Toca Jugar para abrirlo.",
+  "Jogar": "Jugar",
+  "♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.": "♪ Con música ambiental: puedes apagarla con el botón de arriba. En iPhone, desactiva el modo silencio.",
+  "Fases": "Niveles",
+  "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
+  "Fase do dia": "Nivel del día",
+  "Campeonatos": "Torneos",
+  "Desafie amigos, família e grupos com ranking": "Desafía a amigos, familia y grupos con un ranking",
+  "Fases do jogo": "Niveles del juego",
+  "Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.": "Desde el nivel 31 el tablero crece (6×6 y 7×7) y, en algunos niveles, solo aparecen las siguientes piezas de la cola.",
+  "Minhas fases": "Mis niveles",
+  "Criar fase": "Crear nivel",
+  "Importar .txt": "Importar .txt",
+  "Jogo": "Juego",
+  "Peças por vez": "Piezas a la vez",
+  "Automático (por fase)": "Automático (por nivel)",
+  "Todas": "Todas",
+  "Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.": "Cuántas piezas aparecen en la selección. Los niveles con cola propia y los torneos mantienen su regla.",
+  "Vibração leve no celular": "Vibración suave en el móvil",
+  "Idioma": "Idioma",
+  "Acessibilidade": "Accesibilidad",
+  "Símbolos nas cores (para daltônicos)": "Símbolos en los colores (para daltonismo)",
+  "Alto contraste": "Alto contraste",
+  "Texto maior": "Texto más grande",
+  "Reduzir animações e confetes": "Reducir animaciones y confeti",
+  "Jogar só com o teclado": "Jugar solo con el teclado",
+  "<kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> movem o cursor no tabuleiro · <kbd>1</kbd> a <kbd>6</kbd> ou <kbd>P</kbd> escolhem a peça · <kbd>R</kbd> gira · <kbd>T</kbd> espelha · <kbd>Enter</kbd> ou <kbd>Espaço</kbd> encaixa a peça (ou tira a que está na casa) · <kbd>Z</kbd> desfaz · <kbd>H</kbd> dica · <kbd>Esc</kbd> solta a peça.": "<kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> mueven el cursor por el tablero · <kbd>1</kbd> a <kbd>6</kbd> o <kbd>P</kbd> eligen la pieza · <kbd>R</kbd> gira · <kbd>T</kbd> voltea · <kbd>Enter</kbd> o <kbd>Espacio</kbd> coloca la pieza (o quita la que está en la casilla) · <kbd>Z</kbd> deshace · <kbd>H</kbd> pista · <kbd>Esc</kbd> suelta la pieza.",
+  "Som": "Sonido",
+  "Música": "Música",
+  "Estilo": "Estilo",
+  "Calma": "Calma",
+  "Animada": "Animada",
+  "Noturna": "Nocturna",
+  "Volume": "Volumen",
+  "Efeitos sonoros": "Efectos de sonido",
+  "Instalar": "Instalar",
+  "Instalar o jogo no aparelho": "Instalar el juego en el dispositivo",
+  "No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.": "En iPhone: toca Compartir y luego “Añadir a pantalla de inicio”.",
+  "Rever o tutorial dos gestos": "Repetir el tutorial de gestos",
+  "Zerar progresso": "Reiniciar progreso",
+  "Modo de teste": "Modo de prueba",
+  "Sair do modo de teste": "Salir del modo de prueba",
+  "Sobre": "Acerca de",
+  "— criado por": "— creado por",
+  "Código do jogo": "Código del juego",
+  "Compartilhar o jogo": "Compartir el juego",
+  "Fase concluída!": "¡Nivel completado!",
+  "Pinte as 25 casas com as peças da solução. Peças da mesma cor não podem se encostar.": "Pinta las 25 casillas con las piezas de la solución. Las piezas del mismo color no pueden tocarse.",
+  "Cor da peça": "Color de la pieza",
+  "Dificuldade das estrelas": "Dificultad de las estrellas",
+  "Fácil — todas as estrelas": "Fácil: todas las estrellas",
+  "Médio — início e fim de cada peça": "Medio: inicio y fin de cada pieza",
+  "Difícil — uma estrela por peça": "Difícil: una estrella por pieza",
+  "Nome": "Nombre",
+  "Salvar": "Guardar",
+  "Testar": "Probar",
+  "Compartilhar": "Compartir",
+  "Exportar .txt": "Exportar .txt",
+  "Limpar": "Limpiar",
+  "Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.": "Crea un desafío con tus niveles, envía el enlace y mira el ranking. No hace falta correo ni contraseña: solo tu nombre.",
+  "Seu nome": "Tu nombre",
+  "Para criar campeonatos": "Para crear torneos",
+  "Na primeira vez você cria uma senha de organizador. Depois o aparelho é reconhecido e a senha só volta a ser pedida se você limpar os dados do navegador ou usar outro aparelho. Quem só joga não precisa de senha.": "La primera vez creas una contraseña de organizador. Después el dispositivo se reconoce y solo se vuelve a pedir la contraseña si borras los datos del navegador o usas otro dispositivo. Quien solo juega no necesita contraseña.",
+  "Trocar": "Cambiar",
+  "Criar campeonato": "Crear torneo",
+  "Entrar com um código": "Entrar con un código",
+  "Entrar": "Entrar",
+  "Meus campeonatos": "Mis torneos",
+  "Avançado: usar outro banco de dados": "Avanzado: usar otra base de datos",
+  "O jogo já usa o banco oficial. Só preencha isto se quiser usar um banco seu (veja CAMPEONATOS.md).": "El juego ya usa la base de datos oficial. Rellena esto solo si quieres usar una propia (mira CAMPEONATOS.md).",
+  "Salvar endereço": "Guardar dirección",
+  "Novo campeonato": "Nuevo torneo",
+  "Escolha as fases, o número de pessoas e envie o convite.": "Elige los niveles, el número de personas y envía la invitación.",
+  "Nome do campeonato": "Nombre del torneo",
+  "Pessoas": "Personas",
+  "Vale": "Cuenta",
+  "O melhor tempo de cada fase": "El mejor tiempo de cada nivel",
+  "Só a primeira vez que concluir": "Solo la primera vez que se complete",
+  "Prazo": "Plazo",
+  "Sem prazo": "Sin plazo",
+  "{n} dia": "{n} día",
+  "{n} dias": "{n} días",
+  "Adicionar": "Añadir",
+  "Sugestão: 3 fases": "Sugerencia: 3 niveles",
+  "{n} fase": "{n} nivel",
+  "{n} fases": "{n} niveles",
+  "Campeonato": "Torneo",
+  "Organizador": "Organizador",
+  "Editar": "Editar",
+  "Excluir": "Eliminar",
+  "Sou o organizador": "Soy el organizador",
+  "Entrar como organizador": "Entrar como organizador",
+  "Entrar no campeonato": "Entrar en el torneo",
+  "Ranking": "Ranking",
+  "Atualizar": "Actualizar",
+  "Convidar": "Invitar",
+  "Para quem cria e confere as fases: libera todas as fases do menu, sem mexer no seu progresso e sem gravar recordes.": "Para quien crea y revisa niveles: desbloquea todos los niveles del menú, sin tocar tu progreso y sin guardar récords.",
+  "Link": "Enlace",
+  "Copiar mensagem e link": "Copiar mensaje y enlace",
+  "Só o link": "Solo el enlace",
+  "E-mail": "Correo",
+  "Mais apps…": "Más apps…",
+  "Fases e opções": "Niveles y opciones",
+  "Desfazer (Z)": "Deshacer (Z)",
+  "Dica (H)": "Pista (H)",
+  "Reiniciar": "Reiniciar",
+  "Fechar": "Cerrar",
+  "minha-fase": "mi-nivel",
+  "Como você aparece no ranking": "Cómo apareces en el ranking",
+  "Senha de organizador (mínimo 6 caracteres)": "Contraseña de organizador (mínimo 6 caracteres)",
+  "Repita a senha para criar a conta": "Repite la contraseña para crear la cuenta",
+  "Chave da API do app web (apiKey)": "Clave de API de la app web (apiKey)",
+  "Ex.: Copa da família": "Ej.: Copa de la familia",
+  "Senha de organizador": "Contraseña de organizador",
+  "Senha": "Contraseña",
+  "Link para compartilhar": "Enlace para compartir",
+  "Dê um nome ao campeonato.": "Ponle un nombre al torneo.",
+  "Informe o seu nome.": "Indica tu nombre.",
+  "O número de pessoas deve ficar entre 2 e 200.": "El número de personas debe estar entre 2 y 200.",
+  "Escolha como o resultado vale.": "Elige cómo cuenta el resultado.",
+  "Entre como organizador para criar o campeonato.": "Entra como organizador para crear el torneo.",
+  "Adicione pelo menos uma fase.": "Añade al menos un nivel.",
+  "No máximo {n} fases.": "Máximo {n} niveles.",
+  "Uma das fases é inválida.": "Uno de los niveles no es válido.",
+  "Esse nome de organizador já tem conta. Use a senha dele ou escolha outro nome.": "Ese nombre de organizador ya tiene cuenta. Usa su contraseña o elige otro nombre.",
+  "Nome ou senha não conferem.": "El nombre o la contraseña no coinciden.",
+  "A senha precisa ter pelo menos 6 caracteres.": "La contraseña debe tener al menos 6 caracteres.",
+  "Muitas tentativas. Espere alguns minutos e tente de novo.": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+  "O login por e-mail/senha não está ligado no Firebase (Authentication → Método de login → E-mail/senha).": "El inicio de sesión con correo/contraseña no está activado en Firebase (Authentication → Método de acceso → Correo/contraseña).",
+  "A chave do app web está errada.": "La clave de la app web es incorrecta.",
+  "Esse nome não pode ser usado. Use letras e números.": "Ese nombre no se puede usar. Usa letras y números.",
+  "Não consegui entrar agora. Tente de novo.": "No pude entrar ahora. Inténtalo de nuevo.",
+  "Peça {cor}, {n} casas": "Pieza {cor}, {n} casillas",
+  "Linha {y}, coluna {x}: peça {cor} sobre a estrela {est}": "Fila {y}, columna {x}: pieza {cor} sobre la estrella {est}",
+  "Linha {y}, coluna {x}: peça {cor}": "Fila {y}, columna {x}: pieza {cor}",
+  "Linha {y}, coluna {x}: vazia, estrela {est}": "Fila {y}, columna {x}: vacía, estrella {est}",
+  "Linha {y}, coluna {x}: vazia": "Fila {y}, columna {x}: vacía",
+  "Tabuleiro {n} por {n}. Setas movem o cursor, Enter encaixa a peça.": "Tablero de {n} por {n}. Las flechas mueven el cursor, Enter coloca la pieza.",
+  "azul": "azul",
+  "verde": "verde",
+  "rosa": "rosa",
+  "amarela": "amarilla",
+  "selecionada": "seleccionada",
+  "bloqueada": "bloqueado",
+  "concluída": "completado",
+  "Cor": "Color",
+  "organizador": "organizador",
+  "Agora aparecem {n} peças por vez: ao encaixar uma, a próxima entra. Tirar uma peça do tabuleiro a coloca de volta na frente.": "Ahora aparecen {n} piezas a la vez: al colocar una, entra la siguiente. Quitar una pieza del tablero la devuelve al frente.",
+  "Uma peça por vez: você só vê a peça da vez. Tirar uma peça do tabuleiro a coloca de volta na frente.": "Una pieza a la vez: solo ves la pieza del turno. Quitar una pieza del tablero la devuelve al frente.",
+  "Peças em fila: só as próximas {n} aparecem. Tirar uma peça do tabuleiro a coloca de volta na frente.": "Piezas en cola: solo aparecen las siguientes {n}. Quitar una pieza del tablero la devuelve al frente.",
+  "1 por vez": "1 a la vez",
+  "fila de {n}": "cola de {n}",
+  "Fase {n}": "Nivel {n}",
+  "de {n}": "de {n}",
+  "teste": "prueba",
+  "fase personalizada": "nivel personalizado",
+  "fase compartilhada": "nivel compartido",
+  "Teste": "Prueba",
+  "sua fase": "tu nivel",
+  "Fase {a} de {b}": "Nivel {a} de {b}",
+  "Todas as peças estão no tabuleiro.": "Todas las piezas están en el tablero.",
+  "Peça {a} de {b}": "Pieza {a} de {b}",
+  "{n} restante": "{n} restante",
+  "{n} restantes": "{n} restantes",
+  "{n} jogada": "{n} jugada",
+  "{n} jogadas": "{n} jugadas",
+  "{n} dica": "{n} pista",
+  "{n} dicas": "{n} pistas",
+  "Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.": "Dos toques giran · deslizar el dedo voltea · toca una casilla para encajar.",
+  "Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.": "Toca una pieza para seleccionarla. Después, dos toques giran y deslizar voltea.",
+  "Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.": "Piezas en cola: encaja la pieza del turno para ver la siguiente. Puedes quitar una pieza ya colocada tocándola.",
+  "Peça selecionada — use Girar/Espelhar e toque numa casa para encaixar (ou arraste).": "Pieza seleccionada: usa Girar/Voltear y toca una casilla para encajarla (o arrastra).",
+  "Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).": "Pieza seleccionada: R gira, T voltea. Haz clic en una casilla para encajarla (o arrastra).",
+  "Arraste uma peça para o tabuleiro, ou toque nela para selecionar.": "Arrastra una pieza al tablero, o tócala para seleccionarla.",
+  "Arraste uma peça para o tabuleiro. Clique numa peça já encaixada para tirá-la (ou passe o mouse e aperte E).": "Arrastra una pieza al tablero. Haz clic en una pieza ya colocada para quitarla (o pasa el ratón y pulsa E).",
+  "Toque numa peça para selecioná-la.": "Toca una pieza para seleccionarla.",
+  "Agora dê dois toques rápidos na peça para girá-la.": "Ahora da dos toques rápidos en la pieza para girarla.",
+  "Muito bem! Agora deslize o dedo por aqui, fora da peça, para espelhá-la.": "¡Muy bien! Ahora desliza el dedo por aquí, fuera de la pieza, para voltearla.",
+  "Isso mesmo! Agora é só encaixar as peças no tabuleiro.": "¡Eso es! Ahora solo queda encajar las piezas en el tablero.",
+  "Tudo bem! Você pode rever o tutorial no menu.": "¡Sin problema! Puedes repetir el tutorial desde el menú.",
+  "Última peça desfeita.": "Última pieza deshecha.",
+  "Dicas ficam desligadas nos campeonatos.": "Las pistas están desactivadas en los torneos.",
+  "A peça selecionada vai nesse lugar. Dois toques giram e deslizar o dedo espelha.": "La pieza seleccionada va en ese lugar. Dos toques giran y deslizar el dedo voltea.",
+  "A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.": "La pieza seleccionada va en ese lugar. Gira/voltea hasta que encaje.",
+  "Dica: {peca}. Encaixe com o canto superior esquerdo na linha {y}, coluna {x}.": "Pista: {peca}. Colócala con la esquina superior izquierda en la fila {y}, columna {x}.",
+  "Não consegui calcular essa dica agora. Tente tirar uma peça.": "No pude calcular esa pista ahora. Prueba a quitar una pieza.",
+  "Com as peças atuais não há solução — tire alguma (a última colocada está destacada).": "Con las piezas actuales no hay solución: quita alguna (la última colocada está resaltada).",
+  "Não cabe aí.": "No cabe ahí.",
+  "Peça encaixada. Falta 1 peça.": "Pieza colocada. Falta 1 pieza.",
+  "Peça encaixada. Faltam {n} peças.": "Pieza colocada. Faltan {n} piezas.",
+  "Peça encaixada.": "Pieza colocada.",
+  "Peça devolvida.": "Pieza devuelta.",
+  "Peça girada.": "Pieza girada.",
+  "Peça espelhada.": "Pieza volteada.",
+  "Selecione uma peça primeiro": "Selecciona una pieza primero",
+  "Escolha uma peça primeiro (teclas 1 a 6).": "Elige una pieza primero (teclas 1 a 6).",
+  "a peça cabe aqui": "la pieza cabe aquí",
+  "a peça não cabe aqui": "la pieza no cabe aquí",
+  "Fase {n} concluída!": "¡Nivel {n} completado!",
+  "Você dominou todas as formas!": "¡Dominaste todas las formas!",
+  "Fase do dia concluída!": "¡Nivel del día completado!",
+  "Enviando o seu resultado…": "Enviando tu resultado…",
+  "As {n} fases estão completas. Que tal criar as suas?": "Los {n} niveles están completos. ¿Y si creas los tuyos?",
+  "Volte amanhã para um novo desafio.": "Vuelve mañana para un nuevo desafío.",
+  "Sua fase tem solução. Pode salvar e compartilhar.": "Tu nivel tiene solución. Puedes guardarlo y compartirlo.",
+  "Mandou bem!": "¡Bien hecho!",
+  "1 estrela de 3": "1 estrella de 3",
+  "{n} estrelas de 3": "{n} estrellas de 3",
+  "Com dica — esta partida não conta para recorde.": "Con pista: esta partida no cuenta para el récord.",
+  "Novo recorde de tempo e de jogadas!": "¡Nuevo récord de tiempo y de jugadas!",
+  "Novo recorde de tempo!": "¡Nuevo récord de tiempo!",
+  "Novo recorde de jogadas!": "¡Nuevo récord de jugadas!",
+  "Primeiro registro desta fase.": "Primer registro de este nivel.",
+  "Seu recorde: {t} · {j}": "Tu récord: {t} · {j}",
+  "Próxima fase": "Siguiente nivel",
+  "Voltar ao editor": "Volver al editor",
+  "Salvar em Minhas fases": "Guardar en Mis niveles",
+  "Fase salva em Minhas fases": "Nivel guardado en Mis niveles",
+  "Compartilhar resultado": "Compartir resultado",
+  "Desafiar um amigo": "Desafiar a un amigo",
+  "Compartilhar fase": "Compartir nivel",
+  "Jogar de novo": "Jugar de nuevo",
+  "Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?": "Shape Puzzle — Nivel del día {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Racha: {seq}\n¿Puedes hacerlo más rápido?",
+  "Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:": "¡Pasé el nivel {n} de Shape Puzzle en {tempo} ({jog})! Inténtalo:",
+  "Tente a fase \"{nome}\" que eu criei no Shape Puzzle!": "¡Prueba el nivel \"{nome}\" que creé en Shape Puzzle!",
+  "Joga esse quebra-cabeça comigo: Shape Puzzle!": "¡Juega conmigo a este rompecabezas: Shape Puzzle!",
+  "Shape Puzzle — campeonato": "Shape Puzzle — torneo",
+  "Venha disputar o campeonato \"{nome}\" no Shape Puzzle! {fases}, ganha quem for mais rápido. Código: {id}": "¡Ven a competir en el torneo \"{nome}\" de Shape Puzzle! {fases}, gana el más rápido. Código: {id}",
+  "Copiado! É só colar numa conversa.": "¡Copiado! Solo pégalo en una conversación.",
+  "Não consegui copiar sozinho: selecione o link e copie.": "No pude copiarlo automáticamente: selecciona el enlace y cópialo.",
+  "Link de fase inválido": "Enlace de nivel no válido",
+  "Fase compartilhada aberta": "Nivel compartido abierto",
+  "Tabuleiro limpo. O tempo do campeonato continua correndo.": "Tablero limpio. El tiempo del torneo sigue corriendo.",
+  "um desafio novo por dia": "un desafío nuevo cada día",
+  "Você ainda não criou nenhuma fase.": "Aún no has creado ningún nivel.",
+  "Apagar a fase \"{nome}\"?": "¿Eliminar el nivel \"{nome}\"?",
+  "Apagar": "Eliminar",
+  "Abrir": "Abrir",
+  "Remover": "Quitar",
+  "Tirar da lista": "Quitar de la lista",
+  "Exportar": "Exportar",
+  "Preparando a fase do dia…": "Preparando el nivel del día…",
+  "Peças por vez: automático, de acordo com a fase.": "Piezas a la vez: automático, según el nivel.",
+  "Agora todas as peças aparecem de uma vez.": "Ahora todas las piezas aparecen a la vez.",
+  "Agora aparecem {n} peças por vez.": "Ahora aparecen {n} piezas a la vez.",
+  "Modo de teste desligado.": "Modo de prueba desactivado.",
+  "Senha incorreta.": "Contraseña incorrecta.",
+  "Este navegador não permite conferir a senha aqui (precisa de conexão segura, https).": "Este navegador no permite comprobar la contraseña aquí (necesita conexión segura, https).",
+  "Modo de teste ligado: todas as fases liberadas.": "Modo de prueba activado: todos los niveles desbloqueados.",
+  "Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)": "¿Reiniciar el progreso de los niveles? (Tus récords y niveles creados se conservan.)",
+  "Arquivo de fase inválido": "Archivo de nivel no válido",
+  "Fase importada": "Nivel importado",
+  "Jogo instalado!": "¡Juego instalado!",
+  "Faltam {n} casas para preencher": "Faltan {n} casillas por rellenar",
+  "Tabuleiro completo — pronto para salvar ou testar": "Tablero completo: listo para guardar o probar",
+  "Fase \"{nome}\" salva em Minhas fases": "Nivel \"{nome}\" guardado en Mis niveles",
+  "Digite o seu nome (pelo menos 2 letras).": "Escribe tu nombre (al menos 2 letras).",
+  "Endereço inválido. Ele deve começar com https:// e terminar em firebaseio.com ou firebasedatabase.app.": "Dirección no válida. Debe empezar con https:// y terminar en firebaseio.com o firebasedatabase.app.",
+  "A chave da API parece errada.": "La clave de API parece incorrecta.",
+  "Salvo.": "Guardado.",
+  "Saiu do modo organizador neste aparelho. Os campeonatos que você criou continuam no ar.": "Saliste del modo organizador en este dispositivo. Los torneos que creaste siguen activos.",
+  "Não achei essa conta. Se é a sua primeira vez, repita a senha no campo abaixo para criá-la. Se você já tem conta, confira o nome e a senha.": "No encontré esa cuenta. Si es tu primera vez, repite la contraseña en el campo de abajo para crearla. Si ya tienes cuenta, revisa el nombre y la contraseña.",
+  "As duas senhas precisam ser iguais.": "Las dos contraseñas deben coincidir.",
+  "Informe o endereço do banco e a chave da API (veja CAMPEONATOS.md).": "Indica la dirección de la base de datos y la clave de API (mira CAMPEONATOS.md).",
+  "O código tem 6 letras/números, como ABC234.": "El código tiene 6 letras/números, como ABC234.",
+  "Sem o endereço do banco não dá para entrar por código. Peça o link do convite ao organizador.": "Sin la dirección de la base de datos no se puede entrar con código. Pide el enlace de invitación al organizador.",
+  "Sorteada (fácil)": "Aleatorio (fácil)",
+  "Sorteada (média)": "Aleatorio (medio)",
+  "Sorteada (difícil)": "Aleatorio (difícil)",
+  "Editar campeonato": "Editar torneo",
+  "Salvar alterações": "Guardar cambios",
+  "Manter o prazo atual": "Mantener el plazo actual",
+  "Sortear uma nova fase": "Sortear un nuevo nivel",
+  "Fácil (5×5)": "Fácil (5×5)",
+  "Média (5×5)": "Medio (5×5)",
+  "Difícil (6×6, fila)": "Difícil (6×6, cola)",
+  "Não consegui sortear agora. Tente de novo.": "No pude sortear ahora. Inténtalo de nuevo.",
+  "A sessão de organizador acabou. Feche, abra Campeonatos e entre com a senha.": "La sesión de organizador terminó. Cierra, abre Torneos y entra con la contraseña.",
+  "Salvando…": "Guardando…",
+  "Criando…": "Creando…",
+  "Campeonato atualizado.": "Torneo actualizado.",
+  "Campeonato criado! Toque em Convidar para enviar o link.": "¡Torneo creado! Toca Invitar para enviar el enlace.",
+  "Não deu para salvar: alguém já entrou no campeonato (ou a sessão acabou).": "No se pudo guardar: alguien ya entró en el torneo (o la sesión terminó).",
+  "O banco recusou. As regras de segurança foram publicadas?": "La base de datos rechazó la solicitud. ¿Se publicaron las reglas de seguridad?",
+  "Carregando…": "Cargando…",
+  "Não encontrei esse campeonato. Confira o código.": "No encontré ese torneo. Revisa el código.",
+  "sem prazo": "sin plazo",
+  "prazo encerrado": "plazo terminado",
+  "até": "hasta",
+  "Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código": "Organizado por {org} · {n} de {max} personas · {fases} · {prazo} · {modo} · código",
+  "vale o melhor tempo": "cuenta el mejor tiempo",
+  "vale a primeira vez": "cuenta la primera vez",
+  "Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.": "Puedes editar mientras nadie haya entrado. Cuando alguien entre (incluido tú), solo se podrá eliminar.",
+  "Já tem gente no campeonato: não dá mais para editar, só excluir.": "Ya hay gente en el torneo: no se puede editar, solo eliminar.",
+  "Este campeonato já está com todas as vagas preenchidas.": "Este torneo ya tiene todas las plazas ocupadas.",
+  "Ainda não jogada": "Aún sin jugar",
+  "Melhorar": "Mejorar",
+  "Feita": "Hecho",
+  "Ninguém entrou ainda.": "Nadie ha entrado todavía.",
+  "{n}º": "{n}º",
+  "Prazo encerrado. Esse é o resultado final.": "Plazo terminado. Este es el resultado final.",
+  "O prazo já acabou.": "El plazo ya terminó.",
+  "Essa conta de organizador não é a dona deste campeonato.": "Esa cuenta de organizador no es la dueña de este torneo.",
+  "Pronto: você está como organizador neste aparelho.": "Listo: eres el organizador en este dispositivo.",
+  "Excluir o campeonato \"{nome}\"? O ranking e todos os resultados serão apagados e não dá para desfazer.": "¿Eliminar el torneo \"{nome}\"? El ranking y todos los resultados se borrarán y no se puede deshacer.",
+  "A sessão de organizador acabou. Entre com a senha de novo.": "La sesión de organizador terminó. Entra de nuevo con la contraseña.",
+  "Campeonato excluído.": "Torneo eliminado.",
+  "Atualizando…": "Actualizando…",
+  "O prazo deste campeonato acabou.": "El plazo de este torneo terminó.",
+  "Valendo! O tempo já está correndo e as dicas ficam desligadas.": "¡Cuenta! El tiempo ya corre y las pistas están desactivadas.",
+  "O prazo acabou: este resultado não entra no ranking.": "El plazo terminó: este resultado no entra en el ranking.",
+  "Resultado enviado! Veja a sua posição no ranking.": "¡Resultado enviado! Mira tu posición en el ranking.",
+  "Neste campeonato vale só o primeiro resultado de cada fase.": "En este torneo solo cuenta el primer resultado de cada nivel.",
+  "Você já tinha um tempo melhor nesta fase — ele continua valendo.": "Ya tenías un mejor tiempo en este nivel: sigue valiendo.",
+  "Sem conexão: guardei o seu resultado e envio quando voltar.": "Sin conexión: guardé tu resultado y lo envío cuando vuelva.",
+  "Não consegui enviar: {m}": "No pude enviar: {m}",
+  "Próxima fase do campeonato": "Siguiente nivel del torneo",
+  "Ver ranking": "Ver ranking",
+  "Você foi convidado para um campeonato! Toque em Jogar para ver.": "¡Te invitaron a un torneo! Toca Jugar para verlo.",
+  "Você ainda não está em nenhum campeonato.": "Todavía no estás en ningún torneo.",
+  "Organizador: {nome} ✓ (este aparelho é reconhecido)": "Organizador: {nome} ✓ (este dispositivo está reconocido)",
+  "O banco de dados recusou o pedido (as regras de segurança foram publicadas?).": "La base de datos rechazó la solicitud (¿se publicaron las reglas de seguridad?).",
+  "Sem conexão com o banco de dados.": "Sin conexión con la base de datos.",
+  "O banco de dados demorou demais para responder.": "La base de datos tardó demasiado en responder.",
+  "O banco de dados retornou um erro.": "La base de datos devolvió un error.",
+  "Algo deu errado. Tente de novo.": "Algo salió mal. Inténtalo de nuevo.",
+  "Dia {data}": "Día {data}",
+  "Fase {a}/{b}": "Nivel {a}/{b}",
+}
+};
+/*DICT-END*/
+</script>
 <script>
 // ==LOGIC-START==
 const TAM = 5;
@@ -881,6 +1612,96 @@ const store = {
   get(k, d){ try{ const v = localStorage.getItem('shapepuzzle.' + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem('shapepuzzle.' + k, JSON.stringify(v)); }catch(e){} }
 };
+
+/* ======================= Idiomas =======================
+   Os textos do jogo são escritos em português. Para os outros idiomas existe um dicionário (DICT, no bloco acima do jogo) com
+   a frase em português como chave. Chaves com {nome} funcionam como modelo: tr('Fase 3') acha o modelo 'Fase {n}'. */
+const IDIOMAS = {pt: 'Português', en: 'English', es: 'Español'};
+const LANG_HTML = {pt: 'pt-BR', en: 'en', es: 'es'};
+function idiomaDoAparelho(){ const l = String(navigator.language || 'pt').toLowerCase(); return l.startsWith('en') ? 'en' : l.startsWith('es') ? 'es' : 'pt'; }
+let lang = store.get('lang', null); if (!IDIOMAS[lang]) lang = idiomaDoAparelho();
+const LEX = {};
+function lexico(l){
+  if (LEX[l]) return LEX[l];
+  const d = (window.DICT || {})[l] || {}, exato = new Map(), pad = [];
+  for (const k in d){
+    exato.set(k, d[k]);
+    if (/\{\w+\}/.test(k)){
+      const nomes = []; let re = '^', lit = 0;
+      k.split(/\{(\w+)\}/).forEach((x, i) => { if (i % 2){ nomes.push(x); re += /^(n|a|b|max)$/.test(x) ? '(\\d+)' : '([\\s\\S]+?)'; } else { re += x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); lit += x.length; } });
+      pad.push({re: new RegExp(re + '$'), nomes, v: d[k], lit});
+    }
+  }
+  pad.sort((a, b) => b.lit - a.lit);
+  return LEX[l] = {exato, pad};
+}
+/* tr(frase): traduz. tr(modelo, {a: 1}): troca {a} pelos valores (valores já traduzidos por quem chama). */
+function tr(txt, par){
+  if (txt === null || txt === undefined) return txt;
+  let r = String(txt);
+  if (lang !== 'pt'){
+    const L = lexico(lang);
+    if (L.exato.has(r)) r = L.exato.get(r);
+    else if (!par) for (const e of L.pad){
+      const m = e.re.exec(r);
+      if (m){ r = e.v.replace(/\{(\w+)\}/g, (_, n) => { const i = e.nomes.indexOf(n); return i < 0 ? '' : m[i + 1]; }); break; }
+    }
+  }
+  return par ? r.replace(/\{(\w+)\}/g, (_, n) => n in par ? par[n] : '{' + n + '}') : r;
+}
+/* HTML estático: guarda o texto original (em português) de cada nó para poder trocar de idioma a qualquer hora. */
+const REG = {txt: [], atr: [], html: []};
+function registrarI18n(){
+  REG.html = [...document.querySelectorAll('[data-th]')].map(el => ({el, orig: el.innerHTML, shown: el.innerHTML}));
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {acceptNode: n => {
+    const pe = n.parentElement;
+    return !pe || /^(SCRIPT|STYLE)$/.test(pe.tagName) || pe.closest('[data-th]') || !n.data.trim() ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; }});
+  for (let n; (n = w.nextNode());){
+    const m = /^(\s*)([\s\S]*?)(\s*)$/.exec(n.data);
+    REG.txt.push({n, lead: m[1], core: m[2], trail: m[3], orig: n.data, shown: n.data});
+  }
+  document.querySelectorAll('[aria-label],[title],[placeholder]').forEach(el => ['aria-label', 'title', 'placeholder'].forEach(a => {
+    if (el.hasAttribute(a)) REG.atr.push({el, a, orig: el.getAttribute(a), shown: el.getAttribute(a)});
+  }));
+}
+function aplicarIdioma(){
+  document.documentElement.lang = LANG_HTML[lang];
+  if (window.__pronto){ rotuloTabuleiro(); renderSelo(); if (S.jogo) renderBoard(); }
+  REG.txt = REG.txt.filter(r => r.n.isConnected);
+  for (const r of REG.txt){
+    if (r.n.data !== r.shown && r.n.data !== r.orig) continue;      /* o jogo mudou esse texto sozinho: ele cuida da tradução */
+    r.n.data = r.lead + tr(r.core) + r.trail; r.shown = r.n.data;
+  }
+  for (const r of REG.atr){
+    const v = r.el.getAttribute(r.a); if (v !== r.shown && v !== r.orig) continue;
+    r.el.setAttribute(r.a, tr(r.orig)); r.shown = r.el.getAttribute(r.a);
+  }
+  for (const r of REG.html){ if (r.el.innerHTML !== r.shown && r.el.innerHTML !== r.orig) continue; r.el.innerHTML = tr(r.orig); r.shown = r.el.innerHTML; }
+}
+
+/* ======================= Acessibilidade ======================= */
+const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
+let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
+function aplicarA11y(){
+  const b = document.body.classList;
+  b.toggle('dalt', !!a11y.dalt); b.toggle('cont', !!a11y.cont); b.toggle('tg', !!a11y.texto); b.toggle('rm', !!a11y.mov);
+  if (window.__pronto) ajustar();
+}
+let liveT = 0;
+function anunciar(msg){
+  const l = $('#live'); if (!l) return;
+  l.textContent = ''; clearTimeout(liveT); liveT = setTimeout(() => { l.textContent = msg; }, 60);
+}
+const NOME_COR = {1: 'azul', 6: 'verde', 11: 'rosa', 16: 'amarela'};
+const nomeCor = id => tr(NOME_COR[id] || 'azul');
+const casasDe = f => f.reduce((a, l) => a + l.reduce((x, v) => x + (v ? 1 : 0), 0), 0);
+const descPeca = p => tr('Peça {cor}, {n} casas', {cor: nomeCor(p.id), n: casasDe(p.formato)});
+function descCelula(x, y){
+  const j = S.jogo, idu = j.grade[y][x], est = j.gab[y][x], par = {y: y + 1, x: x + 1};
+  if (idu){ const p = j.mapa.get(idu); par.cor = nomeCor(p ? p.id : 1); if (est) par.est = nomeCor(est); return tr(est ? 'Linha {y}, coluna {x}: peça {cor} sobre a estrela {est}' : 'Linha {y}, coluna {x}: peça {cor}', par); }
+  if (est){ par.est = nomeCor(est); return tr('Linha {y}, coluna {x}: vazia, estrela {est}', par); }
+  return tr('Linha {y}, coluna {x}: vazia', par);
+}
 const ICONES = {
   menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
   left:'<path d="M15 5l-7 7 7 7"/>', right:'<path d="M9 5l7 7-7 7"/>',
@@ -919,13 +1740,37 @@ function pintarIcones(raiz = document){
 }
 let toastT = 0;
 function toast(msg){
-  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600);
+  const el = $('#toast'); el.textContent = tr(msg); el.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+/* Diálogos: ao abrir, o foco vai para dentro dele e o fundo fica inerte; ao fechar, o foco volta para onde estava. */
+function prepararDialogos(){
+  document.querySelectorAll('.ov').forEach(o => {
+    const card = o.querySelector('.card'); if (!card) return;
+    card.setAttribute('role', 'dialog'); card.setAttribute('aria-modal', 'true');
+    const h = card.querySelector('h1'); if (h){ h.id = h.id || 'h-' + o.id; card.setAttribute('aria-labelledby', h.id); }
+  });
+  let abertos = new Set();
+  const sinc = () => {
+    const agora = new Set([...document.querySelectorAll('.ov.on')]);
+    let novo = null;
+    agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; novo = o; } });
+    $('#app').inert = agora.size > 0;
+    if (novo){
+      requestAnimationFrame(() => { const card = novo.querySelector('.card'); const alvo = card && (card.querySelector('[data-close]') || card.querySelector('button:not([hidden]):not([disabled])')); if (alvo) alvo.focus({preventScroll: true}); else if (card){ card.tabIndex = -1; card.focus({preventScroll: true}); } });
+    } else if (!agora.size){
+      abertos.forEach(o => { if (!agora.has(o) && o._foco && o._foco.isConnected && o._foco !== document.body){ try{ o._foco.focus({preventScroll: true}); }catch(e){} } });
+    }
+    abertos = agora;
+  };
+  const obs = new MutationObserver(sinc);
+  document.querySelectorAll('.ov').forEach(o => obs.observe(o, {attributes: true, attributeFilter: ['class']}));
+  sinc();
 }
 const abrir = id => { $('#ov-' + id).classList.add('on'); if (window.atualizarTuto) atualizarTuto(); };
 const fechar = id => { $('#ov-' + id).classList.remove('on'); if (window.atualizarTuto) atualizarTuto(); };
 const fmtTempo = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-const fmtJog = n => n + (n === 1 ? ' jogada' : ' jogadas');
+const fmtJog = n => tr(n + (n === 1 ? ' jogada' : ' jogadas'));
 const pad2 = n => String(n).padStart(2, '0');
 const fmtData = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 const dataHoje = () => fmtData(new Date());
@@ -938,7 +1783,7 @@ function pecaEl(formato, id, tam){
   for (const linha of formato) for (const v of linha){
     const c = document.createElement('div');
     c.className = 'pc' + (v ? '' : ' e');
-    c.style.setProperty('--c', COR[id]);
+    c.style.setProperty('--c', COR[id]); if (v) c.dataset.s = id;
     el.appendChild(c);
   }
   return el;
@@ -1221,17 +2066,17 @@ function avisoFila(){
                                         : 'Peças em fila: só as próximas ' + f + ' aparecem. Tirar uma peça do tabuleiro a coloca de volta na frente.');
   S.ultFila = f;
 }
-const rotuloModo = j => (j.n > TAM ? j.n + '×' + j.n : '') + (j.fila && !j.filaAuto ? (j.n > TAM ? ' · ' : '') + (j.fila === 1 ? '1 por vez' : 'fila de ' + j.fila) : '');
+const rotuloModo = j => (j.n > TAM ? j.n + '×' + j.n : '') + (j.fila && !j.filaAuto ? (j.n > TAM ? ' · ' : '') + tr(j.fila === 1 ? '1 por vez' : 'fila de ' + j.fila) : '');
 function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDica(); renderStats(); }
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
-  if (c.k === 'b'){ t1.textContent = 'Fase ' + (c.i + 1); t2.textContent = (modoTeste ? 'teste · ' : '') + (rotuloModo(S.jogo) || 'de ' + BUILTIN.length); }
-  else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = 'fase personalizada'; }
-  else if (c.k === 'd'){ t1.textContent = 'Fase do dia'; t2.textContent = dataCurta(c.data); }
-  else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = 'Fase ' + (c.idx + 1) + ' de ' + c.total; }
-  else if (c.shared){ t1.textContent = c.nome; t2.textContent = 'fase compartilhada'; }
-  else { t1.textContent = 'Teste'; t2.textContent = c.nome || 'sua fase'; }
+  if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + BUILTIN.length)); }
+  else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
+  else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
+  else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.shared){ t1.textContent = tr(c.nome); t2.textContent = tr('fase compartilhada'); }
+  else { t1.textContent = tr('Teste'); t2.textContent = c.nome || tr('sua fase'); }
   $('#btnDica').disabled = c.k === 'x';
 }
 
@@ -1250,16 +2095,18 @@ function renderStats(){
   $('#stJog').textContent = fmtJog(S.jog);
   const k = S.cur && chaveFase(S.cur), r = k && recs[k];
   $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;
-  $('#pDica').hidden = !S.dicas; $('#stDica').textContent = S.dicas + (S.dicas === 1 ? ' dica' : ' dicas');
+  $('#pDica').hidden = !S.dicas; $('#stDica').textContent = tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas'));
 }
 setInterval(tick, 250);
 
 /* ---- tabuleiro ---- */
+function rotuloTabuleiro(){ const b = $('#board'); if (b) b.setAttribute('aria-label', tr('Tabuleiro {n} por {n}. Setas movem o cursor, Enter encaixa a peça.', {n: S.n})); }
 function montarBoard(){
-  const b = $('#board'); b.innerHTML = ''; b.style.setProperty('--n', S.n);
+  const b = $('#board'); b.innerHTML = ''; b.style.setProperty('--n', S.n); S.cursor = null;
+  rotuloTabuleiro();
   for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
     const c = document.createElement('div'); c.className = 'cell';
-    c.innerHTML = '<div class="star"></div><div class="fill"></div>';
+    c.innerHTML = '<div class="star"></div><div class="fill"></div>'; c.setAttribute('role', 'img');
     b.appendChild(c);
   }
 }
@@ -1269,10 +2116,11 @@ function renderBoard(){
   for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
     const c = cellEl(x, y), star = c.children[0], fill = c.children[1];
     const idu = j.grade[y][x], est = j.gab[y][x];
-    if (idu){ const p = j.mapa.get(idu); fill.style.display = 'block'; fill.style.setProperty('--c', COR[p ? p.id : 1]); }
+    if (idu){ const p = j.mapa.get(idu); fill.style.display = 'block'; fill.style.setProperty('--c', COR[p ? p.id : 1]); fill.dataset.s = p ? p.id : 1; }
     else fill.style.display = 'none';
-    if (est && !idu){ star.style.display = 'block'; star.style.setProperty('--c', COR[est]); }
+    if (est && !idu){ star.style.display = 'block'; star.style.setProperty('--c', COR[est]); star.dataset.s = est; }
     else star.style.display = 'none';
+    c.setAttribute('aria-label', descCelula(x, y));
   }
 }
 function celulaEm(cx, cy){
@@ -1306,16 +2154,17 @@ function renderReserva(){
     if (i === 0 || i === cima){ fileira = document.createElement('div'); fileira.className = 'rp'; el.appendChild(fileira); }
     const w = document.createElement('div');
     w.className = 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '');
-    w.dataset.uid = p.uid;
+    w.dataset.uid = p.uid; w.tabIndex = 0; w.setAttribute('role', 'button');
+    w.setAttribute('aria-pressed', S.sel === p); w.setAttribute('aria-label', (i + 1) + '. ' + descPeca(p) + (S.sel === p ? ', ' + tr('selecionada') : ''));
     const pe = pecaEl(p.formato, p.id, 'mini');
     if (S.anim && S.sel === p) pe.classList.add(S.anim === 'giro' ? 'a-giro' : 'a-flip');
     w.appendChild(pe);
     fileira.appendChild(w);
   });
   S.anim = null;
-  if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">Todas as peças estão no tabuleiro.</div>';
+  if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">' + tr('Todas as peças estão no tabuleiro.') + '</div>';
   { const j = S.jogo, resta = j.reserva.length;
-    $('#contagem').textContent = !resta ? '' : j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes'); }
+    $('#contagem').textContent = !resta ? '' : tr(j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes')); }
   fitFileiras(); atualizarTuto();
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
   $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
@@ -1332,11 +2181,11 @@ function renderDica(){
                              : 'Peça selecionada — R gira, T espelha. Clique numa casa para encaixar (ou arraste).';
   else t = toque ? 'Arraste uma peça para o tabuleiro, ou toque nela para selecionar.'
                  : 'Arraste uma peça para o tabuleiro. Clique numa peça já encaixada para tirá-la (ou passe o mouse e aperte E).';
-  $('#dica').textContent = t;
+  $('#dica').textContent = tr(t);
 }
 /* Peça tirada do tabuleiro: volta à reserva; em fila, volta para a frente. */
 function devolver(p){ if (S.jogo.fila) S.jogo.reserva.unshift(p); else S.jogo.reserva.push(p); }
-function selecionar(p){ S.sel = p; renderReserva(); renderDica(); }
+function selecionar(p){ S.sel = p; renderReserva(); renderDica(); if (p) anunciar(descPeca(p) + ', ' + tr('selecionada')); }
 
 /* ---- fantasma (pré-visualização do encaixe) ---- */
 function limparGhost(){ S.ghost.forEach(c => c.classList.remove('gok', 'gbad')); S.ghost = []; }
@@ -1369,7 +2218,7 @@ function acaoDesfazer(){
   if (!p){ atualizarDesfazer(); return; }
   limparDica(); devolver(p); S.sel = p;
   S.ultimaIdu = S.hist.length ? S.hist[S.hist.length - 1] : 0;
-  Som.pegar(); vibrar(10); renderBoard(); renderReserva(); renderDica(); renderStats(); atualizarGhostHover();
+  anunciar(tr('Última peça desfeita.')); Som.pegar(); vibrar(10); renderBoard(); renderReserva(); renderDica(); renderStats(); atualizarGhostHover();
 }
 
 /* ---- dica ---- */
@@ -1390,6 +2239,7 @@ function acaoDica(){
     }
     selecionar(r.peca); renderStats();
     toast(matchMedia('(pointer:coarse)').matches ? 'A peça selecionada vai nesse lugar. Dois toques giram e deslizar o dedo espelha.' : 'A peça selecionada vai nesse lugar. Gire/espelhe até encaixar.');
+    anunciar(tr('Dica: {peca}. Encaixe com o canto superior esquerdo na linha {y}, coluna {x}.', {peca: descPeca(r.peca), y: r.py + 1, x: r.px + 1}));
   } else {
     const idu = S.ultimaIdu && S.jogo.mapa.has(S.ultimaIdu) ? S.ultimaIdu : 0;
     if (idu) for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++) if (S.jogo.grade[y][x] === idu){ const c = cellEl(x, y); c.classList.add('alerta'); S.dicaCels.push(c); }
@@ -1406,24 +2256,28 @@ function tremer(){
 }
 function tentarColocar(p, gx, gy){
   if (!podeColocar(S.jogo, p.formato, gx, gy)){
-    if (sobreposto(p.formato, gx, gy)){ tremer(); Som.invalido(); vibrar([25, 40, 25]); }
+    if (sobreposto(p.formato, gx, gy)){ tremer(); Som.invalido(); vibrar([25, 40, 25]); anunciar(tr('Não cabe aí.')); }
     return false;
   }
   limparDica(); iniciaTempo();
   S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
   Som.encaixar(); vibrar(14);
+  { const falta = S.jogo.total - S.jogo.mapa.size; anunciar(falta ? tr(falta === 1 ? 'Peça encaixada. Falta 1 peça.' : 'Peça encaixada. Faltam {n} peças.', {n: falta}) : tr('Peça encaixada.')); }
   renderBoard(); renderReserva(); renderDica(); renderStats();
   if (concluido(S.jogo)) vencer();
   return true;
 }
+function renderSelo(){
+  const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv) return;
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  selo.hidden = false;
+}
 function vencer(){
   tick();
-  S.venceu = true; atualizarDesfazer();
+  S.venceu = true; atualizarDesfazer(); anunciar(tr('Fase concluída!'));
   $('#board').classList.add('win');
-  const cv = S.cur, selo = $('#selo');
-  selo.innerHTML = ic('check'); selo.append(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome);
-  selo.hidden = false;
+  renderSelo();
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
@@ -1446,22 +2300,22 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!';
-  $('#winTexto').textContent = c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
+  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
-    : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!';
+    : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
   for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
-  re.setAttribute('aria-label', res.est + (res.est === 1 ? ' estrela' : ' estrelas') + ' de 3');
+  re.setAttribute('aria-label', tr(res.est === 1 ? '1 estrela de 3' : res.est + ' estrelas de 3'));
   const r = $('#winRes'); r.innerHTML = '';
   const pill = (icone, txt) => { const s = document.createElement('span'); s.className = 'pill'; s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
-  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', S.dicas + (S.dicas === 1 ? ' dica' : ' dicas'));
+  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas')));
   const k = chaveFase(c);
-  $('#winBadge').textContent = !k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
+  $('#winBadge').textContent = tr(!k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
     : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
-    : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j);
+    : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j));
   acts.innerHTML = '';
-  const add = (txt, cls, fn, icone) => { const b = document.createElement('button'); b.className = 'btn ' + cls; if (icone) b.innerHTML = ic(icone); b.append(txt); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
+  const add = (txt, cls, fn, icone) => { const b = document.createElement('button'); b.className = 'btn ' + cls; if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
@@ -1470,9 +2324,9 @@ function mostrarVitoria(res){
   else {
   const compartilharRes = () => {
     const base = urlBase();
-    if (c.k === 'd') compartilhar('Shape Puzzle', `Shape Puzzle — Fase do dia ${dataCurta(c.data)}\n⏱ ${fmtTempo(res.t)} · ${fmtJog(res.j)}${S.dicas ? ' · ' + S.dicas + (S.dicas === 1 ? ' dica' : ' dicas') : ''}\n🔥 Sequência: ${sequencia()} ${sequencia() === 1 ? 'dia' : 'dias'}\nConsegue mais rápido?`, base);
-    else if (c.k === 'b') compartilhar('Shape Puzzle', `Passei da fase ${c.i + 1} do Shape Puzzle em ${fmtTempo(res.t)} (${fmtJog(res.j)})! Tenta aí:`, base);
-    else compartilhar('Shape Puzzle', `Tente a fase "${c.k === 'c' ? custom[c.i].nome : c.nome}" que eu criei no Shape Puzzle!`, urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
+    if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas')) : '', seq: tr(sequencia() + (sequencia() === 1 ? ' dia' : ' dias'))}), base);
+    else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
+    else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
   };
   compartilharRes.fecha = false;
   add(c.k === 'd' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
@@ -1480,7 +2334,7 @@ function mostrarVitoria(res){
   if (c.k !== 't') add('Fases', '', abrirMenu);
   }
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
-  Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
+  if (!a11y.mov) Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
     const d = document.createElement('i'); d.className = 'conf'; d.style.background = cor;
     d.style.setProperty('--dx', (Math.random() * 320 - 160) + 'px'); d.style.setProperty('--dy', (Math.random() * 300 - 120) + 'px');
     d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); d.style.animationDelay = (n * 0.03 + Math.random() * 0.2) + 's';
@@ -1491,11 +2345,11 @@ function mostrarVitoria(res){
 
 function acaoGirar(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; aposTransformar();
+  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; anunciar(tr('Peça girada.')); aposTransformar();
 }
 function acaoFlip(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; aposTransformar();
+  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; anunciar(tr('Peça espelhada.')); aposTransformar();
 }
 function aposTransformar(){
   renderReserva();
@@ -1652,19 +2506,55 @@ $('#tutoPular').onclick = () => { tuto.fim = true; store.set('tuto', tuto); atua
 $('#btnTuto').onclick = () => { tuto = {sel: false, giro: false, esp: false, fim: false}; store.set('tuto', tuto); fechar('menu'); S.sel = null; renderReserva(); renderDica(); ajustar(); atualizarTuto(); };
 
 /* ---- teclado ---- */
+function tirarDaCasa(x, y){
+  if (S.venceu || !S.jogo.grade[y][x]) return false;
+  const p = remover(S.jogo, x, y);
+  if (!p) return false;
+  limparDica(); devolver(p); Som.soltar(); anunciar(tr('Peça devolvida.')); renderBoard(); renderReserva(); atualizarGhostHover(); return true;
+}
+/* cursor do teclado no tabuleiro: funciona como o mouse passando por cima */
+function moverCursor(dx, dy){
+  const n = S.n, primeira = !S.cursor;
+  const c = S.cursor || {x: Math.floor(n / 2), y: Math.floor(n / 2)};
+  if (!primeira){ c.x = Math.max(0, Math.min(n - 1, c.x + dx)); c.y = Math.max(0, Math.min(n - 1, c.y + dy)); }
+  S.cursor = c;
+  document.querySelectorAll('#board .cell.cur').forEach(el => el.classList.remove('cur'));
+  cellEl(c.x, c.y).classList.add('cur');
+  S.hover = {x: c.x, y: c.y, mouse: true};
+  if (document.activeElement !== $('#board') && !(document.activeElement && document.activeElement.classList.contains('pw'))) $('#board').focus({preventScroll: true});
+  atualizarGhostHover();
+  let msg = descCelula(c.x, c.y);
+  if (S.sel && !S.jogo.grade[c.y][c.x]){ const f = S.sel.formato; msg += ' · ' + tr(podeColocar(S.jogo, f, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2)) ? 'a peça cabe aqui' : 'a peça não cabe aqui'); }
+  anunciar(msg);
+}
+function acaoCursor(){
+  const c = S.cursor; if (!c){ moverCursor(0, 0); return; }
+  if (S.venceu) return;
+  if (S.jogo.grade[c.y][c.x]){ tirarDaCasa(c.x, c.y); return; }
+  if (!S.sel){ toast('Escolha uma peça primeiro (teclas 1 a 6).'); return; }
+  const f = S.sel.formato;
+  tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
+}
+const SETAS = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]};
 window.addEventListener('keydown', e => {
   if (e.target.matches('input,textarea,select')) return;
   if (e.key === 'Escape'){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); if (S.sel && !S.drag){ S.sel = null; limparGhost(); renderReserva(); renderDica(); } return; }
-  if (document.querySelector('.ov.on')) return;
+  if (document.querySelector('.ov.on') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (SETAS[e.key]){ e.preventDefault(); moverCursor(...SETAS[e.key]); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && (e.target === document.body || e.target.id === 'board' || (e.target.classList && e.target.classList.contains('pw')))){
+    e.preventDefault();
+    if (e.target.classList && e.target.classList.contains('pw')){ const q = S.jogo.reserva.find(x => x.uid == e.target.dataset.uid); if (q){ selecionar(q); const w = document.querySelector('#reserva .pw.sel'); if (w) w.focus(); } }
+    else acaoCursor();
+    return;
+  }
   const k = e.key.toLowerCase();
   if (k === 'r') acaoGirar();
   else if (k === 't') acaoFlip();
   else if (k === 'h') acaoDica();
   else if (k === 'z') acaoDesfazer();
-  else if (k === 'e' && S.hover && !S.venceu && S.jogo.grade[S.hover.y][S.hover.x]){
-    const p = remover(S.jogo, S.hover.x, S.hover.y);
-    if (p){ limparDica(); devolver(p); Som.soltar(); renderBoard(); renderReserva(); atualizarGhostHover(); }
-  }
+  else if (/^[1-6]$/.test(k) && !S.venceu){ const q = visiveis(S.jogo)[+k - 1]; if (q) selecionar(q); }
+  else if (k === 'p' && !S.venceu){ const v = visiveis(S.jogo); if (v.length){ selecionar(v[(v.indexOf(S.sel) + 1) % v.length]); } }
+  else if (k === 'e' && S.hover) tirarDaCasa(S.hover.x, S.hover.y);
 });
 
 /* ---- compartilhar ---- */
@@ -1686,6 +2576,7 @@ async function copiar(t){
 /* Painel próprio: funciona igual no celular e no computador (o compartilhar do sistema, sozinho, falha em muitos PCs). */
 let SH = null;
 function abrirCompartilhar(titulo, texto, url){
+  titulo = tr(titulo); texto = tr(texto);
   SH = {titulo, texto, url};
   $('#shTitulo').textContent = titulo; $('#shTexto').textContent = texto; $('#shLink').value = url;
   const msg = encodeURIComponent(texto + '\n' + url);
@@ -1739,8 +2630,8 @@ $('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash')
 /* ---- menu ---- */
 function renderDiario(){
   const hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
-  $('#diaSub').textContent = dataCurta(hoje) + ' · um desafio novo por dia' + (seq ? ' · 🔥 ' + seq + (seq === 1 ? ' dia' : ' dias') : '');
-  $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : 'Jogar';
+  $('#diaSub').textContent = dataCurta(hoje) + ' · ' + tr('um desafio novo por dia') + (seq ? ' · 🔥 ' + tr(seq + (seq === 1 ? ' dia' : ' dias')) : '');
+  $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : tr('Jogar');
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
@@ -1749,7 +2640,8 @@ function abrirMenu(){
     const b = document.createElement('button');
     b.className = 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : '');
     b.disabled = trancada;
-    b.innerHTML = `<span>${i + 1}</span>` + (feito ? ic('check') : '') + (trancada ? ic('lock') : '') + (feito && estrelasFase[i] ? `<span class="est" aria-label="${estrelasFase[i]} de 3 estrelas">${'★'.repeat(estrelasFase[i])}</span>` : '');
+    b.innerHTML = `<span>${i + 1}</span>` + (feito ? ic('check') : '') + (trancada ? ic('lock') : '') + (feito && estrelasFase[i] ? `<span class="est" aria-hidden="true">${'★'.repeat(estrelasFase[i])}</span>` : '');
+    b.setAttribute('aria-label', tr('Fase ' + (i + 1)) + (feito ? ', ' + tr('concluída') + (estrelasFase[i] ? ', ' + tr(estrelasFase[i] === 1 ? '1 estrela de 3' : estrelasFase[i] + ' estrelas de 3') : '') : '') + (trancada ? ', ' + tr('bloqueada') : ''));
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
   });
@@ -1758,20 +2650,21 @@ function abrirMenu(){
   $('#selHumor').value = humorPref;
   $('#selPecas').value = String(pecasPref);
   $('#chkVibra').checked = vibraOn; $('#rowVibra').hidden = !navigator.vibrate;
+  $('#selIdioma').value = lang; $('#chkDalt').checked = !!a11y.dalt; $('#chkCont').checked = !!a11y.cont; $('#chkTexto').checked = !!a11y.texto; $('#chkMov').checked = !!a11y.mov;
   abrir('menu');
 }
 function renderCustom(){
   const l = $('#customList'); l.innerHTML = '';
-  if (!custom.length){ l.innerHTML = '<p class="vazio2">Você ainda não criou nenhuma fase.</p>'; return; }
+  if (!custom.length){ l.innerHTML = '<p class="vazio2">' + tr('Você ainda não criou nenhuma fase.') + '</p>'; return; }
   custom.forEach((f, i) => {
     const r = document.createElement('div'); r.className = 'cust';
     r.innerHTML = '<span></span>';
     r.firstChild.textContent = f.nome;
-    const mk = (icone, label, fn) => { const b = document.createElement('button'); b.className = 'ib'; b.setAttribute('aria-label', label); b.innerHTML = ic(icone); b.onclick = fn; r.appendChild(b); };
+    const mk = (icone, label, fn) => { const b = document.createElement('button'); b.className = 'ib'; b.setAttribute('aria-label', tr(label) + ': ' + f.nome); b.title = tr(label); b.innerHTML = ic(icone); b.onclick = fn; r.appendChild(b); };
     mk('play', 'Jogar', () => { fechar('menu'); carregar({k: 'c', i}); });
     mk('share', 'Compartilhar', () => compartilhar('Shape Puzzle', `Tente a fase "${f.nome}" que eu criei no Shape Puzzle!`, urlFase(f.text, f.nome)));
     mk('download', 'Exportar', () => baixar(f.nome, f.text));
-    mk('trash', 'Apagar', () => { if (confirm('Apagar a fase "' + f.nome + '"?')){ custom.splice(i, 1); store.set('custom', custom); if (S.cur.k === 'c') carregar({k: 'b', i: 0}); renderCustom(); } });
+    mk('trash', 'Apagar', () => { if (confirm(tr('Apagar a fase "{nome}"?', {nome: f.nome}))){ custom.splice(i, 1); store.set('custom', custom); if (S.cur.k === 'c') carregar({k: 'b', i: 0}); renderCustom(); } });
     l.appendChild(r);
   });
 }
@@ -1780,12 +2673,21 @@ $('#btnDia').onclick = () => {
   setTimeout(() => carregar({k: 'd', data: dataHoje()}), 30);
 };
 $('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica(); };
+const salvarA11y = (k, v) => { a11y[k] = v; store.set('a11y', a11y); aplicarA11y(); };
+$('#chkDalt').onchange = e => salvarA11y('dalt', e.target.checked);
+$('#chkCont').onchange = e => salvarA11y('cont', e.target.checked);
+$('#chkTexto').onchange = e => salvarA11y('texto', e.target.checked);
+$('#chkMov').onchange = e => salvarA11y('mov', e.target.checked);
+$('#selIdioma').onchange = e => {
+  lang = e.target.value; store.set('lang', lang); aplicarIdioma();
+  renderTudo(); renderDiario(); renderCustom(); abrirMenu(); if (window.atualizarTuto) atualizarTuto();
+};
 $('#chkVibra').onchange = e => { vibraOn = e.target.checked; store.set('vibra', vibraOn); if (vibraOn) vibrar(30); };
 $('#chkSfx').onchange = e => Som.setSfx(e.target.checked);
 $('#rngVol').oninput = e => Som.setVolume(e.target.value / 100);
 $('#selPecas').onchange = e => { pecasPref = e.target.value === 'auto' ? 'auto' : +e.target.value; store.set('pecas', pecasPref); aplicarPecas(); toast(pecasPref === 'auto' ? 'Peças por vez: automático, de acordo com a fase.' : pecasPref === 99 ? 'Agora todas as peças aparecem de uma vez.' : 'Agora aparecem ' + pecasPref + ' peças por vez.'); };
 $('#selHumor').onchange = e => { humorPref = e.target.value; store.set('humor', humorPref); aplicarHumor(); };
-function renderTeste(){ const b = $('#btnTeste'); b.lastChild.textContent = modoTeste ? 'Sair do modo de teste' : 'Modo de teste'; }
+function renderTeste(){ const b = $('#btnTeste'); b.lastChild.textContent = tr(modoTeste ? 'Sair do modo de teste' : 'Modo de teste'); }
 $('#btnTeste').onclick = () => {
   if (modoTeste){ modoTeste = false; store.set('teste', false); renderTeste(); abrirMenu(); renderTitulo(); toast('Modo de teste desligado.'); return; }
   $('#tsSenha').value = ''; aviso('#tsAviso', ''); fechar('menu'); abrir('teste'); setTimeout(() => $('#tsSenha').focus(), 50);
@@ -1798,7 +2700,7 @@ async function entrarTeste(){
 }
 $('#tsEntrar').onclick = entrarTeste;
 $('#tsSenha').addEventListener('keydown', e => { if (e.key === 'Enter') entrarTeste(); });
-$('#btnZerar').onclick = () => { if (confirm('Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)')){ prog = {max: 0, done: []}; store.set('prog', prog); carregar({k: 'b', i: 0}); abrirMenu(); } };
+$('#btnZerar').onclick = () => { if (confirm(tr('Zerar o progresso das fases? (Seus recordes e fases criadas continuam salvos.)'))){ prog = {max: 0, done: []}; store.set('prog', prog); carregar({k: 'b', i: 0}); abrirMenu(); } };
 $('#btnCriar').onclick = () => { fechar('menu'); abrirEditor(); };
 $('#btnCamp').onclick = () => { fechar('menu'); abrirCamps(); };
 $('#btnImportar').onclick = () => $('#fileImp').click();
@@ -1847,7 +2749,7 @@ function montarEditor(){
   const pal = $('#pal'); pal.innerHTML = '';
   for (const id of CORES_IDS){
     const b = document.createElement('button'); b.className = 'sw' + (E.cor === id ? ' on' : ''); b.style.setProperty('--c', COR[id]);
-    b.setAttribute('aria-label', 'Cor ' + id); b.onclick = () => { E.cor = id; montarEditor(); }; pal.appendChild(b);
+    b.setAttribute('aria-label', tr('Cor') + ' ' + nomeCor(id)); b.dataset.s = id; b.onclick = () => { E.cor = id; montarEditor(); }; pal.appendChild(b);
   }
   const b = $('#edBoard');
   if (!b.children.length) for (let i = 0; i < TAM * TAM; i++){ const c = document.createElement('div'); c.className = 'cell'; c.innerHTML = '<div class="fill"></div>'; b.appendChild(c); }
@@ -1857,11 +2759,11 @@ function renderEditor(){
   const b = $('#edBoard'); let n = 0;
   for (let y = 0; y < TAM; y++) for (let x = 0; x < TAM; x++){
     const f = b.children[y * TAM + x].firstChild, v = E.grid[y][x];
-    if (v){ f.style.display = 'block'; f.style.setProperty('--c', COR[v]); n++; } else f.style.display = 'none';
+    if (v){ f.style.display = 'block'; f.style.setProperty('--c', COR[v]); f.dataset.s = v; n++; } else f.style.display = 'none';
   }
   const info = $('#edInfo'), faltam = TAM * TAM - n;
   info.className = faltam ? '' : 'ok';
-  info.textContent = faltam ? `Faltam ${faltam} casas para preencher` : 'Tabuleiro completo — pronto para salvar ou testar';
+  info.textContent = tr(faltam ? `Faltam ${faltam} casas para preencher` : 'Tabuleiro completo — pronto para salvar ou testar');
   ['#edSalvar', '#edTestar', '#edExportar', '#edCompartilhar'].forEach(s => $(s).disabled = faltam > 0);
 }
 function abrirEditor(){ montarEditor(); abrir('editor'); }
@@ -1914,7 +2816,7 @@ async function nuvem(db, metodo, caminho, corpo, token){
   }catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
   finally{ clearTimeout(to); }
 }
-function aviso(sel, msg, tipo){ const e = $(sel); e.textContent = msg || ''; e.className = 'aviso' + (tipo ? ' ' + tipo : ''); }
+function aviso(sel, msg, tipo){ const e = $(sel); e.textContent = tr(msg || ''); e.className = 'aviso' + (tipo ? ' ' + tipo : ''); }
 function lembrarCamp(id, db, nome, org){
   cpMeus = cpMeus.filter(c => c.id !== id); cpMeus.unshift({id, db, nome, org: !!org}); cpMeus = cpMeus.slice(0, 30); store.set('cpmeus', cpMeus);
 }
@@ -1985,12 +2887,12 @@ addEventListener('online', () => cpDescarregar());
 /* ---- início ---- */
 function renderCpLista(){
   const l = $('#cpLista'); l.innerHTML = '';
-  if (!cpMeus.length){ l.innerHTML = '<p class="vazio2">Você ainda não está em nenhum campeonato.</p>'; return; }
+  if (!cpMeus.length){ l.innerHTML = '<p class="vazio2">' + tr('Você ainda não está em nenhum campeonato.') + '</p>'; return; }
   cpMeus.forEach(c => {
     const d = document.createElement('div'); d.className = 'cust';
-    const sp = document.createElement('span'); sp.textContent = c.nome + (c.org ? ' · organizador' : ''); d.appendChild(sp);
-    const ab = document.createElement('button'); ab.className = 'ib'; ab.innerHTML = ic('play'); ab.setAttribute('aria-label', 'Abrir'); ab.onclick = () => { fechar('camps'); abrirLobby(c.id, c.db); }; d.appendChild(ab);
-    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', 'Tirar da lista');
+    const sp = document.createElement('span'); sp.textContent = c.nome + (c.org ? ' · ' + tr('organizador') : ''); d.appendChild(sp);
+    const ab = document.createElement('button'); ab.className = 'ib'; ab.innerHTML = ic('play'); ab.setAttribute('aria-label', tr('Abrir') + ': ' + c.nome); ab.onclick = () => { fechar('camps'); abrirLobby(c.id, c.db); }; d.appendChild(ab);
+    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', tr('Tirar da lista') + ': ' + c.nome);
     rm.onclick = () => { cpMeus = cpMeus.filter(x => x.id !== c.id); store.set('cpmeus', cpMeus); renderCpLista(); }; d.appendChild(rm);
     l.appendChild(d);
   });
@@ -1998,7 +2900,7 @@ function renderCpLista(){
 function renderOrg(){
   const logado = !!cpAuth;
   $('#cpOrg').hidden = logado; $('#cpOrgOk').hidden = !logado;
-  if (logado){ $('#cpNome').value = cpAuth.nome; cpNome = cpAuth.nome; store.set('cpnome', cpNome); $('#cpOrgNome').textContent = 'Organizador: ' + cpAuth.nome + ' ✓ (este aparelho é reconhecido)'; }
+  if (logado){ $('#cpNome').value = cpAuth.nome; cpNome = cpAuth.nome; store.set('cpnome', cpNome); $('#cpOrgNome').textContent = tr('Organizador: {nome} ✓ (este aparelho é reconhecido)', {nome: cpAuth.nome}); }
   $('#cpNome').disabled = logado;
   $('#cpSenha').value = ''; $('#cpSenha2').value = ''; $('#cpSenha2').hidden = true;
 }
@@ -2063,19 +2965,19 @@ const PRESETS = {3: [3, 10, 18], 5: [2, 9, 16, 24, 33], 8: [2, 6, 11, 16, 21, 27
 const SORTEIOS = {facil: {nome: 'Sorteada (fácil)', o: {n: 5, minEstrelas: 14}}, medio: {nome: 'Sorteada (média)', o: {n: 5, minEstrelas: 7}}, dificil: {nome: 'Sorteada (difícil)', o: {n: 6, minEstrelas: 10, fila: 3}}};
 function abrirCriar(edit){
   CR.edit = edit ? {id: CP.id, criado: edit.criado, fim: edit.fim, org: edit.org} : null;
-  $('#crTitulo').textContent = edit ? 'Editar campeonato' : 'Novo campeonato';
-  $('#crCriar').lastChild.textContent = edit ? 'Salvar alterações' : 'Criar campeonato';
+  $('#crTitulo').textContent = tr(edit ? 'Editar campeonato' : 'Novo campeonato');
+  $('#crCriar').lastChild.textContent = tr(edit ? 'Salvar alterações' : 'Criar campeonato');
   const pz = $('#crPrazo'); [...pz.querySelectorAll('[value=keep]')].forEach(o => o.remove());
   if (edit){
     CR.fases = edit.fases.map(f => ({nome: f.nome, text: f.text}));
     $('#crNome').value = edit.nome; $('#crMax').value = edit.max; $('#crModo').value = edit.modo;
-    if (edit.fim){ pz.insertBefore(new Option('Manter o prazo atual', 'keep'), pz.firstChild); pz.value = 'keep'; } else pz.value = '0';
+    if (edit.fim){ pz.insertBefore(new Option(tr('Manter o prazo atual'), 'keep'), pz.firstChild); pz.value = 'keep'; } else pz.value = '0';
   } else if (CR.fases.length && CR.veioDeEdicao){ CR.fases = []; }
   CR.veioDeEdicao = !!edit;
   const sel = $('#crFonte'); sel.innerHTML = '';
-  const grupo = (rot, itens) => { if (!itens.length) return; const g = document.createElement('optgroup'); g.label = rot; itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
-  grupo('Sortear uma nova fase', [['g:facil', 'Fácil (5×5)'], ['g:medio', 'Média (5×5)'], ['g:dificil', 'Difícil (6×6, fila)']]);
-  grupo('Fases do jogo', BUILTIN.map((f, i) => ['b:' + i, 'Fase ' + (i + 1)]));
+  const grupo = (rot, itens) => { if (!itens.length) return; const g = document.createElement('optgroup'); g.label = tr(rot); itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
+  grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6, fila)')]]);
+  grupo('Fases do jogo', BUILTIN.map((f, i) => ['b:' + i, tr('Fase ' + (i + 1))]));
   grupo('Minhas fases', custom.map((f, i) => ['c:' + i, f.nome]));
   if (!CR.fases.length) CR.fases = PRESETS[3].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text}));
   aviso('#crInfo', ''); renderCriar(); abrir('criar');
@@ -2084,8 +2986,8 @@ function renderCriar(){
   const l = $('#crFases'); l.innerHTML = '';
   CR.fases.forEach((f, i) => {
     const d = document.createElement('div'); d.className = 'cust';
-    const sp = document.createElement('span'); sp.textContent = (i + 1) + '. ' + f.nome; d.appendChild(sp);
-    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', 'Remover'); rm.onclick = () => { CR.fases.splice(i, 1); renderCriar(); }; d.appendChild(rm);
+    const sp = document.createElement('span'); sp.textContent = (i + 1) + '. ' + tr(f.nome); d.appendChild(sp);
+    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', tr('Remover') + ': ' + tr(f.nome)); rm.onclick = () => { CR.fases.splice(i, 1); renderCriar(); }; d.appendChild(rm);
     l.appendChild(d);
   });
   $('#crQtd').textContent = CR.fases.length;
@@ -2130,7 +3032,7 @@ $('#crCriar').onclick = async () => {
 /* ---- sala ---- */
 async function abrirLobby(id, db){
   CP.id = id; CP.db = db; CP.camp = null; CP.jogs = {};
-  $('#lbTitulo').textContent = 'Campeonato'; $('#lbSub').textContent = 'Carregando…';
+  $('#lbTitulo').textContent = tr('Campeonato'); $('#lbSub').textContent = tr('Carregando…');
   $('#lbEntrar').hidden = true; $('#lbJogo').hidden = true; $('#lbRank').innerHTML = ''; aviso('#lbAviso', '');
   $('#lbNome').value = cpNome;
   abrir('lobby');
@@ -2152,34 +3054,34 @@ async function atualizarLobby(silencioso){
     CP.jogs = jogs; renderLobby(); if (!silencioso) aviso('#lbAviso', '');
   }catch(e){ if (!silencioso || !CP.camp) aviso('#lbAviso', msgNuvem(e), 'erro'); }
 }
-const prazoTxt = fim => !fim ? 'sem prazo' : Date.now() > fim ? 'prazo encerrado' : 'até ' + new Date(fim).toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
+const prazoTxt = fim => !fim ? tr('sem prazo') : Date.now() > fim ? tr('prazo encerrado') : tr('até') + ' ' + new Date(fim).toLocaleString(LANG_HTML[lang], {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
 function renderLobby(){
   const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
   $('#lbTitulo').textContent = c.nome;
   $('#lbSub').innerHTML = '';
-  $('#lbSub').append(`Organizado por ${c.org} · ${n} de ${c.max} pessoas · ${c.fases.length} ${c.fases.length === 1 ? 'fase' : 'fases'} · ${prazoTxt(c.fim)} · ${c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez'} · código `);
+  $('#lbSub').append(tr('Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código', {org: c.org, n, max: c.max, fases: tr(c.fases.length + (c.fases.length === 1 ? ' fase' : ' fases')), prazo: prazoTxt(c.fim), modo: tr(c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez')}) + ' ');
   const cod = document.createElement('span'); cod.className = 'cod'; cod.textContent = CP.id; $('#lbSub').appendChild(cod);
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
   const dono = souDono(), vazio = n === 0;
   $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid; if (dono){ $('#lbSouOrgForm').hidden = true; }
   $('#lbEditar').disabled = !vazio;
-  $('#lbOrgInfo').textContent = vazio ? 'Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.' : 'Já tem gente no campeonato: não dá mais para editar, só excluir.';
+  $('#lbOrgInfo').textContent = tr(vazio ? 'Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.' : 'Já tem gente no campeonato: não dá mais para editar, só excluir.');
   if (!eu && encerrado) $('#lbEntrar').hidden = true;
   if (!eu && n >= c.max) aviso('#lbAviso', 'Este campeonato já está com todas as vagas preenchidas.', 'erro');
   const l = $('#lbFases'); l.innerHTML = '';
   c.fases.forEach((f, i) => {
     const r = eu && eu.f && eu.f[i], d = document.createElement('div'); d.className = 'lf' + (r ? ' ok' : '');
-    const sp = document.createElement('span'); sp.append((i + 1) + '. ' + f.nome);
-    const sm = document.createElement('small'); sm.textContent = r ? '✓ ' + fmtTempo(r.t) + ' · ' + fmtJog(r.j) : 'Ainda não jogada'; sp.appendChild(sm); d.appendChild(sp);
+    const sp = document.createElement('span'); sp.append((i + 1) + '. ' + tr(f.nome));
+    const sm = document.createElement('small'); sm.textContent = r ? '✓ ' + fmtTempo(r.t) + ' · ' + fmtJog(r.j) : tr('Ainda não jogada'); sp.appendChild(sm); d.appendChild(sp);
     const b = document.createElement('button'); b.className = 'btn sm' + (r ? '' : ' pri');
-    b.textContent = r ? (c.modo === 'melhor' ? 'Melhorar' : 'Feita') : 'Jogar';
+    b.textContent = tr(r ? (c.modo === 'melhor' ? 'Melhorar' : 'Feita') : 'Jogar');
     b.disabled = encerrado || (r && c.modo === 'primeira'); b.onclick = () => jogarFaseCamp(i); d.appendChild(b); l.appendChild(d);
   });
   const rk = rankear(c, CP.jogs), caixa = $('#lbRank'); caixa.innerHTML = '';
-  if (!rk.length) caixa.innerHTML = '<p class="vazio2">Ninguém entrou ainda.</p>';
+  if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
     const d = document.createElement('div'); d.className = 'rk' + (r.key === key ? ' eu' : '');
-    const medalha = r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : r.pos + 'º';
+    const medalha = r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º');
     const a = document.createElement('span'); a.className = 'pos'; a.textContent = medalha;
     const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.nome;
     const tm = document.createElement('span'); tm.className = 'tm'; tm.textContent = r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '');
@@ -2213,7 +3115,7 @@ $('#lbSenhaOk').onclick = async () => {
 $('#lbEditar').onclick = () => { if (CP.camp && souDono()){ fechar('lobby'); abrirCriar(CP.camp); } };
 $('#lbExcluir').onclick = async () => {
   const c = CP.camp; if (!c || !souDono()) return;
-  if (!confirm('Excluir o campeonato "' + c.nome + '"? O ranking e todos os resultados serão apagados e não dá para desfazer.')) return;
+  if (!confirm(tr('Excluir o campeonato "{nome}"? O ranking e todos os resultados serão apagados e não dá para desfazer.', {nome: c.nome}))) return;
   try{
     const token = await tokenOrganizador();
     if (!token){ renderLobby(); aviso('#lbAviso', 'A sessão de organizador acabou. Entre com a senha de novo.', 'erro'); return; }
@@ -2223,10 +3125,10 @@ $('#lbExcluir').onclick = async () => {
     clearInterval(CP.timer); fechar('lobby'); toast('Campeonato excluído.');
   }catch(e){ aviso('#lbAviso', msgNuvem(e), 'erro'); }
 };
-$('#lbAtualizar').onclick = async () => { aviso('#lbAviso', 'Atualizando…'); await atualizarLobby(); if ($('#lbAviso').textContent === 'Atualizando…') aviso('#lbAviso', ''); };
+$('#lbAtualizar').onclick = async () => { aviso('#lbAviso', 'Atualizando…'); const msgAtu = $('#lbAviso').textContent; await atualizarLobby(); if ($('#lbAviso').textContent === msgAtu) aviso('#lbAviso', ''); };
 $('#lbConvidar').onclick = () => {
   const c = CP.camp; if (!c) return;
-  compartilhar('Shape Puzzle — campeonato', `Venha disputar o campeonato "${c.nome}" no Shape Puzzle! ${c.fases.length} ${c.fases.length === 1 ? 'fase' : 'fases'}, ganha quem for mais rápido. Código: ${CP.id}`, urlConvite(CP.id, CP.db));
+  compartilhar('Shape Puzzle — campeonato', tr('Venha disputar o campeonato "{nome}" no Shape Puzzle! {fases}, ganha quem for mais rápido. Código: {id}', {nome: c.nome, fases: tr(c.fases.length + (c.fases.length === 1 ? ' fase' : ' fases')), id: CP.id}), urlConvite(CP.id, CP.db));
 };
 function jogarFaseCamp(i){
   const c = CP.camp, f = c.fases[i]; if (!f) return;
@@ -2238,14 +3140,14 @@ function jogarFaseCamp(i){
 /* ---- resultado ---- */
 async function cpEnviarResultado(c, res){
   const p = {id: c.camp, db: c.db, key: cpKey(), idx: c.idx, t: res.t, j: res.j, modo: c.modo};
-  if (c.fim && Date.now() > c.fim) return 'O prazo acabou: este resultado não entra no ranking.';
+  if (c.fim && Date.now() > c.fim) return tr('O prazo acabou: este resultado não entra no ranking.');
   try{
     const r = await cpEnviarUm(p);
-    return r === 'ok' ? 'Resultado enviado! Veja a sua posição no ranking.'
-      : p.modo === 'primeira' ? 'Neste campeonato vale só o primeiro resultado de cada fase.' : 'Você já tinha um tempo melhor nesta fase — ele continua valendo.';
+    return tr(r === 'ok' ? 'Resultado enviado! Veja a sua posição no ranking.'
+      : p.modo === 'primeira' ? 'Neste campeonato vale só o primeiro resultado de cada fase.' : 'Você já tinha um tempo melhor nesta fase — ele continua valendo.');
   }catch(e){
-    if (e.cod === 'rede' || e.cod === 'tempo'){ cpPend.push(p); store.set('cppend', cpPend); return 'Sem conexão: guardei o seu resultado e envio quando voltar.'; }
-    return 'Não consegui enviar: ' + msgNuvem(e);
+    if (e.cod === 'rede' || e.cod === 'tempo'){ cpPend.push(p); store.set('cppend', cpPend); return tr('Sem conexão: guardei o seu resultado e envio quando voltar.'); }
+    return tr('Não consegui enviar: {m}', {m: tr(msgNuvem(e))});
   }
 }
 function vitoriaCamp(c, res, add){
@@ -2274,8 +3176,10 @@ function ajustar(){
 }
 addEventListener('scroll', () => atualizarTuto(), true);
 addEventListener('resize', () => { ajustar(); atualizarTuto(); });
-ajustar();
 pintarIcones();
+registrarI18n(); aplicarIdioma(); prepararDialogos();
+aplicarA11y();
+ajustar(); window.__pronto = true;
 montarBoard();
 (() => {
   const l = $('#logo');
@@ -2284,7 +3188,7 @@ montarBoard();
 iconeMusica();
 const linkInicial = lerLink();
 if (linkInicial) $('#splashMsg').hidden = false;
-if (CP.convite){ $('#splashMsg').textContent = 'Você foi convidado para um campeonato! Toque em Jogar para ver.'; $('#splashMsg').hidden = false; }
+if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 carregar(linkInicial || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
