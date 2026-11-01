@@ -257,7 +257,9 @@ with sync_playwright() as pw:
     check(E.is_disabled('#lbFases .lf .btn'), 'modo primeira vez: fase já feita não pode ser refeita')
     E.evaluate("document.querySelectorAll('.ov.on').forEach(o => o.classList.remove('on')); carregar({k:'b', i:0})"); E.wait_for_timeout(200)
     check(E.is_enabled('#btnDica'), 'jogo normal: dica volta a funcionar')
-    E.click('#btnDica'); check(E.evaluate('S.dicas') == 1, 'dica gera contagem no modo normal')
+    E.click('#btnDica'); E.wait_for_timeout(120)
+    if E.evaluate('S.dicaNivel') == 1: E.click('#btnDica')  # 1º degrau só marca a peça
+    check(E.evaluate('S.dicas') == 1, 'dica gera contagem no modo normal')
 
     print('7b. Aparelho novo: recuperar o controle com a senha; excluir')
     ctxR, R = novo(b); R.goto(URL); R.click('#btnJogar'); R.evaluate(f"abrirLobby('{cod}', cpDb)"); R.wait_for_timeout(700)

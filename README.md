@@ -84,9 +84,15 @@ Desenvolvido por [Rafajames](https://github.com/Rafajames)
 - **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
 - **Idiomas**: Português, English e Español, escolhidos pelo idioma do aparelho e trocáveis em Menu → Idioma. As traduções ficam no bloco `DICT` do `index.html`; `tests/idiomas.js` confere se nada ficou sem tradução.
 
+## Dica, solução e QR code
+
+- **Dica em degraus** (botão da lâmpada ou tecla `H`): 1º toque marca a peça certa na lista (não conta como dica); 2º mostra o lugar no tabuleiro (conta como dica); 3º oferece a solução inteira.
+- **Ver a solução**: mostra todas as peças no lugar, uma de cada vez; qualquer toque ou tecla encerra. Conta como dica (sem recorde e sem 3 estrelas). Não existe em campeonatos.
+- **QR code**: em qualquer painel de compartilhar, o botão "Mostrar QR code" gera o código na hora, sem internet (biblioteca MIT embutida no `index.html`).
+
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas e acessibilidade). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, acessibilidade, dica, solução e QR code). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
 
 ## Extras de jogo
 

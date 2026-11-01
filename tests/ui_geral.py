@@ -94,6 +94,7 @@ with sync_playwright() as p:
     for passo in range(12):
         if pg.evaluate('S.venceu'): break
         pg.click('#btnDica'); pg.wait_for_timeout(120)
+        if pg.evaluate('S.dicaNivel') == 1: pg.click('#btnDica'); pg.wait_for_timeout(120)  # 1º degrau só marca a peça
         idx = pg.evaluate("[...document.querySelectorAll('#board .cell')].map((c, i) => c.classList.contains('dica') ? i : -1).filter(i => i >= 0)")
         if not idx: check(False, 'dica não destacou casas no passo %d' % passo); break
         alvo = chave_forma([(i % 5, i // 5) for i in idx])

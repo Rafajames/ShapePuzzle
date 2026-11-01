@@ -87,6 +87,7 @@ with sync_playwright() as pw:
     pg.click('#btnReset'); pg.wait_for_timeout(200)
     check(pg.evaluate('S.jog')==0,'Reiniciar no topo limpa a fase')
     pg.click('#btnDica'); pg.wait_for_timeout(200)
+    if pg.evaluate('S.dicaNivel')==1: pg.click('#btnDica'); pg.wait_for_timeout(200)  # 1º degrau só marca a peça
     check(pg.evaluate('S.dicas')==1,'Dica no topo funciona')
     pg.screenshot(path=SC+'gestos-02.png')
     # tela pequena
