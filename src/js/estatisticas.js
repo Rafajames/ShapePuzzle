@@ -3,7 +3,7 @@ function fmtDuracao(ms){
   const min = Math.floor(ms / 60000), h = Math.floor(min / 60), m = min % 60;
   return h ? tr('{h} h {m} min', {h, m}) : min ? tr('{m} min', {m: min}) : tr('menos de 1 min');
 }
-const nomeRec = k => k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
+const nomeRec = k => k[0] === 's' ? nomeSemana(k.slice(2)) : k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
 function abrirEstatisticas(){
   const corpo = $('#estCorpo'); corpo.innerHTML = '';
   const bloco = (titulo, itens) => {
@@ -20,6 +20,9 @@ function abrirEstatisticas(){
   bloco('Fases do jogo', [[feitas + '/' + BUILTIN.length, 'Fases concluídas'], [estrelas + '/' + BUILTIN.length * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(Math.min(prog.max, BUILTIN.length - 1) + 1), 'Fase mais adiantada']]);
   const sq = sequenciasDe(dias, dataHoje()), ts = Object.values(dias).map(d => d.t).filter(t => t > 0);
   bloco('Fase do dia', [[String(Object.keys(dias).length), 'Dias jogados'], ['🔥 ' + sq.atual, 'Sequência atual'], [String(sq.maior), 'Maior sequência'], [ts.length ? fmtTempo(Math.min(...ts)) : '–', 'Melhor tempo']]);
+  const ss = sequenciasSemanas(sem, dataHoje()), tsem = Object.values(sem).map(d => d.t).filter(t => t > 0);
+  bloco('Desafio da semana', [[String(Object.keys(sem).length), 'Semanas jogadas'], ['🔥 ' + ss.atual, 'Sequência atual'], [String(ss.maior), 'Maior sequência'], [tsem.length ? fmtTempo(Math.min(...tsem)) : '–', 'Melhor tempo']]);
+  bloco('Contra o relógio', [[String(corr.melhor), 'Melhor corrida'], [String(corr.jogos), 'Corridas'], [String(corr.total), 'Fases resolvidas']]);
   const totalInf = MODOS_INF.reduce((a, m) => a + (inf.feitas[m] || 0), 0), it = [[String(totalInf), 'Fases feitas']];
   ['facil', 'medio', 'dificil', 'mestre'].forEach(n => { const p = inf.porNivel[n]; if (p && p.n) it.push([p.n + (p.t ? ' · ' + fmtTempo(p.t) : ''), NIVEIS_INF[n].nome]); });
   bloco('Modo infinito', it);

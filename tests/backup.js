@@ -20,7 +20,7 @@ const r = L.limparBackup(env(bom));
 igual(!!r.dados, true, 'backup bom aceito'); igual(r.criado, '2026-11-01', 'data do backup');
 igual(r.dados.prog.done, [0, 1, 2, 5], 'repetidos saem de "done"');
 igual(r.dados.cfg.tema, 'claro', 'ajustes mantidos'); igual(r.dados.cfg.pecas, 4, 'peças por vez');
-igual(L.resumoBackup(r.dados), {fases: 4, estrelas: 6, recordes: 1, dias: 1, criadas: 1, infinito: 4}, 'resumo');
+igual(L.resumoBackup(r.dados), {fases: 4, estrelas: 6, recordes: 1, dias: 1, semanas: 0, criadas: 1, infinito: 4}, 'resumo');
 
 console.log('Limpeza de dados perigosos ou estranhos');
 const sujo = L.limparBackup(env({prog: {max: 1e9, done: ['a', 3, -4]}, est: {'x': 3, '4': 99, '5': 0}, rec: {'zzz': {t: 1, j: 1}, 'b:ok': {t: -5, j: 3}, 'b:fase02': {t: 1000.7, j: 4}},

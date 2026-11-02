@@ -11,6 +11,8 @@ addEventListener('pagehide', salvarEst);
 let inf = store.get('inf', null); if (!inf || typeof inf !== 'object') inf = {feitas: {}, porNivel: {}}; inf.feitas = inf.feitas || {}; inf.porNivel = inf.porNivel || {};
 let recs = store.get('rec', {});
 let dias = store.get('dias', {});
+let sem = store.get('sem', {});                                      /* desafio da semana: {"2026-W45": {t, j, d}} */
+let corr = store.get('corr', {melhor: 0, jogos: 0, total: 0});     /* contra o relógio */
 let humorPref = store.get('humor', 'auto');
 /* nº de peças por vez escolhido pelo jogador: 'auto' (por dificuldade), 2..6 ou 99 (todas) */
 let vibraOn = store.get('vibra', true) !== false;
@@ -20,7 +22,7 @@ let estrelasFase = store.get('est', {});
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
 if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
-const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
 function aplicarPecas(){
   const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
   const f = filaPadraoDe(S.cur);
@@ -57,12 +59,14 @@ function chaveFase(cur){
   if (cur.k === 'b') return 'b:' + BUILTIN[cur.i].nome;
   if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
   if (cur.k === 'd') return 'd:' + cur.data;
+  if (cur.k === 's') return 's:' + cur.semana;
   return null;
 }
 function humorDaFase(cur){
   if (cur.k === 'i') return {facil: 'calma', medio: 'animada', dificil: 'noturna', mestre: 'noturna'}[cur.nivel] || 'calma';
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
-  if (cur.k === 'd' || cur.k === 'x') return 'animada';
+  if (cur.k === 'd' || cur.k === 'x' || cur.k === 'r') return 'animada';
+  if (cur.k === 's') return 'noturna';
   return 'calma';
 }
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref); }
@@ -70,6 +74,7 @@ function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.c
 function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
+  if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
@@ -101,24 +106,33 @@ function renderTitulo(){
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
+  else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
   else if (c.shared){ t1.textContent = tr(c.nome); t2.textContent = tr('fase compartilhada'); }
   else { t1.textContent = tr('Teste'); t2.textContent = c.nome || tr('sua fase'); }
-  $('#btnDica').disabled = c.k === 'x';
+  $('#btnDica').disabled = semDica(c);
 }
 
 /* ---- relógio e estatísticas ---- */
 const deveRodar = () => S.t.ativo && !S.venceu && (S.cur.k === 'x' || (!document.hidden && !document.querySelector('.ov.on')));
 const tempoMs = () => S.t.acum;
 function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
+/* Um intervalo maior que isso entre dois toques do relógio é a tela bloqueada ou a aba congelada: esse tempo não conta
+   (só no campeonato, que corre pelo relógio de parede de propósito). */
+const SALTO_MAX = 1500;
+const semDica = c => c.k === 'x' || c.k === 'r';
 function tick(){
   const a = performance.now();
-  if (deveRodar()){ const d = a - S.t.ult; S.t.acum += d; if (d > 0 && d < 5000){ Est.tempo += d; estSujo = true; } }
+  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || S.cur.k === 'x') S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
   S.t.ult = a;
-  renderStats();
+  if (Corrida.ativa && Date.now() >= Corrida.fim) fimCorrida();
+  renderStats(); guardarAndamento();
 }
 function renderStats(){
-  $('#stTempo').textContent = fmtTempo(tempoMs());
+  const restante = S.cur && S.cur.k === 'r' ? Math.max(0, Corrida.fim - Date.now()) : -1;
+  $('#stTempo').textContent = fmtTempo(restante >= 0 ? Math.ceil(restante / 1000) * 1000 : tempoMs());
+  $('#stTempo').classList.toggle('urg', restante >= 0 && restante < 15000);
   $('#stJog').textContent = fmtJog(S.jog);
   const k = S.cur && chaveFase(S.cur), r = k && recs[k];
   $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;

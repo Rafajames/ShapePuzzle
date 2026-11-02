@@ -89,9 +89,11 @@
     <h1>Menu</h1>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
+    <button class="daily" id="btnSem"><em data-i="star"></em><span class="dtx"><b>Desafio da semana</b><small id="semSub"></small></span><span class="tag" id="semTag"></span></button>
     <button class="daily" id="btnInf"><em data-i="infinity"></em><span class="dtx"><b>Modo infinito</b><small>Fases novas sem parar, do fácil ao mestre</small></span></button>
-    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
+    <button class="daily" id="btnCorr"><em data-i="clock"></em><span class="dtx"><b>Contra o relógio</b><small id="corrSub"></small></span></button>
     <button class="daily" id="btnCamp"><em data-i="trophy"></em><span class="dtx"><b>Campeonatos</b><small>Desafie amigos, família e grupos com ranking</small></span></button>
+    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
     </div>
     <div id="blocoInstalar" hidden>
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%;margin-top:12px">Instalar o jogo no aparelho</button>
@@ -415,6 +417,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js estatisticas.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js desafios.js estatisticas.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
 </body>
 </html>

@@ -1,13 +1,29 @@
 /* ---- Sequências de dias da fase do dia (lógica pura) ---- */
 const diaNum = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : NaN; };
-function sequenciasDe(dias, hoje){
-  const nums = Object.keys(dias || {}).map(diaNum).filter(n => !isNaN(n)).sort((a, b) => a - b);
+/* Sequência de números seguidos (dias ou semanas): a atual (que ainda vale se o de hoje não foi jogado) e a maior de todas. */
+function sequenciaNum(lista, hoje){
+  const nums = lista.filter(n => !isNaN(n)).sort((a, b) => a - b);
   let maior = 0, run = 0, ant = null;
   for (const n of nums){ run = ant !== null && n === ant + 1 ? run + 1 : 1; ant = n; if (run > maior) maior = run; }
-  const set = new Set(nums); let d = diaNum(hoje), atual = 0;
+  const set = new Set(nums); let d = hoje, atual = 0;
   if (!isNaN(d)){ if (!set.has(d)) d--; while (set.has(d)){ atual++; d--; } }
   return {atual, maior};
 }
+const sequenciasDe = (dias, hoje) => sequenciaNum(Object.keys(dias || {}).map(diaNum), diaNum(hoje));
+/* Semanas (segunda a domingo), no formato ISO "2026-W45". */
+const semanaIdx = data => Math.floor((diaNum(data) + 3) / 7);   /* nº da semana desde 1970; o dia 0 era uma quinta */
+function semanaDe(data){
+  const d = diaNum(data); if (isNaN(d)) return '';
+  const quinta = d - ((d + 3) % 7) + 3, ano = new Date(quinta * 86400000).getUTCFullYear();
+  return ano + '-W' + String(Math.floor((quinta - Math.round(Date.UTC(ano, 0, 1) / 86400000)) / 7) + 1).padStart(2, '0');
+}
+/* Segunda-feira de uma semana "2026-W45" (como AAAA-MM-DD). */
+function segundaDe(chave){
+  const m = /^(\d{4})-W(\d{2})$/.exec(chave || ''); if (!m) return '';
+  const jan4 = Math.round(Date.UTC(+m[1], 0, 4) / 86400000), seg = jan4 - ((jan4 + 3) % 7) + (+m[2] - 1) * 7;
+  return new Date(seg * 86400000).toISOString().slice(0, 10);
+}
+const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map(k => semanaIdx(segundaDe(k))), semanaIdx(hoje));
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
@@ -22,9 +38,12 @@ function limparBackup(env){
     o.prog = {max: inteiro(d.prog.max, 0, 999), done}; }
   if (isObj(d.est)){ o.est = {}; for (const k of Object.keys(d.est)) if (/^\d{1,3}$/.test(k) && d.est[k] >= 1) o.est[k] = inteiro(d.est[k], 1, 3); }
   if (isObj(d.rec)){ o.rec = {}; for (const k of Object.keys(d.rec)){ const r = d.rec[k];
-    if (/^[bcd]:.{1,40}$/.test(k) && isObj(r) && r.t > 0 && r.j > 0) o.rec[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 1, 99999)}; } }
+    if (/^[bcds]:.{1,40}$/.test(k) && isObj(r) && r.t > 0 && r.j > 0) o.rec[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 1, 99999)}; } }
   if (isObj(d.dias)){ o.dias = {}; for (const k of Object.keys(d.dias)){ const r = d.dias[k];
     if (!isNaN(diaNum(k)) && isObj(r) && r.t > 0) o.dias[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 0, 99999), d: inteiro(r.d, 0, 999)}; } }
+  if (isObj(d.sem)){ o.sem = {}; for (const k of Object.keys(d.sem)){ const r = d.sem[k];
+    if (/^\d{4}-W\d{2}$/.test(k) && isObj(r) && r.t > 0) o.sem[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 0, 99999), d: inteiro(r.d, 0, 999)}; } }
+  if (isObj(d.corr)) o.corr = {melhor: inteiro(d.corr.melhor, 0, 1e5), jogos: inteiro(d.corr.jogos, 0, 1e7), total: inteiro(d.corr.total, 0, 1e8)};
   if (Array.isArray(d.custom)){ o.custom = []; const vistos = new Set();
     for (const f of d.custom.slice(0, 100)){
       if (!isObj(f) || typeof f.text !== 'string' || typeof f.nome !== 'string' || f.text.length > 3000 || vistos.has(f.text)) continue;
@@ -47,7 +66,7 @@ function limparBackup(env){
     for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
     if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;
     o.cfg = q; }
-  const cheio = (o.prog && (o.prog.max > 0 || o.prog.done.length)) || (o.est && Object.keys(o.est).length) || (o.rec && Object.keys(o.rec).length) || (o.dias && Object.keys(o.dias).length)
+  const cheio = (o.prog && (o.prog.max > 0 || o.prog.done.length)) || (o.est && Object.keys(o.est).length) || (o.rec && Object.keys(o.rec).length) || (o.dias && Object.keys(o.dias).length) || (o.sem && Object.keys(o.sem).length) || (o.corr && o.corr.jogos > 0)
     || (o.custom && o.custom.length) || (o.stats && Object.values(o.stats).some(v => v > 0)) || (o.inf && (Object.keys(o.inf.feitas).length || Object.keys(o.inf.porNivel).length));
   if (!cheio) return {erro: 'Esse backup está vazio.'};
   return {dados: o, criado: typeof env.criado === 'string' ? env.criado.slice(0, 10) : ''};
@@ -55,7 +74,7 @@ function limparBackup(env){
 function resumoBackup(d){
   const inf = d.inf ? Object.values(d.inf.feitas || {}).reduce((a, b) => Math.max(a, b), 0) : 0;
   return {fases: d.prog ? d.prog.done.length : 0, estrelas: d.est ? Object.values(d.est).reduce((a, b) => a + b, 0) : 0,
-    recordes: d.rec ? Object.keys(d.rec).length : 0, dias: d.dias ? Object.keys(d.dias).length : 0,
+    recordes: d.rec ? Object.keys(d.rec).length : 0, dias: d.dias ? Object.keys(d.dias).length : 0, semanas: d.sem ? Object.keys(d.sem).length : 0,
     criadas: d.custom ? d.custom.length : 0, infinito: inf};
 }
 /* Junta o que já existe (a) com o do backup (b): fica o melhor dos dois. Os ajustes (cfg) de (a) não mudam. */
@@ -65,6 +84,8 @@ function juntarDados(a, b){
   if (b.est){ o.est = o.est || {}; for (const k of Object.keys(b.est)) o.est[k] = Math.max(o.est[k] || 0, b.est[k]); }
   if (b.rec){ o.rec = o.rec || {}; for (const k of Object.keys(b.rec)){ const x = o.rec[k], y = b.rec[k]; o.rec[k] = x ? {t: Math.min(x.t, y.t), j: Math.min(x.j, y.j)} : {t: y.t, j: y.j}; } }
   if (b.dias){ o.dias = o.dias || {}; for (const k of Object.keys(b.dias)){ const x = o.dias[k], y = b.dias[k]; if (!x || y.t < x.t) o.dias[k] = {t: y.t, j: y.j, d: y.d}; } }
+  if (b.sem){ o.sem = o.sem || {}; for (const k of Object.keys(b.sem)){ const x = o.sem[k], y = b.sem[k]; if (!x || y.t < x.t) o.sem[k] = {t: y.t, j: y.j, d: y.d}; } }
+  if (b.corr){ const x = o.corr || {melhor: 0, jogos: 0, total: 0}; o.corr = {melhor: Math.max(x.melhor, b.corr.melhor), jogos: Math.max(x.jogos, b.corr.jogos), total: Math.max(x.total, b.corr.total)}; }
   if (b.custom){ o.custom = o.custom || []; const textos = new Set(o.custom.map(f => f.text)), nomes = new Set(o.custom.map(f => f.nome));
     for (const f of b.custom){ if (textos.has(f.text)) continue; let nome = f.nome, i = 2; while (nomes.has(nome)) nome = f.nome.slice(0, 26) + ' (' + (i++) + ')';
       nomes.add(nome); textos.add(f.text); o.custom.push({nome, text: f.text}); } }

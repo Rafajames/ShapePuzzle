@@ -17,8 +17,8 @@ function tentarColocar(p, gx, gy){
   return true;
 }
 function renderSelo(){
-  const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv) return;
-  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
   selo.hidden = false;
 }
 function vencer(){
@@ -30,6 +30,7 @@ function vencer(){
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
+  if (c.k === 'r'){ corridaFeita(); return; }
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
@@ -38,6 +39,7 @@ function vencer(){
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
+  if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
   if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
@@ -50,9 +52,9 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
-    : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
+    : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
   for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
@@ -76,12 +78,13 @@ function mostrarVitoria(res){
   const compartilharRes = () => {
     const base = urlBase();
     if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequencia(), ' dia', ' dias')}), base);
+    else if (c.k === 's') compartilhar('Shape Puzzle', tr('Shape Puzzle — Desafio da semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\nConsegue mais rápido?', {sem: nomeSemana(c.semana), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequenciasSemanas(sem, dataHoje()).atual, ' semana', ' semanas')}), base);
     else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
     else if (c.k === 'i') compartilhar('Shape Puzzle', tr('Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?'), urlFase(c.text, c.nome));
     else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
   };
   compartilharRes.fecha = false;
-  add(c.k === 'd' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
+  add(c.k === 'd' || c.k === 's' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
   const jn = () => carregar(S.cur); add('Jogar de novo', '', jn);
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);

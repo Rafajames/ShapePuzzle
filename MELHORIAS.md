@@ -35,6 +35,8 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 
 - **Código mais limpo** — o jogo agora é editado em `src/` (CSS, JS por assunto, idiomas) e o `index.html` é gerado por `node build.js`; verificação automática de código (lint) e plural corrigido no backup. _Feito._
 
+- **Desafio da semana, contra o relógio, fase em andamento e relógio sem saltos.** _Feito._
+
 ## Para pensar com cuidado
 10. **Tempo de campeonato à prova de trapaça** — guardar a sequência de jogadas e conferir se resolve a fase.
 11. **Limite de campeonatos por organizador.**

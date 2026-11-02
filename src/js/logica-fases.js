@@ -66,7 +66,7 @@ function novoJogo(texto, filaPadrao = FILA_PADRAO){
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
     contador: 1000,
-    reserva: pecas.map(p => ({uid: _uid++, id: p.id, formato: p.formato.map(r => r.slice())}))
+    reserva: pecas.map((p, ord) => ({uid: _uid++, ord, id: p.id, formato: p.formato.map(r => r.slice())}))
   };
 }
 /* Peças visíveis: todas, ou só as `fila` primeiras quando a fase usa o modo "em fila". */

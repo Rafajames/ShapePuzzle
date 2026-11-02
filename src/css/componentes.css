@@ -95,3 +95,5 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .pc.e{visibility:hidden}
 #flut{position:fixed;left:0;top:0;z-index:90;pointer-events:none;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5));opacity:.97}
 
+
+#stTempo.urg{color:var(--bad);font-weight:800}

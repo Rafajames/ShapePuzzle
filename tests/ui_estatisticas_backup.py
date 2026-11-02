@@ -23,6 +23,10 @@ def novo(b, locale='pt-BR', w=390, h=844, extra=''):
     pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(400)
     return ctx, pg
 def ls(pg, k): return pg.evaluate(f"JSON.parse(localStorage.getItem('shapepuzzle.{k}'))")
+def primeiros(lista):
+    d = {}
+    for a, r in lista: d.setdefault(r, a)
+    return d
 def valores(pg): return pg.evaluate("[...document.querySelectorAll('#estCorpo .sv')].map(e=>[e.firstChild.textContent, e.lastChild.textContent])")
 with sync_playwright() as pw:
     b = pw.chromium.launch()
@@ -32,7 +36,7 @@ with sync_playwright() as pw:
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(250)
     check(pg.is_visible('#btnEst') and 'Estatísticas' in pg.inner_text('#btnEst'), 'botão "Estatísticas" no menu')
     pg.click('#btnEst'); pg.wait_for_timeout(300)
-    v = dict((r, a) for a, r in valores(pg))
+    v = primeiros(valores(pg))
     check(v['Fases concluídas'] == '0/50' and v['Estrelas'] == '0/150' and v['Fases vencidas'] == '0', f"tudo zerado: {v['Fases concluídas']}, {v['Estrelas']}")
     check(v['Melhor tempo'] == '–' and v['Dias jogados'] == '0', 'sem tempos nem dias ainda')
     pg.screenshot(path=SAIDA + 'estatisticas-zerado.png')
@@ -47,7 +51,7 @@ with sync_playwright() as pw:
     pg.evaluate("const dd=n=>{const d=new Date(); d.setDate(d.getDate()-n); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}; dias[dd(2)]={t:40000,j:9,d:0}; dias[dd(1)]={t:35000,j:8,d:0}; dias[dataHoje()]={t:30000,j:7,d:0}; store.set('dias', dias)")
     pg.evaluate("custom.push({nome:'Minha', text: BUILTIN[0].text}); store.set('custom', custom)")
     pg.evaluate("abrirEstatisticas()"); pg.wait_for_timeout(300)
-    v = dict((r, a) for a, r in valores(pg))
+    v = primeiros(valores(pg))
     check(v['Fases vencidas'] == '2', f"2 vitórias contadas ({v['Fases vencidas']})")
     check(v['Fases concluídas'] == '2/50', f"2 fases concluídas ({v['Fases concluídas']})")
     check(v['Dicas usadas'] == '1', 'uma dica contada')

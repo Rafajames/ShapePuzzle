@@ -23,7 +23,7 @@ function limparDica(){
 const assinaturaDica = () => S.hist.join(',') + '|' + S.jogo.mapa.size + '|' + S.jogo.reserva.map(p => p.uid).join(',');
 function acaoDica(){
   if (S.venceu || S.drag || S.sol) return;
-  if (S.cur.k === 'x'){ toast('Dicas ficam desligadas nos campeonatos.'); return; }
+  if (semDica(S.cur)){ toast(S.cur.k === 'r' ? 'Dicas ficam desligadas na corrida.' : 'Dicas ficam desligadas nos campeonatos.'); return; }
   const sig = assinaturaDica(), nivel = S.dicaSig === sig ? S.dicaNivel : 0;
   limparDica();
   const r = dicaDe(S.jogo);

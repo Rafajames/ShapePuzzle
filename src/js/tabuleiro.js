@@ -65,7 +65,7 @@ function renderReserva(){
     $('#contagem').textContent = !resta ? '' : tr(j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes')); }
   fitFileiras(); atualizarTuto();
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
-  $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
+  $('#btnDica').disabled = S.venceu || (S.cur && semDica(S.cur));
 }
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;

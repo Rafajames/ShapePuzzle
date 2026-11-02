@@ -20,6 +20,10 @@ function renderDiario(){
   const hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
   $('#diaSub').textContent = dataCurta(hoje) + ' · ' + tr('um desafio novo por dia') + (seq ? ' · 🔥 ' + qtd(seq, ' dia', ' dias') : '');
   $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : tr('Jogar');
+  const ch = semanaDe(hoje), feitoS = sem[ch], sq = sequenciasSemanas(sem, hoje).atual;
+  $('#semSub').textContent = nomeSemana(ch) + ' · ' + tr('um desafio difícil por semana') + (sq ? ' · 🔥 ' + qtd(sq, ' semana', ' semanas') : '');
+  $('#semTag').textContent = feitoS ? '✓ ' + fmtTempo(feitoS.t) : tr('Jogar');
+  $('#corrSub').textContent = corr.melhor ? tr('Recorde: {n}', {n: qtd(corr.melhor, ' fase', ' fases')}) : tr('Quantas fases em 3 minutos?');
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';

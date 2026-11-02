@@ -183,6 +183,8 @@ kbd{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:11px;padd
 .pc.e{visibility:hidden}
 #flut{position:fixed;left:0;top:0;z-index:90;pointer-events:none;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5));opacity:.97}
 
+
+#stTempo.urg{color:var(--bad);font-weight:800}
 /* overlays */
 .ov{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;background:var(--ovbg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .ov.on{display:flex;animation:fade .2s}
@@ -433,9 +435,11 @@ body.rm #mao.on{opacity:1}
     <h1>Menu</h1>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
+    <button class="daily" id="btnSem"><em data-i="star"></em><span class="dtx"><b>Desafio da semana</b><small id="semSub"></small></span><span class="tag" id="semTag"></span></button>
     <button class="daily" id="btnInf"><em data-i="infinity"></em><span class="dtx"><b>Modo infinito</b><small>Fases novas sem parar, do fácil ao mestre</small></span></button>
-    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
+    <button class="daily" id="btnCorr"><em data-i="clock"></em><span class="dtx"><b>Contra o relógio</b><small id="corrSub"></small></span></button>
     <button class="daily" id="btnCamp"><em data-i="trophy"></em><span class="dtx"><b>Campeonatos</b><small>Desafie amigos, família e grupos com ranking</small></span></button>
+    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
     </div>
     <div id="blocoInstalar" hidden>
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%;margin-top:12px">Instalar o jogo no aparelho</button>
@@ -781,6 +785,34 @@ en: {
   "Aparência e idioma": "Appearance and language",
   "Progresso e dados": "Progress and data",
   "Sobre e atualização": "About and updates",
+  "Desafio da semana": "Weekly challenge",
+  "Contra o relógio": "Against the clock",
+  "Dicas ficam desligadas na corrida.": "Hints are off during the race.",
+  "Desafio da semana concluído!": "Weekly challenge complete!",
+  "Volte na semana que vem para um novo desafio.": "Come back next week for a new challenge.",
+  "Shape Puzzle — Desafio da semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\nConsegue mais rápido?": "Shape Puzzle — Weekly challenge {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Weeks in a row: {seq}\nCan you do it faster?",
+  "um desafio difícil por semana": "one hard challenge a week",
+  "Recorde: {n}": "Record: {n}",
+  "Quantas fases em 3 minutos?": "How many levels in 3 minutes?",
+  "Semana {n}": "Week {n}",
+  "Mais uma! Vamos para a próxima.": "One more! On to the next.",
+  "Tempo esgotado!": "Time's up!",
+  "Você resolveu {n} em 3 minutos.": "You solved {n} in 3 minutes.",
+  "Nenhuma fase dessa vez. Tente de novo!": "No levels this time. Try again!",
+  "Novo recorde da corrida!": "New race record!",
+  "Seu recorde: {n}": "Your record: {n}",
+  "1 semana do desafio da semana": "1 week of the weekly challenge",
+  "{n} semanas do desafio da semana": "{n} weeks of the weekly challenge",
+  "Sua fase em andamento foi guardada. Toque em Jogar para continuar.": "Your level in progress was saved. Tap Play to continue.",
+  "Semanas jogadas": "Weeks played",
+  "Melhor corrida": "Best race",
+  "Corridas": "Races",
+  "Fases resolvidas": "Levels solved",
+  "{n} semana": "{n} week",
+  "{n} semanas": "{n} weeks",
+  "{n} feita": "{n} done",
+  "Corrida": "Race",
+  "desafio da semana": "weekly challenge",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1249,6 +1281,34 @@ es: {
   "Aparência e idioma": "Apariencia e idioma",
   "Progresso e dados": "Progreso y datos",
   "Sobre e atualização": "Acerca de y actualizaciones",
+  "Desafio da semana": "Desafío de la semana",
+  "Contra o relógio": "Contrarreloj",
+  "Dicas ficam desligadas na corrida.": "Las pistas están desactivadas en la carrera.",
+  "Desafio da semana concluído!": "¡Desafío de la semana completado!",
+  "Volte na semana que vem para um novo desafio.": "Vuelve la próxima semana para un nuevo desafío.",
+  "Shape Puzzle — Desafio da semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\nConsegue mais rápido?": "Shape Puzzle — Desafío de la semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\n¿Puedes más rápido?",
+  "um desafio difícil por semana": "un desafío difícil por semana",
+  "Recorde: {n}": "Récord: {n}",
+  "Quantas fases em 3 minutos?": "¿Cuántos niveles en 3 minutos?",
+  "Semana {n}": "Semana {n}",
+  "Mais uma! Vamos para a próxima.": "¡Una más! Vamos a la siguiente.",
+  "Tempo esgotado!": "¡Se acabó el tiempo!",
+  "Você resolveu {n} em 3 minutos.": "Resolviste {n} en 3 minutos.",
+  "Nenhuma fase dessa vez. Tente de novo!": "Ningún nivel esta vez. ¡Inténtalo de nuevo!",
+  "Novo recorde da corrida!": "¡Nuevo récord de la carrera!",
+  "Seu recorde: {n}": "Tu récord: {n}",
+  "1 semana do desafio da semana": "1 semana del desafío de la semana",
+  "{n} semanas do desafio da semana": "{n} semanas del desafío de la semana",
+  "Sua fase em andamento foi guardada. Toque em Jogar para continuar.": "Tu nivel en curso se guardó. Toca Jugar para continuar.",
+  "Semanas jogadas": "Semanas jugadas",
+  "Melhor corrida": "Mejor carrera",
+  "Corridas": "Carreras",
+  "Fases resolvidas": "Niveles resueltos",
+  "{n} semana": "{n} semana",
+  "{n} semanas": "{n} semanas",
+  "{n} feita": "{n} hecho",
+  "Corrida": "Carrera",
+  "desafio da semana": "desafío de la semana",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -1774,7 +1834,7 @@ function novoJogo(texto, filaPadrao = FILA_PADRAO){
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
     contador: 1000,
-    reserva: pecas.map(p => ({uid: _uid++, id: p.id, formato: p.formato.map(r => r.slice())}))
+    reserva: pecas.map((p, ord) => ({uid: _uid++, ord, id: p.id, formato: p.formato.map(r => r.slice())}))
   };
 }
 /* Peças visíveis: todas, ou só as `fila` primeiras quando a fase usa o modo "em fila". */
@@ -2088,14 +2148,30 @@ function lerConviteHash(hash, dbSalvo){
 
 /* ---- Sequências de dias da fase do dia (lógica pura) ---- */
 const diaNum = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : NaN; };
-function sequenciasDe(dias, hoje){
-  const nums = Object.keys(dias || {}).map(diaNum).filter(n => !isNaN(n)).sort((a, b) => a - b);
+/* Sequência de números seguidos (dias ou semanas): a atual (que ainda vale se o de hoje não foi jogado) e a maior de todas. */
+function sequenciaNum(lista, hoje){
+  const nums = lista.filter(n => !isNaN(n)).sort((a, b) => a - b);
   let maior = 0, run = 0, ant = null;
   for (const n of nums){ run = ant !== null && n === ant + 1 ? run + 1 : 1; ant = n; if (run > maior) maior = run; }
-  const set = new Set(nums); let d = diaNum(hoje), atual = 0;
+  const set = new Set(nums); let d = hoje, atual = 0;
   if (!isNaN(d)){ if (!set.has(d)) d--; while (set.has(d)){ atual++; d--; } }
   return {atual, maior};
 }
+const sequenciasDe = (dias, hoje) => sequenciaNum(Object.keys(dias || {}).map(diaNum), diaNum(hoje));
+/* Semanas (segunda a domingo), no formato ISO "2026-W45". */
+const semanaIdx = data => Math.floor((diaNum(data) + 3) / 7);   /* nº da semana desde 1970; o dia 0 era uma quinta */
+function semanaDe(data){
+  const d = diaNum(data); if (isNaN(d)) return '';
+  const quinta = d - ((d + 3) % 7) + 3, ano = new Date(quinta * 86400000).getUTCFullYear();
+  return ano + '-W' + String(Math.floor((quinta - Math.round(Date.UTC(ano, 0, 1) / 86400000)) / 7) + 1).padStart(2, '0');
+}
+/* Segunda-feira de uma semana "2026-W45" (como AAAA-MM-DD). */
+function segundaDe(chave){
+  const m = /^(\d{4})-W(\d{2})$/.exec(chave || ''); if (!m) return '';
+  const jan4 = Math.round(Date.UTC(+m[1], 0, 4) / 86400000), seg = jan4 - ((jan4 + 3) % 7) + (+m[2] - 1) * 7;
+  return new Date(seg * 86400000).toISOString().slice(0, 10);
+}
+const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map(k => semanaIdx(segundaDe(k))), semanaIdx(hoje));
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
@@ -2110,9 +2186,12 @@ function limparBackup(env){
     o.prog = {max: inteiro(d.prog.max, 0, 999), done}; }
   if (isObj(d.est)){ o.est = {}; for (const k of Object.keys(d.est)) if (/^\d{1,3}$/.test(k) && d.est[k] >= 1) o.est[k] = inteiro(d.est[k], 1, 3); }
   if (isObj(d.rec)){ o.rec = {}; for (const k of Object.keys(d.rec)){ const r = d.rec[k];
-    if (/^[bcd]:.{1,40}$/.test(k) && isObj(r) && r.t > 0 && r.j > 0) o.rec[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 1, 99999)}; } }
+    if (/^[bcds]:.{1,40}$/.test(k) && isObj(r) && r.t > 0 && r.j > 0) o.rec[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 1, 99999)}; } }
   if (isObj(d.dias)){ o.dias = {}; for (const k of Object.keys(d.dias)){ const r = d.dias[k];
     if (!isNaN(diaNum(k)) && isObj(r) && r.t > 0) o.dias[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 0, 99999), d: inteiro(r.d, 0, 999)}; } }
+  if (isObj(d.sem)){ o.sem = {}; for (const k of Object.keys(d.sem)){ const r = d.sem[k];
+    if (/^\d{4}-W\d{2}$/.test(k) && isObj(r) && r.t > 0) o.sem[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 0, 99999), d: inteiro(r.d, 0, 999)}; } }
+  if (isObj(d.corr)) o.corr = {melhor: inteiro(d.corr.melhor, 0, 1e5), jogos: inteiro(d.corr.jogos, 0, 1e7), total: inteiro(d.corr.total, 0, 1e8)};
   if (Array.isArray(d.custom)){ o.custom = []; const vistos = new Set();
     for (const f of d.custom.slice(0, 100)){
       if (!isObj(f) || typeof f.text !== 'string' || typeof f.nome !== 'string' || f.text.length > 3000 || vistos.has(f.text)) continue;
@@ -2135,7 +2214,7 @@ function limparBackup(env){
     for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
     if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;
     o.cfg = q; }
-  const cheio = (o.prog && (o.prog.max > 0 || o.prog.done.length)) || (o.est && Object.keys(o.est).length) || (o.rec && Object.keys(o.rec).length) || (o.dias && Object.keys(o.dias).length)
+  const cheio = (o.prog && (o.prog.max > 0 || o.prog.done.length)) || (o.est && Object.keys(o.est).length) || (o.rec && Object.keys(o.rec).length) || (o.dias && Object.keys(o.dias).length) || (o.sem && Object.keys(o.sem).length) || (o.corr && o.corr.jogos > 0)
     || (o.custom && o.custom.length) || (o.stats && Object.values(o.stats).some(v => v > 0)) || (o.inf && (Object.keys(o.inf.feitas).length || Object.keys(o.inf.porNivel).length));
   if (!cheio) return {erro: 'Esse backup está vazio.'};
   return {dados: o, criado: typeof env.criado === 'string' ? env.criado.slice(0, 10) : ''};
@@ -2143,7 +2222,7 @@ function limparBackup(env){
 function resumoBackup(d){
   const inf = d.inf ? Object.values(d.inf.feitas || {}).reduce((a, b) => Math.max(a, b), 0) : 0;
   return {fases: d.prog ? d.prog.done.length : 0, estrelas: d.est ? Object.values(d.est).reduce((a, b) => a + b, 0) : 0,
-    recordes: d.rec ? Object.keys(d.rec).length : 0, dias: d.dias ? Object.keys(d.dias).length : 0,
+    recordes: d.rec ? Object.keys(d.rec).length : 0, dias: d.dias ? Object.keys(d.dias).length : 0, semanas: d.sem ? Object.keys(d.sem).length : 0,
     criadas: d.custom ? d.custom.length : 0, infinito: inf};
 }
 /* Junta o que já existe (a) com o do backup (b): fica o melhor dos dois. Os ajustes (cfg) de (a) não mudam. */
@@ -2153,6 +2232,8 @@ function juntarDados(a, b){
   if (b.est){ o.est = o.est || {}; for (const k of Object.keys(b.est)) o.est[k] = Math.max(o.est[k] || 0, b.est[k]); }
   if (b.rec){ o.rec = o.rec || {}; for (const k of Object.keys(b.rec)){ const x = o.rec[k], y = b.rec[k]; o.rec[k] = x ? {t: Math.min(x.t, y.t), j: Math.min(x.j, y.j)} : {t: y.t, j: y.j}; } }
   if (b.dias){ o.dias = o.dias || {}; for (const k of Object.keys(b.dias)){ const x = o.dias[k], y = b.dias[k]; if (!x || y.t < x.t) o.dias[k] = {t: y.t, j: y.j, d: y.d}; } }
+  if (b.sem){ o.sem = o.sem || {}; for (const k of Object.keys(b.sem)){ const x = o.sem[k], y = b.sem[k]; if (!x || y.t < x.t) o.sem[k] = {t: y.t, j: y.j, d: y.d}; } }
+  if (b.corr){ const x = o.corr || {melhor: 0, jogos: 0, total: 0}; o.corr = {melhor: Math.max(x.melhor, b.corr.melhor), jogos: Math.max(x.jogos, b.corr.jogos), total: Math.max(x.total, b.corr.total)}; }
   if (b.custom){ o.custom = o.custom || []; const textos = new Set(o.custom.map(f => f.text)), nomes = new Set(o.custom.map(f => f.nome));
     for (const f of b.custom){ if (textos.has(f.text)) continue; let nome = f.nome, i = 2; while (nomes.has(nome)) nome = f.nome.slice(0, 26) + ' (' + (i++) + ')';
       nomes.add(nome); textos.add(f.text); o.custom.push({nome, text: f.text}); } }
@@ -2582,6 +2663,8 @@ addEventListener('pagehide', salvarEst);
 let inf = store.get('inf', null); if (!inf || typeof inf !== 'object') inf = {feitas: {}, porNivel: {}}; inf.feitas = inf.feitas || {}; inf.porNivel = inf.porNivel || {};
 let recs = store.get('rec', {});
 let dias = store.get('dias', {});
+let sem = store.get('sem', {});                                      /* desafio da semana: {"2026-W45": {t, j, d}} */
+let corr = store.get('corr', {melhor: 0, jogos: 0, total: 0});     /* contra o relógio */
 let humorPref = store.get('humor', 'auto');
 /* nº de peças por vez escolhido pelo jogador: 'auto' (por dificuldade), 2..6 ou 99 (todas) */
 let vibraOn = store.get('vibra', true) !== false;
@@ -2591,7 +2674,7 @@ let estrelasFase = store.get('est', {});
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
 if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
-const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
 function aplicarPecas(){
   const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
   const f = filaPadraoDe(S.cur);
@@ -2628,12 +2711,14 @@ function chaveFase(cur){
   if (cur.k === 'b') return 'b:' + BUILTIN[cur.i].nome;
   if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
   if (cur.k === 'd') return 'd:' + cur.data;
+  if (cur.k === 's') return 's:' + cur.semana;
   return null;
 }
 function humorDaFase(cur){
   if (cur.k === 'i') return {facil: 'calma', medio: 'animada', dificil: 'noturna', mestre: 'noturna'}[cur.nivel] || 'calma';
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
-  if (cur.k === 'd' || cur.k === 'x') return 'animada';
+  if (cur.k === 'd' || cur.k === 'x' || cur.k === 'r') return 'animada';
+  if (cur.k === 's') return 'noturna';
   return 'calma';
 }
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref); }
@@ -2641,6 +2726,7 @@ function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.c
 function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
+  if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
@@ -2672,24 +2758,33 @@ function renderTitulo(){
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
+  else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
   else if (c.shared){ t1.textContent = tr(c.nome); t2.textContent = tr('fase compartilhada'); }
   else { t1.textContent = tr('Teste'); t2.textContent = c.nome || tr('sua fase'); }
-  $('#btnDica').disabled = c.k === 'x';
+  $('#btnDica').disabled = semDica(c);
 }
 
 /* ---- relógio e estatísticas ---- */
 const deveRodar = () => S.t.ativo && !S.venceu && (S.cur.k === 'x' || (!document.hidden && !document.querySelector('.ov.on')));
 const tempoMs = () => S.t.acum;
 function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
+/* Um intervalo maior que isso entre dois toques do relógio é a tela bloqueada ou a aba congelada: esse tempo não conta
+   (só no campeonato, que corre pelo relógio de parede de propósito). */
+const SALTO_MAX = 1500;
+const semDica = c => c.k === 'x' || c.k === 'r';
 function tick(){
   const a = performance.now();
-  if (deveRodar()){ const d = a - S.t.ult; S.t.acum += d; if (d > 0 && d < 5000){ Est.tempo += d; estSujo = true; } }
+  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || S.cur.k === 'x') S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
   S.t.ult = a;
-  renderStats();
+  if (Corrida.ativa && Date.now() >= Corrida.fim) fimCorrida();
+  renderStats(); guardarAndamento();
 }
 function renderStats(){
-  $('#stTempo').textContent = fmtTempo(tempoMs());
+  const restante = S.cur && S.cur.k === 'r' ? Math.max(0, Corrida.fim - Date.now()) : -1;
+  $('#stTempo').textContent = fmtTempo(restante >= 0 ? Math.ceil(restante / 1000) * 1000 : tempoMs());
+  $('#stTempo').classList.toggle('urg', restante >= 0 && restante < 15000);
   $('#stJog').textContent = fmtJog(S.jog);
   const k = S.cur && chaveFase(S.cur), r = k && recs[k];
   $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;
@@ -2697,6 +2792,64 @@ function renderStats(){
 }
 setInterval(tick, 250);
 
+/* ======================= Fase em andamento: guardada para continuar depois ======================= */
+/* Guarda onde cada peça está, o tempo e as jogadas. Ao abrir o jogo de novo, a fase volta como estava. Campeonato e corrida não entram. */
+const ANDA_TIPOS = ['b', 'c', 'd', 's', 'i'];
+function dadosAndamento(){
+  const c = S.cur, j = S.jogo;
+  if (!c || !j) return undefined;
+  if (!ANDA_TIPOS.includes(c.k)) return undefined;            /* outro tipo de jogo: não mexe no que já estava guardado */
+  const postas = S.hist.filter(i => j.mapa.has(i));
+  if (S.venceu || !postas.length) return null;
+  const pos = postas.map(i => {
+    const p = j.mapa.get(i), f0 = p.formato.findIndex(l => l.some(Boolean)), k0 = p.formato[f0].findIndex(Boolean);
+    let y0 = -1, x0 = -1;
+    for (let r = 0; r < j.n && y0 < 0; r++) for (let q = 0; q < j.n; q++) if (j.grade[r][q] === i){ y0 = r; x0 = q; break; }
+    return {o: p.ord, f: p.formato, x: x0 - k0, y: y0 - f0};
+  });
+  return {v: 1, cur: c, h: somaTexto(faseDe(c).text), jog: S.jog, dicas: S.dicas, acum: Math.round(S.t.acum), sol: S.solVista, pos,
+    res: j.reserva.map(p => [p.ord, p.formato]), sel: S.sel ? S.sel.ord : -1};
+}
+let andaSig = '';
+function guardarAndamento(forcar){
+  if (restaurando) return;
+  const d = dadosAndamento(); if (d === undefined) return;
+  const sig = d ? JSON.stringify(Object.assign({}, d, {acum: 0})) : '';
+  if (sig === andaSig && !forcar) return;
+  andaSig = sig; store.set('andamento', d);
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) guardarAndamento(true); });
+addEventListener('pagehide', () => guardarAndamento(true));
+
+function lerAndamento(){
+  const a = store.get('andamento', null);
+  if (!isObj(a) || a.v !== 1 || !isObj(a.cur) || !ANDA_TIPOS.includes(a.cur.k) || !Array.isArray(a.pos) || !Array.isArray(a.res)) return null;
+  let f = null; try{ f = faseDe(a.cur); }catch(e){}
+  if (!f || typeof f.text !== 'string' || somaTexto(f.text) !== a.h) return null;      /* a fase mudou (ou foi apagada) */
+  if (a.cur.k === 'd' && a.cur.data !== dataHoje()) return null;                     /* fase do dia de ontem */
+  if (a.cur.k === 's' && a.cur.semana !== semanaDe(dataHoje())) return null;
+  return a;
+}
+/* Recoloca as peças na fase recém-carregada. Se algo não bater, recomeça a fase do zero. */
+function retomarAndamento(a){
+  const j = S.jogo; S.hist = [];
+  try{
+    for (const q of a.pos){
+      const p = j.reserva.find(r => r.ord === q.o);
+      if (!p || !Array.isArray(q.f)) throw 0;
+      p.formato = q.f;
+      if (!podeColocar(j, p.formato, q.x, q.y)) throw 0;
+      S.hist.push(colocar(j, p, q.x, q.y));
+    }
+    const ordem = a.res.map(([o, f]) => { const p = j.reserva.find(r => r.ord === o); if (!p) throw 0; p.formato = f; return p; });
+    if (ordem.length !== j.reserva.length) throw 0;
+    j.reserva = ordem;
+  }catch(e){ carregar(S.cur); return false; }
+  S.ultimaIdu = S.hist[S.hist.length - 1] || 0; S.jog = a.jog | 0; S.dicas = a.dicas | 0; S.t.acum = a.acum || 0; S.solVista = !!a.sol;
+  S.sel = j.reserva.find(r => r.ord === a.sel) || (j.fila === 1 ? j.reserva[0] || null : null);
+  andaSig = ''; renderTudo(); ajustar(); atualizarTuto();
+  return true;
+}
 /* ---- tabuleiro ---- */
 function rotuloTabuleiro(){ const b = $('#board'); if (b) b.setAttribute('aria-label', tr('Tabuleiro {n} por {n}. Setas movem o cursor, Enter encaixa a peça.', {n: S.n})); }
 function montarBoard(){
@@ -2764,7 +2917,7 @@ function renderReserva(){
     $('#contagem').textContent = !resta ? '' : tr(j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes')); }
   fitFileiras(); atualizarTuto();
   $('#btnGirar').disabled = $('#btnFlip').disabled = !S.sel;
-  $('#btnDica').disabled = S.venceu || (S.cur && S.cur.k === 'x');
+  $('#btnDica').disabled = S.venceu || (S.cur && semDica(S.cur));
 }
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
@@ -2827,7 +2980,7 @@ function limparDica(){
 const assinaturaDica = () => S.hist.join(',') + '|' + S.jogo.mapa.size + '|' + S.jogo.reserva.map(p => p.uid).join(',');
 function acaoDica(){
   if (S.venceu || S.drag || S.sol) return;
-  if (S.cur.k === 'x'){ toast('Dicas ficam desligadas nos campeonatos.'); return; }
+  if (semDica(S.cur)){ toast(S.cur.k === 'r' ? 'Dicas ficam desligadas na corrida.' : 'Dicas ficam desligadas nos campeonatos.'); return; }
   const sig = assinaturaDica(), nivel = S.dicaSig === sig ? S.dicaNivel : 0;
   limparDica();
   const r = dicaDe(S.jogo);
@@ -2932,8 +3085,8 @@ function tentarColocar(p, gx, gy){
   return true;
 }
 function renderSelo(){
-  const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv) return;
-  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
   selo.hidden = false;
 }
 function vencer(){
@@ -2945,6 +3098,7 @@ function vencer(){
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
+  if (c.k === 'r'){ corridaFeita(); return; }
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
@@ -2953,6 +3107,7 @@ function vencer(){
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
+  if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
   if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
@@ -2965,9 +3120,9 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
-    : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
+    : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
   for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
@@ -2991,12 +3146,13 @@ function mostrarVitoria(res){
   const compartilharRes = () => {
     const base = urlBase();
     if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequencia(), ' dia', ' dias')}), base);
+    else if (c.k === 's') compartilhar('Shape Puzzle', tr('Shape Puzzle — Desafio da semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\nConsegue mais rápido?', {sem: nomeSemana(c.semana), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequenciasSemanas(sem, dataHoje()).atual, ' semana', ' semanas')}), base);
     else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
     else if (c.k === 'i') compartilhar('Shape Puzzle', tr('Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?'), urlFase(c.text, c.nome));
     else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
   };
   compartilharRes.fecha = false;
-  add(c.k === 'd' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
+  add(c.k === 'd' || c.k === 's' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
   const jn = () => carregar(S.cur); add('Jogar de novo', '', jn);
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);
@@ -3320,6 +3476,10 @@ function renderDiario(){
   const hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
   $('#diaSub').textContent = dataCurta(hoje) + ' · ' + tr('um desafio novo por dia') + (seq ? ' · 🔥 ' + qtd(seq, ' dia', ' dias') : '');
   $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : tr('Jogar');
+  const ch = semanaDe(hoje), feitoS = sem[ch], sq = sequenciasSemanas(sem, hoje).atual;
+  $('#semSub').textContent = nomeSemana(ch) + ' · ' + tr('um desafio difícil por semana') + (sq ? ' · 🔥 ' + qtd(sq, ' semana', ' semanas') : '');
+  $('#semTag').textContent = feitoS ? '✓ ' + fmtTempo(feitoS.t) : tr('Jogar');
+  $('#corrSub').textContent = corr.melhor ? tr('Recorde: {n}', {n: qtd(corr.melhor, ' fase', ' fases')}) : tr('Quantas fases em 3 minutos?');
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
@@ -3526,12 +3686,92 @@ function abrirInf(){
 }
 $('#btnInf').onclick = abrirInf;
 
+/* ======================= Desafios: da semana e contra o relógio ======================= */
+const nomeSemana = ch => tr('Semana {n}', {n: +ch.slice(6)});
+
+/* Desafio da semana: a mesma fase (6×6, 3 peças por vez) para todo mundo, escolhida pela semana. Fica guardada para não gerar de novo. */
+async function faseDaSemana(ch){
+  const c = store.get('semfase', null);
+  if (c && c.sem === ch && typeof c.text === 'string' && faseValida(c.text)) return c.text;
+  const base = (semanaIdx(segundaDe(ch)) * 7919) % 900000000 + 1;
+  for (let t = 0; t < 12; t++){
+    const f = await Gerador.gerar(base + t, NIVEIS_INF.dificil.o);
+    if (f && f.unica){ store.set('semfase', {sem: ch, text: f.text}); return f.text; }
+  }
+  return null;
+}
+/* Gera sem deixar começar duas vezes ao mesmo tempo; devolve null se não deu. */
+async function comGerando(fn){
+  if (Inf.gerando) return null;
+  Inf.gerando = true; mostrarGerando(true);
+  let r = null;
+  try{ r = await fn(); }catch(e){}
+  mostrarGerando(false); Inf.gerando = false;
+  if (!r) toast('Não consegui gerar uma fase agora. Tente de novo.');
+  return r;
+}
+async function jogarSemana(){
+  const ch = semanaDe(dataHoje()), text = await comGerando(() => faseDaSemana(ch));
+  if (!text) return;
+  fecharTodos('ov-splash'); carregar({k: 's', semana: ch, nome: 'semana ' + ch, text});
+}
+$('#btnSem').onclick = jogarSemana;
+
+/* Contra o relógio: 3 minutos, quantas fases novas dá para resolver. Sem dicas; o tempo corre pelo relógio. */
+const Corrida = {ativa: false, fim: 0, feitas: 0, prox: null, duracao: 180000};
+const nivelCorrida = n => n < 4 ? 'facil' : n < 9 ? 'medio' : 'dificil';
+const gerarNivelCorrida = async n => { const f = await gerarNivelInf(nivelCorrida(n), n, 0); return f && Object.assign(f, {k: 'r', n, nome: 'Corrida ' + (n + 1)}); };
+const prepararProxima = n => { if (Gerador.emSegundoPlano) Corrida.prox = gerarNivelCorrida(n); };
+async function jogarCorrida(){
+  const fase = await comGerando(() => gerarNivelCorrida(0));
+  if (!fase) return;
+  fecharTodos('ov-splash');
+  Object.assign(Corrida, {ativa: true, feitas: 0, fim: Date.now() + Corrida.duracao, prox: null});
+  carregar(fase); prepararProxima(1);
+}
+function corridaFeita(){
+  Corrida.feitas++; Som.vitoria(); vibrar(30); toast('Mais uma! Vamos para a próxima.');
+  setTimeout(proximaCorrida, 700);
+}
+async function proximaCorrida(){
+  if (!Corrida.ativa) return;
+  const n = Corrida.feitas;
+  let fase = null;
+  try{ fase = (Corrida.prox && await Corrida.prox) || await gerarNivelCorrida(n); }catch(e){}
+  Corrida.prox = null;
+  if (!Corrida.ativa) return;
+  if (!fase || Date.now() >= Corrida.fim){ fimCorrida(); return; }
+  carregar(fase); prepararProxima(n + 1);
+}
+function fimCorrida(){
+  if (!Corrida.ativa) return;
+  Corrida.ativa = false; Corrida.prox = null;
+  S.venceu = true; S.drag = null; removerFlutuante(); limparGhost(); atualizarDesfazer(); renderReserva();
+  const n = Corrida.feitas, antes = corr.melhor;
+  corr = {melhor: Math.max(n, antes), jogos: corr.jogos + 1, total: corr.total + n}; store.set('corr', corr);
+  anunciar(tr('Tempo esgotado!'));
+  setTimeout(() => mostrarFimCorrida(n, n > antes, antes), 400);
+}
+function mostrarFimCorrida(n, recorde, antes){
+  $('#winTitulo').textContent = tr('Tempo esgotado!');
+  $('#winTexto').textContent = tr(n ? 'Você resolveu {n} em 3 minutos.' : 'Nenhuma fase dessa vez. Tente de novo!', {n: qtd(n, ' fase', ' fases')});
+  $('#winEstrelas').innerHTML = ''; $('#winEstrelas').removeAttribute('aria-label');
+  const r = $('#winRes'); r.innerHTML = ''; const pill = mk('span', 'pill'); pill.innerHTML = ic('trophy'); pill.append(String(n)); r.appendChild(pill);
+  $('#winBadge').textContent = tr(recorde && n ? 'Novo recorde da corrida!' : 'Seu recorde: {n}', {n: String(corr.melhor)});
+  const acts = $('#winActs'); acts.innerHTML = '';
+  [['Jogar de novo', 'pri', jogarCorrida], ['Menu', '', abrirMenu]].forEach(([txt, cls, fn]) => {
+    const b = mk('button', 'btn ' + cls, tr(txt)); b.onclick = () => { fechar('win'); fn(); }; acts.appendChild(b);
+  });
+  $('#cardWin').querySelectorAll('.conf').forEach(x => x.remove());
+  abrir('win');
+}
+$('#btnCorr').onclick = () => { fechar('menu'); jogarCorrida(); };
 /* ======================= Estatísticas ======================= */
 function fmtDuracao(ms){
   const min = Math.floor(ms / 60000), h = Math.floor(min / 60), m = min % 60;
   return h ? tr('{h} h {m} min', {h, m}) : min ? tr('{m} min', {m: min}) : tr('menos de 1 min');
 }
-const nomeRec = k => k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
+const nomeRec = k => k[0] === 's' ? nomeSemana(k.slice(2)) : k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
 function abrirEstatisticas(){
   const corpo = $('#estCorpo'); corpo.innerHTML = '';
   const bloco = (titulo, itens) => {
@@ -3548,6 +3788,9 @@ function abrirEstatisticas(){
   bloco('Fases do jogo', [[feitas + '/' + BUILTIN.length, 'Fases concluídas'], [estrelas + '/' + BUILTIN.length * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(Math.min(prog.max, BUILTIN.length - 1) + 1), 'Fase mais adiantada']]);
   const sq = sequenciasDe(dias, dataHoje()), ts = Object.values(dias).map(d => d.t).filter(t => t > 0);
   bloco('Fase do dia', [[String(Object.keys(dias).length), 'Dias jogados'], ['🔥 ' + sq.atual, 'Sequência atual'], [String(sq.maior), 'Maior sequência'], [ts.length ? fmtTempo(Math.min(...ts)) : '–', 'Melhor tempo']]);
+  const ss = sequenciasSemanas(sem, dataHoje()), tsem = Object.values(sem).map(d => d.t).filter(t => t > 0);
+  bloco('Desafio da semana', [[String(Object.keys(sem).length), 'Semanas jogadas'], ['🔥 ' + ss.atual, 'Sequência atual'], [String(ss.maior), 'Maior sequência'], [tsem.length ? fmtTempo(Math.min(...tsem)) : '–', 'Melhor tempo']]);
+  bloco('Contra o relógio', [[String(corr.melhor), 'Melhor corrida'], [String(corr.jogos), 'Corridas'], [String(corr.total), 'Fases resolvidas']]);
   const totalInf = MODOS_INF.reduce((a, m) => a + (inf.feitas[m] || 0), 0), it = [[String(totalInf), 'Fases feitas']];
   ['facil', 'medio', 'dificil', 'mestre'].forEach(n => { const p = inf.porNivel[n]; if (p && p.n) it.push([p.n + (p.t ? ' · ' + fmtTempo(p.t) : ''), NIVEIS_INF[n].nome]); });
   bloco('Modo infinito', it);
@@ -3560,7 +3803,7 @@ $('#btnEst').onclick = abrirEstatisticas;
 
 /* ======================= Backup do progresso ======================= */
 const BK = {pend: null};
-const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, custom, stats: Est, inf,
+const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
   cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
 const envelopeBackup = () => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dadosAtuais()});
 const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
@@ -3609,6 +3852,7 @@ async function conferirBackup(){
     tr(x.recordes === 1 ? '1 recorde' : '{n} recordes', {n: x.recordes}));
   if (x.criadas) partes.push(tr(x.criadas === 1 ? '1 fase criada' : x.criadas + ' fases criadas'));
   if (x.dias) partes.push(tr(x.dias === 1 ? '1 dia da fase do dia' : x.dias + ' dias da fase do dia'));
+  if (x.semanas) partes.push(tr(x.semanas === 1 ? '1 semana do desafio da semana' : x.semanas + ' semanas do desafio da semana'));
   if (x.infinito) partes.push(tr('modo infinito: {n} fases', {n: x.infinito}));
   $('#bkTxt').textContent = (r.criado ? tr('Backup de {data}:', {data: r.criado.split('-').reverse().join('/')}) + ' ' : '') + partes.join(' · ') + '.';
   $('#bkResumo').hidden = false;
@@ -3617,8 +3861,8 @@ function gravarBackup(d, comCfg, limpar){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
   if (d.prog) d.prog = {max: Math.min(d.prog.max, BUILTIN.length - 1), done: d.prog.done.filter(i => i < BUILTIN.length)};
-  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
-  if (limpar){ store.set('infatual', null); }
+  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
+  if (limpar){ store.set('infatual', null); store.set('andamento', null); }
   if (comCfg && d.cfg){
     const c = d.cfg;
     if (c.lang) store.set('lang', c.lang); if (c.tema) store.set('tema', c.tema); if (c.a11y) store.set('a11y', Object.assign({}, a11y, c.a11y));
@@ -3655,7 +3899,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.02.3';
+const VERSAO = '2026.11.02.4';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -4156,7 +4400,9 @@ iconeMusica();
 const linkInicial = lerLink();
 if (linkInicial) $('#splashMsg').hidden = false;
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
-carregar(linkInicial || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+const andamento = linkInicial ? null : lerAndamento();
+carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
 </body>

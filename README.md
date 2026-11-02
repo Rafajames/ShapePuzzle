@@ -49,6 +49,13 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 
 Traduções novas: adicione a frase em `src/idiomas/en.js` e `es.js` (a chave é o texto em português).
 
+## Desafios e continuar de onde parou
+
+- **Desafio da semana** (Menu → atalho): uma fase difícil (6×6, 3 peças por vez) igual para todo mundo, que muda toda segunda-feira. Mostra a sequência de semanas seguidas e entra nas estatísticas, no recorde e no backup.
+- **Contra o relógio** (Menu → atalho): 3 minutos para resolver o máximo de fases novas (começa fácil e sobe). Sem dicas; o tempo corre mesmo com o menu aberto. Guarda o melhor resultado, o total de corridas e de fases.
+- **Fase em andamento**: o jogo guarda onde cada peça está, o tempo e as jogadas; ao reabrir, a fase volta como estava (campeonato e corrida não entram).
+- **Relógio justo**: tela bloqueada, aba escondida ou celular congelado não contam no tempo da fase nem nas estatísticas (só o campeonato corre pelo relógio de parede, de propósito).
+
 ## Menu
 
 O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísticas**, **Campeonatos**) e, abaixo, seções que abrem e fecham com um toque: **Fases** (já aberta), **Minhas fases**, **Jogo**, **Som**, **Aparência e idioma**, **Acessibilidade**, **Progresso e dados** (backup e zerar) e **Sobre e atualização** (versão, atualizar, modo de teste, compartilhar). Funciona também pelo teclado (Enter ou Espaço).

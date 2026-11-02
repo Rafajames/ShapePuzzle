@@ -1,6 +1,6 @@
 /* ======================= Backup do progresso ======================= */
 const BK = {pend: null};
-const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, custom, stats: Est, inf,
+const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
   cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
 const envelopeBackup = () => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dadosAtuais()});
 const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
@@ -49,6 +49,7 @@ async function conferirBackup(){
     tr(x.recordes === 1 ? '1 recorde' : '{n} recordes', {n: x.recordes}));
   if (x.criadas) partes.push(tr(x.criadas === 1 ? '1 fase criada' : x.criadas + ' fases criadas'));
   if (x.dias) partes.push(tr(x.dias === 1 ? '1 dia da fase do dia' : x.dias + ' dias da fase do dia'));
+  if (x.semanas) partes.push(tr(x.semanas === 1 ? '1 semana do desafio da semana' : x.semanas + ' semanas do desafio da semana'));
   if (x.infinito) partes.push(tr('modo infinito: {n} fases', {n: x.infinito}));
   $('#bkTxt').textContent = (r.criado ? tr('Backup de {data}:', {data: r.criado.split('-').reverse().join('/')}) + ' ' : '') + partes.join(' · ') + '.';
   $('#bkResumo').hidden = false;
@@ -57,8 +58,8 @@ function gravarBackup(d, comCfg, limpar){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
   if (d.prog) d.prog = {max: Math.min(d.prog.max, BUILTIN.length - 1), done: d.prog.done.filter(i => i < BUILTIN.length)};
-  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
-  if (limpar){ store.set('infatual', null); }
+  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
+  if (limpar){ store.set('infatual', null); store.set('andamento', null); }
   if (comCfg && d.cfg){
     const c = d.cfg;
     if (c.lang) store.set('lang', c.lang); if (c.tema) store.set('tema', c.tema); if (c.a11y) store.set('a11y', Object.assign({}, a11y, c.a11y));
