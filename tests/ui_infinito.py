@@ -28,7 +28,7 @@ with sync_playwright() as pw:
     pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(400)
 
     print('Menu e escolha')
-    pg.click('#btnMenu'); pg.wait_for_timeout(250)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(250)
     check(pg.is_visible('#btnInf') and 'Modo infinito' in pg.inner_text('#btnInf'), 'botão "Modo infinito" no menu')
     pg.click('#btnInf'); pg.wait_for_timeout(250)
     nomes = pg.evaluate("[...document.querySelectorAll('#infLista .infop b')].map(e=>e.textContent)")

@@ -49,6 +49,10 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 
 Traduções novas: adicione a frase em `src/idiomas/en.js` e `es.js` (a chave é o texto em português).
 
+## Menu
+
+O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísticas**, **Campeonatos**) e, abaixo, seções que abrem e fecham com um toque: **Fases** (já aberta), **Minhas fases**, **Jogo**, **Som**, **Aparência e idioma**, **Acessibilidade**, **Progresso e dados** (backup e zerar) e **Sobre e atualização** (versão, atualizar, modo de teste, compartilhar). Funciona também pelo teclado (Enter ou Espaço).
+
 ## Temas, acessibilidade e idiomas
 
 - Menu → **Tema**: Automático (segue o claro/escuro do aparelho), Escuro (padrão), Claro, Oceano, Floresta e Pôr do sol. A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.

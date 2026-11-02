@@ -49,10 +49,10 @@ with sync_playwright() as pw:
     for lg, nome in [('en', 'inglês'), ('es', 'espanhol')]:
         print('Trocar para ' + nome)
         pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on')); carregar({k:'b',i:0})"); pg.wait_for_timeout(200)
-        pg.evaluate("abrirMenu()"); pg.wait_for_timeout(200)
+        pg.evaluate("abrirMenu()"); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
         pg.select_option('#selIdioma', lg); pg.wait_for_timeout(300)
         t1 = pg.inner_text('#titulo .t1'); g = pg.inner_text('#btnGirar')
-        esp = {'en': ('Level 1', 'Rotate', 'Levels', '0 moves'), 'es': ('Nivel 1', 'Girar', 'Niveles', '0 jugadas')}[lg]
+        esp = {'en': ('Level 1', 'Rotate', 'Menu', '0 moves'), 'es': ('Nivel 1', 'Girar', 'Menú', '0 jugadas')}[lg]
         check(t1 == esp[0], f'título da fase: {t1}')
         check(esp[1] in g, f'botão: {g.strip()}')
         check(pg.inner_text('#ov-menu h1') == esp[2], 'título do menu: ' + pg.inner_text('#ov-menu h1'))
@@ -91,8 +91,8 @@ with sync_playwright() as pw:
         sh = pg.evaluate("tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: 4, tempo: '1:02', jog: '9'})")
         check('4' in sh and '1:02' in sh and '{' not in sh, 'modelos com valores: ' + sh)
     print('Voltar ao português')
-    pg.evaluate("abrirMenu()"); pg.select_option('#selIdioma', 'pt'); pg.wait_for_timeout(300)
-    check(pg.inner_text('#titulo .t1') == 'Fase 1' and 'Girar' in pg.inner_text('#btnGirar') and pg.inner_text('#ov-menu h1') == 'Fases', 'tudo de volta em português')
+    pg.evaluate("abrirMenu()"); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.select_option('#selIdioma', 'pt'); pg.wait_for_timeout(300)
+    check(pg.inner_text('#titulo .t1') == 'Fase 1' and 'Girar' in pg.inner_text('#btnGirar') and pg.inner_text('#ov-menu h1') == 'Menu', 'tudo de volta em português')
     sobras_pt = [t for t in textos_visiveis(pg) if re.search(r'\b(Level|Rotate|Nivel|Voltear)\b', t) and 'completa' not in t]   # o título da vitória só é refeito na próxima vitória
     check(not sobras_pt, 'nada em inglês/espanhol sobrando: ' + str(sobras_pt[:5]))
     # recarregar mantém a escolha

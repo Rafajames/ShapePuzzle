@@ -33,7 +33,7 @@ with sync_playwright() as pw:
 
     print('Padrão e menu')
     check(pg.evaluate("document.documentElement.dataset.tema") == 'escuro', 'quem não escolheu nada continua com o tema escuro de sempre')
-    pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     ops = pg.evaluate("[...document.querySelectorAll('#selTema option')].map(o=>o.value)")
     check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'], f'seletor com os 6 temas: {ops}')
     check(pg.is_visible('#selTema'), 'seletor aparece no menu')
@@ -52,7 +52,7 @@ with sync_playwright() as pw:
     pg.reload(); pg.wait_for_timeout(300)
     check(pg.evaluate("document.documentElement.dataset.tema") == 'oceano', 'depois de recarregar continua no tema escolhido')
     check(pg.evaluate("document.querySelector('meta[name=theme-color]').content") == '#06161f', 'cor da barra do navegador acompanha o tema')
-    pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.evaluate("document.querySelector('#selTema').value") == 'oceano', 'o menu mostra o tema atual')
 
     print('As cores das peças não mudam')
@@ -79,7 +79,7 @@ with sync_playwright() as pw:
     pg.evaluate("(()=>{const e=document.querySelector('#selTema'); e.value='claro'; e.dispatchEvent(new Event('change'))})()")
     pg.evaluate("salvarA11y('cont', true)"); pg.wait_for_timeout(150)
     check(pg.evaluate("document.documentElement.dataset.tema") == 'escuro', 'com alto contraste ligado usa o escuro')
-    pg.evaluate("abrirMenu()"); pg.wait_for_timeout(200)
+    pg.evaluate("abrirMenu()"); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.is_visible('#temaNota'), 'o menu avisa por quê')
     pg.evaluate("salvarA11y('cont', false)"); pg.wait_for_timeout(150)
     check(pg.evaluate("document.documentElement.dataset.tema") == 'claro', 'desligando, volta ao tema escolhido')

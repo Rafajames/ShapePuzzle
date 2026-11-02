@@ -37,7 +37,7 @@ with sync_playwright() as pw:
     print('Versão e verificação manual')
     check(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+', VER) is not None, f'formato da versão: {VER}')
     check(pg.evaluate("VERSAO") == VER, 'o jogo conhece a própria versão')
-    pg.click('#btnMenu'); pg.wait_for_timeout(250)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(250)
     pg.evaluate("document.querySelector('#btnAtualizar').scrollIntoView()")
     check(VER in pg.inner_text('#verTxt'), 'menu mostra a versão')
     check(pg.is_visible('#btnAtualizar') and 'Verificar' in pg.inner_text('#btnAtualizar'), 'botão "Verificar atualizações"')
@@ -108,7 +108,7 @@ with sync_playwright() as pw:
 
     print('Idiomas')
     pg.evaluate("Upd.nova=null; $('#upd').hidden=true")
-    pg.evaluate("abrirMenu()"); pg.wait_for_timeout(200)
+    pg.evaluate("abrirMenu()"); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     pg.select_option('#selIdioma', 'en'); pg.wait_for_timeout(300)
     check('Version' in pg.inner_text('#verTxt') and 'Check for updates' in pg.inner_text('#btnAtualizar'), 'menu em inglês')
     pg.evaluate("Upd.nova='9999.1.1.1'; mostrarAvisoAtualizacao()")

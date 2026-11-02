@@ -73,7 +73,7 @@ with sync_playwright() as p:
     check(pg.evaluate('Som.humorAtual()') == 'animada', 'fase 12 → Animada (automático)')
     pg.evaluate("carregar({k:'b', i:22})"); pg.wait_for_timeout(200)
     check(pg.evaluate('Som.humorAtual()') == 'noturna', 'fase 23 → Noturna (automático)')
-    pg.click('#btnMenu'); pg.select_option('#selHumor', 'animada'); pg.wait_for_timeout(200)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.select_option('#selHumor', 'animada'); pg.wait_for_timeout(200)
     check(pg.evaluate('Som.humorAtual()') == 'animada', 'estilo fixo Animada vale em qualquer fase')
     pg.evaluate("carregar({k:'b', i:0})"); pg.wait_for_timeout(150)
     check(pg.evaluate('Som.humorAtual()') == 'animada', 'estilo fixo não muda ao trocar de fase')
@@ -139,7 +139,7 @@ with sync_playwright() as p:
 
     # ---------------------------------------------------------------- 5. fase do dia
     print('5. Fase do dia, sequência e compartilhar resultado')
-    pg.click('#btnMenu'); pg.wait_for_timeout(150)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(150)
     check('um desafio novo por dia' in pg.inner_text('#diaSub'), 'menu mostra o desafio do dia')
     pg.screenshot(path=SC + 'v2-07-menu-topo.png')
     pg.click('#btnDia'); pg.wait_for_timeout(500)
@@ -159,7 +159,7 @@ with sync_playwright() as p:
 
     # ---------------------------------------------------------------- 6. editor → link → abrir
     print('6. Criar fase, compartilhar por link e abrir o link')
-    pg.click('#btnMenu'); pg.click('#btnCriar'); pg.wait_for_timeout(250)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.click('#btnCriar'); pg.wait_for_timeout(250)
     eb = pg.locator('#edBoard').bounding_box(); ec = eb['height'] / 5
     sw = pg.locator('#pal .sw')
     sw.nth(0).click()
@@ -242,7 +242,7 @@ with sync_playwright() as p:
 
     # iPhone: instrução de instalar
     ctx, pg = novo(b, user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1')
-    pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.is_visible('#dicaIOS'), 'iPhone: mostra como instalar (Compartilhar → Adicionar à Tela de Início)')
     pg.evaluate("document.querySelector('#ov-menu .card').scrollTo(0, 99999)"); pg.wait_for_timeout(150)
     pg.screenshot(path=SC + 'v2-11-menu-fim.png')

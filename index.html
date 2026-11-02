@@ -247,6 +247,21 @@ select.field{flex:1}
 .aviso{margin:10px 0 0;font-size:13px;min-height:18px;color:var(--mut)}
 .aviso.erro{color:var(--bad)}.aviso.ok{color:var(--ok)}
 .cod{font-family:ui-monospace,Menlo,monospace;letter-spacing:3px;font-weight:700;color:var(--txt)}
+/* atalhos do menu: quatro cartões lado a lado */
+.atalhos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.atalhos .daily{margin-top:0;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;min-width:0}
+.atalhos .daily .dtx{width:100%;font-size:15px}.atalhos .daily .tag{margin-top:-2px}
+.atalhos .daily em{display:flex}
+/* menu em seções que abrem e fecham */
+details.sec{margin-top:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--panel) 70%,transparent)}
+details.sec>summary{display:flex;align-items:center;gap:10px;min-height:50px;padding:0 14px;cursor:pointer;list-style:none;font-weight:700;font-size:15px;color:var(--txt);border-radius:16px;-webkit-tap-highlight-color:transparent}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary svg.i{width:20px;height:20px;flex:none;color:var(--accent)}
+details.sec>summary::after{content:'';margin-left:auto;width:8px;height:8px;border:solid var(--mut);border-width:0 2px 2px 0;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+details.sec[open]>summary::after{transform:translateY(2px) rotate(-135deg)}
+details.sec>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.sec>.sb{padding:2px 14px 14px}
+details.sec .row:first-child{margin-top:4px}
 details.cfg{margin-top:16px;font-size:13px;color:var(--mut)}
 details.cfg summary{cursor:pointer;font-weight:600}
 #toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:120;background:var(--toast);border:1px solid var(--line);color:var(--txt);
@@ -326,7 +341,7 @@ body.dalt .star{width:46%;height:46%}
 body.dalt .star[data-s]::after{inset:12%}
 body.cont{--line:#a8a8cc;--mut:#d6d6ec;--txt:#fff;--bg:#000;background:#000}
 body.cont .card{background:#0a0a14;border-color:#c8c8e8}
-body.cont .btn,body.cont .ib,body.cont .pill,body.cont .tile,body.cont .field,body.cont .reserva,body.cont .daily{border-color:#b8b8dc;background:#12122a}
+body.cont .btn,body.cont .ib,body.cont .pill,body.cont .tile,body.cont .field,body.cont .reserva,body.cont .daily,body.cont details.sec{border-color:#b8b8dc;background:#12122a}
 body.cont .btn.pri{background:#4a3df0;color:#fff}
 body.cont .cell{background:#0c0c16;box-shadow:inset 0 0 0 1px #7878a4}
 body.cont .cell:nth-child(odd){background:#171728}
@@ -337,7 +352,7 @@ body.cont .cell.gok::after{outline:3px solid #fff}
 body.cont .cell.gbad::after{outline:3px solid #ff6b81}
 body.cont #toast{background:#000;border-color:#fff}
 body.cont #dica,body.cont .card p,body.cont .vazio2{color:#e4e4f4}
-body.tg .card p,body.tg .row,body.tg .how li,body.tg details.cfg,body.tg .vazio2{font-size:17px}
+body.tg .card p,body.tg .row,body.tg .how li,body.tg details.cfg,body.tg details.sec>summary,body.tg .vazio2{font-size:17px}
 body.tg .row .rl{font-size:16px;width:78px}
 body.tg .btn{font-size:17px}body.tg .btn.sm{font-size:16px}
 body.tg .pill{font-size:16px;padding:7px 12px}
@@ -415,23 +430,31 @@ body.rm #mao.on{opacity:1}
 <div class="ov" id="ov-menu">
   <div class="card">
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
-    <h1>Fases</h1>
-    <p>Complete uma fase para liberar a próxima.</p>
+    <h1>Menu</h1>
+    <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
     <button class="daily" id="btnInf"><em data-i="infinity"></em><span class="dtx"><b>Modo infinito</b><small>Fases novas sem parar, do fácil ao mestre</small></span></button>
     <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
     <button class="daily" id="btnCamp"><em data-i="trophy"></em><span class="dtx"><b>Campeonatos</b><small>Desafie amigos, família e grupos com ranking</small></span></button>
-    <h2>Fases do jogo</h2>
+    </div>
+    <div id="blocoInstalar" hidden>
+      <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%;margin-top:12px">Instalar o jogo no aparelho</button>
+      <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
+    </div>
+    <details class="sec" open><summary data-i="play">Fases</summary><div class="sb">
+      <p style="margin:0 0 10px">Complete uma fase para liberar a próxima.</p>
     <div class="tiles" id="tiles"></div>
     <p class="vazio2" style="margin-top:10px">Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.</p>
-    <h2>Minhas fases</h2>
+    </div></details>
+    <details class="sec"><summary data-i="edit">Minhas fases</summary><div class="sb">
     <div id="customList"></div>
     <div class="acts">
       <button class="btn" id="btnCriar" data-i="edit">Criar fase</button>
       <button class="btn" id="btnImportar" data-i="upload">Importar .txt</button>
     </div>
     <input type="file" id="fileImp" accept=".txt,text/plain" hidden>
-    <h2>Jogo</h2>
+    </div></details>
+    <details class="sec"><summary data-i="rotate">Jogo</summary><div class="sb">
     <label class="row"><span class="rl">Peças por vez</span>
       <select class="field" id="selPecas">
         <option value="auto">Automático (por fase)</option>
@@ -441,6 +464,21 @@ body.rm #mao.on{opacity:1}
       </select></label>
     <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
     <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
+    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
+    </div></details>
+    <details class="sec"><summary data-i="note">Som</summary><div class="sb">
+    <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
+    <label class="row"><span class="rl">Estilo</span>
+      <select class="field" id="selHumor">
+        <option value="auto">Automático (por fase)</option>
+        <option value="calma">Calma</option>
+        <option value="animada">Animada</option>
+        <option value="noturna">Noturna</option>
+      </select></label>
+    <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
+    <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
+    </div></details>
+    <details class="sec"><summary data-i="eye">Aparência e idioma</summary><div class="sb">
     <label class="row"><span class="rl">Idioma</span>
       <select class="field" id="selIdioma"><option value="pt">Português</option><option value="en">English</option><option value="es">Español</option></select></label>
     <label class="row"><span class="rl">Tema</span>
@@ -453,7 +491,8 @@ body.rm #mao.on{opacity:1}
         <option value="poente">Pôr do sol</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
-    <h2>Acessibilidade</h2>
+    </div></details>
+    <details class="sec"><summary data-i="user">Acessibilidade</summary><div class="sb">
     <label class="row"><input type="checkbox" id="chkDalt"> Símbolos nas cores (para daltônicos)</label>
     <label class="row"><input type="checkbox" id="chkCont"> Alto contraste</label>
     <label class="row"><input type="checkbox" id="chkTexto"> Texto maior</label>
@@ -461,38 +500,24 @@ body.rm #mao.on{opacity:1}
     <details class="cfg" id="ajudaTeclado"><summary>Jogar só com o teclado</summary>
       <p data-th style="margin:8px 0"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> movem o cursor no tabuleiro · <kbd>1</kbd> a <kbd>6</kbd> ou <kbd>P</kbd> escolhem a peça · <kbd>R</kbd> gira · <kbd>T</kbd> espelha · <kbd>Enter</kbd> ou <kbd>Espaço</kbd> encaixa a peça (ou tira a que está na casa) · <kbd>Z</kbd> desfaz · <kbd>H</kbd> dica · <kbd>Esc</kbd> solta a peça.</p>
     </details>
-    <h2>Som</h2>
-    <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
-    <label class="row"><span class="rl">Estilo</span>
-      <select class="field" id="selHumor">
-        <option value="auto">Automático (por fase)</option>
-        <option value="calma">Calma</option>
-        <option value="animada">Animada</option>
-        <option value="noturna">Noturna</option>
-      </select></label>
-    <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
-    <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
-    <div id="blocoInstalar" hidden>
-      <h2>Instalar</h2>
-      <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
-      <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
-    </div>
-    <h2>Backup</h2>
+    </div></details>
+    <details class="sec"><summary data-i="download">Progresso e dados</summary><div class="sb">
     <p style="margin:0">Leve o seu progresso para outro aparelho ou guarde uma cópia.</p>
     <div class="acts" style="margin-top:8px"><button class="btn" id="btnBackup" data-i="download" style="width:100%">Backup do progresso</button></div>
-    <h2>Atualização</h2>
+    <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button></div>
+    </div></details>
+    <details class="sec"><summary data-i="chat">Sobre e atualização</summary><div class="sb">
     <p id="verTxt" style="margin:0 0 4px"></p>
     <div class="acts" style="margin-top:8px"><button class="btn" id="btnAtualizar" data-i="reset" style="width:100%">Verificar atualizações</button></div>
     <p id="updMsg" role="status" aria-live="polite" style="margin:8px 0 0;font-size:13px;min-height:18px"></p>
-    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
-    <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
-    <h2>Sobre</h2>
     <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
     <div class="acts">
       <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
       <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
     </div>
     <div class="acts"><button class="btn" id="btnCompJogo" data-i="share">Compartilhar o jogo</button></div>
+    <div class="acts"><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
+    </div></details>
   </div>
 </div>
 
@@ -752,6 +777,10 @@ en: {
   "Alguém compartilhou uma fase com você! Toque em Jogar para abrir.": "Someone shared a level with you! Tap Play to open it.",
   "Jogar": "Play",
   "♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.": "♪ With ambient music — you can turn it off with the button at the top. On iPhone, turn off silent mode.",
+  "Menu": "Menu",
+  "Aparência e idioma": "Appearance and language",
+  "Progresso e dados": "Progress and data",
+  "Sobre e atualização": "About and updates",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1216,6 +1245,10 @@ es: {
   "Alguém compartilhou uma fase com você! Toque em Jogar para abrir.": "¡Alguien compartió un nivel contigo! Toca Jugar para abrirlo.",
   "Jogar": "Jugar",
   "♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.": "♪ Con música ambiental: puedes apagarla con el botón de arriba. En iPhone, desactiva el modo silencio.",
+  "Menu": "Menú",
+  "Aparência e idioma": "Apariencia e idioma",
+  "Progresso e dados": "Progreso y datos",
+  "Sobre e atualização": "Acerca de y actualizaciones",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3622,7 +3655,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.02.2';
+const VERSAO = '2026.11.02.3';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};

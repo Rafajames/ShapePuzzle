@@ -15,7 +15,7 @@ RES="""() => { const j=S.jogo; const occ=j.grade.map(r=>r.map(v=>v!==0)); const 
 with sync_playwright() as pw:
     b=pw.chromium.launch(); ctx=b.new_context(locale='pt-BR', viewport={'width':390,'height':844}); pg=ctx.new_page()
     pg.on('pageerror',lambda e:erros.append(str(e)))
-    pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.locator('#tiles .tile').nth(39).is_disabled(),'fase 40 trancada no início')
     check('senha' not in pg.content().lower().replace('senha de organizador','').replace('senha','',0) or True,'-')
     pg.click('#btnTeste'); pg.wait_for_timeout(200)
@@ -31,7 +31,7 @@ with sync_playwright() as pw:
     prog0=pg.evaluate('JSON.stringify(prog)'); pg.evaluate(RES); pg.wait_for_timeout(1300)
     check(pg.is_visible('#ov-win'),'dá para concluir a fase')
     check(pg.evaluate('JSON.stringify(prog)')==prog0 and pg.evaluate('Object.keys(recs).length')==0,'concluir em teste não altera progresso nem recordes')
-    pg.reload(); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.reload(); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.evaluate('modoTeste') and pg.locator('#tiles .tile:disabled').count()==0,'aparelho lembra o modo de teste')
     pg.click('#btnTeste'); pg.wait_for_timeout(200)
     pg.click('#btnMenu') if not pg.is_visible('#ov-menu') else None

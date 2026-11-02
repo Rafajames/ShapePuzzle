@@ -38,7 +38,7 @@ with sync_playwright() as p:
     pg.goto(URL); pg.wait_for_timeout(400)
     check(pg.evaluate('prog.max') == 30, 'prog.max sobe de 29 para 30 (fase 31 liberada)')
     check(pg.evaluate('BUILTIN.length') == 50, '50 fases')
-    pg.click('#btnJogar'); pg.click('#btnMenu'); pg.wait_for_timeout(200)
+    pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.locator('#tiles .tile').count() == 50, 'menu tem 50 quadradinhos')
     check(not pg.locator('#tiles .tile').nth(30).is_disabled(), 'quadradinho 31 clicável')
     check(pg.locator('#tiles .tile').nth(31).is_disabled(), 'quadradinho 32 ainda trancado')

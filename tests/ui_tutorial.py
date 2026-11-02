@@ -49,7 +49,7 @@ with sync_playwright() as pw:
     pg.reload(); pg.click('#btnJogar'); pg.wait_for_timeout(400)
     check(not pg.evaluate("document.querySelector('#mao').classList.contains('on')"), 'tutorial não reaparece depois de concluído')
     print('Rever pelo menu')
-    pg.click('#btnMenu'); pg.wait_for_timeout(200); pg.click('#btnTuto'); pg.wait_for_timeout(300)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200); pg.click('#btnTuto'); pg.wait_for_timeout(300)
     check(pg.evaluate("document.querySelector('#mao').classList.contains('toque')"), 'menu reinicia o tutorial')
     print('Pular')
     pg.click('#tutoPular'); pg.wait_for_timeout(200)

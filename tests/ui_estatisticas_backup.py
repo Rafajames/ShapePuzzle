@@ -29,7 +29,7 @@ with sync_playwright() as pw:
     ctx, pg = novo(b)
 
     print('Estatísticas — aparelho novo')
-    pg.click('#btnMenu'); pg.wait_for_timeout(250)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(250)
     check(pg.is_visible('#btnEst') and 'Estatísticas' in pg.inner_text('#btnEst'), 'botão "Estatísticas" no menu')
     pg.click('#btnEst'); pg.wait_for_timeout(300)
     v = dict((r, a) for a, r in valores(pg))
@@ -69,7 +69,7 @@ with sync_playwright() as pw:
     print('Backup — salvar')
     pg.evaluate("localStorage.setItem('shapepuzzle.cpauth', JSON.stringify({uid:'u1', key:'SEGREDO123', refresh:'RTOKEN', token:'TTOKEN'})); localStorage.setItem('shapepuzzle.teste','true')")
     pg.evaluate("salvarA11y('dalt', true); tema='poente'; store.set('tema','poente'); aplicarTema()")
-    pg.click('#btnMenu'); pg.wait_for_timeout(250)
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(250)
     check(pg.is_visible('#btnBackup'), 'botão "Backup do progresso" no menu')
     pg.click('#btnBackup'); pg.wait_for_timeout(600)
     codigo = pg.input_value('#bkCodigo')
