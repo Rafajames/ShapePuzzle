@@ -3,11 +3,11 @@ const E = {grid: Array.from({length: TAM}, () => Array(TAM).fill(0)), cor: 1, mo
 function montarEditor(){
   const pal = $('#pal'); pal.innerHTML = '';
   for (const id of CORES_IDS){
-    const b = document.createElement('button'); b.className = 'sw' + (E.cor === id ? ' on' : ''); b.style.setProperty('--c', COR[id]);
+    const b = mk('button', 'sw' + (E.cor === id ? ' on' : '')); b.style.setProperty('--c', COR[id]);
     b.setAttribute('aria-label', tr('Cor') + ' ' + nomeCor(id)); b.dataset.s = id; b.onclick = () => { E.cor = id; montarEditor(); }; pal.appendChild(b);
   }
   const b = $('#edBoard');
-  if (!b.children.length) for (let i = 0; i < TAM * TAM; i++){ const c = document.createElement('div'); c.className = 'cell'; c.innerHTML = '<div class="fill"></div>'; b.appendChild(c); }
+  if (!b.children.length) for (let i = 0; i < TAM * TAM; i++){ const c = mk('div', 'cell'); c.innerHTML = '<div class="fill"></div>'; b.appendChild(c); }
   renderEditor();
 }
 function renderEditor(){

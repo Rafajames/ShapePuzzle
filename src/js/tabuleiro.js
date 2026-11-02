@@ -4,7 +4,7 @@ function montarBoard(){
   const b = $('#board'); b.innerHTML = ''; b.style.setProperty('--n', S.n); S.cursor = null;
   rotuloTabuleiro();
   for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
-    const c = document.createElement('div'); c.className = 'cell';
+    const c = mk('div', 'cell');
     c.innerHTML = '<div class="star"></div><div class="fill"></div>'; c.setAttribute('role', 'img');
     b.appendChild(c);
   }
@@ -50,9 +50,8 @@ function renderReserva(){
   const cima = n <= 3 ? n : Math.ceil(n / 2);
   let fileira = null;
   vis.forEach((p, i) => {
-    if (i === 0 || i === cima){ fileira = document.createElement('div'); fileira.className = 'rp'; el.appendChild(fileira); }
-    const w = document.createElement('div');
-    w.className = 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '') + (S.dicaPeca === p.uid ? ' dicaP' : '');
+    if (i === 0 || i === cima) el.appendChild(fileira = mk('div', 'rp'));
+    const w = mk('div', 'pw' + (S.sel === p ? ' sel' : '') + (arrastando === p ? ' hide' : '') + (S.dicaPeca === p.uid ? ' dicaP' : ''));
     w.dataset.uid = p.uid; w.tabIndex = 0; w.setAttribute('role', 'button');
     w.setAttribute('aria-pressed', S.sel === p); w.setAttribute('aria-label', (i + 1) + '. ' + descPeca(p) + (S.sel === p ? ', ' + tr('selecionada') : ''));
     const pe = pecaEl(p.formato, p.id, 'mini');

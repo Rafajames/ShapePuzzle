@@ -7,10 +7,9 @@ const nomeRec = k => k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 1
 function abrirEstatisticas(){
   const corpo = $('#estCorpo'); corpo.innerHTML = '';
   const bloco = (titulo, itens) => {
-    const h = document.createElement('h2'); h.textContent = tr(titulo); corpo.appendChild(h);
-    const g = document.createElement('div'); g.className = 'estg';
-    itens.forEach(([v, r]) => { const d = document.createElement('div'); d.className = 'sv'; d.innerHTML = '<b></b><span></span>'; d.firstChild.textContent = v; d.lastChild.textContent = tr(r); g.appendChild(d); });
-    corpo.appendChild(g);
+    const g = mk('div', 'estg');
+    itens.forEach(([v, r]) => { const d = mk('div', 'sv'); d.append(mk('b', '', v), mk('span', '', tr(r))); g.appendChild(d); });
+    corpo.append(mk('h2', '', tr(titulo)), g);
   };
   const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
   const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;

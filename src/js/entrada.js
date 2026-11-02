@@ -12,6 +12,8 @@ function gridDeOrigem(o){
   const r = $('#board').getBoundingClientRect();
   return {gx: Math.round((o.px - r.left) / S.cell), gy: Math.round((o.py - r.top) / S.cell)};
 }
+/* canto superior esquerdo para a peça `f` ficar centrada na casa (x, y) */
+const origemCentro = (f, x, y) => [x - Math.floor(f[0].length / 2), y - Math.floor(f.length / 2)];
 function atualizarGhostDrag(){
   const d = S.drag; if (!d || !d.moved) return;
   const {gx, gy} = gridDeOrigem(origemFlut(d));
@@ -19,8 +21,7 @@ function atualizarGhostDrag(){
 }
 function atualizarGhostHover(){
   if (S.drag || !S.sel || !S.hover || !S.hover.mouse){ if (!S.drag) limparGhost(); return; }
-  const f = S.sel.formato;
-  mostrarGhost(S.sel, S.hover.x - Math.floor(f[0].length / 2), S.hover.y - Math.floor(f.length / 2));
+  mostrarGhost(S.sel, ...origemCentro(S.sel.formato, S.hover.x, S.hover.y));
 }
 function iniciarDrag(e, piece, origem){
   const jaSel = S.sel === piece;
@@ -45,8 +46,7 @@ $('#board').addEventListener('pointerdown', e => {
     if (p){ limparDica(); devolver(p); Som.pegar(); renderBoard(); iniciarDrag(e, p, 'tabuleiro'); }
   } else if (S.sel){
     if (e.pointerType !== 'mouse'){ gestoInicio(e, 'tabuleiro', c); return; }
-    const f = S.sel.formato;
-    tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
+    tentarColocar(S.sel, ...origemCentro(S.sel.formato, c.x, c.y));
   } else gestoInicio(e, 'tabuleiro', c);
 });
 $('#board').addEventListener('pointerleave', () => { S.hover = null; if (!S.drag) limparGhost(); });
@@ -110,7 +110,7 @@ function fimGesto(e, cancelado){
   }
   if (Math.hypot(dx, dy) < 12 && dt < 450){
     if (g.zona === 'tabuleiro' && S.sel){
-      const f = S.sel.formato; tentarColocar(S.sel, g.cel.x - Math.floor(f[0].length / 2), g.cel.y - Math.floor(f.length / 2));
+      tentarColocar(S.sel, ...origemCentro(S.sel.formato, g.cel.x, g.cel.y));
     } else if (g.zona === 'fundo' && S.sel && toqueDuplo(e.clientX, e.clientY)){
       S.sel.formato = girar(S.sel.formato); Som.girar(); S.anim = 'giro'; marcarTuto('giro'); aposTransformar();
     }
@@ -164,7 +164,7 @@ function moverCursor(dx, dy){
   if (document.activeElement !== $('#board') && !(document.activeElement && document.activeElement.classList.contains('pw'))) $('#board').focus({preventScroll: true});
   atualizarGhostHover();
   let msg = descCelula(c.x, c.y);
-  if (S.sel && !S.jogo.grade[c.y][c.x]){ const f = S.sel.formato; msg += ' · ' + tr(podeColocar(S.jogo, f, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2)) ? 'a peça cabe aqui' : 'a peça não cabe aqui'); }
+  if (S.sel && !S.jogo.grade[c.y][c.x]){ const f = S.sel.formato; msg += ' · ' + tr(podeColocar(S.jogo, f, ...origemCentro(f, c.x, c.y)) ? 'a peça cabe aqui' : 'a peça não cabe aqui'); }
   anunciar(msg);
 }
 function acaoCursor(){
@@ -172,13 +172,12 @@ function acaoCursor(){
   if (S.venceu) return;
   if (S.jogo.grade[c.y][c.x]){ tirarDaCasa(c.x, c.y); return; }
   if (!S.sel){ toast('Escolha uma peça primeiro (teclas 1 a 6).'); return; }
-  const f = S.sel.formato;
-  tentarColocar(S.sel, c.x - Math.floor(f[0].length / 2), c.y - Math.floor(f.length / 2));
+  tentarColocar(S.sel, ...origemCentro(S.sel.formato, c.x, c.y));
 }
 const SETAS = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]};
 window.addEventListener('keydown', e => {
   if (e.target.matches('input,textarea,select')) return;
-  if (e.key === 'Escape'){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); if (S.sel && !S.drag){ S.sel = null; limparGhost(); renderReserva(); renderDica(); } return; }
+  if (e.key === 'Escape'){ fecharTodos('ov-splash'); if (S.sel && !S.drag){ S.sel = null; limparGhost(); renderReserva(); renderDica(); } return; }
   if (document.querySelector('.ov.on') || e.ctrlKey || e.metaKey || e.altKey) return;
   if (SETAS[e.key]){ e.preventDefault(); moverCursor(...SETAS[e.key]); return; }
   if ((e.key === 'Enter' || e.key === ' ') && (e.target === document.body || e.target.id === 'board' || (e.target.classList && e.target.classList.contains('pw')))){

@@ -71,5 +71,5 @@ function lerLink(){
     return {k: 't', nome, text, shared: true};
   }catch(e){ toast('Link de fase inválido'); return null; }
 }
-window.addEventListener('hashchange', () => { const l = lerLink(); if (l){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); carregar(l); toast('Fase compartilhada aberta'); } });
+window.addEventListener('hashchange', () => { const l = lerLink(); if (l){ fecharTodos('ov-splash'); carregar(l); toast('Fase compartilhada aberta'); } });
 

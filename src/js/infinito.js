@@ -61,7 +61,7 @@ async function jogarInfinito(modo){
   }catch(e){ fase = null; }
   mostrarGerando(false); Inf.gerando = false;
   if (!fase){ toast('Não consegui gerar uma fase agora. Tente de novo.'); return; }
-  document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); });
+  fecharTodos('ov-splash');
   store.set('infmodo', modo);
   infAtual = {modo, num, seed: fase.seed}; store.set('infatual', infAtual);
   carregar(fase);
@@ -79,13 +79,13 @@ function abrirInf(){
   const l = $('#infLista'); l.innerHTML = '';
   const ultimo = store.get('infmodo', 'medio');
   MODOS_INF.forEach(m => {
-    const n = inf.feitas[m] || 0, b = document.createElement('button'); b.className = 'infop';
+    const n = inf.feitas[m] || 0, b = mk('button', 'infop' + (m === ultimo ? ' ult' : ''));
     const nome = m === 'crescente' ? 'Crescente' : NIVEIS_INF[m].nome, desc = m === 'crescente' ? 'Começa fácil e sobe a cada 5 fases' : NIVEIS_INF[m].desc;
     b.innerHTML = '<span class="dtx"><b></b><small></small></span><span class="qt"></span>';
     b.querySelector('b').textContent = tr(nome); b.querySelector('small').textContent = tr(desc);
-    b.querySelector('.qt').textContent = n ? tr(n === 1 ? '1 feita' : n + ' feitas') : '';
-    b.setAttribute('aria-label', tr(nome) + ', ' + tr(desc) + (n ? ', ' + tr(n === 1 ? '1 feita' : n + ' feitas') : ''));
-    if (m === ultimo) b.classList.add('ult');
+    const feitas = n ? qtd(n, ' feita', ' feitas') : '';
+    b.querySelector('.qt').textContent = feitas;
+    b.setAttribute('aria-label', tr(nome) + ', ' + tr(desc) + (n ? ', ' + feitas : ''));
     b.onclick = () => jogarInfinito(m);
     l.appendChild(b);
   });

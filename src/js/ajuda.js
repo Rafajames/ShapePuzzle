@@ -90,7 +90,7 @@ function acaoSolucao(){
     const q = r.passos[S.sol.i++];
     for (let i = 0; i < q.o.length; i++) for (let k = 0; k < q.o[0].length; k++){
       if (!q.o[i][k]) continue;
-      const el = document.createElement('i'); el.className = 'solp'; el.style.setProperty('--c', COR[q.peca.id]); el.dataset.s = q.peca.id;
+      const el = mk('i', 'solp'); el.style.setProperty('--c', COR[q.peca.id]); el.dataset.s = q.peca.id;
       cellEl(q.px + k, q.py + i).appendChild(el); S.sol.cels.push(el);
     }
     Som.encaixar();

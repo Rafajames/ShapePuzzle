@@ -58,14 +58,14 @@ function mostrarVitoria(res){
   for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
   re.setAttribute('aria-label', tr(res.est === 1 ? '1 estrela de 3' : res.est + ' estrelas de 3'));
   const r = $('#winRes'); r.innerHTML = '';
-  const pill = (icone, txt) => { const s = document.createElement('span'); s.className = 'pill'; s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
-  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas')));
+  const pill = (icone, txt) => { const s = mk('span', 'pill'); s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
+  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', qtd(S.dicas, ' dica', ' dicas'));
   const k = chaveFase(c);
   $('#winBadge').textContent = tr(!k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
     : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
     : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j));
   acts.innerHTML = '';
-  const add = (txt, cls, fn, icone) => { const b = document.createElement('button'); b.className = 'btn ' + cls; if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
+  const add = (txt, cls, fn, icone) => { const b = mk('button', 'btn ' + cls); if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
   if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo));
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
@@ -75,7 +75,7 @@ function mostrarVitoria(res){
   else {
   const compartilharRes = () => {
     const base = urlBase();
-    if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas')) : '', seq: tr(sequencia() + (sequencia() === 1 ? ' dia' : ' dias'))}), base);
+    if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequencia(), ' dia', ' dias')}), base);
     else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
     else if (c.k === 'i') compartilhar('Shape Puzzle', tr('Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?'), urlFase(c.text, c.nome));
     else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
@@ -88,7 +88,7 @@ function mostrarVitoria(res){
   }
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
   if (!a11y.mov) Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
-    const d = document.createElement('i'); d.className = 'conf'; d.style.background = cor;
+    const d = mk('i', 'conf'); d.style.background = cor;
     d.style.setProperty('--dx', (Math.random() * 320 - 160) + 'px'); d.style.setProperty('--dy', (Math.random() * 300 - 120) + 'px');
     d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); d.style.animationDelay = (n * 0.03 + Math.random() * 0.2) + 's';
     card.appendChild(d);

@@ -122,7 +122,7 @@ function renderStats(){
   $('#stJog').textContent = fmtJog(S.jog);
   const k = S.cur && chaveFase(S.cur), r = k && recs[k];
   $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;
-  $('#pDica').hidden = !S.dicas; $('#stDica').textContent = tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas'));
+  $('#pDica').hidden = !S.dicas; $('#stDica').textContent = qtd(S.dicas, ' dica', ' dicas');
 }
 setInterval(tick, 250);
 

@@ -12,16 +12,19 @@ const cpKey = () => normalizarNome(cpNome);
 const erroNuvem = cod => Object.assign(new Error(cod), {cod});
 const MSG_NUVEM = {negado: 'O banco de dados recusou o pedido (as regras de segurança foram publicadas?).', rede: 'Sem conexão com o banco de dados.', tempo: 'O banco de dados demorou demais para responder.', http: 'O banco de dados retornou um erro.'};
 const msgNuvem = e => e && e.cod === 'auth' ? msgAuth(e.auth) : MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
-async function nuvem(db, metodo, caminho, corpo, token){
+/* Roda fn(signal) com limite de 9 s; qualquer falha vira um erro com `cod` (tempo, rede, negado, http, auth). */
+async function comTempo(fn){
   const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
-  try{
-    const r = await fetch(db + '/' + caminho + '.json' + (token ? '?auth=' + encodeURIComponent(token) : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal: ctl.signal, cache: 'no-store'});
-    if (r.status === 401 || r.status === 403) throw erroNuvem('negado');
-    if (!r.ok) throw erroNuvem('http');
-    return await r.json();
-  }catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
+  try{ return await fn(ctl.signal); }
+  catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
   finally{ clearTimeout(to); }
 }
+const nuvem = (db, metodo, caminho, corpo, token) => comTempo(async signal => {
+  const r = await fetch(db + '/' + caminho + '.json' + (token ? '?auth=' + encodeURIComponent(token) : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal, cache: 'no-store'});
+  if (r.status === 401 || r.status === 403) throw erroNuvem('negado');
+  if (!r.ok) throw erroNuvem('http');
+  return r.json();
+});
 function aviso(sel, msg, tipo){ const e = $(sel); e.textContent = tr(msg || ''); e.className = 'aviso' + (tipo ? ' ' + tipo : ''); }
 function lembrarCamp(id, db, nome, org){
   cpMeus = cpMeus.filter(c => c.id !== id); cpMeus.unshift({id, db, nome, org: !!org}); cpMeus = cpMeus.slice(0, 30); store.set('cpmeus', cpMeus);
@@ -33,19 +36,16 @@ function lerConvite(){
   return c;
 }
 CP.convite = lerConvite();
-window.addEventListener('hashchange', () => { const c = lerConvite(); if (c){ document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); }); abrirLobby(c.id, c.db); } });
+window.addEventListener('hashchange', () => { const c = lerConvite(); if (c){ fecharTodos('ov-splash'); abrirLobby(c.id, c.db); } });
 
 /* ---- login do organizador: nome + senha (Firebase Auth, sem e-mail de verdade) ---- */
-async function authChamar(url, corpo){
-  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
-  try{
-    const r = await fetch(url, {method: 'POST', body: JSON.stringify(corpo), signal: ctl.signal, headers: {'Content-Type': 'application/json'}});
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok) throw Object.assign(new Error('auth'), {cod: 'auth', auth: (j.error && j.error.message) || 'ERRO'});
-    return j;
-  }catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
-  finally{ clearTimeout(to); }
-}
+const authChamar = (url, corpo) => comTempo(async signal => {
+  const r = await fetch(url, {method: 'POST', body: JSON.stringify(corpo), signal, headers: {'Content-Type': 'application/json'}});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error('auth'), {cod: 'auth', auth: (j.error && j.error.message) || 'ERRO'});
+  return j;
+});
+const esquecerAuth = () => { cpAuth = null; store.set('cpauth', null); };
 function guardarAuth(j, key, nome){
   cpAuth = {uid: j.localId, key, nome, refresh: j.refreshToken, token: j.idToken, exp: Date.now() + (parseInt(j.expiresIn, 10) || 3600) * 1000};
   store.set('cpauth', cpAuth);
@@ -65,7 +65,7 @@ async function tokenOrganizador(){
     cpAuth.token = j.id_token; cpAuth.refresh = j.refresh_token || cpAuth.refresh; cpAuth.exp = Date.now() + (parseInt(j.expires_in, 10) || 3600) * 1000; store.set('cpauth', cpAuth);
     return cpAuth.token;
   }catch(e){
-    if (e.cod === 'auth'){ cpAuth = null; store.set('cpauth', null); return null; }
+    if (e.cod === 'auth'){ esquecerAuth(); return null; }
     throw e;
   }
 }
@@ -95,11 +95,10 @@ function renderCpLista(){
   const l = $('#cpLista'); l.innerHTML = '';
   if (!cpMeus.length){ l.innerHTML = '<p class="vazio2">' + tr('Você ainda não está em nenhum campeonato.') + '</p>'; return; }
   cpMeus.forEach(c => {
-    const d = document.createElement('div'); d.className = 'cust';
-    const sp = document.createElement('span'); sp.textContent = c.nome + (c.org ? ' · ' + tr('organizador') : ''); d.appendChild(sp);
-    const ab = document.createElement('button'); ab.className = 'ib'; ab.innerHTML = ic('play'); ab.setAttribute('aria-label', tr('Abrir') + ': ' + c.nome); ab.onclick = () => { fechar('camps'); abrirLobby(c.id, c.db); }; d.appendChild(ab);
-    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', tr('Tirar da lista') + ': ' + c.nome);
-    rm.onclick = () => { cpMeus = cpMeus.filter(x => x.id !== c.id); store.set('cpmeus', cpMeus); renderCpLista(); }; d.appendChild(rm);
+    const d = mk('div', 'cust');
+    d.append(mk('span', '', c.nome + (c.org ? ' · ' + tr('organizador') : '')),
+      icBtn('play', tr('Abrir') + ': ' + c.nome, () => { fechar('camps'); abrirLobby(c.id, c.db); }),
+      icBtn('trash', tr('Tirar da lista') + ': ' + c.nome, () => { cpMeus = cpMeus.filter(x => x.id !== c.id); store.set('cpmeus', cpMeus); renderCpLista(); }));
     l.appendChild(d);
   });
 }
@@ -114,7 +113,7 @@ function abrirCamps(){
   $('#cpNome').value = cpNome; $('#cpDb').value = cpDb; $('#cpChave').value = cpChave === NUVEM_CHAVE ? '' : cpChave; $('#cpCfg').open = !cpDb && !cpMeus.length;
   renderOrg(); aviso('#cpAviso', ''); renderCpLista(); cpDescarregar(); abrir('camps');
 }
-$('#cpSair').onclick = () => { cpAuth = null; store.set('cpauth', null); $('#cpNome').disabled = false; renderOrg(); aviso('#cpAviso', 'Saiu do modo organizador neste aparelho. Os campeonatos que você criou continuam no ar.', 'ok'); };
+$('#cpSair').onclick = () => { esquecerAuth(); $('#cpNome').disabled = false; renderOrg(); aviso('#cpAviso', 'Saiu do modo organizador neste aparelho. Os campeonatos que você criou continuam no ar.', 'ok'); };
 function exigirNome(sel, av){
   const n = limparNome($(sel).value);
   if (!nomeValido(n)){ aviso(av, 'Digite o seu nome (pelo menos 2 letras).', 'erro'); $(sel).focus(); return false; }
@@ -125,7 +124,7 @@ $('#cpDbSalvar').onclick = () => {
   if (!v){ aviso('#cpAviso', 'Endereço inválido. Ele deve começar com https:// e terminar em firebaseio.com ou firebasedatabase.app.', 'erro'); return; }
   const k = $('#cpChave').value.trim();
   if (k && !/^[A-Za-z0-9_-]{20,80}$/.test(k)){ aviso('#cpAviso', 'A chave da API parece errada.', 'erro'); return; }
-  if (v !== cpDb || (k || NUVEM_CHAVE) !== cpChave){ cpAuth = null; store.set('cpauth', null); }
+  if (v !== cpDb || (k || NUVEM_CHAVE) !== cpChave) esquecerAuth();
   cpDb = v; store.set('cpdb', v); cpChave = k || NUVEM_CHAVE; store.set('cpchave', k);
   $('#cpDb').value = v; renderOrg(); aviso('#cpAviso', 'Salvo.', 'ok');
 };

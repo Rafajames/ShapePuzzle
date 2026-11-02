@@ -106,19 +106,18 @@ function prepararDialogos(){
 const abrir = id => { $('#ov-' + id).classList.add('on'); if (window.atualizarTuto) atualizarTuto(); };
 const fechar = id => { $('#ov-' + id).classList.remove('on'); if (window.atualizarTuto) atualizarTuto(); };
 const fmtTempo = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-const fmtJog = n => tr(n + (n === 1 ? ' jogada' : ' jogadas'));
+const qtd = (n, um, varios) => tr(n + (n === 1 ? um : varios));   /* "1 dia" / "3 dias" */
+const fmtJog = n => qtd(n, ' jogada', ' jogadas');
 const pad2 = n => String(n).padStart(2, '0');
 const fmtData = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 const dataHoje = () => fmtData(new Date());
 const dataCurta = iso => iso.slice(8, 10) + '/' + iso.slice(5, 7);
 
 function pecaEl(formato, id, tam){
-  const el = document.createElement('div');
-  el.className = 'pg ' + tam;
+  const el = mk('div', 'pg ' + tam);
   el.style.setProperty('--w', formato[0].length);
   for (const linha of formato) for (const v of linha){
-    const c = document.createElement('div');
-    c.className = 'pc' + (v ? '' : ' e');
+    const c = mk('div', 'pc' + (v ? '' : ' e'));
     c.style.setProperty('--c', COR[id]); if (v) c.dataset.s = id;
     el.appendChild(c);
   }

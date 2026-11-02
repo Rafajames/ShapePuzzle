@@ -18,15 +18,14 @@ $('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash')
 /* ---- menu ---- */
 function renderDiario(){
   const hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
-  $('#diaSub').textContent = dataCurta(hoje) + ' · ' + tr('um desafio novo por dia') + (seq ? ' · 🔥 ' + tr(seq + (seq === 1 ? ' dia' : ' dias')) : '');
+  $('#diaSub').textContent = dataCurta(hoje) + ' · ' + tr('um desafio novo por dia') + (seq ? ' · 🔥 ' + qtd(seq, ' dia', ' dias') : '');
   $('#diaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : tr('Jogar');
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
   BUILTIN.forEach((f, i) => {
     const feito = prog.done.includes(i), trancada = i > prog.max && !modoTeste;
-    const b = document.createElement('button');
-    b.className = 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : '');
+    const b = mk('button', 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : ''));
     b.disabled = trancada;
     b.innerHTML = `<span>${i + 1}</span>` + (feito ? ic('check') : '') + (trancada ? ic('lock') : '') + (feito && estrelasFase[i] ? `<span class="est" aria-hidden="true">${'★'.repeat(estrelasFase[i])}</span>` : '');
     b.setAttribute('aria-label', tr('Fase ' + (i + 1)) + (feito ? ', ' + tr('concluída') + (estrelasFase[i] ? ', ' + tr(estrelasFase[i] === 1 ? '1 estrela de 3' : estrelasFase[i] + ' estrelas de 3') : '') : '') + (trancada ? ', ' + tr('bloqueada') : ''));
@@ -46,14 +45,12 @@ function renderCustom(){
   const l = $('#customList'); l.innerHTML = '';
   if (!custom.length){ l.innerHTML = '<p class="vazio2">' + tr('Você ainda não criou nenhuma fase.') + '</p>'; return; }
   custom.forEach((f, i) => {
-    const r = document.createElement('div'); r.className = 'cust';
-    r.innerHTML = '<span></span>';
-    r.firstChild.textContent = f.nome;
-    const mk = (icone, label, fn) => { const b = document.createElement('button'); b.className = 'ib'; b.setAttribute('aria-label', tr(label) + ': ' + f.nome); b.title = tr(label); b.innerHTML = ic(icone); b.onclick = fn; r.appendChild(b); };
-    mk('play', 'Jogar', () => { fechar('menu'); carregar({k: 'c', i}); });
-    mk('share', 'Compartilhar', () => compartilhar('Shape Puzzle', `Tente a fase "${f.nome}" que eu criei no Shape Puzzle!`, urlFase(f.text, f.nome)));
-    mk('download', 'Exportar', () => baixar(f.nome, f.text));
-    mk('trash', 'Apagar', () => { if (confirm(tr('Apagar a fase "{nome}"?', {nome: f.nome}))){ custom.splice(i, 1); store.set('custom', custom); if (S.cur.k === 'c') carregar({k: 'b', i: 0}); renderCustom(); } });
+    const r = mk('div', 'cust'); r.append(mk('span', '', f.nome));
+    const add = (icone, label, fn) => r.appendChild(icBtn(icone, tr(label) + ': ' + f.nome, fn, tr(label)));
+    add('play', 'Jogar', () => { fechar('menu'); carregar({k: 'c', i}); });
+    add('share', 'Compartilhar', () => compartilhar('Shape Puzzle', `Tente a fase "${f.nome}" que eu criei no Shape Puzzle!`, urlFase(f.text, f.nome)));
+    add('download', 'Exportar', () => baixar(f.nome, f.text));
+    add('trash', 'Apagar', () => { if (confirm(tr('Apagar a fase "{nome}"?', {nome: f.nome}))){ custom.splice(i, 1); store.set('custom', custom); if (S.cur.k === 'c') carregar({k: 'b', i: 0}); renderCustom(); } });
     l.appendChild(r);
   });
 }
@@ -108,7 +105,7 @@ function salvarCustom(nome, text){
   store.set('custom', custom);
 }
 function baixar(nome, texto){
-  const a = document.createElement('a');
+  const a = mk('a');
   a.href = URL.createObjectURL(new Blob([texto], {type: 'text/plain'}));
   a.download = (nome || 'fase') + '.txt'; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);

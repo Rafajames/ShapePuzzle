@@ -14,7 +14,7 @@ function abrirCriar(edit){
   } else if (CR.fases.length && CR.veioDeEdicao){ CR.fases = []; }
   CR.veioDeEdicao = !!edit;
   const sel = $('#crFonte'); sel.innerHTML = '';
-  const grupo = (rot, itens) => { if (!itens.length) return; const g = document.createElement('optgroup'); g.label = tr(rot); itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
+  const grupo = (rot, itens) => { if (!itens.length) return; const g = mk('optgroup'); g.label = tr(rot); itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
   grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6, fila)')]]);
   grupo('Fases do jogo', BUILTIN.map((f, i) => ['b:' + i, tr('Fase ' + (i + 1))]));
   grupo('Minhas fases', custom.map((f, i) => ['c:' + i, f.nome]));
@@ -24,9 +24,8 @@ function abrirCriar(edit){
 function renderCriar(){
   const l = $('#crFases'); l.innerHTML = '';
   CR.fases.forEach((f, i) => {
-    const d = document.createElement('div'); d.className = 'cust';
-    const sp = document.createElement('span'); sp.textContent = (i + 1) + '. ' + tr(f.nome); d.appendChild(sp);
-    const rm = document.createElement('button'); rm.className = 'ib'; rm.innerHTML = ic('trash'); rm.setAttribute('aria-label', tr('Remover') + ': ' + tr(f.nome)); rm.onclick = () => { CR.fases.splice(i, 1); renderCriar(); }; d.appendChild(rm);
+    const d = mk('div', 'cust');
+    d.append(mk('span', '', (i + 1) + '. ' + tr(f.nome)), icBtn('trash', tr('Remover') + ': ' + tr(f.nome), () => { CR.fases.splice(i, 1); renderCriar(); }));
     l.appendChild(d);
   });
   $('#crQtd').textContent = CR.fases.length;
@@ -98,8 +97,8 @@ function renderLobby(){
   const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
   $('#lbTitulo').textContent = c.nome;
   $('#lbSub').innerHTML = '';
-  $('#lbSub').append(tr('Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código', {org: c.org, n, max: c.max, fases: tr(c.fases.length + (c.fases.length === 1 ? ' fase' : ' fases')), prazo: prazoTxt(c.fim), modo: tr(c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez')}) + ' ');
-  const cod = document.createElement('span'); cod.className = 'cod'; cod.textContent = CP.id; $('#lbSub').appendChild(cod);
+  $('#lbSub').append(tr('Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código', {org: c.org, n, max: c.max, fases: qtd(c.fases.length, ' fase', ' fases'), prazo: prazoTxt(c.fim), modo: tr(c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez')}) + ' ');
+  $('#lbSub').appendChild(mk('span', 'cod', CP.id));
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
   const dono = souDono(), vazio = n === 0;
   $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid; if (dono){ $('#lbSouOrgForm').hidden = true; }
@@ -109,22 +108,18 @@ function renderLobby(){
   if (!eu && n >= c.max) aviso('#lbAviso', 'Este campeonato já está com todas as vagas preenchidas.', 'erro');
   const l = $('#lbFases'); l.innerHTML = '';
   c.fases.forEach((f, i) => {
-    const r = eu && eu.f && eu.f[i], d = document.createElement('div'); d.className = 'lf' + (r ? ' ok' : '');
-    const sp = document.createElement('span'); sp.append((i + 1) + '. ' + tr(f.nome));
-    const sm = document.createElement('small'); sm.textContent = r ? '✓ ' + fmtTempo(r.t) + ' · ' + fmtJog(r.j) : tr('Ainda não jogada'); sp.appendChild(sm); d.appendChild(sp);
-    const b = document.createElement('button'); b.className = 'btn sm' + (r ? '' : ' pri');
-    b.textContent = tr(r ? (c.modo === 'melhor' ? 'Melhorar' : 'Feita') : 'Jogar');
-    b.disabled = encerrado || (r && c.modo === 'primeira'); b.onclick = () => jogarFaseCamp(i); d.appendChild(b); l.appendChild(d);
+    const r = eu && eu.f && eu.f[i], d = mk('div', 'lf' + (r ? ' ok' : '')), sp = mk('span');
+    sp.append((i + 1) + '. ' + tr(f.nome), mk('small', '', r ? '✓ ' + fmtTempo(r.t) + ' · ' + fmtJog(r.j) : tr('Ainda não jogada')));
+    const b = mk('button', 'btn sm' + (r ? '' : ' pri'), tr(r ? (c.modo === 'melhor' ? 'Melhorar' : 'Feita') : 'Jogar'));
+    b.disabled = encerrado || (r && c.modo === 'primeira'); b.onclick = () => jogarFaseCamp(i); d.append(sp, b); l.appendChild(d);
   });
   const rk = rankear(c, CP.jogs), caixa = $('#lbRank'); caixa.innerHTML = '';
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
-    const d = document.createElement('div'); d.className = 'rk' + (r.key === key ? ' eu' : '');
-    const medalha = r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º');
-    const a = document.createElement('span'); a.className = 'pos'; a.textContent = medalha;
-    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = r.nome;
-    const tm = document.createElement('span'); tm.className = 'tm'; tm.textContent = r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '');
-    d.append(a, nm, tm); caixa.appendChild(d);
+    const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
+    d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')), mk('span', 'nm', r.nome),
+      mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
+    caixa.appendChild(d);
   });
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');
 }
@@ -147,7 +142,7 @@ $('#lbSenhaOk').onclick = async () => {
   const c = CP.camp; if (!c) return;
   try{
     await authEntrar(c.org, $('#lbSenha').value, false);
-    if (cpAuth.uid !== c.uid){ cpAuth = null; store.set('cpauth', null); aviso('#lbAviso', 'Essa conta de organizador não é a dona deste campeonato.', 'erro'); return; }
+    if (cpAuth.uid !== c.uid){ esquecerAuth(); aviso('#lbAviso', 'Essa conta de organizador não é a dona deste campeonato.', 'erro'); return; }
     $('#lbSenha').value = ''; aviso('#lbAviso', 'Pronto: você está como organizador neste aparelho.', 'ok'); renderLobby();
   }catch(e){ aviso('#lbAviso', msgNuvem(e), 'erro'); }
 };
@@ -167,12 +162,12 @@ $('#lbExcluir').onclick = async () => {
 $('#lbAtualizar').onclick = async () => { aviso('#lbAviso', 'Atualizando…'); const msgAtu = $('#lbAviso').textContent; await atualizarLobby(); if ($('#lbAviso').textContent === msgAtu) aviso('#lbAviso', ''); };
 $('#lbConvidar').onclick = () => {
   const c = CP.camp; if (!c) return;
-  compartilhar('Shape Puzzle — campeonato', tr('Venha disputar o campeonato "{nome}" no Shape Puzzle! {fases}, ganha quem for mais rápido. Código: {id}', {nome: c.nome, fases: tr(c.fases.length + (c.fases.length === 1 ? ' fase' : ' fases')), id: CP.id}), urlConvite(CP.id, CP.db));
+  compartilhar('Shape Puzzle — campeonato', tr('Venha disputar o campeonato "{nome}" no Shape Puzzle! {fases}, ganha quem for mais rápido. Código: {id}', {nome: c.nome, fases: qtd(c.fases.length, ' fase', ' fases'), id: CP.id}), urlConvite(CP.id, CP.db));
 };
 function jogarFaseCamp(i){
   const c = CP.camp, f = c.fases[i]; if (!f) return;
   if (c.fim && Date.now() > c.fim){ toast('O prazo deste campeonato acabou.'); return; }
-  document.querySelectorAll('.ov.on').forEach(o => o.classList.remove('on'));
+  fecharTodos();
   carregar({k: 'x', camp: CP.id, db: CP.db, campNome: c.nome, idx: i, total: c.fases.length, modo: c.modo, fim: c.fim, nome: f.nome, text: f.text});
   toast('Valendo! O tempo já está correndo e as dicas ficam desligadas.');
 }
