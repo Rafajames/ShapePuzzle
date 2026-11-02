@@ -60,9 +60,15 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 - Ao atualizar, o jogo apaga o cache e recarrega; o progresso, as estrelas e os ajustes ficam guardados. A fase em andamento recomeça, e durante um campeonato a atualização espera.
 - **Para publicar uma versão nova:** aumente a constante `VERSAO` no `index.html` (formato `AAAA.MM.DD.N`, ex.: `2026.11.02.1`). Sem isso, o jogo não percebe que há novidade. O GitHub Pages pode levar alguns minutos para mostrar o arquivo novo.
 
+## Modo infinito, estatísticas e backup
+
+- **Modo infinito** (Menu → Modo infinito): o jogo cria fases novas na hora, sempre com solução única garantida. Cinco níveis — Fácil, Médio, Difícil, Mestre e Surpresa — cada um com sua contagem. A fase em andamento é lembrada; as fases difíceis são geradas em segundo plano (Web Worker) enquanto você joga a anterior.
+- **Estatísticas** (Menu → Estatísticas): tempo jogado, vitórias, jogadas, dicas, fases e estrelas, melhores tempos, sequência de dias da fase do dia, progresso no infinito e fases criadas. Tudo fica só no aparelho.
+- **Backup do progresso** (Menu → Backup do progresso): gera um **código** (copiar/colar) ou um **arquivo** `.json` com progresso, estrelas, recordes, fases criadas, estatísticas, infinito e ajustes. Para restaurar, cole o código ou escolha o arquivo e decida entre **Juntar** (mantém o melhor dos dois lados e não mexe nos ajustes do aparelho) ou **Substituir**. O backup **nunca** leva senhas, logins de organizador nem o modo de teste, e o código tem verificação contra cópia incompleta.
+
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução, QR code e atualização). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução, QR code, atualização, modo infinito, estatísticas e backup). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
 
 ## Extras de jogo
 

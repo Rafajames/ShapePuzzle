@@ -143,6 +143,7 @@ body.compacto .reserva{margin-top:8px;padding:8px}body.compacto .reserva h2{marg
 .solp{position:absolute;inset:5%;border-radius:24%;background:var(--c);z-index:3;pointer-events:none;box-shadow:0 0 0 2px var(--gokln),0 0 12px var(--c);animation:solIn .35s ease-out}
 @keyframes solIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
 body.rm .solp{animation:none}
+body.rm .spin{animation:none}
 .pw.dicaP{border-color:#ffd24a;box-shadow:0 0 0 4px rgba(255,210,74,.28);animation:pulse 1s infinite}
 body.rm .pw.dicaP{animation:none}
 .cell.alerta .fill{outline:3px solid #ff5a6e;animation:pulse .7s infinite}
@@ -251,6 +252,22 @@ details.cfg summary{cursor:pointer;font-weight:600}
 #toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:120;background:var(--toast);border:1px solid var(--line);color:var(--txt);
   padding:11px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+#ger{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:130;display:flex;gap:12px;align-items:center;padding:16px 20px;border-radius:16px;
+  background:var(--card1);border:1px solid var(--accent);box-shadow:0 12px 40px var(--shc);color:var(--txt);font-size:15px;font-weight:600}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:giro 0.9s linear infinite}
+@keyframes giro{to{transform:rotate(360deg)}}
+.inflista{display:grid;gap:8px;margin-top:14px}
+.infop{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--t1);color:var(--txt);cursor:pointer;font-family:inherit}
+.infop:hover{background:var(--t2)}
+.infop .dtx{flex:1;display:flex;flex-direction:column;gap:2px;font-size:16px;font-weight:700}
+.infop small{color:var(--mut);font-size:12px;font-weight:500}
+.infop .qt{font-size:12px;font-weight:700;color:var(--ok);white-space:nowrap}
+.estg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sv{padding:12px;border-radius:14px;background:var(--t1);border:1px solid var(--line)}
+.sv b{display:block;font-size:22px;line-height:1.15;font-variant-numeric:tabular-nums}
+.sv span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
+#bkCodigo,#bkCola{resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all}
 #upd{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:110;width:min(94vw,460px);display:flex;flex-wrap:wrap;gap:8px;align-items:center;
   padding:12px 14px;border-radius:16px;background:var(--card1);border:1px solid var(--accent);box-shadow:0 12px 40px var(--shc);color:var(--txt);font-size:14px;animation:fade .25s}
 #upd span{flex:1 1 100%;line-height:1.4}
@@ -369,6 +386,7 @@ body.rm #mao.on{opacity:1}
 <div id="flut" hidden></div>
 <div id="mao" aria-hidden="true"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="ger" role="status" hidden><i class="spin"></i><span id="gerTxt">Gerando uma fase nova…</span></div>
 <div id="upd" role="status" hidden>
   <span id="updTxt"></span>
   <button class="btn sm pri" id="updSim" data-i="download">Atualizar o jogo</button>
@@ -400,6 +418,8 @@ body.rm #mao.on{opacity:1}
     <h1>Fases</h1>
     <p>Complete uma fase para liberar a próxima.</p>
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
+    <button class="daily" id="btnInf"><em data-i="infinity"></em><span class="dtx"><b>Modo infinito</b><small>Fases novas sem parar, do fácil ao mestre</small></span></button>
+    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
     <button class="daily" id="btnCamp"><em data-i="trophy"></em><span class="dtx"><b>Campeonatos</b><small>Desafie amigos, família e grupos com ranking</small></span></button>
     <h2>Fases do jogo</h2>
     <div class="tiles" id="tiles"></div>
@@ -457,6 +477,9 @@ body.rm #mao.on{opacity:1}
       <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
       <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
     </div>
+    <h2>Backup</h2>
+    <p style="margin:0">Leve o seu progresso para outro aparelho ou guarde uma cópia.</p>
+    <div class="acts" style="margin-top:8px"><button class="btn" id="btnBackup" data-i="download" style="width:100%">Backup do progresso</button></div>
     <h2>Atualização</h2>
     <p id="verTxt" style="margin:0 0 4px"></p>
     <div class="acts" style="margin-top:8px"><button class="btn" id="btnAtualizar" data-i="reset" style="width:100%">Verificar atualizações</button></div>
@@ -641,6 +664,56 @@ body.rm #mao.on{opacity:1}
     <div id="shQRBox" hidden>
       <canvas id="shQRCanvas" role="img" aria-label="QR code com o link" width="1" height="1"></canvas>
       <p>Aponte a câmera de outro celular para abrir direto.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modo infinito -->
+<div class="ov" id="ov-inf">
+  <div class="card">
+    <button class="ib x" data-close="inf" data-i="close" aria-label="Fechar"></button>
+    <h1>Modo infinito</h1>
+    <p>Fases novas sem parar, sempre com uma única solução. Escolha a dificuldade:</p>
+    <div id="infLista" class="inflista"></div>
+  </div>
+</div>
+
+<!-- Estatísticas -->
+<div class="ov" id="ov-stats">
+  <div class="card">
+    <button class="ib x" data-close="stats" data-i="close" aria-label="Fechar"></button>
+    <h1>Estatísticas</h1>
+    <div id="estCorpo"></div>
+  </div>
+</div>
+
+<!-- Backup -->
+<div class="ov" id="ov-backup">
+  <div class="card">
+    <button class="ib x" data-close="backup" data-i="close" aria-label="Fechar"></button>
+    <h1>Backup do progresso</h1>
+    <p>O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas nem a conexão dos campeonatos.</p>
+    <h2>Salvar</h2>
+    <textarea class="field" id="bkCodigo" readonly rows="3" aria-label="Código do backup"></textarea>
+    <div class="acts">
+      <button class="btn pri" id="bkCopiar" data-i="copy">Copiar código</button>
+      <button class="btn" id="bkBaixar" data-i="download">Baixar arquivo</button>
+    </div>
+    <h2>Restaurar</h2>
+    <textarea class="field" id="bkCola" rows="3" placeholder="Cole aqui o código do backup" aria-label="Código para restaurar"></textarea>
+    <div class="acts">
+      <button class="btn" id="bkArqBtn" data-i="upload">Escolher arquivo…</button>
+      <button class="btn pri" id="bkConferir" data-i="check">Conferir backup</button>
+    </div>
+    <input type="file" id="bkArq" accept=".json,.txt,text/plain,application/json" hidden>
+    <p class="aviso" id="bkAviso" role="status" aria-live="polite"></p>
+    <div id="bkResumo" hidden>
+      <p id="bkTxt" style="color:var(--txt)"></p>
+      <div class="acts">
+        <button class="btn pri" id="bkJuntar" data-i="swap">Juntar com o meu progresso</button>
+        <button class="btn danger" id="bkSubst" data-i="trash">Substituir tudo</button>
+      </div>
+      <p style="margin-top:8px;font-size:12px">Juntar mantém o melhor dos dois. Substituir apaga o que há neste aparelho.</p>
     </div>
   </div>
 </div>
@@ -1046,6 +1119,87 @@ en: {
   "Tem uma versão nova do jogo.": "There is a new version of the game.",
   "A fase em andamento recomeça ao atualizar.": "The level in progress restarts when you update.",
   "Termine o campeonato antes de atualizar.": "Finish the tournament before updating.",
+  "Modo infinito": "Endless mode",
+  "Fases novas sem parar, do fácil ao mestre": "Endless new levels, from easy to master",
+  "Estatísticas": "Statistics",
+  "Suas marcas, estrelas e sequência de dias": "Your records, stars and daily streak",
+  "Backup": "Backup",
+  "Leve o seu progresso para outro aparelho ou guarde uma cópia.": "Take your progress to another device or keep a copy.",
+  "Backup do progresso": "Progress backup",
+  "Fases novas sem parar, sempre com uma única solução. Escolha a dificuldade:": "New levels non-stop, each with a single solution. Pick the difficulty:",
+  "O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas nem a conexão dos campeonatos.": "The code keeps completed levels, stars, records, daily levels, created levels, statistics and settings. It does not include passwords or the tournament connection.",
+  "Restaurar": "Restore",
+  "Copiar código": "Copy code",
+  "Baixar arquivo": "Download file",
+  "Cole aqui o código do backup": "Paste the backup code here",
+  "Código do backup": "Backup code",
+  "Código para restaurar": "Code to restore",
+  "Escolher arquivo…": "Choose file…",
+  "Conferir backup": "Check backup",
+  "Juntar com o meu progresso": "Merge with my progress",
+  "Substituir tudo": "Replace everything",
+  "Juntar mantém o melhor dos dois. Substituir apaga o que há neste aparelho.": "Merging keeps the best of both. Replacing erases what is on this device.",
+  "Gerando uma fase nova…": "Generating a new level…",
+  "Não consegui gerar uma fase agora. Tente de novo.": "I couldn't generate a level right now. Try again.",
+  "Infinito {n}": "Endless {n}",
+  "Infinito {n} concluído!": "Endless {n} complete!",
+  "Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?": "Look at this level from Shape Puzzle's endless mode. Can you solve it?",
+  "Mudar dificuldade": "Change difficulty",
+  "Fácil": "Easy",
+  "Médio": "Medium",
+  "Difícil": "Hard",
+  "Mestre": "Master",
+  "Crescente": "Rising",
+  "Começa fácil e sobe a cada 5 fases": "Starts easy and goes up every 5 levels",
+  "5×5, com muitas estrelas-guia": "5×5, with many guide stars",
+  "5×5, com poucas estrelas-guia": "5×5, with few guide stars",
+  "6×6, só 3 peças por vez": "6×6, only 3 pieces at a time",
+  "7×7, só 2 peças por vez": "7×7, only 2 pieces at a time",
+  "1 feita": "1 done",
+  "{n} feitas": "{n} done",
+  "Geral": "Overall",
+  "Seus melhores tempos": "Your best times",
+  "Criação": "Creating",
+  "Tempo jogado": "Time played",
+  "Fases vencidas": "Levels won",
+  "Jogadas": "Moves",
+  "Dicas usadas": "Hints used",
+  "Soluções vistas": "Solutions viewed",
+  "Jogando desde": "Playing since",
+  "Fases concluídas": "Levels completed",
+  "Estrelas": "Stars",
+  "Fases com 3 estrelas": "Levels with 3 stars",
+  "Fase mais adiantada": "Furthest level",
+  "Dias jogados": "Days played",
+  "Sequência atual": "Current streak",
+  "Maior sequência": "Longest streak",
+  "Melhor tempo": "Best time",
+  "Fases feitas": "Levels done",
+  "Fases criadas": "Levels created",
+  "{h} h {m} min": "{h} h {m} min",
+  "{m} min": "{m} min",
+  "menos de 1 min": "less than 1 min",
+  "{n} fases concluídas": "{n} levels completed",
+  "{n} estrelas": "{n} stars",
+  "{n} recordes": "{n} records",
+  "1 fase criada": "1 level created",
+  "{n} fases criadas": "{n} levels created",
+  "1 dia da fase do dia": "1 daily level day",
+  "{n} dias da fase do dia": "{n} daily level days",
+  "modo infinito: {n} fases": "endless mode: {n} levels",
+  "Backup de {data}:": "Backup from {data}:",
+  "Cole o código ou escolha um arquivo primeiro.": "Paste the code or choose a file first.",
+  "Esse texto é grande demais para ser um backup.": "This text is too big to be a backup.",
+  "Esse código não parece um backup do Shape Puzzle.": "This code doesn't look like a Shape Puzzle backup.",
+  "O código está incompleto ou foi alterado. Copie de novo, inteiro.": "The code is incomplete or was changed. Copy it again, in full.",
+  "Esse arquivo é grande demais para ser um backup.": "This file is too big to be a backup.",
+  "Não consegui ler esse arquivo.": "I couldn't read that file.",
+  "Isso não parece um backup do Shape Puzzle.": "That doesn't look like a Shape Puzzle backup.",
+  "Esse backup é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "This backup is from a version this game doesn't know. Update the game and try again.",
+  "Esse backup está vazio.": "This backup is empty.",
+  "Código copiado! Guarde onde quiser (ou mande para você mesmo).": "Code copied! Keep it wherever you like (or send it to yourself).",
+  "Backup restaurado! Reiniciando o jogo…": "Backup restored! Restarting the game…",
+  "Substituir todo o progresso e os ajustes deste aparelho pelo do backup?": "Replace all progress and settings on this device with the backup?",
 },
 es: {
   "Girar": "Girar",
@@ -1426,6 +1580,87 @@ es: {
   "Tem uma versão nova do jogo.": "Hay una versión nueva del juego.",
   "A fase em andamento recomeça ao atualizar.": "El nivel en curso se reinicia al actualizar.",
   "Termine o campeonato antes de atualizar.": "Termina el torneo antes de actualizar.",
+  "Modo infinito": "Modo infinito",
+  "Fases novas sem parar, do fácil ao mestre": "Niveles nuevos sin parar, del fácil al maestro",
+  "Estatísticas": "Estadísticas",
+  "Suas marcas, estrelas e sequência de dias": "Tus marcas, estrellas y racha de días",
+  "Backup": "Copia de seguridad",
+  "Leve o seu progresso para outro aparelho ou guarde uma cópia.": "Lleva tu progreso a otro dispositivo o guarda una copia.",
+  "Backup do progresso": "Copia de seguridad del progreso",
+  "Fases novas sem parar, sempre com uma única solução. Escolha a dificuldade:": "Niveles nuevos sin parar, siempre con una única solución. Elige la dificultad:",
+  "O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas nem a conexão dos campeonatos.": "El código guarda niveles completados, estrellas, récords, nivel del día, niveles creados, estadísticas y ajustes. No incluye contraseñas ni la conexión de los torneos.",
+  "Restaurar": "Restaurar",
+  "Copiar código": "Copiar código",
+  "Baixar arquivo": "Descargar archivo",
+  "Cole aqui o código do backup": "Pega aquí el código de la copia",
+  "Código do backup": "Código de la copia",
+  "Código para restaurar": "Código para restaurar",
+  "Escolher arquivo…": "Elegir archivo…",
+  "Conferir backup": "Comprobar copia",
+  "Juntar com o meu progresso": "Combinar con mi progreso",
+  "Substituir tudo": "Reemplazar todo",
+  "Juntar mantém o melhor dos dois. Substituir apaga o que há neste aparelho.": "Combinar conserva lo mejor de ambos. Reemplazar borra lo que hay en este dispositivo.",
+  "Gerando uma fase nova…": "Generando un nivel nuevo…",
+  "Não consegui gerar uma fase agora. Tente de novo.": "No pude generar un nivel ahora. Inténtalo de nuevo.",
+  "Infinito {n}": "Infinito {n}",
+  "Infinito {n} concluído!": "¡Infinito {n} completado!",
+  "Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?": "Mira este nivel del modo infinito de Shape Puzzle. ¿Puedes resolverlo?",
+  "Mudar dificuldade": "Cambiar dificultad",
+  "Fácil": "Fácil",
+  "Médio": "Medio",
+  "Difícil": "Difícil",
+  "Mestre": "Maestro",
+  "Crescente": "Creciente",
+  "Começa fácil e sobe a cada 5 fases": "Empieza fácil y sube cada 5 niveles",
+  "5×5, com muitas estrelas-guia": "5×5, con muchas estrellas guía",
+  "5×5, com poucas estrelas-guia": "5×5, con pocas estrellas guía",
+  "6×6, só 3 peças por vez": "6×6, solo 3 piezas a la vez",
+  "7×7, só 2 peças por vez": "7×7, solo 2 piezas a la vez",
+  "1 feita": "1 hecho",
+  "{n} feitas": "{n} hechos",
+  "Geral": "General",
+  "Seus melhores tempos": "Tus mejores tiempos",
+  "Criação": "Creación",
+  "Tempo jogado": "Tiempo jugado",
+  "Fases vencidas": "Niveles ganados",
+  "Jogadas": "Jugadas",
+  "Dicas usadas": "Pistas usadas",
+  "Soluções vistas": "Soluciones vistas",
+  "Jogando desde": "Jugando desde",
+  "Fases concluídas": "Niveles completados",
+  "Estrelas": "Estrellas",
+  "Fases com 3 estrelas": "Niveles con 3 estrellas",
+  "Fase mais adiantada": "Nivel más avanzado",
+  "Dias jogados": "Días jugados",
+  "Sequência atual": "Racha actual",
+  "Maior sequência": "Racha más larga",
+  "Melhor tempo": "Mejor tiempo",
+  "Fases feitas": "Niveles hechos",
+  "Fases criadas": "Niveles creados",
+  "{h} h {m} min": "{h} h {m} min",
+  "{m} min": "{m} min",
+  "menos de 1 min": "menos de 1 min",
+  "{n} fases concluídas": "{n} niveles completados",
+  "{n} estrelas": "{n} estrellas",
+  "{n} recordes": "{n} récords",
+  "1 fase criada": "1 nivel creado",
+  "{n} fases criadas": "{n} niveles creados",
+  "1 dia da fase do dia": "1 día del nivel del día",
+  "{n} dias da fase do dia": "{n} días del nivel del día",
+  "modo infinito: {n} fases": "modo infinito: {n} niveles",
+  "Backup de {data}:": "Copia del {data}:",
+  "Cole o código ou escolha um arquivo primeiro.": "Pega el código o elige un archivo primero.",
+  "Esse texto é grande demais para ser um backup.": "Este texto es demasiado grande para ser una copia.",
+  "Esse código não parece um backup do Shape Puzzle.": "Este código no parece una copia de Shape Puzzle.",
+  "O código está incompleto ou foi alterado. Copie de novo, inteiro.": "El código está incompleto o fue alterado. Cópialo de nuevo, entero.",
+  "Esse arquivo é grande demais para ser um backup.": "Este archivo es demasiado grande para ser una copia.",
+  "Não consegui ler esse arquivo.": "No pude leer ese archivo.",
+  "Isso não parece um backup do Shape Puzzle.": "Eso no parece una copia de Shape Puzzle.",
+  "Esse backup é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "Esta copia es de una versión que este juego no conoce. Actualiza el juego e inténtalo de nuevo.",
+  "Esse backup está vazio.": "Esta copia está vacía.",
+  "Código copiado! Guarde onde quiser (ou mande para você mesmo).": "¡Código copiado! Guárdalo donde quieras (o envíatelo a ti mismo).",
+  "Backup restaurado! Reiniciando o jogo…": "¡Copia restaurada! Reiniciando el juego…",
+  "Substituir todo o progresso e os ajustes deste aparelho pelo do backup?": "¿Reemplazar todo el progreso y los ajustes de este dispositivo por los de la copia?",
 }
 };
 /*DICT-END*/
@@ -1811,6 +2046,89 @@ function lerConviteHash(hash, dbSalvo){
   return db ? {id, db} : null;
 }
 
+
+/* ---- Sequências de dias da fase do dia (lógica pura) ---- */
+const diaNum = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : NaN; };
+function sequenciasDe(dias, hoje){
+  const nums = Object.keys(dias || {}).map(diaNum).filter(n => !isNaN(n)).sort((a, b) => a - b);
+  let maior = 0, run = 0, ant = null;
+  for (const n of nums){ run = ant !== null && n === ant + 1 ? run + 1 : 1; ant = n; if (run > maior) maior = run; }
+  const set = new Set(nums); let d = diaNum(hoje), atual = 0;
+  if (!isNaN(d)){ if (!set.has(d)) d--; while (set.has(d)){ atual++; d--; } }
+  return {atual, maior};
+}
+
+/* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
+const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
+const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'];
+const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
+const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };
+function limparBackup(env){
+  if (!isObj(env) || env.app !== 'shapepuzzle' || !isObj(env.dados)) return {erro: 'Isso não parece um backup do Shape Puzzle.'};
+  if (env.v !== 1) return {erro: 'Esse backup é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.'};
+  const d = env.dados, o = {};
+  if (isObj(d.prog)){ const done = Array.isArray(d.prog.done) ? [...new Set(d.prog.done.map(v => inteiro(v, 0, 999)))].sort((a, b) => a - b) : [];
+    o.prog = {max: inteiro(d.prog.max, 0, 999), done}; }
+  if (isObj(d.est)){ o.est = {}; for (const k of Object.keys(d.est)) if (/^\d{1,3}$/.test(k) && d.est[k] >= 1) o.est[k] = inteiro(d.est[k], 1, 3); }
+  if (isObj(d.rec)){ o.rec = {}; for (const k of Object.keys(d.rec)){ const r = d.rec[k];
+    if (/^[bcd]:.{1,40}$/.test(k) && isObj(r) && r.t > 0 && r.j > 0) o.rec[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 1, 99999)}; } }
+  if (isObj(d.dias)){ o.dias = {}; for (const k of Object.keys(d.dias)){ const r = d.dias[k];
+    if (!isNaN(diaNum(k)) && isObj(r) && r.t > 0) o.dias[k] = {t: inteiro(r.t, 1, 864e7), j: inteiro(r.j, 0, 99999), d: inteiro(r.d, 0, 999)}; } }
+  if (Array.isArray(d.custom)){ o.custom = []; const vistos = new Set();
+    for (const f of d.custom.slice(0, 100)){
+      if (!isObj(f) || typeof f.text !== 'string' || typeof f.nome !== 'string' || f.text.length > 3000 || vistos.has(f.text)) continue;
+      let ok = false; try{ ok = faseValida(f.text); }catch(e){}
+      const nome = f.nome.replace(/[<>]/g, '').trim().slice(0, 30);
+      if (ok && nome){ vistos.add(f.text); o.custom.push({nome, text: f.text}); } } }
+  if (isObj(d.stats)){ const s = d.stats, n = k => inteiro(s[k], 0, 1e13);
+    o.stats = {tempo: n('tempo'), vitorias: n('vitorias'), jogadas: n('jogadas'), dicas: n('dicas'), solucoes: n('solucoes'), desde: n('desde')}; }
+  if (isObj(d.inf)){ o.inf = {feitas: {}, porNivel: {}};
+    for (const k of BK_NIVEIS){
+      if (isObj(d.inf.feitas) && d.inf.feitas[k] > 0) o.inf.feitas[k] = inteiro(d.inf.feitas[k], 0, 1e7);
+      const p = isObj(d.inf.porNivel) ? d.inf.porNivel[k] : null;
+      if (isObj(p) && k !== 'crescente') o.inf.porNivel[k] = {n: inteiro(p.n, 0, 1e7), t: inteiro(p.t, 0, 864e7), est: inteiro(p.est, 0, 1e8), e3: inteiro(p.e3, 0, 1e7)}; } }
+  if (isObj(d.cfg)){ const c = d.cfg, q = {};
+    if (['pt', 'en', 'es'].includes(c.lang)) q.lang = c.lang;
+    if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
+    if (isObj(c.a11y)){ q.a11y = {}; for (const k of ['dalt', 'cont', 'texto', 'mov']) if (typeof c.a11y[k] === 'boolean') q.a11y[k] = c.a11y[k]; }
+    if (['auto', 'calma', 'animada', 'noturna'].includes(c.humor)) q.humor = c.humor;
+    if (c.pecas === 'auto' || (c.pecas >= 2 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 2, 99);
+    for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
+    if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;
+    o.cfg = q; }
+  const cheio = (o.prog && (o.prog.max > 0 || o.prog.done.length)) || (o.est && Object.keys(o.est).length) || (o.rec && Object.keys(o.rec).length) || (o.dias && Object.keys(o.dias).length)
+    || (o.custom && o.custom.length) || (o.stats && Object.values(o.stats).some(v => v > 0)) || (o.inf && (Object.keys(o.inf.feitas).length || Object.keys(o.inf.porNivel).length));
+  if (!cheio) return {erro: 'Esse backup está vazio.'};
+  return {dados: o, criado: typeof env.criado === 'string' ? env.criado.slice(0, 10) : ''};
+}
+function resumoBackup(d){
+  const inf = d.inf ? Object.values(d.inf.feitas || {}).reduce((a, b) => Math.max(a, b), 0) : 0;
+  return {fases: d.prog ? d.prog.done.length : 0, estrelas: d.est ? Object.values(d.est).reduce((a, b) => a + b, 0) : 0,
+    recordes: d.rec ? Object.keys(d.rec).length : 0, dias: d.dias ? Object.keys(d.dias).length : 0,
+    criadas: d.custom ? d.custom.length : 0, infinito: inf};
+}
+/* Junta o que já existe (a) com o do backup (b): fica o melhor dos dois. Os ajustes (cfg) de (a) não mudam. */
+function juntarDados(a, b){
+  const o = JSON.parse(JSON.stringify(a || {}));
+  if (b.prog){ const p = o.prog || {max: 0, done: []}; p.max = Math.max(p.max, b.prog.max); p.done = [...new Set([...p.done, ...b.prog.done])].sort((x, y) => x - y); o.prog = p; }
+  if (b.est){ o.est = o.est || {}; for (const k of Object.keys(b.est)) o.est[k] = Math.max(o.est[k] || 0, b.est[k]); }
+  if (b.rec){ o.rec = o.rec || {}; for (const k of Object.keys(b.rec)){ const x = o.rec[k], y = b.rec[k]; o.rec[k] = x ? {t: Math.min(x.t, y.t), j: Math.min(x.j, y.j)} : {t: y.t, j: y.j}; } }
+  if (b.dias){ o.dias = o.dias || {}; for (const k of Object.keys(b.dias)){ const x = o.dias[k], y = b.dias[k]; if (!x || y.t < x.t) o.dias[k] = {t: y.t, j: y.j, d: y.d}; } }
+  if (b.custom){ o.custom = o.custom || []; const textos = new Set(o.custom.map(f => f.text)), nomes = new Set(o.custom.map(f => f.nome));
+    for (const f of b.custom){ if (textos.has(f.text)) continue; let nome = f.nome, i = 2; while (nomes.has(nome)) nome = f.nome.slice(0, 26) + ' (' + (i++) + ')';
+      nomes.add(nome); textos.add(f.text); o.custom.push({nome, text: f.text}); } }
+  if (b.stats){ const x = o.stats || {tempo: 0, vitorias: 0, jogadas: 0, dicas: 0, solucoes: 0, desde: 0}, y = b.stats;
+    o.stats = {tempo: Math.max(x.tempo, y.tempo), vitorias: Math.max(x.vitorias, y.vitorias), jogadas: Math.max(x.jogadas, y.jogadas), dicas: Math.max(x.dicas, y.dicas),
+      solucoes: Math.max(x.solucoes, y.solucoes), desde: x.desde && y.desde ? Math.min(x.desde, y.desde) : (x.desde || y.desde)}; }
+  if (b.inf){ const x = o.inf || {feitas: {}, porNivel: {}};
+    for (const k of Object.keys(b.inf.feitas)) x.feitas[k] = Math.max(x.feitas[k] || 0, b.inf.feitas[k]);
+    for (const k of Object.keys(b.inf.porNivel)){ const p = x.porNivel[k], q = b.inf.porNivel[k];
+      x.porNivel[k] = p ? {n: Math.max(p.n, q.n), t: p.t && q.t ? Math.min(p.t, q.t) : (p.t || q.t), est: Math.max(p.est, q.est), e3: Math.max(p.e3, q.e3)} : q; }
+    o.inf = x; }
+  return o;
+}
+/* Soma de verificação simples (FNV-1a) para perceber um código copiado pela metade. */
+function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
 // ==LOGIC-END==
 
 /* ======================= Fases embutidas ======================= */
@@ -1947,6 +2265,8 @@ const ICONES = {
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
   share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
+  infinity:'<path d="M12 12c-2-3-3.5-4.5-5.5-4.5a4.5 4.5 0 0 0 0 9c2 0 3.5-1.500 5.500-4.500zm0 0c2 3 3.500 4.500 5.500 4.500a4.500 4.500 0 0 0 0-9c-2 0-3.500 1.500-5.500 4.500z"/>',
+  stats:'<path d="M5 20V11M12 20V4M19 20v-7"/>',
   qr:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/>',
   eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
@@ -2210,6 +2530,14 @@ const Som = (() => {
 /* ======================= Estado do jogo ======================= */
 let custom = store.get('custom', []);
 let prog = store.get('prog', {max: 0, done: []});
+let Est = Object.assign({tempo: 0, vitorias: 0, jogadas: 0, dicas: 0, solucoes: 0, desde: 0}, store.get('stats', {}));
+if (!Est.desde) Est.desde = Date.now();
+let estSujo = true, restaurando = false;
+function salvarEst(){ if (restaurando) return; store.set('stats', Est); estSujo = false; }
+setInterval(() => { if (estSujo) salvarEst(); }, 15000);
+document.addEventListener('visibilitychange', () => { if (document.hidden) salvarEst(); });
+addEventListener('pagehide', salvarEst);
+let inf = store.get('inf', null); if (!inf || typeof inf !== 'object') inf = {feitas: {}, porNivel: {}}; inf.feitas = inf.feitas || {}; inf.porNivel = inf.porNivel || {};
 let recs = store.get('rec', {});
 let dias = store.get('dias', {});
 let humorPref = store.get('humor', 'auto');
@@ -2221,7 +2549,7 @@ let estrelasFase = store.get('est', {});
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
 if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
-const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : FILA_PADRAO;
+const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
 function aplicarPecas(){
   const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
   const f = filaPadraoDe(S.cur);
@@ -2261,6 +2589,7 @@ function chaveFase(cur){
   return null;
 }
 function humorDaFase(cur){
+  if (cur.k === 'i') return {facil: 'calma', medio: 'animada', dificil: 'noturna', mestre: 'noturna'}[cur.nivel] || 'calma';
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
   if (cur.k === 'd' || cur.k === 'x') return 'animada';
   return 'calma';
@@ -2301,6 +2630,7 @@ function renderTitulo(){
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
   else if (c.shared){ t1.textContent = tr(c.nome); t2.textContent = tr('fase compartilhada'); }
   else { t1.textContent = tr('Teste'); t2.textContent = c.nome || tr('sua fase'); }
   $('#btnDica').disabled = c.k === 'x';
@@ -2312,7 +2642,7 @@ const tempoMs = () => S.t.acum;
 function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
 function tick(){
   const a = performance.now();
-  if (deveRodar()) S.t.acum += a - S.t.ult;
+  if (deveRodar()){ const d = a - S.t.ult; S.t.acum += d; if (d > 0 && d < 5000){ Est.tempo += d; estSujo = true; } }
   S.t.ult = a;
   renderStats();
 }
@@ -2573,6 +2903,8 @@ function vencer(){
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
+  Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
+  if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
     prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
@@ -2592,7 +2924,7 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
@@ -2609,6 +2941,7 @@ function mostrarVitoria(res){
   acts.innerHTML = '';
   const add = (txt, cls, fn, icone) => { const b = document.createElement('button'); b.className = 'btn ' + cls; if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
+  if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo));
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
@@ -2618,12 +2951,14 @@ function mostrarVitoria(res){
     const base = urlBase();
     if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + tr(S.dicas + (S.dicas === 1 ? ' dica' : ' dicas')) : '', seq: tr(sequencia() + (sequencia() === 1 ? ' dia' : ' dias'))}), base);
     else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
+    else if (c.k === 'i') compartilhar('Shape Puzzle', tr('Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?'), urlFase(c.text, c.nome));
     else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
   };
   compartilharRes.fecha = false;
   add(c.k === 'd' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
   const jn = () => carregar(S.cur); add('Jogar de novo', '', jn);
-  if (c.k !== 't') add('Fases', '', abrirMenu);
+  if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
+  else if (c.k !== 't') add('Fases', '', abrirMenu);
   }
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
   if (!a11y.mov) Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
@@ -3059,9 +3394,232 @@ $('#btnInstalar').onclick = async () => {
 };
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 
+
+/* ======================= Modo infinito =======================
+   Fases novas geradas na hora (solução única), em segundo plano para o jogo não travar. */
+const NIVEIS_INF = {
+  facil: {nome: 'Fácil', desc: '5×5, com muitas estrelas-guia', fila: 6, o: {n: 5, minEstrelas: 14}},
+  medio: {nome: 'Médio', desc: '5×5, com poucas estrelas-guia', fila: 4, o: {n: 5, minEstrelas: 7}},
+  dificil: {nome: 'Difícil', desc: '6×6, só 3 peças por vez', fila: 0, o: {n: 6, pMin: 9, pMax: 11, minEstrelas: 10, fila: 3}},
+  mestre: {nome: 'Mestre', desc: '7×7, só 2 peças por vez', fila: 0, o: {n: 7, pMin: 12, pMax: 15, minEstrelas: 9, fila: 2}}
+};
+const MODOS_INF = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
+const nivelInf = (modo, num) => modo !== 'crescente' ? modo : num < 5 ? 'facil' : num < 10 ? 'medio' : num < 15 ? 'dificil' : 'mestre';
+const Gerador = (() => {
+  let w = null, id = 0, falhou = false; const pend = new Map();
+  function iniciar(){
+    if (w || falhou) return;
+    try{
+      const fonte = [...document.scripts].map(x => x.textContent).find(t => t.includes('// ==LOGIC-START=='));
+      const logica = fonte.split('// ==LOGIC-START==')[1].split('// ==LOGIC-END==')[0];
+      const blob = new Blob([logica + '\nonmessage = e => { let f = null; try{ f = gerarFase(e.data.seed, e.data.opts); }catch(err){} postMessage({id: e.data.id, f: f}); };'], {type: 'text/javascript'});
+      w = new Worker(URL.createObjectURL(blob));
+      w.onmessage = e => { const r = pend.get(e.data.id); if (r){ pend.delete(e.data.id); r(e.data.f); } };
+      w.onerror = () => { falhou = true; w = null; pend.forEach(r => r(undefined)); pend.clear(); };
+    }catch(e){ falhou = true; w = null; }
+  }
+  return {
+    get emSegundoPlano(){ iniciar(); return !!w; },
+    gerar(seed, opts){
+      iniciar();
+      return new Promise(res => {
+        if (w){ const i = ++id; pend.set(i, f => f === undefined ? res(gerarFase(seed, opts)) : res(f)); w.postMessage({id: i, seed, opts}); }
+        else setTimeout(() => res(gerarFase(seed, opts)), 40);
+      });
+    }
+  };
+})();
+const Inf = {prox: null, gerando: false};
+let infAtual = store.get('infatual', null);
+const novaSeed = () => 1 + Math.floor(Math.random() * 999999998);
+async function gerarNivelInf(modo, num, seed){
+  const nivel = nivelInf(modo, num);
+  for (let t = 0; t < 4; t++){
+    const sd = seed && t === 0 ? seed : novaSeed();
+    const f = await Gerador.gerar(sd, NIVEIS_INF[nivel].o);
+    if (f && f.unica) return {k: 'i', modo, nivel, num, seed: sd, nome: 'Infinito ' + (num + 1), text: f.text};
+  }
+  return null;
+}
+function mostrarGerando(on){
+  const g = $('#ger'); clearTimeout(mostrarGerando.t);
+  if (!on){ g.hidden = true; return; }
+  mostrarGerando.t = setTimeout(() => { $('#gerTxt').textContent = tr('Gerando uma fase nova…'); g.hidden = false; }, 250);
+}
+async function jogarInfinito(modo){
+  if (Inf.gerando) return;
+  Inf.gerando = true; mostrarGerando(true);
+  const num = inf.feitas[modo] || 0;
+  let fase = null;
+  try{
+    if (Inf.prox && Inf.prox.modo === modo && Inf.prox.num === num) fase = await Inf.prox.p;
+    Inf.prox = null;
+    if (!fase) fase = await gerarNivelInf(modo, num, infAtual && infAtual.modo === modo && infAtual.num === num ? infAtual.seed : 0);
+  }catch(e){ fase = null; }
+  mostrarGerando(false); Inf.gerando = false;
+  if (!fase){ toast('Não consegui gerar uma fase agora. Tente de novo.'); return; }
+  document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'ov-splash') o.classList.remove('on'); });
+  store.set('infmodo', modo);
+  infAtual = {modo, num, seed: fase.seed}; store.set('infatual', infAtual);
+  carregar(fase);
+  if (Gerador.emSegundoPlano) Inf.prox = {modo, num: num + 1, p: gerarNivelInf(modo, num + 1, 0)};
+}
+function registrarInf(c, t, j, est){
+  if (c.num !== (inf.feitas[c.modo] || 0)) return;           // repetir a mesma fase não conta de novo
+  inf.feitas[c.modo] = c.num + 1;
+  const p = inf.porNivel[c.nivel] = inf.porNivel[c.nivel] || {n: 0, t: 0, est: 0, e3: 0};
+  p.n++; p.est += est; if (est === 3) p.e3++;
+  if (!S.dicas && (!p.t || t < p.t)) p.t = t;
+  store.set('inf', inf); infAtual = null; store.set('infatual', null);
+}
+function abrirInf(){
+  const l = $('#infLista'); l.innerHTML = '';
+  const ultimo = store.get('infmodo', 'medio');
+  MODOS_INF.forEach(m => {
+    const n = inf.feitas[m] || 0, b = document.createElement('button'); b.className = 'infop';
+    const nome = m === 'crescente' ? 'Crescente' : NIVEIS_INF[m].nome, desc = m === 'crescente' ? 'Começa fácil e sobe a cada 5 fases' : NIVEIS_INF[m].desc;
+    b.innerHTML = '<span class="dtx"><b></b><small></small></span><span class="qt"></span>';
+    b.querySelector('b').textContent = tr(nome); b.querySelector('small').textContent = tr(desc);
+    b.querySelector('.qt').textContent = n ? tr(n === 1 ? '1 feita' : n + ' feitas') : '';
+    b.setAttribute('aria-label', tr(nome) + ', ' + tr(desc) + (n ? ', ' + tr(n === 1 ? '1 feita' : n + ' feitas') : ''));
+    if (m === ultimo) b.classList.add('ult');
+    b.onclick = () => jogarInfinito(m);
+    l.appendChild(b);
+  });
+  abrir('inf');
+}
+$('#btnInf').onclick = abrirInf;
+
+/* ======================= Estatísticas ======================= */
+function fmtDuracao(ms){
+  const min = Math.floor(ms / 60000), h = Math.floor(min / 60), m = min % 60;
+  return h ? tr('{h} h {m} min', {h, m}) : min ? tr('{m} min', {m: min}) : tr('menos de 1 min');
+}
+const nomeRec = k => k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
+function abrirEstatisticas(){
+  const corpo = $('#estCorpo'); corpo.innerHTML = '';
+  const bloco = (titulo, itens) => {
+    const h = document.createElement('h2'); h.textContent = tr(titulo); corpo.appendChild(h);
+    const g = document.createElement('div'); g.className = 'estg';
+    itens.forEach(([v, r]) => { const d = document.createElement('div'); d.className = 'sv'; d.innerHTML = '<b></b><span></span>'; d.firstChild.textContent = v; d.lastChild.textContent = tr(r); g.appendChild(d); });
+    corpo.appendChild(g);
+  };
+  const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
+  const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;
+  const dg = [[fmtDuracao(Est.tempo), 'Tempo jogado'], [String(Est.vitorias), 'Fases vencidas'], [String(Est.jogadas), 'Jogadas'], [String(Est.dicas), 'Dicas usadas']];
+  if (Est.solucoes) dg.push([String(Est.solucoes), 'Soluções vistas']);
+  dg.push([new Date(Est.desde).toLocaleDateString(LANG_HTML[lang]), 'Jogando desde']);
+  bloco('Geral', dg);
+  bloco('Fases do jogo', [[feitas + '/' + BUILTIN.length, 'Fases concluídas'], [estrelas + '/' + BUILTIN.length * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(Math.min(prog.max, BUILTIN.length - 1) + 1), 'Fase mais adiantada']]);
+  const sq = sequenciasDe(dias, dataHoje()), ts = Object.values(dias).map(d => d.t).filter(t => t > 0);
+  bloco('Fase do dia', [[String(Object.keys(dias).length), 'Dias jogados'], ['🔥 ' + sq.atual, 'Sequência atual'], [String(sq.maior), 'Maior sequência'], [ts.length ? fmtTempo(Math.min(...ts)) : '–', 'Melhor tempo']]);
+  const totalInf = MODOS_INF.reduce((a, m) => a + (inf.feitas[m] || 0), 0), it = [[String(totalInf), 'Fases feitas']];
+  ['facil', 'medio', 'dificil', 'mestre'].forEach(n => { const p = inf.porNivel[n]; if (p && p.n) it.push([p.n + (p.t ? ' · ' + fmtTempo(p.t) : ''), NIVEIS_INF[n].nome]); });
+  bloco('Modo infinito', it);
+  const melhores = Object.keys(recs).map(k => ({k, t: recs[k].t})).sort((a, b) => a.t - b.t).slice(0, 4);
+  if (melhores.length) bloco('Seus melhores tempos', melhores.map(r => [fmtTempo(r.t), nomeRec(r.k)]));
+  bloco('Criação', [[String(custom.length), 'Fases criadas']]);
+  abrir('stats');
+}
+$('#btnEst').onclick = abrirEstatisticas;
+
+/* ======================= Backup do progresso ======================= */
+const BK = {pend: null};
+const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, custom, stats: Est, inf,
+  cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
+const envelopeBackup = () => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dadosAtuais()});
+const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const b64uParaBytes = t => { t = t.replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; const b = atob(t), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+const passar = async (u8, stream) => new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer());
+async function codigoBackup(){
+  const json = JSON.stringify(envelopeBackup());
+  let bytes = new TextEncoder().encode(json), z = '';
+  if (typeof CompressionStream !== 'undefined'){ try{ bytes = await passar(bytes, new CompressionStream('deflate-raw')); z = 'z'; }catch(e){ bytes = new TextEncoder().encode(json); z = ''; } }
+  return 'SP1' + z + '.' + somaTexto(json) + '.' + bytesParaB64u(bytes);
+}
+/* Aceita o código ou o conteúdo de um arquivo .json. Devolve {dados, criado} ou {erro}. */
+async function lerBackup(texto){
+  texto = String(texto || '').trim();
+  if (!texto) return {erro: 'Cole o código ou escolha um arquivo primeiro.'};
+  if (texto.length > 2e6) return {erro: 'Esse texto é grande demais para ser um backup.'};
+  let env;
+  try{
+    if (texto[0] === '{') env = JSON.parse(texto);
+    else {
+      const m = /^SP1(z?)\.([0-9a-f]{8})\.([A-Za-z0-9_-]+)$/.exec(texto.replace(/\s+/g, ''));
+      if (!m) return {erro: 'Esse código não parece um backup do Shape Puzzle.'};
+      let bytes = b64uParaBytes(m[3]);
+      if (m[1]) bytes = await passar(bytes, new DecompressionStream('deflate-raw'));
+      const json = new TextDecoder().decode(bytes);
+      if (somaTexto(json) !== m[2]) return {erro: 'O código está incompleto ou foi alterado. Copie de novo, inteiro.'};
+      env = JSON.parse(json);
+    }
+  }catch(e){ return {erro: 'O código está incompleto ou foi alterado. Copie de novo, inteiro.'}; }
+  return limparBackup(env);
+}
+function abrirBackup(){
+  BK.pend = null; $('#bkResumo').hidden = true; $('#bkCola').value = ''; avisoBk('');
+  $('#bkCodigo').value = '…';
+  codigoBackup().then(c => { $('#bkCodigo').value = c; });
+  abrir('backup');
+}
+function avisoBk(msg, cls){ const a = $('#bkAviso'); a.textContent = msg ? tr(msg) : ''; a.className = 'aviso' + (cls ? ' ' + cls : ''); }
+async function conferirBackup(){
+  BK.pend = null; $('#bkResumo').hidden = true; avisoBk('');
+  const r = await lerBackup($('#bkCola').value);
+  if (r.erro){ avisoBk(r.erro, 'erro'); return; }
+  BK.pend = r.dados;
+  const x = resumoBackup(r.dados), partes = [];
+  partes.push(tr('{n} fases concluídas', {n: x.fases}), tr('{n} estrelas', {n: x.estrelas}), tr('{n} recordes', {n: x.recordes}));
+  if (x.criadas) partes.push(tr(x.criadas === 1 ? '1 fase criada' : x.criadas + ' fases criadas'));
+  if (x.dias) partes.push(tr(x.dias === 1 ? '1 dia da fase do dia' : x.dias + ' dias da fase do dia'));
+  if (x.infinito) partes.push(tr('modo infinito: {n} fases', {n: x.infinito}));
+  $('#bkTxt').textContent = (r.criado ? tr('Backup de {data}:', {data: r.criado.split('-').reverse().join('/')}) + ' ' : '') + partes.join(' · ') + '.';
+  $('#bkResumo').hidden = false;
+}
+function gravarBackup(d, comCfg, limpar){
+  restaurando = true;
+  const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
+  if (d.prog) d.prog = {max: Math.min(d.prog.max, BUILTIN.length - 1), done: d.prog.done.filter(i => i < BUILTIN.length)};
+  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
+  if (limpar){ store.set('infatual', null); }
+  if (comCfg && d.cfg){
+    const c = d.cfg;
+    if (c.lang) store.set('lang', c.lang); if (c.tema) store.set('tema', c.tema); if (c.a11y) store.set('a11y', Object.assign({}, a11y, c.a11y));
+    if (c.humor) store.set('humor', c.humor); if (c.pecas !== undefined) store.set('pecas', c.pecas);
+    ['vibra', 'musica', 'sfx', 'vol'].forEach(k => { if (c[k] !== undefined) store.set(k, c[k]); });
+  }
+  toast('Backup restaurado! Reiniciando o jogo…');
+  setTimeout(() => location.reload(), 1000);
+}
+function dadosLimpos(){ const r = limparBackup({app: 'shapepuzzle', v: 1, dados: dadosAtuais()}); return r.dados || {}; }
+$('#btnBackup').onclick = abrirBackup;
+$('#bkCopiar').onclick = async () => { const c = $('#bkCodigo').value; if (c && c !== '…'){ await copiar(c); toast('Código copiado! Guarde onde quiser (ou mande para você mesmo).'); } };
+$('#bkCodigo').onclick = e => e.target.select();
+$('#bkBaixar').onclick = () => {
+  const blob = new Blob([JSON.stringify(envelopeBackup(), null, 1)], {type: 'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'shapepuzzle-backup-' + dataHoje() + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+};
+$('#bkArqBtn').onclick = () => $('#bkArq').click();
+$('#bkArq').onchange = e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  if (f.size > 2e6){ avisoBk('Esse arquivo é grande demais para ser um backup.', 'erro'); return; }
+  const rd = new FileReader();
+  rd.onload = () => { $('#bkCola').value = String(rd.result); conferirBackup(); };
+  rd.onerror = () => avisoBk('Não consegui ler esse arquivo.', 'erro');
+  rd.readAsText(f);
+};
+$('#bkConferir').onclick = conferirBackup;
+$('#bkJuntar').onclick = () => { if (!BK.pend) return; gravarBackup(juntarDados(dadosLimpos(), BK.pend), false, false); };
+$('#bkSubst').onclick = () => {
+  if (!BK.pend) return;
+  if (confirm(tr('Substituir todo o progresso e os ajustes deste aparelho pelo do backup?'))) gravarBackup(JSON.parse(JSON.stringify(BK.pend)), true, true);
+};
+
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.01.1';
+const VERSAO = '2026.11.01.2';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};

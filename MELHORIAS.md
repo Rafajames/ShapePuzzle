@@ -24,12 +24,13 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 1. **Dica em degraus** — 1º toque mostra só a peça (não conta como dica), 2º mostra o lugar, 3º oferece a solução. _Feito._
 2. **Ver a solução animada** — mostra todas as peças no lugar, uma de cada vez; conta como dica. _Feito (3º toque na Dica)._
 3. **QR code ao compartilhar** — botão "Mostrar QR code" no painel de compartilhar (jogo, fase por link, resultado). _Feito._
-4. **Modo infinito** — fases novas geradas sozinhas, com solução garantida e vários níveis. _Depois._
-5. **Estatísticas pessoais** — fases feitas, estrelas, tempo total e melhores marcas. _Depois._
+4. **Modo infinito** — fases novas geradas sozinhas, com solução garantida e 5 níveis (Fácil a Mestre). _Feito (Menu → Modo infinito)._
+5. **Estatísticas pessoais** — fases feitas, estrelas, tempo total, sequência de dias e melhores marcas. _Feito (Menu → Estatísticas)._
 6. **Temas** — Automático (segue o aparelho), Escuro, Claro, Oceano, Floresta e Pôr do sol, em Menu → Tema. _Feito._ Cores diferentes para as peças ficam para depois.
 7. **Conquistas e medalhas** guardadas no aparelho. _A ver._
-8. **Modo dois jogadores no mesmo aparelho**, **modo criança**, **backup do progresso por código/arquivo**, **efeitos sonoros e mais músicas**. _A ver._
+8. **Modo dois jogadores no mesmo aparelho**, **modo criança**, **efeitos sonoros e mais músicas**. _A ver._
 
+8b. **Backup do progresso** — código ou arquivo, juntar ou substituir, sem senhas. _Feito (Menu → Backup do progresso)._
 9. **Atualização do jogo instalado** — aviso de versão nova + botão "Verificar atualizações" no menu. _Feito._ (A cada publicação, aumentar `VERSAO` no `index.html`.)
 
 ## Para pensar com cuidado
