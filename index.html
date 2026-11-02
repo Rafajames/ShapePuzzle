@@ -1182,6 +1182,9 @@ en: {
   "{n} fases concluídas": "{n} levels completed",
   "{n} estrelas": "{n} stars",
   "{n} recordes": "{n} records",
+  "1 fase concluída": "1 level completed",
+  "1 estrela": "1 star",
+  "1 recorde": "1 record",
   "1 fase criada": "1 level created",
   "{n} fases criadas": "{n} levels created",
   "1 dia da fase do dia": "1 daily level day",
@@ -1643,6 +1646,9 @@ es: {
   "{n} fases concluídas": "{n} niveles completados",
   "{n} estrelas": "{n} estrellas",
   "{n} recordes": "{n} récords",
+  "1 fase concluída": "1 nivel completado",
+  "1 estrela": "1 estrella",
+  "1 recorde": "1 récord",
   "1 fase criada": "1 nivel creado",
   "{n} fases criadas": "{n} niveles creados",
   "1 dia da fase do dia": "1 día del nivel del día",
@@ -3069,7 +3075,6 @@ window.addEventListener('pointercancel', e => fimDrag(e, true));
 /* ---- gestos no celular: dois toques giram 90°, deslizar espelha ---- */
 let G = null, ULT_TOQUE = null;
 const SWIPE_MIN = 34;
-function girarAntihorario(f){ return girar(girar(girar(f))); }
 function gestoInicio(e, zona, cel){
   if (e.pointerType === 'mouse' || S.venceu) return false;
   G = {id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now(), zona, cel};
@@ -3570,7 +3575,8 @@ async function conferirBackup(){
   if (r.erro){ avisoBk(r.erro, 'erro'); return; }
   BK.pend = r.dados;
   const x = resumoBackup(r.dados), partes = [];
-  partes.push(tr('{n} fases concluídas', {n: x.fases}), tr('{n} estrelas', {n: x.estrelas}), tr('{n} recordes', {n: x.recordes}));
+  partes.push(tr(x.fases === 1 ? '1 fase concluída' : '{n} fases concluídas', {n: x.fases}), tr(x.estrelas === 1 ? '1 estrela' : '{n} estrelas', {n: x.estrelas}),
+    tr(x.recordes === 1 ? '1 recorde' : '{n} recordes', {n: x.recordes}));
   if (x.criadas) partes.push(tr(x.criadas === 1 ? '1 fase criada' : x.criadas + ' fases criadas'));
   if (x.dias) partes.push(tr(x.dias === 1 ? '1 dia da fase do dia' : x.dias + ' dias da fase do dia'));
   if (x.infinito) partes.push(tr('modo infinito: {n} fases', {n: x.infinito}));
@@ -3619,7 +3625,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.01.2';
+const VERSAO = '2026.11.02.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};

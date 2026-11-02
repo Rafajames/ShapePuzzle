@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c0c12">
+<meta name="description" content="Shape Puzzle — quebra-cabeça lógico: preencha o tabuleiro 5x5 com as peças e cubra cada estrela com a cor certa.">
+<meta property="og:title" content="Shape Puzzle">
+<meta property="og:description" content="Quebra-cabeça lógico: preencha o tabuleiro 5x5 e cubra cada estrela com a cor certa. 50 fases, fase do dia e editor.">
+<meta property="og:image" content="https://rafajames.github.io/ShapePuzzle/icon-512.png">
+<meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shape Puzzle">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Shape Puzzle</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+@@script tema-inicial.js
+@@style base.css componentes.css telas.css acessibilidade.css
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
+    <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 50</span></div>
+    <div class="nav">
+      <button class="ib" id="btnDesfazer" data-i="undo" aria-label="Desfazer (Z)" title="Desfazer (Z)" disabled></button>
+      <button class="ib" id="btnDica" data-i="bulb" aria-label="Dica (H)" title="Dica (H)"></button>
+      <button class="ib" id="btnReset" data-i="reset" aria-label="Reiniciar" title="Reiniciar"></button>
+      <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="stats">
+      <span class="pill"><em data-i="clock"></em><span id="stTempo">0:00</span></span>
+      <span class="pill"><em data-i="swap"></em><span id="stJog">0 jogadas</span></span>
+      <span class="pill rec" id="pRec" hidden><em data-i="trophy"></em><span id="stRec"></span></span>
+      <span class="pill dc" id="pDica" hidden><em data-i="bulb"></em><span id="stDica"></span></span>
+    </div>
+    <div id="boardWrap"><div id="board" role="group" tabindex="0"></div><div id="selo" hidden></div></div>
+    <div class="tools">
+      <button class="btn" id="btnGirar" data-i="rotate">Girar <kbd>R</kbd></button>
+      <button class="btn" id="btnFlip" data-i="flip">Espelhar <kbd>T</kbd></button>
+    </div>
+    <section class="reserva">
+      <h2><span>Peças</span><span id="contagem"></span></h2>
+      <div id="reserva"></div>
+      <p id="dica"></p>
+      <button class="btn sm" id="tutoPular" hidden style="width:100%;margin-top:8px">Entendi, pular o tutorial</button>
+    </section>
+  </main>
+</div>
+
+<div id="flut" hidden></div>
+<div id="mao" aria-hidden="true"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="ger" role="status" hidden><i class="spin"></i><span id="gerTxt">Gerando uma fase nova…</span></div>
+<div id="upd" role="status" hidden>
+  <span id="updTxt"></span>
+  <button class="btn sm pri" id="updSim" data-i="download">Atualizar o jogo</button>
+  <button class="btn sm" id="updNao">Depois</button>
+</div>
+<div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Abertura -->
+<div class="ov on" id="ov-splash">
+  <div class="card">
+    <div id="logo"></div>
+    <h1 style="text-align:center">Shape Puzzle</h1>
+    <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
+    <ul class="how">
+      <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
+      <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+      <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
+    </ul>
+    <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
+    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px">Jogar</button>
+    <p style="text-align:center;margin-top:12px;font-size:12px">♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.</p>
+  </div>
+</div>
+
+<!-- Menu -->
+<div class="ov" id="ov-menu">
+  <div class="card">
+    <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
+    <h1>Fases</h1>
+    <p>Complete uma fase para liberar a próxima.</p>
+    <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
+    <button class="daily" id="btnInf"><em data-i="infinity"></em><span class="dtx"><b>Modo infinito</b><small>Fases novas sem parar, do fácil ao mestre</small></span></button>
+    <button class="daily" id="btnEst"><em data-i="stats"></em><span class="dtx"><b>Estatísticas</b><small>Suas marcas, estrelas e sequência de dias</small></span></button>
+    <button class="daily" id="btnCamp"><em data-i="trophy"></em><span class="dtx"><b>Campeonatos</b><small>Desafie amigos, família e grupos com ranking</small></span></button>
+    <h2>Fases do jogo</h2>
+    <div class="tiles" id="tiles"></div>
+    <p class="vazio2" style="margin-top:10px">Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.</p>
+    <h2>Minhas fases</h2>
+    <div id="customList"></div>
+    <div class="acts">
+      <button class="btn" id="btnCriar" data-i="edit">Criar fase</button>
+      <button class="btn" id="btnImportar" data-i="upload">Importar .txt</button>
+    </div>
+    <input type="file" id="fileImp" accept=".txt,text/plain" hidden>
+    <h2>Jogo</h2>
+    <label class="row"><span class="rl">Peças por vez</span>
+      <select class="field" id="selPecas">
+        <option value="auto">Automático (por fase)</option>
+        <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+        <option value="5">5</option><option value="6">6</option>
+        <option value="99">Todas</option>
+      </select></label>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
+    <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
+    <label class="row"><span class="rl">Idioma</span>
+      <select class="field" id="selIdioma"><option value="pt">Português</option><option value="en">English</option><option value="es">Español</option></select></label>
+    <label class="row"><span class="rl">Tema</span>
+      <select class="field" id="selTema">
+        <option value="auto">Automático (segue o aparelho)</option>
+        <option value="escuro">Escuro</option>
+        <option value="claro">Claro</option>
+        <option value="oceano">Oceano</option>
+        <option value="floresta">Floresta</option>
+        <option value="poente">Pôr do sol</option>
+      </select></label>
+    <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
+    <h2>Acessibilidade</h2>
+    <label class="row"><input type="checkbox" id="chkDalt"> Símbolos nas cores (para daltônicos)</label>
+    <label class="row"><input type="checkbox" id="chkCont"> Alto contraste</label>
+    <label class="row"><input type="checkbox" id="chkTexto"> Texto maior</label>
+    <label class="row"><input type="checkbox" id="chkMov"> Reduzir animações e confetes</label>
+    <details class="cfg" id="ajudaTeclado"><summary>Jogar só com o teclado</summary>
+      <p data-th style="margin:8px 0"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> movem o cursor no tabuleiro · <kbd>1</kbd> a <kbd>6</kbd> ou <kbd>P</kbd> escolhem a peça · <kbd>R</kbd> gira · <kbd>T</kbd> espelha · <kbd>Enter</kbd> ou <kbd>Espaço</kbd> encaixa a peça (ou tira a que está na casa) · <kbd>Z</kbd> desfaz · <kbd>H</kbd> dica · <kbd>Esc</kbd> solta a peça.</p>
+    </details>
+    <h2>Som</h2>
+    <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
+    <label class="row"><span class="rl">Estilo</span>
+      <select class="field" id="selHumor">
+        <option value="auto">Automático (por fase)</option>
+        <option value="calma">Calma</option>
+        <option value="animada">Animada</option>
+        <option value="noturna">Noturna</option>
+      </select></label>
+    <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
+    <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
+    <div id="blocoInstalar" hidden>
+      <h2>Instalar</h2>
+      <button class="btn" id="btnInstalar" data-i="download" hidden style="width:100%">Instalar o jogo no aparelho</button>
+      <p id="dicaIOS" hidden>No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.</p>
+    </div>
+    <h2>Backup</h2>
+    <p style="margin:0">Leve o seu progresso para outro aparelho ou guarde uma cópia.</p>
+    <div class="acts" style="margin-top:8px"><button class="btn" id="btnBackup" data-i="download" style="width:100%">Backup do progresso</button></div>
+    <h2>Atualização</h2>
+    <p id="verTxt" style="margin:0 0 4px"></p>
+    <div class="acts" style="margin-top:8px"><button class="btn" id="btnAtualizar" data-i="reset" style="width:100%">Verificar atualizações</button></div>
+    <p id="updMsg" role="status" aria-live="polite" style="margin:8px 0 0;font-size:13px;min-height:18px"></p>
+    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
+    <div class="acts"><button class="btn danger sm" id="btnZerar" data-i="trash">Zerar progresso</button><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
+    <h2>Sobre</h2>
+    <p><b style="color:var(--txt)">Shape Puzzle</b> — criado por <b style="color:var(--txt)">Jamerson Rafael</b>.</p>
+    <div class="acts">
+      <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
+      <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
+    </div>
+    <div class="acts"><button class="btn" id="btnCompJogo" data-i="share">Compartilhar o jogo</button></div>
+  </div>
+</div>
+
+<!-- Vitória -->
+<div class="ov" id="ov-win">
+  <div class="card vit" id="cardWin">
+    <div class="big" data-i="check"></div>
+    <h1 id="winTitulo">Fase concluída!</h1>
+    <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
+    <p id="winTexto"></p>
+    <div class="res" id="winRes"></div>
+    <div class="badge" id="winBadge"></div>
+    <div class="acts" id="winActs"></div>
+  </div>
+</div>
+
+<!-- Editor -->
+<div class="ov" id="ov-editor">
+  <div class="card">
+    <button class="ib x" data-close="editor" data-i="close" aria-label="Fechar"></button>
+    <h1>Criar fase</h1>
+    <p>Pinte as 25 casas com as peças da solução. Peças da mesma cor não podem se encostar.</p>
+    <h2>Cor da peça</h2>
+    <div class="pal" id="pal"></div>
+    <div id="edBoard"></div>
+    <div id="edInfo"></div>
+    <h2>Dificuldade das estrelas</h2>
+    <select class="field" id="edDif">
+      <option value="0">Fácil — todas as estrelas</option>
+      <option value="1">Médio — início e fim de cada peça</option>
+      <option value="2">Difícil — uma estrela por peça</option>
+    </select>
+    <h2>Nome</h2>
+    <input class="field" id="edNome" maxlength="30" placeholder="minha-fase" autocomplete="off">
+    <div class="acts">
+      <button class="btn pri" id="edSalvar" data-i="check">Salvar</button>
+      <button class="btn" id="edTestar" data-i="play">Testar</button>
+    </div>
+    <div class="acts">
+      <button class="btn" id="edCompartilhar" data-i="share">Compartilhar</button>
+      <button class="btn" id="edExportar" data-i="download">Exportar .txt</button>
+      <button class="btn" id="edLimpar" data-i="trash">Limpar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Campeonatos: início -->
+<div class="ov" id="ov-camps">
+  <div class="card">
+    <button class="ib x" data-close="camps" data-i="close" aria-label="Fechar"></button>
+    <h1>Campeonatos</h1>
+    <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
+    <h2>Seu nome</h2>
+    <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
+    <div id="cpOrg">
+      <h2>Para criar campeonatos</h2>
+      <p id="cpOrgInfo">Na primeira vez você cria uma senha de organizador. Depois o aparelho é reconhecido e a senha só volta a ser pedida se você limpar os dados do navegador ou usar outro aparelho. Quem só joga não precisa de senha.</p>
+      <input class="field" id="cpSenha" type="password" placeholder="Senha de organizador (mínimo 6 caracteres)" autocomplete="current-password" style="margin-top:10px">
+      <input class="field" id="cpSenha2" type="password" placeholder="Repita a senha para criar a conta" autocomplete="new-password" hidden style="margin-top:8px">
+    </div>
+    <div class="row" id="cpOrgOk" hidden><span style="flex:1" id="cpOrgNome"></span><button class="btn sm" id="cpSair">Trocar</button></div>
+    <div class="acts"><button class="btn pri" id="cpCriar" data-i="trophy">Criar campeonato</button></div>
+    <h2>Entrar com um código</h2>
+    <div class="row"><input class="field cod" id="cpCodigo" maxlength="6" placeholder="ABC234" autocapitalize="characters" autocomplete="off"><button class="btn" id="cpEntrar">Entrar</button></div>
+    <h2>Meus campeonatos</h2>
+    <div id="cpLista"></div>
+    <p id="cpAviso" class="aviso"></p>
+    <details class="cfg" id="cpCfg"><summary>Avançado: usar outro banco de dados</summary>
+      <p style="margin:8px 0">O jogo já usa o banco oficial. Só preencha isto se quiser usar um banco seu (veja CAMPEONATOS.md).</p>
+      <input class="field" id="cpDb" placeholder="https://seu-projeto-default-rtdb.firebaseio.com" autocapitalize="off" spellcheck="false">
+      <input class="field" id="cpChave" placeholder="Chave da API do app web (apiKey)" autocapitalize="off" spellcheck="false" style="margin-top:8px">
+      <div class="acts"><button class="btn sm" id="cpDbSalvar">Salvar endereço</button></div>
+    </details>
+  </div>
+</div>
+
+<!-- Campeonatos: criar -->
+<div class="ov" id="ov-criar">
+  <div class="card">
+    <button class="ib x" data-close="criar" data-i="close" aria-label="Fechar"></button>
+    <h1 id="crTitulo">Novo campeonato</h1>
+    <p>Escolha as fases, o número de pessoas e envie o convite.</p>
+    <h2>Nome do campeonato</h2>
+    <input class="field" id="crNome" maxlength="40" placeholder="Ex.: Copa da família">
+    <label class="row"><span class="rl">Pessoas</span><input class="field" id="crMax" type="number" min="2" max="200" value="10" inputmode="numeric"></label>
+    <label class="row"><span class="rl">Vale</span><select class="field" id="crModo"><option value="melhor">O melhor tempo de cada fase</option><option value="primeira">Só a primeira vez que concluir</option></select></label>
+    <label class="row"><span class="rl">Prazo</span><select class="field" id="crPrazo"><option value="0">Sem prazo</option><option value="1">1 dia</option><option value="3">3 dias</option><option value="7">7 dias</option><option value="30">30 dias</option></select></label>
+    <h2><span>Fases</span> (<span id="crQtd">0</span>/10)</h2>
+    <div id="crFases"></div>
+    <div class="row"><select class="field" id="crFonte"></select><button class="btn sm" id="crAdd">Adicionar</button></div>
+    <div class="acts">
+      <button class="btn sm" data-preset="3">Sugestão: 3 fases</button>
+      <button class="btn sm" data-preset="5">5 fases</button>
+      <button class="btn sm" data-preset="8">8 fases</button>
+    </div>
+    <p class="aviso" id="crInfo"></p>
+    <div class="acts"><button class="btn pri" id="crCriar" data-i="trophy">Criar campeonato</button></div>
+  </div>
+</div>
+
+<!-- Campeonatos: sala -->
+<div class="ov" id="ov-lobby">
+  <div class="card">
+    <button class="ib x" data-close="lobby" data-i="close" aria-label="Fechar"></button>
+    <h1 id="lbTitulo">Campeonato</h1>
+    <p id="lbSub"></p>
+    <div id="lbOrg" hidden>
+      <h2>Organizador</h2>
+      <div class="acts"><button class="btn" id="lbEditar" data-i="edit">Editar</button><button class="btn danger" id="lbExcluir" data-i="trash">Excluir</button></div>
+      <p id="lbOrgInfo" class="aviso"></p>
+    </div>
+    <div id="lbSouOrg" hidden>
+      <button class="btn sm" id="lbSouOrgBtn">Sou o organizador</button>
+      <div id="lbSouOrgForm" hidden>
+        <input class="field" id="lbSenha" type="password" placeholder="Senha de organizador" autocomplete="current-password" style="margin-top:10px">
+        <div class="acts"><button class="btn pri sm" id="lbSenhaOk">Entrar como organizador</button></div>
+      </div>
+    </div>
+    <div id="lbEntrar" hidden>
+      <h2>Entrar no campeonato</h2>
+      <input class="field" id="lbNome" maxlength="20" placeholder="Seu nome" autocomplete="nickname">
+      <div class="acts"><button class="btn pri" id="lbEntrarBtn" data-i="play">Entrar</button></div>
+    </div>
+    <div id="lbJogo" hidden>
+      <h2>Fases</h2>
+      <div id="lbFases"></div>
+    </div>
+    <h2>Ranking</h2>
+    <div id="lbRank"></div>
+    <p class="aviso" id="lbAviso"></p>
+    <div class="acts">
+      <button class="btn" id="lbAtualizar" data-i="reset">Atualizar</button>
+      <button class="btn" id="lbConvidar" data-i="share">Convidar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modo de teste -->
+<div class="ov" id="ov-teste">
+  <div class="card">
+    <button class="ib x" data-close="teste" data-i="close" aria-label="Fechar"></button>
+    <h1>Modo de teste</h1>
+    <p>Para quem cria e confere as fases: libera todas as fases do menu, sem mexer no seu progresso e sem gravar recordes.</p>
+    <input class="field" id="tsSenha" type="password" placeholder="Senha" autocomplete="off" style="margin-top:14px">
+    <p class="aviso" id="tsAviso"></p>
+    <div class="acts"><button class="btn pri" id="tsEntrar" data-i="lock">Entrar</button></div>
+  </div>
+</div>
+
+<!-- Compartilhar -->
+<div class="ov" id="ov-share">
+  <div class="card">
+    <button class="ib x" data-close="share" data-i="close" aria-label="Fechar"></button>
+    <h1 id="shTitulo">Compartilhar</h1>
+    <p id="shTexto" style="white-space:pre-line;margin-top:6px"></p>
+    <h2>Link</h2>
+    <input class="field" id="shLink" readonly aria-label="Link para compartilhar">
+    <div class="acts"><button class="btn pri" id="shCopiar" data-i="copy">Copiar mensagem e link</button></div>
+    <div class="acts">
+      <button class="btn" id="shCopiarLink" data-i="link">Só o link</button>
+      <a class="btn" id="shWpp" target="_blank" rel="noopener" data-i="chat">WhatsApp</a>
+    </div>
+    <div class="acts">
+      <a class="btn" id="shTg" target="_blank" rel="noopener" data-i="send">Telegram</a>
+      <a class="btn" id="shMail" data-i="mail">E-mail</a>
+      <button class="btn" id="shMais" data-i="share" hidden>Mais apps…</button>
+    </div>
+    <div class="acts"><button class="btn" id="shQR" data-i="qr" aria-expanded="false" aria-controls="shQRBox">Mostrar QR code</button></div>
+    <div id="shQRBox" hidden>
+      <canvas id="shQRCanvas" role="img" aria-label="QR code com o link" width="1" height="1"></canvas>
+      <p>Aponte a câmera de outro celular para abrir direto.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modo infinito -->
+<div class="ov" id="ov-inf">
+  <div class="card">
+    <button class="ib x" data-close="inf" data-i="close" aria-label="Fechar"></button>
+    <h1>Modo infinito</h1>
+    <p>Fases novas sem parar, sempre com uma única solução. Escolha a dificuldade:</p>
+    <div id="infLista" class="inflista"></div>
+  </div>
+</div>
+
+<!-- Estatísticas -->
+<div class="ov" id="ov-stats">
+  <div class="card">
+    <button class="ib x" data-close="stats" data-i="close" aria-label="Fechar"></button>
+    <h1>Estatísticas</h1>
+    <div id="estCorpo"></div>
+  </div>
+</div>
+
+<!-- Backup -->
+<div class="ov" id="ov-backup">
+  <div class="card">
+    <button class="ib x" data-close="backup" data-i="close" aria-label="Fechar"></button>
+    <h1>Backup do progresso</h1>
+    <p>O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas nem a conexão dos campeonatos.</p>
+    <h2>Salvar</h2>
+    <textarea class="field" id="bkCodigo" readonly rows="3" aria-label="Código do backup"></textarea>
+    <div class="acts">
+      <button class="btn pri" id="bkCopiar" data-i="copy">Copiar código</button>
+      <button class="btn" id="bkBaixar" data-i="download">Baixar arquivo</button>
+    </div>
+    <h2>Restaurar</h2>
+    <textarea class="field" id="bkCola" rows="3" placeholder="Cole aqui o código do backup" aria-label="Código para restaurar"></textarea>
+    <div class="acts">
+      <button class="btn" id="bkArqBtn" data-i="upload">Escolher arquivo…</button>
+      <button class="btn pri" id="bkConferir" data-i="check">Conferir backup</button>
+    </div>
+    <input type="file" id="bkArq" accept=".json,.txt,text/plain,application/json" hidden>
+    <p class="aviso" id="bkAviso" role="status" aria-live="polite"></p>
+    <div id="bkResumo" hidden>
+      <p id="bkTxt" style="color:var(--txt)"></p>
+      <div class="acts">
+        <button class="btn pri" id="bkJuntar" data-i="swap">Juntar com o meu progresso</button>
+        <button class="btn danger" id="bkSubst" data-i="trash">Substituir tudo</button>
+      </div>
+      <p style="margin-top:8px;font-size:12px">Juntar mantém o melhor dos dois. Substituir apaga o que há neste aparelho.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Solução -->
+<div class="ov" id="ov-solucao">
+  <div class="card">
+    <button class="ib x" data-close="solucao" data-i="close" aria-label="Fechar"></button>
+    <h1>Quer ver a solução?</h1>
+    <p>Ela mostra todas as peças no lugar, uma de cada vez. Esta partida não conta para recorde nem para 3 estrelas.</p>
+    <div class="acts"><button class="btn pri" id="solVer" data-i="eye">Ver a solução</button></div>
+    <div class="acts">
+      <button class="btn" id="solLugar" data-i="bulb">Mostrar o lugar de novo</button>
+      <button class="btn" id="solFechar" data-i="close">Continuar jogando</button>
+    </div>
+  </div>
+</div>
+
+@@script qr-code.js
+@@idiomas en.js es.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js estatisticas.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
+</body>
+</html>

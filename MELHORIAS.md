@@ -31,7 +31,9 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 8. **Modo dois jogadores no mesmo aparelho**, **modo criança**, **efeitos sonoros e mais músicas**. _A ver._
 
 8b. **Backup do progresso** — código ou arquivo, juntar ou substituir, sem senhas. _Feito (Menu → Backup do progresso)._
-9. **Atualização do jogo instalado** — aviso de versão nova + botão "Verificar atualizações" no menu. _Feito._ (A cada publicação, aumentar `VERSAO` no `index.html`.)
+9. **Atualização do jogo instalado** — aviso de versão nova + botão "Verificar atualizações" no menu. _Feito._ (A cada publicação, aumentar `VERSAO` em `src/js/atualizacao.js` e rodar `node build.js`.)
+
+- **Código mais limpo** — o jogo agora é editado em `src/` (CSS, JS por assunto, idiomas) e o `index.html` é gerado por `node build.js`; verificação automática de código (lint) e plural corrigido no backup. _Feito._
 
 ## Para pensar com cuidado
 10. **Tempo de campeonato à prova de trapaça** — guardar a sequência de jogadas e conferir se resolve a fase.

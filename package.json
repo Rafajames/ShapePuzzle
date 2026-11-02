@@ -2,6 +2,14 @@
   "name": "shapepuzzle",
   "private": true,
   "description": "Shape Puzzle - testes automáticos",
-  "scripts": { "test": "bash tests/rodar.sh" },
-  "devDependencies": { "targaryen": "3.1.0" }
+  "scripts": {
+    "build": "node build.js",
+    "lint": "node tests/lint.js",
+    "test": "bash tests/rodar.sh"
+  },
+  "devDependencies": {
+    "eslint": "^9.14.0",
+    "globals": "^15.12.0",
+    "targaryen": "3.1.0"
+  }
 }

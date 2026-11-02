@@ -31,13 +31,23 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 
 | Pasta/arquivo | O que é |
 |---|---|
-| `index.html` | O jogo inteiro (código, fases, músicas, traduções) |
+| `index.html` | O jogo inteiro num arquivo só (é o que o GitHub Pages publica). **É gerado** a partir de `src/`: não edite à mão |
+| `src/` | Onde o jogo é editado, em partes: `css/` (estilos), `js/` (um arquivo por assunto: fases, áudio, jogo, infinito, backup, campeonato…), `idiomas/` (inglês e espanhol), `pagina.html` (a estrutura da página) |
+| `build.js` | Junta `src/` e gera o `index.html` (`node build.js`) |
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Instalar como app e jogar offline |
 | `firebase-rules.json`, `CAMPEONATOS.md` | Regras e guia do banco dos campeonatos |
 | `tests/` | Testes automáticos (rodam no GitHub a cada publicação) |
 | `fases-web/` | Fases 31–50 em `.txt` (cópia de referência; já estão no `index.html`) |
 | `java-original/` | Primeira versão em Java Swing — não é usada pelo jogo web ([veja o README dela](java-original/README.md)) |
 | `MELHORIAS.md` | Lista de ideias e o que já foi feito |
+
+## Como editar o jogo
+
+1. Edite os arquivos de `src/` (por exemplo, `src/js/backup.js` para mexer no backup, `src/css/telas.css` para os painéis).
+2. Rode `node build.js` — ele recria o `index.html`.
+3. Rode `bash tests/rodar.sh` e publique. O teste confere se o `index.html` bate com `src/` (se você esquecer o passo 2, o teste avisa) e roda o `npm run lint`, que acusa variável não declarada, repetida ou sem uso.
+
+Traduções novas: adicione a frase em `src/idiomas/en.js` e `es.js` (a chave é o texto em português).
 
 ## Temas, acessibilidade e idiomas
 
@@ -58,7 +68,7 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 - Quem instalou o jogo (ou deixou aberto) recebe um aviso **"Tem uma versão nova do jogo"** com o botão **Atualizar o jogo**. O jogo confere sozinho ao abrir, ao voltar para ele e a cada 30 minutos.
 - Também dá para conferir na hora em **Menu → Atualização → Verificar atualizações** (o menu mostra a versão atual).
 - Ao atualizar, o jogo apaga o cache e recarrega; o progresso, as estrelas e os ajustes ficam guardados. A fase em andamento recomeça, e durante um campeonato a atualização espera.
-- **Para publicar uma versão nova:** aumente a constante `VERSAO` no `index.html` (formato `AAAA.MM.DD.N`, ex.: `2026.11.02.1`). Sem isso, o jogo não percebe que há novidade. O GitHub Pages pode levar alguns minutos para mostrar o arquivo novo.
+- **Para publicar uma versão nova:** aumente a constante `VERSAO` em `src/js/atualizacao.js`, rode `node build.js` (formato `AAAA.MM.DD.N`, ex.: `2026.11.02.1`). Sem isso, o jogo não percebe que há novidade. O GitHub Pages pode levar alguns minutos para mostrar o arquivo novo.
 
 ## Modo infinito, estatísticas e backup
 

@@ -44,7 +44,7 @@ with sync_playwright() as pw:
     pg.evaluate(COLOCA); pg.wait_for_timeout(1500)
     vencer(pg)
     pg.evaluate("carregar({k:'b',i:1})"); pg.wait_for_timeout(200); pg.evaluate("acaoDica()"); pg.wait_for_timeout(100); pg.evaluate("acaoDica()"); vencer(pg)
-    pg.evaluate("dias['2026-10-30']={t:40000,j:9,d:0}; dias['2026-10-31']={t:35000,j:8,d:0}; dias[dataHoje()]={t:30000,j:7,d:0}; store.set('dias', dias)")
+    pg.evaluate("const dd=n=>{const d=new Date(); d.setDate(d.getDate()-n); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}; dias[dd(2)]={t:40000,j:9,d:0}; dias[dd(1)]={t:35000,j:8,d:0}; dias[dataHoje()]={t:30000,j:7,d:0}; store.set('dias', dias)")
     pg.evaluate("custom.push({nome:'Minha', text: BUILTIN[0].text}); store.set('custom', custom)")
     pg.evaluate("abrirEstatisticas()"); pg.wait_for_timeout(300)
     v = dict((r, a) for a, r in valores(pg))
