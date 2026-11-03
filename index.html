@@ -22,7 +22,7 @@
 try{var __t=JSON.parse(localStorage.getItem('shapepuzzle.tema')),__c=JSON.parse(localStorage.getItem('shapepuzzle.a11y')||'{}');
 if(__t==='auto')__t=matchMedia('(prefers-color-scheme: light)').matches?'claro':'escuro';
 if(__c&&__c.cont)__t='escuro';
-document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
+document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente','retro'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
 </script>
 <style>
 :root{
@@ -365,6 +365,53 @@ body.tg .card h1{font-size:30px}body.tg .card h2{font-size:14px}body.tg .reserva
 body.tg .field{font-size:17px}body.tg .tile{font-size:20px}body.tg .daily small{font-size:14px}body.tg #toast{font-size:17px}
 body.rm *,body.rm *::before,body.rm *::after{animation:none!important;transition:none!important}
 body.rm #mao.on{opacity:1}
+/* ======================= Tema Retrô (8 bits) =======================
+   Cantos retos, molduras duplas, blocos com brilho de pixel e fonte de máquina. Só troca a aparência: as cores das peças são as mesmas. */
+html[data-tema="retro"]{
+  --bg:#1f2327; --bg2:#2a2e33; --panel:#000; --line:#58d6e6; --txt:#fff; --mut:#b9c3cc;
+  --accent:#c8281c; --acc2:#2a40d8; --onacc:#fff;
+  --t0:rgba(255,255,255,.05); --t1:rgba(255,255,255,.07); --t2:rgba(255,255,255,.16);
+  --board:#000; --cel1:#000; --cel2:#07090b; --cline:#1c2126;
+  --card1:#000; --card2:#05070a; --ovbg:rgba(0,0,0,.84); --toast:#000; --fieldbg:#000;
+  --shb:rgba(0,0,0,.6); --shc:rgba(0,0,0,.7);
+  --soft:#e4eaef; --strong:#fff; --acctxt:#6ff0ff; --gold:#ffd84d; --goldln:#ffd84d;
+  --ok:#5af0a0; --bad:#ff7a6a; --info:#8fd8ff; --staroff:#5a646e;
+  --ring:rgba(255,255,255,.75); --gokbg:rgba(255,255,255,.28); --gokln:#fff; --selln:#fff;
+  --handbg:rgba(255,255,255,.4); --handln:#fff;
+}
+html[data-tema="retro"] *{border-radius:0!important}
+html[data-tema="retro"] body{
+  background:#2a2e33 linear-gradient(#1f2327 2px,transparent 2px) 0 0/24px 24px fixed, linear-gradient(90deg,#1f2327 2px,transparent 2px) 0 0/24px 24px fixed;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono","Courier New",monospace;font-weight:700;
+}
+html[data-tema="retro"] :is(h1,h2,.btn,.pill,.tile,summary,.t1,.t2,.rl,.daily b){text-transform:uppercase;letter-spacing:.6px}
+html[data-tema="retro"] :is(h1,.t1){text-shadow:2px 2px 0 #000}
+/* molduras: cartões e tabuleiro com borda dupla, como num fliperama antigo */
+html[data-tema="retro"] .card{background:#000;border:4px solid var(--line);box-shadow:0 0 0 4px #000,0 0 0 8px #8a9199,8px 8px 0 8px rgba(0,0,0,.5)}
+html[data-tema="retro"] #board,html[data-tema="retro"] #edBoard{box-shadow:0 0 0 4px #000,0 0 0 8px var(--line),0 0 0 12px #000,0 0 0 14px #8a9199}
+html[data-tema="retro"] .cell{box-shadow:none}
+html[data-tema="retro"] .reserva{background:#000;border:3px solid var(--line)}
+html[data-tema="retro"] :is(.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast){border-width:2px}
+html[data-tema="retro"] :is(.btn,.ib,.tile,.infop,.daily){background:#000;box-shadow:inset -3px -3px 0 rgba(255,255,255,.16),inset 3px 3px 0 rgba(255,255,255,.08)}
+html[data-tema="retro"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#12171c}
+html[data-tema="retro"] :is(.btn,.ib):active{transform:translate(2px,2px)}
+html[data-tema="retro"] .btn.pri{background:var(--acc2);border-color:#9fb0ff;color:#fff}
+html[data-tema="retro"] .btn.pri:hover{background:#3a52f0}
+/* blocos: cor lisa com brilho de pixel em cima e sombra embaixo (as cores das peças continuam as mesmas) */
+html[data-tema="retro"] .fill{inset:1px;background:var(--c);box-shadow:inset calc(var(--cell)*.1) calc(var(--cell)*.1) 0 rgba(255,255,255,.6),inset calc(var(--cell)*-.1) calc(var(--cell)*-.1) 0 rgba(0,0,0,.38)}
+html[data-tema="retro"] .pc{margin:1px;background:var(--c);box-shadow:inset calc(var(--s)*.1) calc(var(--s)*.1) 0 rgba(255,255,255,.6),inset calc(var(--s)*-.1) calc(var(--s)*-.1) 0 rgba(0,0,0,.38)}
+html[data-tema="retro"] #flut{filter:none}
+html[data-tema="retro"] .star{width:24%;height:24%;box-shadow:0 0 0 2px #000,0 0 0 4px var(--ring)}
+html[data-tema="retro"] .cell.gok::after,html[data-tema="retro"] .cell.gbad::after{inset:1px}
+html[data-tema="retro"] .solp{inset:1px;box-shadow:inset 0 0 0 3px #fff}
+html[data-tema="retro"] #selo{background:#00a844;color:#fff;box-shadow:4px 4px 0 #000;border:2px solid #fff}
+html[data-tema="retro"] .pw{background:#000}
+html[data-tema="retro"] .pw.sel{box-shadow:0 0 0 3px #fff}
+html[data-tema="retro"] input,html[data-tema="retro"] textarea,html[data-tema="retro"] select{font-weight:700}
+html[data-tema="retro"] .field{text-transform:none}
+html[data-tema="retro"] #boardWrap{margin:14px auto}
+html[data-tema="retro"] #titulo .t1{letter-spacing:0;font-size:17px}
+@media (max-width:350px){html[data-tema="retro"] #titulo .t1{font-size:14px}html[data-tema="retro"] #titulo .t2{font-size:10px}}
 </style>
 </head>
 <body>
@@ -494,6 +541,7 @@ body.rm #mao.on{opacity:1}
         <option value="oceano">Oceano</option>
         <option value="floresta">Floresta</option>
         <option value="poente">Pôr do sol</option>
+        <option value="retro">Retrô (8 bits)</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
     </div></details>
@@ -1337,6 +1385,7 @@ en: {
   "Claro": "Light",
   "Oceano": "Ocean",
   "Floresta": "Forest",
+  "Retrô (8 bits)": "Retro (8-bit)",
   "Pôr do sol": "Sunset",
   "Com alto contraste ligado, o tema escuro é usado.": "With high contrast on, the dark theme is used.",
   "Tema alterado.": "Theme changed.",
@@ -1913,6 +1962,7 @@ es: {
   "Claro": "Claro",
   "Oceano": "Océano",
   "Floresta": "Bosque",
+  "Retrô (8 bits)": "Retro (8 bits)",
   "Pôr do sol": "Atardecer",
   "Com alto contraste ligado, o tema escuro é usado.": "Con el alto contraste activado se usa el tema oscuro.",
   "Tema alterado.": "Tema cambiado.",
@@ -2438,7 +2488,7 @@ const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
-const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'];
+const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
 const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
 const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };
 function limparBackup(env){
@@ -2676,8 +2726,8 @@ function aplicarIdioma(){
 const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
 let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
 /* ---- tema ---- */
-const TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'];
-const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14'};
+const TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327'};
 let tema = store.get('tema', 'escuro'); if (!TEMAS.includes(tema)) tema = 'escuro';
 const mqClaro = matchMedia('(prefers-color-scheme: light)');
 const temaAtivo = () => a11y.cont ? 'escuro' : tema === 'auto' ? (mqClaro.matches ? 'claro' : 'escuro') : tema;
@@ -4467,7 +4517,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.03.2';
+const VERSAO = '2026.11.03.3';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};

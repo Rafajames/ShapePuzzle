@@ -473,6 +473,7 @@ es: {
   "Claro": "Claro",
   "Oceano": "Océano",
   "Floresta": "Bosque",
+  "Retrô (8 bits)": "Retro (8 bits)",
   "Pôr do sol": "Atardecer",
   "Com alto contraste ligado, o tema escuro é usado.": "Con el alto contraste activado se usa el tema oscuro.",
   "Tema alterado.": "Tema cambiado.",

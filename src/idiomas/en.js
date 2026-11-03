@@ -473,6 +473,7 @@ en: {
   "Claro": "Light",
   "Oceano": "Ocean",
   "Floresta": "Forest",
+  "Retrô (8 bits)": "Retro (8-bit)",
   "Pôr do sol": "Sunset",
   "Com alto contraste ligado, o tema escuro é usado.": "With high contrast on, the dark theme is used.",
   "Tema alterado.": "Theme changed.",

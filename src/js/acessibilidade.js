@@ -2,8 +2,8 @@
 const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
 let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
 /* ---- tema ---- */
-const TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'];
-const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14'};
+const TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327'};
 let tema = store.get('tema', 'escuro'); if (!TEMAS.includes(tema)) tema = 'escuro';
 const mqClaro = matchMedia('(prefers-color-scheme: light)');
 const temaAtivo = () => a11y.cont ? 'escuro' : tema === 'auto' ? (mqClaro.matches ? 'claro' : 'escuro') : tema;

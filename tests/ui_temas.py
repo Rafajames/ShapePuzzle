@@ -10,7 +10,7 @@ def check(c, m):
     print(('  ok   ' if c else '  FALHA ') + m)
     if not c: falhas.append(m)
 FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')"
-TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente']
+TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro']
 def rgb(c):
     c = c.strip()
     if c.startswith('#'):
@@ -35,7 +35,7 @@ with sync_playwright() as pw:
     check(pg.evaluate("document.documentElement.dataset.tema") == 'escuro', 'quem não escolheu nada continua com o tema escuro de sempre')
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     ops = pg.evaluate("[...document.querySelectorAll('#selTema option')].map(o=>o.value)")
-    check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente'], f'seletor com os 6 temas: {ops}')
+    check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'], f'seletor com os 7 temas: {ops}')
     check(pg.is_visible('#selTema'), 'seletor aparece no menu')
     check(pg.evaluate("document.querySelector('#selTema').closest('label').textContent.includes('Tema')"), 'rótulo "Tema"')
 
@@ -46,7 +46,7 @@ with sync_playwright() as pw:
         check(pg.evaluate("document.documentElement.dataset.tema") == t, f'{t}: aplicado')
         fundos[t] = pg.evaluate("getComputedStyle(document.body).backgroundColor") + '|' + pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bg')")
         check(pg.evaluate("document.querySelector('meta[name=theme-color]').content") != '', f'{t}: cor da barra do navegador definida')
-    check(len(set(fundos.values())) >= 5, 'cada tema tem um fundo diferente')
+    check(len(set(fundos.values())) >= 6, 'cada tema tem um fundo diferente')
     pg.select_option('#selTema', 'oceano'); pg.wait_for_timeout(150)
     check(pg.evaluate("JSON.parse(localStorage.getItem('shapepuzzle.tema'))") == 'oceano', 'escolha salva no aparelho')
     pg.reload(); pg.wait_for_timeout(300)
@@ -100,7 +100,7 @@ with sync_playwright() as pw:
     pg.evaluate("document.documentElement.dataset.tema='oceano'")
 
     print('Telas no tema claro (sem sobra de cor escura)')
-    pg.evaluate("document.documentElement.dataset.tema='claro'")
+    pg.evaluate("document.documentElement.dataset.tema='claro'"); pg.wait_for_timeout(400)
     clar = pg.evaluate("""(()=>{const ruins=[]; const lumi=c=>{const m=c.match(/[\\d.]+/g).map(Number); return m.length>3 && m[3]<.3 ? 255 : (m[0]*.299+m[1]*.587+m[2]*.114)};
       for (const sel of ['body','.card','#board','.cell','.reserva','.pill','.btn','.ib']){ const e=document.querySelector(sel); if(!e) continue;
         const bg=getComputedStyle(e).backgroundColor; if(bg && bg!=='rgba(0, 0, 0, 0)' && lumi(bg)<110) ruins.push(sel+' '+bg);} return ruins;})()""")

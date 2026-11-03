@@ -64,7 +64,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 
 ## Temas, acessibilidade e idiomas
 
-- Menu → **Tema**: Automático (segue o claro/escuro do aparelho), Escuro (padrão), Claro, Oceano, Floresta e Pôr do sol. A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.
+- Menu → **Tema**: Automático (segue o claro/escuro do aparelho), Escuro (padrão), Claro, Oceano, Floresta, Pôr do sol e **Retrô (8 bits)** (cantos retos, molduras duplas e blocos com brilho de pixel). A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.
 - Menu → **Acessibilidade**: modo para daltônicos (um símbolo em cada cor), alto contraste, texto maior e reduzir animações (segue também a configuração do aparelho).
 - **Teclado**: setas movem o cursor no tabuleiro, `1`–`6` escolhe a peça, `R` gira, `T` espelha, `Enter`/`Espaço` encaixa ou tira a peça, `Z` desfaz, `P` pega a peça.
 - **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
