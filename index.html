@@ -242,6 +242,7 @@ select.field{flex:1}
 .rk .pos{width:34px;font-weight:800;text-align:center;flex:none}
 .rk .nm{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rk .tm{color:var(--mut);font-variant-numeric:tabular-nums;text-align:right;font-size:13px;flex:none}
+.rk.clic{cursor:pointer}.rk.clic:hover{border-color:var(--accent)}.rk .seta{color:var(--mut);flex:none;font-size:18px;line-height:1}
 .lf{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;border-radius:14px;background:var(--t1);border:1px solid var(--line);margin-bottom:8px}
 .lf.ok{border-color:rgba(40,230,120,.55);background:rgba(40,230,120,.08)}
 .lf span{flex:1;font-size:14px;font-weight:600}
@@ -740,6 +741,18 @@ body.rm #mao.on{opacity:1}
 </div>
 
 <!-- Modo de teste -->
+<!-- Estatísticas de um jogador (campeonatos) -->
+<div class="ov" id="ov-jog">
+  <div class="card">
+    <button class="ib x" data-close="jog" data-i="close" aria-label="Fechar"></button>
+    <h1 id="jgNome"></h1>
+    <p id="jgSub"></p>
+    <div id="jgGrade"></div>
+    <h2>Fase a fase</h2>
+    <div id="jgFases"></div>
+  </div>
+</div>
+
 <div class="ov" id="ov-teste">
   <div class="card">
     <button class="ib x" data-close="teste" data-i="close" aria-label="Fechar"></button>
@@ -962,6 +975,17 @@ en: {
   "terminaram tudo": "finished all",
   "{n} jogador": "{n} player",
   "{n} jogadores": "{n} players",
+  "Estatísticas de {nome}": "{nome}'s stats",
+  "Posição {pos}": "Rank {pos}",
+  "{pos}º de {n}": "{pos} of {n}",
+  "melhor: {t}": "best: {t}",
+  "Ver estatísticas de {nome}": "See {nome}'s stats",
+  "{a} de {b} fases concluídas": "{a} of {b} levels completed",
+  "Fase a fase": "Level by level",
+  "tempo total": "total time",
+  "jogadas": "moves",
+  "tempo médio por fase": "average time per level",
+  "fases com o melhor tempo": "levels with the best time",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1527,6 +1551,17 @@ es: {
   "terminaram tudo": "terminaron todo",
   "{n} jogador": "{n} jugador",
   "{n} jogadores": "{n} jugadores",
+  "Estatísticas de {nome}": "Estadísticas de {nome}",
+  "Posição {pos}": "Posición {pos}",
+  "{pos}º de {n}": "{pos}º de {n}",
+  "melhor: {t}": "mejor: {t}",
+  "Ver estatísticas de {nome}": "Ver estadísticas de {nome}",
+  "{a} de {b} fases concluídas": "{a} de {b} niveles completados",
+  "Fase a fase": "Nivel por nivel",
+  "tempo total": "tiempo total",
+  "jogadas": "jugadas",
+  "tempo médio por fase": "tiempo medio por nivel",
+  "fases com o melhor tempo": "niveles con el mejor tiempo",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2345,6 +2380,16 @@ function rankear(camp, jogadores){
   lista.sort((a, b) => b.feitas - a.feitas || a.tempo - b.tempo || a.jog - b.jog || a.ts - b.ts || (a.key < b.key ? -1 : 1));
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
   return lista;
+}
+/* Estatísticas de um jogador no campeonato. todos: uma lista por jogador, com [tempo, jogadas] ou null em cada fase; idx: quem; N: nº de fases. */
+function perfilJogador(todos, idx, N){
+  const meu = todos[idx] || [], fases = [];
+  for (let i = 0; i < N; i++){
+    const col = todos.map(l => l && l[i]).filter(Boolean), x = meu[i] || null, ts = col.map(y => y[0]);
+    fases.push({r: x, n: col.length, melhor: ts.length ? Math.min(...ts) : 0, media: ts.length ? Math.round(ts.reduce((a, b) => a + b, 0) / ts.length) : 0, pos: x ? 1 + col.filter(y => y[0] < x[0]).length : 0});
+  }
+  const fe = fases.filter(f => f.r), tempo = fe.reduce((a, f) => a + f.r[0], 0);
+  return {feitas: fe.length, total: N, tempo, jog: fe.reduce((a, f) => a + f.r[1], 0), medio: fe.length ? Math.round(tempo / fe.length) : 0, melhores: fe.filter(f => f.pos === 1).length, fases};
 }
 const emailOrganizador = nome => normalizarNome(nome) + '@organizador.shapepuzzle.app';
 const MSG_AUTH = {
@@ -4279,6 +4324,7 @@ function renderOffV(){
     const d = mk('div', 'rk' + (l.idx === e.eu ? ' eu' : ''));
     d.append(mk('span', 'pos', medalha(l.pos)), mk('span', 'nm', l.nome),
       mk('span', 'tm', !l.feitas ? tr('ainda não jogou') : (l.completo ? '' : l.feitas + '/' + p.f.length + ' · ') + fmtTempo(l.t) + (l.completo ? ' · ' + fmtJog(l.jog) : '')));
+    linhaClicavel(d, l.nome, () => abrirJogador(l.nome, l.pos, perfilJogador(p.j.map((_, i) => p.r[i] || []), l.idx, p.f.length), p.f.map((_, i) => 'Fase ' + (i + 1))));
     r.appendChild(d);
   });
   /* estatísticas */
@@ -4421,7 +4467,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.03.1';
+const VERSAO = '2026.11.03.2';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -4792,6 +4838,26 @@ async function atualizarLobby(silencioso){
   }catch(e){ if (!silencioso || !CP.camp) aviso('#lbAviso', msgNuvem(e), 'erro'); }
 }
 const prazoTxt = fim => !fim ? tr('sem prazo') : Date.now() > fim ? tr('prazo encerrado') : tr('até') + ' ' + new Date(fim).toLocaleString(LANG_HTML[lang], {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
+/* Estatísticas de um jogador (toque no nome no ranking). nomesFases: nome de cada fase. */
+function abrirJogador(nome, pos, perfil, nomesFases){
+  $('#jgNome').textContent = tr('Estatísticas de {nome}', {nome});
+  $('#jgSub').textContent = (pos ? tr('Posição {pos}', {pos}) + ' · ' : '') + tr('{a} de {b} fases concluídas', {a: perfil.feitas, b: perfil.total});
+  const g = $('#jgGrade'); g.innerHTML = '';
+  if (perfil.feitas) g.appendChild(gradeSv([[fmtTempo(perfil.tempo), 'tempo total'], [String(perfil.jog), 'jogadas'], [fmtTempo(perfil.medio), 'tempo médio por fase'], [perfil.melhores + '/' + perfil.feitas, 'fases com o melhor tempo']]));
+  const l = $('#jgFases'); l.innerHTML = '';
+  perfil.fases.forEach((f, i) => {
+    const d = mk('div', 'lf' + (f.r ? ' ok' : '')), s = mk('span', '', (i + 1) + '. ' + tr(nomesFases[i]));
+    s.appendChild(mk('small', '', !f.r ? tr('Ainda não jogada') : fmtTempo(f.r[0]) + ' · ' + fmtJog(f.r[1]) + ' · ' + tr('{pos}º de {n}', {pos: f.pos, n: f.n}) + (f.pos === 1 ? ' 🏆' : ' · ' + tr('melhor: {t}', {t: fmtTempo(f.melhor)}))));
+    d.appendChild(s); l.appendChild(d);
+  });
+  abrir('jog');
+}
+/* linha de ranking que abre as estatísticas ao tocar (ou Enter/Espaço) */
+function linhaClicavel(d, nome, abrirFn){
+  d.classList.add('clic'); d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', tr('Ver estatísticas de {nome}', {nome}));
+  d.appendChild(mk('span', 'seta', '›')); d.onclick = abrirFn;
+  d.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirFn(); } };
+}
 function renderLobby(){
   const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
   $('#lbTitulo').textContent = c.nome;
@@ -4818,6 +4884,11 @@ function renderLobby(){
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')), mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
+    linhaClicavel(d, r.nome, () => {
+      const chaves = Object.keys(CP.jogs), N = c.fases.length;
+      const todos = chaves.map(k => Array.from({length: N}, (_, i) => { const x = (CP.jogs[k].f || {})[i]; return x && x.t > 0 ? [x.t, x.j || 0] : null; }));
+      abrirJogador(r.nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
+    });
     caixa.appendChild(d);
   });
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');

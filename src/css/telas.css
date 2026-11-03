@@ -55,6 +55,7 @@ select.field{flex:1}
 .rk .pos{width:34px;font-weight:800;text-align:center;flex:none}
 .rk .nm{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rk .tm{color:var(--mut);font-variant-numeric:tabular-nums;text-align:right;font-size:13px;flex:none}
+.rk.clic{cursor:pointer}.rk.clic:hover{border-color:var(--accent)}.rk .seta{color:var(--mut);flex:none;font-size:18px;line-height:1}
 .lf{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;border-radius:14px;background:var(--t1);border:1px solid var(--line);margin-bottom:8px}
 .lf.ok{border-color:rgba(40,230,120,.55);background:rgba(40,230,120,.08)}
 .lf span{flex:1;font-size:14px;font-weight:600}

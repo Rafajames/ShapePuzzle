@@ -43,6 +43,16 @@ function rankear(camp, jogadores){
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
   return lista;
 }
+/* Estatísticas de um jogador no campeonato. todos: uma lista por jogador, com [tempo, jogadas] ou null em cada fase; idx: quem; N: nº de fases. */
+function perfilJogador(todos, idx, N){
+  const meu = todos[idx] || [], fases = [];
+  for (let i = 0; i < N; i++){
+    const col = todos.map(l => l && l[i]).filter(Boolean), x = meu[i] || null, ts = col.map(y => y[0]);
+    fases.push({r: x, n: col.length, melhor: ts.length ? Math.min(...ts) : 0, media: ts.length ? Math.round(ts.reduce((a, b) => a + b, 0) / ts.length) : 0, pos: x ? 1 + col.filter(y => y[0] < x[0]).length : 0});
+  }
+  const fe = fases.filter(f => f.r), tempo = fe.reduce((a, f) => a + f.r[0], 0);
+  return {feitas: fe.length, total: N, tempo, jog: fe.reduce((a, f) => a + f.r[1], 0), medio: fe.length ? Math.round(tempo / fe.length) : 0, melhores: fe.filter(f => f.pos === 1).length, fases};
+}
 const emailOrganizador = nome => normalizarNome(nome) + '@organizador.shapepuzzle.app';
 const MSG_AUTH = {
   EMAIL_EXISTS: 'Esse nome de organizador já tem conta. Use a senha dele ou escolha outro nome.',

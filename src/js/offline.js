@@ -174,6 +174,7 @@ function renderOffV(){
     const d = mk('div', 'rk' + (l.idx === e.eu ? ' eu' : ''));
     d.append(mk('span', 'pos', medalha(l.pos)), mk('span', 'nm', l.nome),
       mk('span', 'tm', !l.feitas ? tr('ainda não jogou') : (l.completo ? '' : l.feitas + '/' + p.f.length + ' · ') + fmtTempo(l.t) + (l.completo ? ' · ' + fmtJog(l.jog) : '')));
+    linhaClicavel(d, l.nome, () => abrirJogador(l.nome, l.pos, perfilJogador(p.j.map((_, i) => p.r[i] || []), l.idx, p.f.length), p.f.map((_, i) => 'Fase ' + (i + 1))));
     r.appendChild(d);
   });
   /* estatísticas */

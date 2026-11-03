@@ -93,6 +93,26 @@ async function atualizarLobby(silencioso){
   }catch(e){ if (!silencioso || !CP.camp) aviso('#lbAviso', msgNuvem(e), 'erro'); }
 }
 const prazoTxt = fim => !fim ? tr('sem prazo') : Date.now() > fim ? tr('prazo encerrado') : tr('até') + ' ' + new Date(fim).toLocaleString(LANG_HTML[lang], {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
+/* Estatísticas de um jogador (toque no nome no ranking). nomesFases: nome de cada fase. */
+function abrirJogador(nome, pos, perfil, nomesFases){
+  $('#jgNome').textContent = tr('Estatísticas de {nome}', {nome});
+  $('#jgSub').textContent = (pos ? tr('Posição {pos}', {pos}) + ' · ' : '') + tr('{a} de {b} fases concluídas', {a: perfil.feitas, b: perfil.total});
+  const g = $('#jgGrade'); g.innerHTML = '';
+  if (perfil.feitas) g.appendChild(gradeSv([[fmtTempo(perfil.tempo), 'tempo total'], [String(perfil.jog), 'jogadas'], [fmtTempo(perfil.medio), 'tempo médio por fase'], [perfil.melhores + '/' + perfil.feitas, 'fases com o melhor tempo']]));
+  const l = $('#jgFases'); l.innerHTML = '';
+  perfil.fases.forEach((f, i) => {
+    const d = mk('div', 'lf' + (f.r ? ' ok' : '')), s = mk('span', '', (i + 1) + '. ' + tr(nomesFases[i]));
+    s.appendChild(mk('small', '', !f.r ? tr('Ainda não jogada') : fmtTempo(f.r[0]) + ' · ' + fmtJog(f.r[1]) + ' · ' + tr('{pos}º de {n}', {pos: f.pos, n: f.n}) + (f.pos === 1 ? ' 🏆' : ' · ' + tr('melhor: {t}', {t: fmtTempo(f.melhor)}))));
+    d.appendChild(s); l.appendChild(d);
+  });
+  abrir('jog');
+}
+/* linha de ranking que abre as estatísticas ao tocar (ou Enter/Espaço) */
+function linhaClicavel(d, nome, abrirFn){
+  d.classList.add('clic'); d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', tr('Ver estatísticas de {nome}', {nome}));
+  d.appendChild(mk('span', 'seta', '›')); d.onclick = abrirFn;
+  d.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirFn(); } };
+}
 function renderLobby(){
   const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
   $('#lbTitulo').textContent = c.nome;
@@ -119,6 +139,11 @@ function renderLobby(){
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')), mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
+    linhaClicavel(d, r.nome, () => {
+      const chaves = Object.keys(CP.jogs), N = c.fases.length;
+      const todos = chaves.map(k => Array.from({length: N}, (_, i) => { const x = (CP.jogs[k].f || {})[i]; return x && x.t > 0 ? [x.t, x.j || 0] : null; }));
+      abrirJogador(r.nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
+    });
     caixa.appendChild(d);
   });
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');

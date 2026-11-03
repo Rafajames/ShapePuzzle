@@ -1,7 +1,7 @@
 // Campeonato sem internet: código, validação, junção de resultados, ranking e estatísticas.
 const fs=require('fs');const html=fs.readFileSync(require('path').join(__dirname,'..','index.html'),'utf8');
 const logic=html.split('// ==LOGIC-START==')[1].split('// ==LOGIC-END==')[0];
-const L=new Function('btoa','atob','escape','unescape',logic+';return {limparOff,codigoOff,lerCodigoOff,juntarOff,rankOff,estatOff,defOff};')(
+const L=new Function('btoa','atob','escape','unescape',logic+';return {perfilJogador,limparOff,codigoOff,lerCodigoOff,juntarOff,rankOff,estatOff,defOff};')(
   s=>Buffer.from(s,'binary').toString('base64'),s=>Buffer.from(s,'base64').toString('binary'),escape,unescape);
 let ok=true;const eq=(a,b,m)=>{if(JSON.stringify(a)!==JSON.stringify(b)){ok=false;console.log('FALHA',m,JSON.stringify(a),'!=',JSON.stringify(b));}};
 const base={v:1,i:'ABC234',n:'Copa da Família',f:[['b',2],['g','facil',123456],['g','dificil',999]],j:['Rafa','Maria','João'],r:{}};
@@ -53,6 +53,13 @@ eq([e.jogadores,e.terminaram,e.comResultado,e.tempoTotal,e.jogadasTotal],[3,2,3,
 eq(e.porFase[0].melhor.nome,'João','melhor da fase 1');eq(e.porFase[0].n,3,'3 resultados na fase 1');eq(e.porFase[0].media,Math.round((60000+50000+40000)/3),'média da fase 1');
 eq(e.maisRapida.i,0,'fase mais rápida (menor média)');eq(e.maisDificil.i,2,'fase mais demorada');
 eq(L.estatOff(a).maisDificil,null,'uma fase só com resultado: sem "mais difícil"');
+// perfil de um jogador (usado também pelo campeonato online)
+const todos=[0,1,2].map(i=>t.r[i]||[]);
+const pr=L.perfilJogador(todos,0,3);
+eq([pr.feitas,pr.total,pr.tempo,pr.jog,pr.medio,pr.melhores],[3,3,180000,31,60000,2],'perfil de Rafa');
+eq(pr.fases.map(f=>[f.pos,f.n,f.melhor]),[[3,3,40000],[1,2,50000],[1,2,70000]],'posição em cada fase (empate fica com a mesma posição)');
+eq(L.perfilJogador(todos,2,3).fases[1],{r:null,n:2,melhor:50000,media:50000,pos:0},'fase não jogada');
+eq(L.perfilJogador([[]],0,2).feitas,0,'sem resultados');
 // tamanho do convite (tem que caber num QR)
 const grande=limparOff({v:1,i:'ABC234',n:'Campeonato bem grande do escritório',f:Array.from({length:8},(_,i)=>['g','dificil',900000000+i]),j:Array.from({length:12},(_,i)=>'Jogador numero '+i),r:{}},50).pacote;
 console.log('convite máximo:',codigoOff(grande).length,'caracteres');if(codigoOff(grande).length>1000){ok=false;console.log('FALHA convite grande demais');}
