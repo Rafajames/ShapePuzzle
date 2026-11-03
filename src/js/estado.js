@@ -71,7 +71,9 @@ function humorDaFase(cur){
   if (cur.k === 's') return 'noturna';
   return 'calma';
 }
-function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref); }
+/* a música de cada tema (menu → Som → Estilo → "Música do tema") */
+const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira'};
+function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};

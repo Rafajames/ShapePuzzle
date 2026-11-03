@@ -18,7 +18,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 @@script tema-inicial.js
-@@style base.css componentes.css telas.css acessibilidade.css tema-retro.css
+@@style base.css componentes.css telas.css acessibilidade.css tema-retro.css tema-madeira.css
 </head>
 <body>
 <div id="app">
@@ -129,9 +129,17 @@
     <label class="row"><span class="rl">Estilo</span>
       <select class="field" id="selHumor">
         <option value="auto">Automático (por fase)</option>
+        <option value="tema">Música do tema (muda com o tema)</option>
         <option value="calma">Calma</option>
         <option value="animada">Animada</option>
         <option value="noturna">Noturna</option>
+        <option value="noite">Meia-noite</option>
+        <option value="manha">Manhã</option>
+        <option value="mare">Maré</option>
+        <option value="mata">Mata</option>
+        <option value="entardecer">Entardecer</option>
+        <option value="chip">Chiptune</option>
+        <option value="madeira">Marimba</option>
       </select></label>
     <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
@@ -148,6 +156,7 @@
         <option value="floresta">Floresta</option>
         <option value="poente">Pôr do sol</option>
         <option value="retro">Retrô (8 bits)</option>
+        <option value="madeira">Madeira</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
     </div></details>

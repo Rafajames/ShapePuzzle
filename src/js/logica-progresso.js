@@ -27,7 +27,8 @@ const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
-const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira'];
+const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira'];
 const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
 const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };
 function limparBackup(env){
@@ -61,7 +62,7 @@ function limparBackup(env){
     if (['pt', 'en', 'es'].includes(c.lang)) q.lang = c.lang;
     if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
     if (isObj(c.a11y)){ q.a11y = {}; for (const k of ['dalt', 'cont', 'texto', 'mov']) if (typeof c.a11y[k] === 'boolean') q.a11y[k] = c.a11y[k]; }
-    if (['auto', 'calma', 'animada', 'noturna'].includes(c.humor)) q.humor = c.humor;
+    if (BK_HUMORES.includes(c.humor)) q.humor = c.humor;
     if (c.pecas === 'auto' || (c.pecas >= 2 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 2, 99);
     for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
     if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;

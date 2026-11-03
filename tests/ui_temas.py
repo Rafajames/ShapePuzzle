@@ -10,7 +10,7 @@ def check(c, m):
     print(('  ok   ' if c else '  FALHA ') + m)
     if not c: falhas.append(m)
 FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')"
-TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro']
+TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira']
 def rgb(c):
     c = c.strip()
     if c.startswith('#'):
@@ -35,7 +35,7 @@ with sync_playwright() as pw:
     check(pg.evaluate("document.documentElement.dataset.tema") == 'escuro', 'quem não escolheu nada continua com o tema escuro de sempre')
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     ops = pg.evaluate("[...document.querySelectorAll('#selTema option')].map(o=>o.value)")
-    check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'], f'seletor com os 7 temas: {ops}')
+    check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira'], f'seletor com os 8 temas: {ops}')
     check(pg.is_visible('#selTema'), 'seletor aparece no menu')
     check(pg.evaluate("document.querySelector('#selTema').closest('label').textContent.includes('Tema')"), 'rótulo "Tema"')
 
@@ -46,7 +46,7 @@ with sync_playwright() as pw:
         check(pg.evaluate("document.documentElement.dataset.tema") == t, f'{t}: aplicado')
         fundos[t] = pg.evaluate("getComputedStyle(document.body).backgroundColor") + '|' + pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bg')")
         check(pg.evaluate("document.querySelector('meta[name=theme-color]').content") != '', f'{t}: cor da barra do navegador definida')
-    check(len(set(fundos.values())) >= 6, 'cada tema tem um fundo diferente')
+    check(len(set(fundos.values())) >= 7, 'cada tema tem um fundo diferente')
     pg.select_option('#selTema', 'oceano'); pg.wait_for_timeout(150)
     check(pg.evaluate("JSON.parse(localStorage.getItem('shapepuzzle.tema'))") == 'oceano', 'escolha salva no aparelho')
     pg.reload(); pg.wait_for_timeout(300)
@@ -105,6 +105,30 @@ with sync_playwright() as pw:
       for (const sel of ['body','.card','#board','.cell','.reserva','.pill','.btn','.ib']){ const e=document.querySelector(sel); if(!e) continue;
         const bg=getComputedStyle(e).backgroundColor; if(bg && bg!=='rgba(0, 0, 0, 0)' && lumi(bg)<110) ruins.push(sel+' '+bg);} return ruins;})()""")
     check(not clar, f'nenhum fundo escuro sobrando no tema claro: {clar}')
+
+    print('Música de cada tema')
+    pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")
+    pg.evaluate("store.set('humor','auto'); humorPref='auto'; Som.iniciar(); aplicarHumor()"); pg.wait_for_timeout(200)
+    pg.evaluate("abrirMenu(); document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)")
+    ops = pg.evaluate("[...document.querySelectorAll('#selHumor option')].map(o=>o.value)")
+    check(ops[:2] == ['auto', 'tema'] and set(['noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira']) <= set(ops), f'Estilo de música tem "Música do tema" e um clima para cada tema: {ops}')
+    pg.select_option('#selHumor', 'tema'); pg.wait_for_timeout(200)
+    esperado = {'escuro': 'noite', 'claro': 'manha', 'oceano': 'mare', 'floresta': 'mata', 'poente': 'entardecer', 'retro': 'chip', 'madeira': 'madeira'}
+    for t, h in esperado.items():
+        pg.select_option('#selTema', t); pg.wait_for_timeout(200)
+        check(pg.evaluate("Som.humorAtual()") == h, f'tema {t}: música {h}')
+    pg.select_option('#selHumor', 'calma'); pg.wait_for_timeout(150); pg.select_option('#selTema', 'retro'); pg.wait_for_timeout(150)
+    check(pg.evaluate("Som.humorAtual()") == 'calma', 'estilo fixo não muda com o tema')
+    pg.select_option('#selHumor', 'auto'); pg.wait_for_timeout(150)
+    check(pg.evaluate("store.get('humor')") == 'auto', 'voltar ao automático')
+    # cada clima toca de verdade (cria os nós de áudio sem erro)
+    for h in esperado.values():
+        pg.evaluate(f"Som.aplicarHumor('{h}')"); pg.wait_for_timeout(700)
+        check(pg.evaluate("Som.humorAtual()") == h, f'clima {h} toca')
+    pg.evaluate("document.documentElement.dataset.tema='madeira'")
+    pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))"); pg.evaluate("carregar({k:'b',i:9})"); pg.wait_for_timeout(300)
+    pg.screenshot(path=SAIDA + 'madeira-jogo.png')
+    pg.evaluate("abrirMenu()"); pg.wait_for_timeout(300); pg.screenshot(path=SAIDA + 'madeira-menu.png')
     b.close()
 print('erros de página:', erros)
 if erros: falhas.append('erros de página')

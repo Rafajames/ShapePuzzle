@@ -64,8 +64,9 @@ $('#btnDia').onclick = () => {
   setTimeout(() => carregar({k: 'd', data: dataHoje()}), 30);
 };
 $('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica(); };
-const salvarA11y = (k, v) => { a11y[k] = v; store.set('a11y', a11y); aplicarA11y(); };
-$('#selTema').onchange = e => { tema = e.target.value; store.set('tema', tema); aplicarTema(); anunciar(tr('Tema alterado.')); };
+const salvarA11y = (k, v) => { a11y[k] = v; store.set('a11y', a11y); aplicarA11y(); aplicarHumor(); };
+$('#selTema').onchange = e => { tema = e.target.value; store.set('tema', tema); aplicarTema(); aplicarHumor(); anunciar(tr('Tema alterado.')); };
+if (mqClaro.addEventListener) mqClaro.addEventListener('change', () => { if (tema === 'auto') aplicarHumor(); });
 $('#chkDalt').onchange = e => salvarA11y('dalt', e.target.checked);
 $('#chkCont').onchange = e => salvarA11y('cont', e.target.checked);
 $('#chkTexto').onchange = e => salvarA11y('texto', e.target.checked);
