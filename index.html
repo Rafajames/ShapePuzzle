@@ -574,6 +574,7 @@ body.rm #mao.on{opacity:1}
     <button class="ib x" data-close="camps" data-i="close" aria-label="Fechar"></button>
     <h1>Campeonatos</h1>
     <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
+    <div class="acts"><button class="btn" id="cpOff" data-i="qr" style="width:100%">Campeonato sem internet (QR code)</button></div>
     <h2>Seu nome</h2>
     <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
     <div id="cpOrg">
@@ -595,6 +596,85 @@ body.rm #mao.on{opacity:1}
       <input class="field" id="cpChave" placeholder="Chave da API do app web (apiKey)" autocapitalize="off" spellcheck="false" style="margin-top:8px">
       <div class="acts"><button class="btn sm" id="cpDbSalvar">Salvar endereço</button></div>
     </details>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: início -->
+<div class="ov" id="ov-off">
+  <div class="card">
+    <button class="ib x" data-close="off" data-i="close" aria-label="Fechar"></button>
+    <h1>Sem internet</h1>
+    <p>Crie um campeonato e gere um QR code para cada pessoa. Cada um joga no seu tempo, sem internet, e no fim vocês juntam os resultados para ver o ranking.</p>
+    <div class="acts"><button class="btn pri" id="ofCriar" data-i="trophy" style="width:100%">Criar campeonato por QR code</button></div>
+    <h2>Recebeu um código ou link?</h2>
+    <textarea class="field" id="ofCola" rows="3" placeholder="Cole aqui o link ou o código" autocapitalize="off" spellcheck="false" style="resize:vertical"></textarea>
+    <div class="acts"><button class="btn" id="ofImportar" data-i="download">Abrir</button></div>
+    <p class="aviso" id="ofAviso"></p>
+    <h2>Meus campeonatos sem internet</h2>
+    <div id="ofLista"></div>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: criar -->
+<div class="ov" id="ov-offc">
+  <div class="card">
+    <button class="ib x" data-close="offc" data-i="close" aria-label="Fechar"></button>
+    <h1>Novo campeonato</h1>
+    <input class="field" id="ocNome" maxlength="30" placeholder="Nome do campeonato" autocomplete="off">
+    <h2>Seu nome</h2>
+    <input class="field" id="ocEu" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
+    <h2>Os outros jogadores</h2>
+    <textarea class="field" id="ocOutros" rows="5" placeholder="Um nome por linha&#10;Ana&#10;Bruno" style="resize:vertical"></textarea>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Cada nome ganha o seu próprio QR code. Até 12 pessoas no total, com você.</p>
+    <h2>Fases</h2>
+    <label class="row"><span class="rl">Quantas</span>
+      <select class="field" id="ocQtd"><option value="3">3 fases</option><option value="5" selected>5 fases</option><option value="8">8 fases</option></select></label>
+    <label class="row"><span class="rl">Quais</span>
+      <select class="field" id="ocTipo">
+        <option value="jogo">Fases do jogo (de fácil a difícil)</option>
+        <option value="crescente">Sorteadas (de fácil a difícil)</option>
+        <option value="facil">Sorteadas fáceis</option>
+        <option value="medio">Sorteadas médias</option>
+        <option value="dificil">Sorteadas difíceis</option>
+      </select></label>
+    <div class="acts"><button class="btn pri" id="ocCriar" data-i="trophy">Criar e gerar os QR codes</button></div>
+    <p class="aviso" id="ocAviso"></p>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: o campeonato -->
+<div class="ov" id="ov-offv">
+  <div class="card">
+    <button class="ib x" data-close="offv" data-i="close" aria-label="Fechar"></button>
+    <h1 id="ovTitulo">Campeonato</h1>
+    <p id="ovSub"></p>
+    <div id="ovQuem" hidden>
+      <h2>Quem é você?</h2>
+      <select class="field" id="ovQuemSel"></select>
+      <div class="acts"><button class="btn pri" id="ovQuemOk" data-i="check">Sou eu</button></div>
+    </div>
+    <div id="ovMeu" hidden>
+      <h2 id="ovMeuTit">Suas fases</h2>
+      <div id="ovFases"></div>
+      <p class="aviso ok" id="ovFim" hidden>Você terminou! Mostre o seu QR de resultado para quem organiza.</p>
+    </div>
+    <h2>Ranking</h2>
+    <div id="ovRank"></div>
+    <div id="ovEst"></div>
+    <div class="acts">
+      <button class="btn pri" id="ovResultado" data-i="qr" hidden>QR do meu resultado</button>
+      <button class="btn" id="ovRanking" data-i="trophy">Compartilhar o ranking</button>
+    </div>
+    <h2>QR codes dos jogadores</h2>
+    <p style="margin:0 0 8px;font-size:13px">Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.</p>
+    <div id="ovConvites"></div>
+    <details class="cfg"><summary>Juntar o resultado de outra pessoa</summary>
+      <p style="margin:8px 0">Escaneie o QR de resultado com a câmera do celular, ou cole aqui o link ou o código que ela mandou.</p>
+      <textarea class="field" id="ovCola" rows="3" placeholder="Cole aqui o link ou o código" autocapitalize="off" spellcheck="false" style="resize:vertical"></textarea>
+      <div class="acts"><button class="btn sm" id="ovImportar" data-i="download">Juntar</button></div>
+    </details>
+    <p class="aviso" id="ovAviso"></p>
+    <div class="acts"><button class="btn danger sm" id="ovExcluir" data-i="trash">Tirar deste aparelho</button></div>
   </div>
 </div>
 
@@ -813,6 +893,75 @@ en: {
   "{n} feita": "{n} done",
   "Corrida": "Race",
   "desafio da semana": "weekly challenge",
+  "Sorteada": "Random",
+  "Diga primeiro quem é você.": "Say who you are first.",
+  "Você já fez esta fase.": "You already did this level.",
+  "Você terminou o campeonato! Mostre o seu QR de resultado.": "You finished the championship! Show your result QR code.",
+  "Resultado guardado neste aparelho.": "Result saved on this device.",
+  "Você ainda não tem nenhum campeonato sem internet.": "You don't have any offline championships yet.",
+  "Tirar deste aparelho": "Remove from this device",
+  "Tirar este campeonato deste aparelho? Os resultados guardados aqui serão apagados.": "Remove this championship from this device? The results saved here will be deleted.",
+  "Shape Puzzle — campeonato \"{c}\"": "Shape Puzzle — championship \"{c}\"",
+  "ainda não jogou": "hasn't played yet",
+  "Suas fases, {nome}": "Your levels, {nome}",
+  "fase mais rápida": "fastest level",
+  "fase mais demorada": "slowest level",
+  "Melhor: {nome} {t} · Média: {m} · {n} de {total}": "Best: {nome} {t} · Average: {m} · {n} of {total}",
+  "QR code": "QR code",
+  "{nome}, você foi convidado(a) para o campeonato \"{c}\" no Shape Puzzle! São {n} fases, cada um joga no seu tempo e no fim vocês comparam os resultados.": "{nome}, you're invited to the championship \"{c}\" on Shape Puzzle! There are {n} levels, everyone plays at their own pace and in the end you compare results.",
+  "{nome} jogou o campeonato \"{c}\" no Shape Puzzle ({a} de {b} fases, {t} no total). Escaneie o QR code ou abra o link para juntar o resultado.": "{nome} played the championship \"{c}\" on Shape Puzzle ({a} of {b} levels, {t} in total). Scan the QR code or open the link to add the result.",
+  "Esse código é de outro campeonato.": "That code is from a different championship.",
+  "Resultados juntados.": "Results merged.",
+  "Você recebeu um campeonato sem internet! Toque em Jogar para abrir.": "You received an offline championship! Tap Play to open it.",
+  "Cada jogador precisa de um nome diferente, com pelo menos 2 letras.": "Each player needs a different name with at least 2 letters.",
+  "Cada nome ganha o seu próprio QR code. Até 12 pessoas no total, com você.": "Each name gets its own QR code. Up to 12 people in total, including you.",
+  "Campeonato sem internet (QR code)": "Offline championship (QR code)",
+  "Cole aqui o link ou o código": "Paste the link or code here",
+  "Cole o código ou o link primeiro.": "Paste the code or link first.",
+  "Compartilhar o ranking": "Share the ranking",
+  "Criar campeonato por QR code": "Create a QR code championship",
+  "Criar e gerar os QR codes": "Create and generate the QR codes",
+  "Crie um campeonato e gere um QR code para cada pessoa. Cada um joga no seu tempo, sem internet, e no fim vocês juntam os resultados para ver o ranking.": "Create a championship and get a QR code for each person. Everyone plays at their own pace, offline, and in the end you put the results together to see the ranking.",
+  "Dê um nome ao campeonato (pelo menos 2 letras).": "Give the championship a name (at least 2 letters).",
+  "Escaneie o QR de resultado com a câmera do celular, ou cole aqui o link ou o código que ela mandou.": "Scan the result QR code with your phone camera, or paste here the link or code they sent.",
+  "Escreva o nome de pelo menos mais um jogador.": "Write the name of at least one more player.",
+  "Esse código não parece ser de um campeonato do Shape Puzzle.": "That code doesn't look like a Shape Puzzle championship.",
+  "Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "That code is from a version this game doesn't know. Update the game and try again.",
+  "Fase do jogo": "Game level",
+  "Fases do jogo (de fácil a difícil)": "Game levels (easy to hard)",
+  "Isso não parece um código de campeonato do Shape Puzzle.": "That doesn't look like a Shape Puzzle championship code.",
+  "Juntar": "Merge",
+  "Juntar o resultado de outra pessoa": "Add another person's result",
+  "Meus campeonatos sem internet": "My offline championships",
+  "Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.": "Show the QR code to each person: they scan it with their phone camera and join as themselves.",
+  "No máximo 12 jogadores, contando com você.": "At most 12 players, counting you.",
+  "O campeonato precisa de 1 a 8 fases.": "The championship needs 1 to 8 levels.",
+  "O campeonato precisa de 2 a 12 jogadores.": "The championship needs 2 to 12 players.",
+  "Os nomes dos jogadores estão repetidos ou inválidos.": "The player names are repeated or invalid.",
+  "Os outros jogadores": "The other players",
+  "QR codes dos jogadores": "Players' QR codes",
+  "QR do meu resultado": "My result QR code",
+  "Quais": "Which",
+  "Quantas": "How many",
+  "Quem é você?": "Who are you?",
+  "Recebeu um código ou link?": "Got a code or link?",
+  "Sem internet": "Offline",
+  "Sorteadas (de fácil a difícil)": "Random (easy to hard)",
+  "Sorteadas difíceis": "Random, hard",
+  "Sorteadas fáceis": "Random, easy",
+  "Sorteadas médias": "Random, medium",
+  "Sou eu": "It's me",
+  "Suas fases": "Your levels",
+  "Um nome por linha\nAna\nBruno": "One name per line\nAna\nBruno",
+  "Uma das fases desse campeonato é inválida.": "One of this championship's levels is invalid.",
+  "Ver campeonato": "View championship",
+  "Ver resultado": "View result",
+  "Você terminou! Mostre o seu QR de resultado para quem organiza.": "You're done! Show your result QR code to the organizer.",
+  "jogadas somadas": "total moves",
+  "tempo somado": "total time",
+  "terminaram tudo": "finished all",
+  "{n} jogador": "{n} player",
+  "{n} jogadores": "{n} players",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1309,6 +1458,75 @@ es: {
   "{n} feita": "{n} hecho",
   "Corrida": "Carrera",
   "desafio da semana": "desafío de la semana",
+  "Sorteada": "Sorteada",
+  "Diga primeiro quem é você.": "Diga primero quién eres.",
+  "Você já fez esta fase.": "Ya hiciste este nivel.",
+  "Você terminou o campeonato! Mostre o seu QR de resultado.": "¡Terminaste el torneo! Muestra tu código QR de resultado.",
+  "Resultado guardado neste aparelho.": "Resultado guardado en este dispositivo.",
+  "Você ainda não tem nenhum campeonato sem internet.": "Aún no tienes ningún torneo sin internet.",
+  "Tirar deste aparelho": "Quitar de este dispositivo",
+  "Tirar este campeonato deste aparelho? Os resultados guardados aqui serão apagados.": "¿Quitar este torneo de este dispositivo? Se borrarán los resultados guardados aquí.",
+  "Shape Puzzle — campeonato \"{c}\"": "Shape Puzzle — torneo \"{c}\"",
+  "ainda não jogou": "aún no jugó",
+  "Suas fases, {nome}": "Tus niveles, {nome}",
+  "fase mais rápida": "nivel más rápido",
+  "fase mais demorada": "nivel más lento",
+  "Melhor: {nome} {t} · Média: {m} · {n} de {total}": "Mejor: {nome} {t} · Promedio: {m} · {n} de {total}",
+  "QR code": "Código QR",
+  "{nome}, você foi convidado(a) para o campeonato \"{c}\" no Shape Puzzle! São {n} fases, cada um joga no seu tempo e no fim vocês comparam os resultados.": "{nome}, ¡te invitaron al torneo \"{c}\" en Shape Puzzle! Son {n} niveles, cada uno juega a su ritmo y al final comparan los resultados.",
+  "{nome} jogou o campeonato \"{c}\" no Shape Puzzle ({a} de {b} fases, {t} no total). Escaneie o QR code ou abra o link para juntar o resultado.": "{nome} jugó el torneo \"{c}\" en Shape Puzzle ({a} de {b} niveles, {t} en total). Escanea el código QR o abre el enlace para sumar el resultado.",
+  "Esse código é de outro campeonato.": "Ese código es de otro torneo.",
+  "Resultados juntados.": "Resultados unidos.",
+  "Você recebeu um campeonato sem internet! Toque em Jogar para abrir.": "¡Recibiste un torneo sin internet! Toca Jugar para abrirlo.",
+  "Cada jogador precisa de um nome diferente, com pelo menos 2 letras.": "Cada jugador necesita un nombre distinto, con al menos 2 letras.",
+  "Cada nome ganha o seu próprio QR code. Até 12 pessoas no total, com você.": "Cada nombre recibe su propio código QR. Hasta 12 personas en total, contigo.",
+  "Campeonato sem internet (QR code)": "Torneo sin internet (código QR)",
+  "Cole aqui o link ou o código": "Pega aquí el enlace o el código",
+  "Cole o código ou o link primeiro.": "Pega primero el código o el enlace.",
+  "Compartilhar o ranking": "Compartir el ranking",
+  "Criar campeonato por QR code": "Crear torneo por código QR",
+  "Criar e gerar os QR codes": "Crear y generar los códigos QR",
+  "Crie um campeonato e gere um QR code para cada pessoa. Cada um joga no seu tempo, sem internet, e no fim vocês juntam os resultados para ver o ranking.": "Crea un torneo y genera un código QR para cada persona. Cada uno juega a su ritmo, sin internet, y al final juntan los resultados para ver el ranking.",
+  "Dê um nome ao campeonato (pelo menos 2 letras).": "Ponle un nombre al torneo (al menos 2 letras).",
+  "Escaneie o QR de resultado com a câmera do celular, ou cole aqui o link ou o código que ela mandou.": "Escanea el QR de resultado con la cámara del celular, o pega aquí el enlace o el código que envió.",
+  "Escreva o nome de pelo menos mais um jogador.": "Escribe el nombre de al menos un jugador más.",
+  "Esse código não parece ser de um campeonato do Shape Puzzle.": "Ese código no parece ser de un torneo de Shape Puzzle.",
+  "Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "Ese código es de una versión que este juego no conoce. Actualiza el juego e inténtalo de nuevo.",
+  "Fase do jogo": "Nivel del juego",
+  "Fases do jogo (de fácil a difícil)": "Niveles del juego (de fácil a difícil)",
+  "Isso não parece um código de campeonato do Shape Puzzle.": "Eso no parece un código de torneo de Shape Puzzle.",
+  "Juntar": "Unir",
+  "Juntar o resultado de outra pessoa": "Sumar el resultado de otra persona",
+  "Meus campeonatos sem internet": "Mis torneos sin internet",
+  "Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.": "Muestra el QR a cada persona: lo escanea con la cámara del celular y entra como ella misma.",
+  "No máximo 12 jogadores, contando com você.": "Máximo 12 jugadores, contándote a ti.",
+  "O campeonato precisa de 1 a 8 fases.": "El torneo necesita de 1 a 8 niveles.",
+  "O campeonato precisa de 2 a 12 jogadores.": "El torneo necesita de 2 a 12 jugadores.",
+  "Os nomes dos jogadores estão repetidos ou inválidos.": "Los nombres de los jugadores están repetidos o no son válidos.",
+  "Os outros jogadores": "Los demás jugadores",
+  "QR codes dos jogadores": "Códigos QR de los jugadores",
+  "QR do meu resultado": "QR de mi resultado",
+  "Quais": "Cuáles",
+  "Quantas": "Cuántos",
+  "Quem é você?": "¿Quién eres?",
+  "Recebeu um código ou link?": "¿Recibiste un código o enlace?",
+  "Sem internet": "Sin internet",
+  "Sorteadas (de fácil a difícil)": "Sorteados (de fácil a difícil)",
+  "Sorteadas difíceis": "Sorteados difíciles",
+  "Sorteadas fáceis": "Sorteados fáciles",
+  "Sorteadas médias": "Sorteados medios",
+  "Sou eu": "Soy yo",
+  "Suas fases": "Tus niveles",
+  "Um nome por linha\nAna\nBruno": "Un nombre por línea\nAna\nBruno",
+  "Uma das fases desse campeonato é inválida.": "Uno de los niveles de este torneo no es válido.",
+  "Ver campeonato": "Ver torneo",
+  "Ver resultado": "Ver resultado",
+  "Você terminou! Mostre o seu QR de resultado para quem organiza.": "¡Terminaste! Muestra tu QR de resultado a quien organiza.",
+  "jogadas somadas": "jugadas sumadas",
+  "tempo somado": "tiempo sumado",
+  "terminaram tudo": "terminaron todo",
+  "{n} jogador": "{n} jugador",
+  "{n} jogadores": "{n} jugadores",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2249,6 +2467,83 @@ function juntarDados(a, b){
 }
 /* Soma de verificação simples (FNV-1a) para perceber um código copiado pela metade. */
 function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+/* ---- Campeonato sem internet por QR code: lógica pura (testada em Node) ----
+   Tudo viaja dentro do próprio link/QR. Um "pacote" é o campeonato (nome, fases, jogadores) mais os resultados que já se tem:
+   {v: 1, i: código, n: nome, f: [fases], j: [nomes], r: {"0": [[tempoMs, jogadas] | null, ...]}}
+   Uma fase é ['b', número da fase do jogo] ou ['g', 'facil'|'medio'|'dificil', semente] (o jogo gera a mesma fase em qualquer aparelho). */
+function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
+const OFF_MAX_J = 12, OFF_MAX_F = 8, OFF_NIVEIS = ['facil', 'medio', 'dificil'];
+const defOff = p => JSON.stringify([p.n, p.f, p.j]);
+function limparOff(p, nBuiltin = 999){
+  if (!isObj(p) || p.v !== 1) return {erro: 'Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.'};
+  const nome = limparNome(String(p.n || '').slice(0, 40)), id = String(p.i || '');
+  if (!codigoValido(id) || nome.length < 2) return {erro: 'Esse código não parece ser de um campeonato do Shape Puzzle.'};
+  if (!Array.isArray(p.j) || p.j.length < 2 || p.j.length > OFF_MAX_J) return {erro: 'O campeonato precisa de 2 a ' + OFF_MAX_J + ' jogadores.'};
+  const j = p.j.map(limparNome), vistos = new Set(j.map(normalizarNome));
+  if (j.some(x => !nomeValido(x)) || vistos.size !== j.length) return {erro: 'Os nomes dos jogadores estão repetidos ou inválidos.'};
+  if (!Array.isArray(p.f) || p.f.length < 1 || p.f.length > OFF_MAX_F) return {erro: 'O campeonato precisa de 1 a ' + OFF_MAX_F + ' fases.'};
+  const f = [];
+  for (const x of p.f){
+    if (Array.isArray(x) && x[0] === 'b' && Number.isInteger(x[1]) && x[1] >= 0 && x[1] < nBuiltin) f.push(['b', x[1]]);
+    else if (Array.isArray(x) && x[0] === 'g' && OFF_NIVEIS.includes(x[1]) && Number.isInteger(x[2]) && x[2] >= 1 && x[2] <= 999999999) f.push(['g', x[1], x[2]]);
+    else return {erro: 'Uma das fases desse campeonato é inválida.'};
+  }
+  const r = {};
+  if (isObj(p.r)) for (const k of Object.keys(p.r)){
+    const i = +k; if (!Number.isInteger(i) || i < 0 || i >= j.length || !Array.isArray(p.r[k])) continue;
+    const lin = f.map((_, n) => { const x = p.r[k][n]; return Array.isArray(x) && x[0] > 0 && x[1] > 0 ? [inteiro(x[0], 1, 864e5), inteiro(x[1], 1, 99999)] : null; });
+    if (lin.some(Boolean)) r[i] = lin;
+  }
+  return {pacote: {v: 1, i: id, n: nome, f, j, r}};
+}
+/* código: SPO1.<pacote em base64>.<soma de verificação> (a soma só percebe cópia cortada ou estragada; não impede trapaça) */
+function codigoOff(p){ const c = b64u(JSON.stringify({v: 1, i: p.i, n: p.n, f: p.f, j: p.j, r: p.r || {}})); return 'SPO1.' + c + '.' + somaTexto(c); }
+/* Aceita o código puro, o link inteiro (com #o=...&eu=2) ou texto com o código no meio. Devolve {pacote, eu} ou {erro}. */
+function lerCodigoOff(txt, nBuiltin){
+  const t = String(txt || '').replace(/\s+/g, ''), m = /SPO1\.([A-Za-z0-9_-]{10,20000})\.([0-9a-f]{8})/.exec(t);
+  if (!m) return {erro: !t ? 'Cole o código ou o link primeiro.' : t.includes('SPO1.') ? 'O código está incompleto ou foi alterado. Copie de novo, inteiro.' : 'Isso não parece um código de campeonato do Shape Puzzle.'};
+  if (somaTexto(m[1]) !== m[2]) return {erro: 'O código está incompleto ou foi alterado. Copie de novo, inteiro.'};
+  let obj; try{ obj = JSON.parse(deb64u(m[1])); }catch(e){ return {erro: 'O código está incompleto ou foi alterado. Copie de novo, inteiro.'}; }
+  const r = limparOff(obj, nBuiltin); if (r.erro) return r;
+  const e = /[#&?]eu=(\d{1,2})(?![\d])/.exec(String(txt || ''));
+  return {pacote: r.pacote, eu: e && +e[1] < r.pacote.j.length ? +e[1] : null};
+}
+/* Junta os resultados de b em a (mesmo campeonato): em caso de conflito fica o melhor tempo. Devolve null se não for o mesmo campeonato. */
+function juntarOff(a, b){
+  if (a.i !== b.i || defOff(a) !== defOff(b)) return null;
+  const r = JSON.parse(JSON.stringify(a.r || {}));
+  for (const k of Object.keys(b.r || {})){
+    const x = r[k] = r[k] || b.f.map(() => null);
+    b.r[k].forEach((y, n) => { if (y && (!x[n] || y[0] < x[n][0])) x[n] = y; });
+  }
+  return Object.assign({}, a, {r});
+}
+/* Ranking: quem terminou todas as fases vem primeiro (menor tempo total, depois menos jogadas); depois quem fez mais fases. */
+function rankOff(p){
+  const lin = p.j.map((nome, idx) => { const r = p.r[idx] || [], fei = r.filter(Boolean);
+    return {idx, nome, feitas: fei.length, t: fei.reduce((a, x) => a + x[0], 0), jog: fei.reduce((a, x) => a + x[1], 0), completo: fei.length === p.f.length}; });
+  lin.sort((a, b) => b.feitas - a.feitas || a.t - b.t || a.jog - b.jog || a.idx - b.idx);
+  let pos = 0, ant = null;
+  lin.forEach((l, i) => {
+    if (!l.feitas){ l.pos = 0; return; }
+    if (!ant || ant.feitas !== l.feitas || ant.t !== l.t || ant.jog !== l.jog) pos = i + 1;
+    l.pos = pos; ant = l;
+  });
+  return lin;
+}
+function estatOff(p){
+  const porFase = p.f.map((_, i) => {
+    const xs = p.j.map((nome, idx) => ({idx, nome, x: (p.r[idx] || [])[i]})).filter(o => o.x).map(o => ({idx: o.idx, nome: o.nome, t: o.x[0], jog: o.x[1]}));
+    xs.sort((a, b) => a.t - b.t || a.jog - b.jog);
+    return {i, n: xs.length, lista: xs, melhor: xs[0] || null, media: xs.length ? Math.round(xs.reduce((a, o) => a + o.t, 0) / xs.length) : 0};
+  });
+  const com = porFase.filter(f => f.n);
+  const rk = rankOff(p);
+  return {porFase, jogadores: p.j.length, terminaram: rk.filter(l => l.completo).length, comResultado: rk.filter(l => l.feitas).length,
+    maisRapida: com.length ? com.reduce((a, f) => f.media < a.media ? f : a) : null, maisDificil: com.length > 1 ? com.reduce((a, f) => f.media > a.media ? f : a) : null,
+    tempoTotal: rk.reduce((a, l) => a + l.t, 0), jogadasTotal: rk.reduce((a, l) => a + l.jog, 0)};
+}
 // ==LOGIC-END==
 
 /* ======================= Fases embutidas ======================= */
@@ -2674,9 +2969,11 @@ let estrelasFase = store.get('est', {});
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
 if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
-const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+/* campeonato (online ou sem internet): tempo pelo relógio de parede, sem dicas */
+const ehCamp = c => c.k === 'x' || c.k === 'o';
+const filaPadraoDe = cur => ehCamp(cur) ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
 function aplicarPecas(){
-  const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
+  const j = S.jogo; if (!j || j.filaFixa || ehCamp(S.cur)) return;
   const f = filaPadraoDe(S.cur);
   j.filaAuto = j.total > f; j.fila = j.filaAuto ? f : 0;
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
@@ -2717,7 +3014,7 @@ function chaveFase(cur){
 function humorDaFase(cur){
   if (cur.k === 'i') return {facil: 'calma', medio: 'animada', dificil: 'noturna', mestre: 'noturna'}[cur.nivel] || 'calma';
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
-  if (cur.k === 'd' || cur.k === 'x' || cur.k === 'r') return 'animada';
+  if (cur.k === 'd' || ehCamp(cur) || cur.k === 'r') return 'animada';
   if (cur.k === 's') return 'noturna';
   return 'calma';
 }
@@ -2731,7 +3028,7 @@ function carregar(cur, manter){
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
-  S.t = {acum: 0, ult: performance.now(), ativo: cur.k === 'x'};
+  S.t = {acum: 0, ult: performance.now(), ativo: ehCamp(cur)};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
@@ -2757,7 +3054,7 @@ function renderTitulo(){
   if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + BUILTIN.length)); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
-  else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
   else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
   else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
@@ -2767,16 +3064,16 @@ function renderTitulo(){
 }
 
 /* ---- relógio e estatísticas ---- */
-const deveRodar = () => S.t.ativo && !S.venceu && (S.cur.k === 'x' || (!document.hidden && !document.querySelector('.ov.on')));
+const deveRodar = () => S.t.ativo && !S.venceu && (ehCamp(S.cur) || (!document.hidden && !document.querySelector('.ov.on')));
 const tempoMs = () => S.t.acum;
 function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
 /* Um intervalo maior que isso entre dois toques do relógio é a tela bloqueada ou a aba congelada: esse tempo não conta
    (só no campeonato, que corre pelo relógio de parede de propósito). */
 const SALTO_MAX = 1500;
-const semDica = c => c.k === 'x' || c.k === 'r';
+const semDica = c => ehCamp(c) || c.k === 'r';
 function tick(){
   const a = performance.now();
-  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || S.cur.k === 'x') S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
+  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || ehCamp(S.cur)) S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
   S.t.ult = a;
   if (Corrida.ativa && Date.now() >= Corrida.fim) fimCorrida();
   renderStats(); guardarAndamento();
@@ -3028,7 +3325,7 @@ function pararSolucao(){
   S.sol = null; renderDica();
 }
 function acaoSolucao(){
-  if (S.venceu || S.cur.k === 'x') return;
+  if (S.venceu || ehCamp(S.cur)) return;
   limparDica(); pararSolucao();
   const r = solucaoDe(S.jogo);
   if (r.tipo !== 'ok'){ Som.invalido(); toast(r.tipo === 'demorou' ? 'Não consegui calcular a solução agora. Tente tirar uma peça.' : 'Com as peças atuais não há solução — tire alguma.'); return; }
@@ -3086,7 +3383,7 @@ function tentarColocar(p, gx, gy){
 }
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
-  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
   selo.hidden = false;
 }
 function vencer(){
@@ -3099,6 +3396,7 @@ function vencer(){
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
   if (c.k === 'r'){ corridaFeita(); return; }
+  if (c.k === 'o') registrarOff(c, t, j);
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
@@ -3120,7 +3418,7 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
@@ -3142,6 +3440,7 @@ function mostrarVitoria(res){
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
   if (c.k === 'x') vitoriaCamp(c, res, add);
+  else if (c.k === 'o') vitoriaOff(c, res, add);
   else {
   const compartilharRes = () => {
     const base = urlBase();
@@ -3381,8 +3680,6 @@ window.addEventListener('keydown', e => {
 
 /* ---- compartilhar ---- */
 const urlBase = () => location.origin + location.pathname;
-function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
 const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
 async function copiar(t){
   let ok = false;
@@ -3459,7 +3756,7 @@ $('#btnGirar').onclick = acaoGirar;
 $('#btnFlip').onclick = acaoFlip;
 $('#btnDica').onclick = acaoDica;
 $('#btnDesfazer').onclick = acaoDesfazer;
-$('#btnReset').onclick = () => { if (S.cur.k === 'x'){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
+$('#btnReset').onclick = () => { if (ehCamp(S.cur)){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
 $('#btnMenu').onclick = () => abrirMenu();
 function iconeMusica(){
   const b = $('#btnMusica'); b.classList.toggle('off', !Som.musica());
@@ -3469,7 +3766,8 @@ function iconeMusica(){
 $('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); } };
+$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
+  if (OFF.pendente){ const id = OFF.pendente; OFF.pendente = null; abrirOffV(id); } };
 
 /* ---- menu ---- */
 function renderDiario(){
@@ -3772,12 +4070,16 @@ function fmtDuracao(ms){
   return h ? tr('{h} h {m} min', {h, m}) : min ? tr('{m} min', {m: min}) : tr('menos de 1 min');
 }
 const nomeRec = k => k[0] === 's' ? nomeSemana(k.slice(2)) : k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
+/* grade de quadradinhos "valor + legenda" */
+const gradeSv = itens => {
+  const g = mk('div', 'estg');
+  itens.forEach(([v, r]) => { const d = mk('div', 'sv'); d.append(mk('b', '', v), mk('span', '', tr(r))); g.appendChild(d); });
+  return g;
+};
 function abrirEstatisticas(){
   const corpo = $('#estCorpo'); corpo.innerHTML = '';
   const bloco = (titulo, itens) => {
-    const g = mk('div', 'estg');
-    itens.forEach(([v, r]) => { const d = mk('div', 'sv'); d.append(mk('b', '', v), mk('span', '', tr(r))); g.appendChild(d); });
-    corpo.append(mk('h2', '', tr(titulo)), g);
+    corpo.append(mk('h2', '', tr(titulo)), gradeSv(itens));
   };
   const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
   const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;
@@ -3801,6 +4103,226 @@ function abrirEstatisticas(){
 }
 $('#btnEst').onclick = abrirEstatisticas;
 
+/* ======================= Campeonato sem internet (QR code) =======================
+   Nada vai para servidor: o campeonato, o convite de cada pessoa e os resultados viajam dentro do link/QR (veja logica-offline.js). */
+let offs = store.get('offs', {});      /* código → {p: pacote, eu: índice de quem usa este aparelho | null, ts} */
+const OFF = {id: null, pendente: null};
+const salvarOffs = () => {
+  const ids = Object.keys(offs).sort((a, b) => offs[b].ts - offs[a].ts);
+  ids.slice(20).forEach(i => delete offs[i]);
+  store.set('offs', offs);
+};
+const urlOff = (p, eu) => urlBase() + '#o=' + codigoOff(p) + (eu != null ? '&eu=' + eu : '');
+const meusOff = e => (e.eu != null && e.p.r[e.eu]) || [];
+
+/* Guarda (ou junta com o que já havia) o campeonato lido de um código. Devolve {id} ou {erro}. */
+function importarOff(r){
+  const p = r.pacote, e = offs[p.i];
+  if (!e){ offs[p.i] = {p, eu: r.eu, ts: Date.now()}; salvarOffs(); return {id: p.i}; }
+  const m = juntarOff(e.p, p);
+  if (!m) return {erro: 'Esse código é de outro campeonato.'};
+  e.p = m; e.ts = Date.now();
+  if (r.eu != null && (e.eu == null || !meusOff(e).some(Boolean))) e.eu = r.eu;
+  salvarOffs(); return {id: p.i};
+}
+/* link do convite (#o=...&eu=N) ou de resultados (#o=...) aberto neste aparelho */
+function lerLinkOff(){
+  if (!/[#&]o=SPO1\./.test(location.hash)) return null;
+  const r = lerCodigoOff(location.hash, BUILTIN.length);
+  history.replaceState(null, '', location.pathname + location.search);
+  if (r.erro){ toast(r.erro); return null; }
+  const g = importarOff(r);
+  if (g.erro){ toast(g.erro); return null; }
+  return g.id;
+}
+window.addEventListener('hashchange', () => { const id = lerLinkOff(); if (id){ fecharTodos('ov-splash'); abrirOffV(id); } });
+
+/* ---- fases ---- */
+const textosOff = new Map();
+async function textoDeRef(ref){
+  const k = JSON.stringify(ref);
+  if (textosOff.has(k)) return textosOff.get(k);
+  let t = null;
+  if (ref[0] === 'b') t = BUILTIN[ref[1]].text;
+  else { const f = await Gerador.gerar(ref[2], NIVEIS_INF[ref[1]].o); t = f && f.text; }
+  if (t) textosOff.set(k, t);
+  return t;
+}
+/* sorteia as fases do campeonato; só aceita fase de solução única */
+async function sortearFasesOff(tipo, n){
+  if (tipo === 'jogo') return PRESETS[n].map(i => ['b', i]);
+  const fases = [];
+  for (let k = 0; k < n; k++){
+    const nivel = tipo === 'crescente' ? OFF_NIVEIS[Math.floor(k * 3 / n)] : tipo;
+    let ref = null;
+    for (let t = 0; t < 6 && !ref; t++){
+      const seed = novaSeed(), f = await Gerador.gerar(seed, NIVEIS_INF[nivel].o);
+      if (f && f.unica) ref = ['g', nivel, seed];
+    }
+    if (!ref) return null;
+    fases.push(ref);
+  }
+  return fases;
+}
+const rotuloFaseOff = ref => ref[0] === 'b' ? tr('Fase do jogo') : tr('Sorteada') + ' · ' + tr(NIVEIS_INF[ref[1]].nome);
+
+/* ---- jogar ---- */
+async function jogarFaseOff(i){
+  const e = offs[OFF.id]; if (!e) return;
+  if (e.eu == null){ toast('Diga primeiro quem é você.'); return; }
+  if (meusOff(e)[i]){ toast('Você já fez esta fase.'); return; }
+  const text = await comGerando(() => textoDeRef(e.p.f[i])); if (!text) return;
+  fecharTodos();
+  carregar({k: 'o', oc: e.p.i, idx: i, total: e.p.f.length, campNome: e.p.n, nome: 'Fase ' + (i + 1), text});
+  toast('Valendo! O tempo já está correndo e as dicas ficam desligadas.');
+}
+/* a primeira vez que a fase é concluída é a que vale */
+function registrarOff(c, t, j){
+  const e = offs[c.oc]; if (!e || e.eu == null) return;
+  const r = e.p.r[e.eu] = e.p.r[e.eu] || e.p.f.map(() => null);
+  if (!r[c.idx]) r[c.idx] = [inteiro(t, 1, 864e5), inteiro(j, 1, 99999)];
+  e.ts = Date.now(); salvarOffs();
+}
+function vitoriaOff(c, res, add){
+  const e = offs[c.oc]; if (!e){ return; }
+  const feitas = meusOff(e), tudo = e.p.f.every((_, i) => feitas[i]);
+  $('#winTexto').textContent = tr(tudo ? 'Você terminou o campeonato! Mostre o seu QR de resultado.' : 'Resultado guardado neste aparelho.');
+  const proxima = e.p.f.findIndex((_, i) => !feitas[i]);
+  if (!tudo && proxima >= 0) add('Próxima fase do campeonato', 'pri', () => setTimeout(() => { OFF.id = c.oc; jogarFaseOff(proxima); }, 50));
+  add(tudo ? 'Ver resultado' : 'Ver campeonato', tudo || proxima < 0 ? 'pri' : '', () => setTimeout(() => abrirOffV(c.oc), 50), 'trophy');
+}
+
+/* ---- início ---- */
+function abrirOffHub(){
+  const l = $('#ofLista'); l.innerHTML = ''; $('#ofCola').value = ''; aviso('#ofAviso', '');
+  const ids = Object.keys(offs).sort((a, b) => offs[b].ts - offs[a].ts);
+  if (!ids.length) l.innerHTML = '<p class="vazio2">' + tr('Você ainda não tem nenhum campeonato sem internet.') + '</p>';
+  ids.forEach(id => {
+    const p = offs[id].p, d = mk('div', 'cust');
+    d.append(mk('span', '', p.n + ' · ' + qtd(p.j.length, ' jogador', ' jogadores')),
+      icBtn('play', tr('Abrir') + ': ' + p.n, () => { fechar('off'); abrirOffV(id); }),
+      icBtn('trash', tr('Tirar deste aparelho') + ': ' + p.n, () => { if (confirmarTirarOff()){ delete offs[id]; salvarOffs(); abrirOffHub(); } }));
+    l.appendChild(d);
+  });
+  abrir('off');
+}
+const confirmarTirarOff = () => confirm(tr('Tirar este campeonato deste aparelho? Os resultados guardados aqui serão apagados.'));
+$('#cpOff').onclick = () => { fechar('camps'); abrirOffHub(); };
+$('#ofCriar').onclick = () => { fechar('off'); abrirOffCriar(); };
+$('#ofImportar').onclick = () => {
+  const r = lerCodigoOff($('#ofCola').value, BUILTIN.length);
+  if (r.erro){ aviso('#ofAviso', r.erro, 'erro'); return; }
+  const g = importarOff(r);
+  if (g.erro){ aviso('#ofAviso', g.erro, 'erro'); return; }
+  fechar('off'); abrirOffV(g.id);
+};
+
+/* ---- criar ---- */
+function abrirOffCriar(){
+  $('#ocNome').value = ''; $('#ocEu').value = cpNome || ''; $('#ocOutros').value = ''; aviso('#ocAviso', '');
+  abrir('offc'); setTimeout(() => $('#ocNome').focus(), 50);
+}
+$('#ocCriar').onclick = async () => {
+  const nome = limparNome($('#ocNome').value), eu = limparNome($('#ocEu').value);
+  const outros = $('#ocOutros').value.split(/[\n,;]+/).map(limparNome).filter(Boolean);
+  const erro = !nomeValido(nome) ? 'Dê um nome ao campeonato (pelo menos 2 letras).' : !nomeValido(eu) ? 'Digite o seu nome (pelo menos 2 letras).'
+    : !outros.length ? 'Escreva o nome de pelo menos mais um jogador.' : outros.length + 1 > OFF_MAX_J ? 'No máximo ' + OFF_MAX_J + ' jogadores, contando com você.'
+    : [eu, ...outros].some((x, i, a) => !nomeValido(x) || a.findIndex(y => normalizarNome(y) === normalizarNome(x)) !== i) ? 'Cada jogador precisa de um nome diferente, com pelo menos 2 letras.' : '';
+  if (erro){ aviso('#ocAviso', erro, 'erro'); return; }
+  aviso('#ocAviso', '');
+  const f = await comGerando(() => sortearFasesOff($('#ocTipo').value, +$('#ocQtd').value)); if (!f) return;
+  const r = limparOff({v: 1, i: novoCodigo(), n: nome, f, j: [eu, ...outros], r: {}}, BUILTIN.length);
+  if (r.erro){ aviso('#ocAviso', r.erro, 'erro'); return; }
+  offs[r.pacote.i] = {p: r.pacote, eu: 0, ts: Date.now()}; salvarOffs();
+  if (!cpNome){ cpNome = eu; store.set('cpnome', eu); }
+  fechar('offc'); abrirOffV(r.pacote.i);
+};
+
+/* ---- o campeonato ---- */
+const medalha = pos => pos >= 1 && pos <= 3 ? ['🥇', '🥈', '🥉'][pos - 1] : pos ? pos + 'º' : '–';
+function abrirOffV(id){
+  if (!offs[id]) return;
+  OFF.id = id; fecharTodos(); aviso('#ovAviso', ''); $('#ovCola').value = '';
+  renderOffV(); abrir('offv');
+}
+function textoRankingOff(p){
+  const rk = rankOff(p);
+  return tr('Shape Puzzle — campeonato "{c}"', {c: p.n}) + '\n' + rk.map(l => medalha(l.pos) + ' ' + l.nome + (l.feitas ? ' — ' + (l.completo ? fmtTempo(l.t) : l.feitas + '/' + p.f.length + ' · ' + fmtTempo(l.t)) : ' — ' + tr('ainda não jogou'))).join('\n');
+}
+function renderOffV(){
+  const e = offs[OFF.id]; if (!e) return;
+  const p = e.p, tem = e.eu != null, feitas = meusOff(e);
+  $('#ovTitulo').textContent = p.n;
+  $('#ovSub').textContent = qtd(p.f.length, ' fase', ' fases') + ' · ' + qtd(p.j.length, ' jogador', ' jogadores');
+  /* quem é você? (só até o primeiro resultado) */
+  $('#ovQuem').hidden = tem; $('#ovMeu').hidden = !tem;
+  const sel = $('#ovQuemSel'); sel.innerHTML = '';
+  p.j.forEach((n, i) => { const o = mk('option', '', n); o.value = i; sel.appendChild(o); });
+  $('#ovQuemOk').onclick = () => { e.eu = +sel.value; salvarOffs(); renderOffV(); };
+  /* minhas fases */
+  if (tem){
+    $('#ovMeuTit').textContent = tr('Suas fases, {nome}', {nome: p.j[e.eu]});
+    const l = $('#ovFases'); l.innerHTML = '';
+    p.f.forEach((ref, i) => {
+      const x = feitas[i], d = mk('div', 'lf' + (x ? ' ok' : '')), s = mk('span', '', tr('Fase ' + (i + 1)));
+      s.appendChild(mk('small', '', x ? '✓ ' + fmtTempo(x[0]) + ' · ' + fmtJog(x[1]) : rotuloFaseOff(ref)));
+      d.appendChild(s);
+      const b = icBtn(x ? 'check' : 'play', tr(x ? 'Feita' : 'Jogar') + ': ' + tr('Fase ' + (i + 1)), () => jogarFaseOff(i));
+      b.disabled = !!x; d.appendChild(b); l.appendChild(d);
+    });
+    const tudo = p.f.every((_, i) => feitas[i]);
+    $('#ovFim').hidden = !tudo;
+  }
+  /* ranking */
+  const rk = rankOff(p), r = $('#ovRank'); r.innerHTML = '';
+  rk.forEach(l => {
+    const d = mk('div', 'rk' + (l.idx === e.eu ? ' eu' : ''));
+    d.append(mk('span', 'pos', medalha(l.pos)), mk('span', 'nm', l.nome),
+      mk('span', 'tm', !l.feitas ? tr('ainda não jogou') : (l.completo ? '' : l.feitas + '/' + p.f.length + ' · ') + fmtTempo(l.t) + (l.completo ? ' · ' + fmtJog(l.jog) : '')));
+    r.appendChild(d);
+  });
+  /* estatísticas */
+  const est = estatOff(p), eb = $('#ovEst'); eb.innerHTML = '';
+  if (est.comResultado){
+    eb.appendChild(mk('h2', '', tr('Estatísticas')));
+    const it = [[est.terminaram + '/' + est.jogadores, 'terminaram tudo'], [fmtTempo(est.tempoTotal), 'tempo somado'], [String(est.jogadasTotal), 'jogadas somadas']];
+    if (est.maisRapida) it.push([tr('Fase ' + (est.maisRapida.i + 1)), 'fase mais rápida']);
+    if (est.maisDificil) it.push([tr('Fase ' + (est.maisDificil.i + 1)), 'fase mais demorada']);
+    eb.appendChild(gradeSv(it));
+    est.porFase.filter(f => f.n).forEach(f => {
+      const d = mk('div', 'lf'), s = mk('span', '', tr('Fase ' + (f.i + 1)));
+      s.appendChild(mk('small', '', tr('Melhor: {nome} {t} · Média: {m} · {n} de {total}', {nome: f.melhor.nome, t: fmtTempo(f.melhor.t), m: fmtTempo(f.media), n: f.n, total: p.j.length})));
+      d.appendChild(s); eb.appendChild(d);
+    });
+  }
+  /* QR dos jogadores */
+  const cv = $('#ovConvites'); cv.innerHTML = '';
+  p.j.forEach((n, i) => {
+    if (i === e.eu) return;
+    const d = mk('div', 'cust');
+    d.append(mk('span', '', n), icBtn('qr', tr('QR code') + ': ' + n, () => {
+      compartilhar('Shape Puzzle', tr('{nome}, você foi convidado(a) para o campeonato "{c}" no Shape Puzzle! São {n} fases, cada um joga no seu tempo e no fim vocês comparam os resultados.', {nome: n, c: p.n, n: p.f.length}), urlOff(Object.assign({}, p, {r: {}}), i));
+      alternarQR(true);
+    }, tr('QR code')));
+    cv.appendChild(d);
+  });
+  $('#ovResultado').hidden = !feitas.some(Boolean);
+}
+$('#ovResultado').onclick = () => {
+  const e = offs[OFF.id], f = meusOff(e), p = e.p, nf = f.filter(Boolean).length, t = f.filter(Boolean).reduce((a, x) => a + x[0], 0);
+  compartilhar('Shape Puzzle', tr('{nome} jogou o campeonato "{c}" no Shape Puzzle ({a} de {b} fases, {t} no total). Escaneie o QR code ou abra o link para juntar o resultado.', {nome: p.j[e.eu], c: p.n, a: nf, b: p.f.length, t: fmtTempo(t)}), urlOff(p));
+  alternarQR(true);
+};
+$('#ovRanking').onclick = () => { const p = offs[OFF.id].p; compartilhar('Shape Puzzle', textoRankingOff(p), urlOff(p)); };
+$('#ovImportar').onclick = () => {
+  const r = lerCodigoOff($('#ovCola').value, BUILTIN.length);
+  if (r.erro){ aviso('#ovAviso', r.erro, 'erro'); return; }
+  if (r.pacote.i !== OFF.id){ aviso('#ovAviso', 'Esse código é de outro campeonato.', 'erro'); return; }
+  const g = importarOff(r);
+  if (g.erro){ aviso('#ovAviso', g.erro, 'erro'); return; }
+  $('#ovCola').value = ''; renderOffV(); aviso('#ovAviso', 'Resultados juntados.', 'ok');
+};
+$('#ovExcluir').onclick = () => { if (confirmarTirarOff()){ delete offs[OFF.id]; salvarOffs(); fechar('offv'); abrirOffHub(); } };
 /* ======================= Backup do progresso ======================= */
 const BK = {pend: null};
 const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
@@ -3899,7 +4421,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.02.4';
+const VERSAO = '2026.11.03.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -3931,7 +4453,7 @@ function mostrarAvisoAtualizacao(){
   anunciar(tr('Tem uma versão nova do jogo.'));
 }
 async function aplicarAtualizacao(){
-  if (S.cur && S.cur.k === 'x' && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
+  if (S.cur && ehCamp(S.cur) && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
   try{
     await fetch(location.pathname, {cache: 'reload'});                      // atualiza o cache do navegador
     if ('caches' in window){ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
@@ -4397,8 +4919,10 @@ montarBoard();
   [[[[1,1],[1,0]], 1], [[[1,1,1],[0,1,0]], 11], [[[1,0],[1,1]], 6], [[[1,1],[1,0]], 16]].forEach(([f, id]) => l.appendChild(pecaEl(f, id, 'mini')));
 })();
 iconeMusica();
-const linkInicial = lerLink();
+OFF.pendente = lerLinkOff();
+const linkInicial = OFF.pendente ? null : lerLink();
 if (linkInicial) $('#splashMsg').hidden = false;
+if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato sem internet! Toque em Jogar para abrir.'); $('#splashMsg').hidden = false; }
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
 carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});

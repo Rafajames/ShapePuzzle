@@ -1,6 +1,6 @@
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.02.4';
+const VERSAO = '2026.11.03.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -32,7 +32,7 @@ function mostrarAvisoAtualizacao(){
   anunciar(tr('Tem uma versão nova do jogo.'));
 }
 async function aplicarAtualizacao(){
-  if (S.cur && S.cur.k === 'x' && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
+  if (S.cur && ehCamp(S.cur) && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
   try{
     await fetch(location.pathname, {cache: 'reload'});                      // atualiza o cache do navegador
     if ('caches' in window){ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }

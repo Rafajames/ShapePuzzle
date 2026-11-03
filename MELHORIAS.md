@@ -40,3 +40,5 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 ## Para pensar com cuidado
 10. **Tempo de campeonato à prova de trapaça** — guardar a sequência de jogadas e conferir se resolve a fase.
 11. **Limite de campeonatos por organizador.**
+
+- **Campeonato sem internet por QR code** — _Feito (Campeonatos → Campeonato sem internet)._

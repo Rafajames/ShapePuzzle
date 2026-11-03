@@ -71,7 +71,7 @@ function pararSolucao(){
   S.sol = null; renderDica();
 }
 function acaoSolucao(){
-  if (S.venceu || S.cur.k === 'x') return;
+  if (S.venceu || ehCamp(S.cur)) return;
   limparDica(); pararSolucao();
   const r = solucaoDe(S.jogo);
   if (r.tipo !== 'ok'){ Som.invalido(); toast(r.tipo === 'demorou' ? 'Não consegui calcular a solução agora. Tente tirar uma peça.' : 'Com as peças atuais não há solução — tire alguma.'); return; }

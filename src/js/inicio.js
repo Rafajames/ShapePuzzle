@@ -26,8 +26,10 @@ montarBoard();
   [[[[1,1],[1,0]], 1], [[[1,1,1],[0,1,0]], 11], [[[1,0],[1,1]], 6], [[[1,1],[1,0]], 16]].forEach(([f, id]) => l.appendChild(pecaEl(f, id, 'mini')));
 })();
 iconeMusica();
-const linkInicial = lerLink();
+OFF.pendente = lerLinkOff();
+const linkInicial = OFF.pendente ? null : lerLink();
 if (linkInicial) $('#splashMsg').hidden = false;
+if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato sem internet! Toque em Jogar para abrir.'); $('#splashMsg').hidden = false; }
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
 carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});

@@ -3,7 +3,7 @@ $('#btnGirar').onclick = acaoGirar;
 $('#btnFlip').onclick = acaoFlip;
 $('#btnDica').onclick = acaoDica;
 $('#btnDesfazer').onclick = acaoDesfazer;
-$('#btnReset').onclick = () => { if (S.cur.k === 'x'){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
+$('#btnReset').onclick = () => { if (ehCamp(S.cur)){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
 $('#btnMenu').onclick = () => abrirMenu();
 function iconeMusica(){
   const b = $('#btnMusica'); b.classList.toggle('off', !Som.musica());
@@ -13,7 +13,8 @@ function iconeMusica(){
 $('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); } };
+$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
+  if (OFF.pendente){ const id = OFF.pendente; OFF.pendente = null; abrirOffV(id); } };
 
 /* ---- menu ---- */
 function renderDiario(){

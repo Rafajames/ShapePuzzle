@@ -18,7 +18,7 @@ function tentarColocar(p, gx, gy){
 }
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
-  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : cv.k === 'x' ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
   selo.hidden = false;
 }
 function vencer(){
@@ -31,6 +31,7 @@ function vencer(){
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
   if (c.k === 'r'){ corridaFeita(); return; }
+  if (c.k === 'o') registrarOff(c, t, j);
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
@@ -52,7 +53,7 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(c.k === 'x' ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
@@ -74,6 +75,7 @@ function mostrarVitoria(res){
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
   if (c.k === 'x') vitoriaCamp(c, res, add);
+  else if (c.k === 'o') vitoriaOff(c, res, add);
   else {
   const compartilharRes = () => {
     const base = urlBase();

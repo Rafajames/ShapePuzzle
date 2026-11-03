@@ -1,7 +1,5 @@
 /* ---- compartilhar ---- */
 const urlBase = () => location.origin + location.pathname;
-function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
 const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
 async function copiar(t){
   let ok = false;

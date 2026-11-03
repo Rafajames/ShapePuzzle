@@ -22,9 +22,11 @@ let estrelasFase = store.get('est', {});
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
 if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
-const filaPadraoDe = cur => cur.k === 'x' ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+/* campeonato (online ou sem internet): tempo pelo relógio de parede, sem dicas */
+const ehCamp = c => c.k === 'x' || c.k === 'o';
+const filaPadraoDe = cur => ehCamp(cur) ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
 function aplicarPecas(){
-  const j = S.jogo; if (!j || j.filaFixa || S.cur.k === 'x') return;
+  const j = S.jogo; if (!j || j.filaFixa || ehCamp(S.cur)) return;
   const f = filaPadraoDe(S.cur);
   j.filaAuto = j.total > f; j.fila = j.filaAuto ? f : 0;
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
@@ -65,7 +67,7 @@ function chaveFase(cur){
 function humorDaFase(cur){
   if (cur.k === 'i') return {facil: 'calma', medio: 'animada', dificil: 'noturna', mestre: 'noturna'}[cur.nivel] || 'calma';
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
-  if (cur.k === 'd' || cur.k === 'x' || cur.k === 'r') return 'animada';
+  if (cur.k === 'd' || ehCamp(cur) || cur.k === 'r') return 'animada';
   if (cur.k === 's') return 'noturna';
   return 'calma';
 }
@@ -79,7 +81,7 @@ function carregar(cur, manter){
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
-  S.t = {acum: 0, ult: performance.now(), ativo: cur.k === 'x'};
+  S.t = {acum: 0, ult: performance.now(), ativo: ehCamp(cur)};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
@@ -105,7 +107,7 @@ function renderTitulo(){
   if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + BUILTIN.length)); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
-  else if (c.k === 'x'){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
   else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
   else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
@@ -115,16 +117,16 @@ function renderTitulo(){
 }
 
 /* ---- relógio e estatísticas ---- */
-const deveRodar = () => S.t.ativo && !S.venceu && (S.cur.k === 'x' || (!document.hidden && !document.querySelector('.ov.on')));
+const deveRodar = () => S.t.ativo && !S.venceu && (ehCamp(S.cur) || (!document.hidden && !document.querySelector('.ov.on')));
 const tempoMs = () => S.t.acum;
 function iniciaTempo(){ if (!S.t.ativo){ S.t.ativo = true; S.t.ult = performance.now(); } }
 /* Um intervalo maior que isso entre dois toques do relógio é a tela bloqueada ou a aba congelada: esse tempo não conta
    (só no campeonato, que corre pelo relógio de parede de propósito). */
 const SALTO_MAX = 1500;
-const semDica = c => c.k === 'x' || c.k === 'r';
+const semDica = c => ehCamp(c) || c.k === 'r';
 function tick(){
   const a = performance.now();
-  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || S.cur.k === 'x') S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
+  if (deveRodar()){ const d = a - S.t.ult, ok = d > 0 && d < SALTO_MAX; if (ok || ehCamp(S.cur)) S.t.acum += d; if (ok){ Est.tempo += d; estSujo = true; } }
   S.t.ult = a;
   if (Corrida.ativa && Date.now() >= Corrida.fim) fimCorrida();
   renderStats(); guardarAndamento();

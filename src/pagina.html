@@ -228,6 +228,7 @@
     <button class="ib x" data-close="camps" data-i="close" aria-label="Fechar"></button>
     <h1>Campeonatos</h1>
     <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
+    <div class="acts"><button class="btn" id="cpOff" data-i="qr" style="width:100%">Campeonato sem internet (QR code)</button></div>
     <h2>Seu nome</h2>
     <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
     <div id="cpOrg">
@@ -249,6 +250,85 @@
       <input class="field" id="cpChave" placeholder="Chave da API do app web (apiKey)" autocapitalize="off" spellcheck="false" style="margin-top:8px">
       <div class="acts"><button class="btn sm" id="cpDbSalvar">Salvar endereço</button></div>
     </details>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: início -->
+<div class="ov" id="ov-off">
+  <div class="card">
+    <button class="ib x" data-close="off" data-i="close" aria-label="Fechar"></button>
+    <h1>Sem internet</h1>
+    <p>Crie um campeonato e gere um QR code para cada pessoa. Cada um joga no seu tempo, sem internet, e no fim vocês juntam os resultados para ver o ranking.</p>
+    <div class="acts"><button class="btn pri" id="ofCriar" data-i="trophy" style="width:100%">Criar campeonato por QR code</button></div>
+    <h2>Recebeu um código ou link?</h2>
+    <textarea class="field" id="ofCola" rows="3" placeholder="Cole aqui o link ou o código" autocapitalize="off" spellcheck="false" style="resize:vertical"></textarea>
+    <div class="acts"><button class="btn" id="ofImportar" data-i="download">Abrir</button></div>
+    <p class="aviso" id="ofAviso"></p>
+    <h2>Meus campeonatos sem internet</h2>
+    <div id="ofLista"></div>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: criar -->
+<div class="ov" id="ov-offc">
+  <div class="card">
+    <button class="ib x" data-close="offc" data-i="close" aria-label="Fechar"></button>
+    <h1>Novo campeonato</h1>
+    <input class="field" id="ocNome" maxlength="30" placeholder="Nome do campeonato" autocomplete="off">
+    <h2>Seu nome</h2>
+    <input class="field" id="ocEu" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
+    <h2>Os outros jogadores</h2>
+    <textarea class="field" id="ocOutros" rows="5" placeholder="Um nome por linha&#10;Ana&#10;Bruno" style="resize:vertical"></textarea>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Cada nome ganha o seu próprio QR code. Até 12 pessoas no total, com você.</p>
+    <h2>Fases</h2>
+    <label class="row"><span class="rl">Quantas</span>
+      <select class="field" id="ocQtd"><option value="3">3 fases</option><option value="5" selected>5 fases</option><option value="8">8 fases</option></select></label>
+    <label class="row"><span class="rl">Quais</span>
+      <select class="field" id="ocTipo">
+        <option value="jogo">Fases do jogo (de fácil a difícil)</option>
+        <option value="crescente">Sorteadas (de fácil a difícil)</option>
+        <option value="facil">Sorteadas fáceis</option>
+        <option value="medio">Sorteadas médias</option>
+        <option value="dificil">Sorteadas difíceis</option>
+      </select></label>
+    <div class="acts"><button class="btn pri" id="ocCriar" data-i="trophy">Criar e gerar os QR codes</button></div>
+    <p class="aviso" id="ocAviso"></p>
+  </div>
+</div>
+
+<!-- Campeonato sem internet: o campeonato -->
+<div class="ov" id="ov-offv">
+  <div class="card">
+    <button class="ib x" data-close="offv" data-i="close" aria-label="Fechar"></button>
+    <h1 id="ovTitulo">Campeonato</h1>
+    <p id="ovSub"></p>
+    <div id="ovQuem" hidden>
+      <h2>Quem é você?</h2>
+      <select class="field" id="ovQuemSel"></select>
+      <div class="acts"><button class="btn pri" id="ovQuemOk" data-i="check">Sou eu</button></div>
+    </div>
+    <div id="ovMeu" hidden>
+      <h2 id="ovMeuTit">Suas fases</h2>
+      <div id="ovFases"></div>
+      <p class="aviso ok" id="ovFim" hidden>Você terminou! Mostre o seu QR de resultado para quem organiza.</p>
+    </div>
+    <h2>Ranking</h2>
+    <div id="ovRank"></div>
+    <div id="ovEst"></div>
+    <div class="acts">
+      <button class="btn pri" id="ovResultado" data-i="qr" hidden>QR do meu resultado</button>
+      <button class="btn" id="ovRanking" data-i="trophy">Compartilhar o ranking</button>
+    </div>
+    <h2>QR codes dos jogadores</h2>
+    <p style="margin:0 0 8px;font-size:13px">Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.</p>
+    <div id="ovConvites"></div>
+    <details class="cfg"><summary>Juntar o resultado de outra pessoa</summary>
+      <p style="margin:8px 0">Escaneie o QR de resultado com a câmera do celular, ou cole aqui o link ou o código que ela mandou.</p>
+      <textarea class="field" id="ovCola" rows="3" placeholder="Cole aqui o link ou o código" autocapitalize="off" spellcheck="false" style="resize:vertical"></textarea>
+      <div class="acts"><button class="btn sm" id="ovImportar" data-i="download">Juntar</button></div>
+    </details>
+    <p class="aviso" id="ovAviso"></p>
+    <div class="acts"><button class="btn danger sm" id="ovExcluir" data-i="trash">Tirar deste aparelho</button></div>
   </div>
 </div>
 
@@ -417,6 +497,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js desafios.js estatisticas.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
 </body>
 </html>

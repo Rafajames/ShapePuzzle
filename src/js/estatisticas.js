@@ -4,12 +4,16 @@ function fmtDuracao(ms){
   return h ? tr('{h} h {m} min', {h, m}) : min ? tr('{m} min', {m: min}) : tr('menos de 1 min');
 }
 const nomeRec = k => k[0] === 's' ? nomeSemana(k.slice(2)) : k[0] === 'b' ? tr('Fase ' + (parseInt(k.slice(1 + 1 + 4), 10) || '?')) : k[0] === 'd' ? tr('Dia {data}', {data: dataCurta(k.slice(2))}) : k.slice(2);
+/* grade de quadradinhos "valor + legenda" */
+const gradeSv = itens => {
+  const g = mk('div', 'estg');
+  itens.forEach(([v, r]) => { const d = mk('div', 'sv'); d.append(mk('b', '', v), mk('span', '', tr(r))); g.appendChild(d); });
+  return g;
+};
 function abrirEstatisticas(){
   const corpo = $('#estCorpo'); corpo.innerHTML = '';
   const bloco = (titulo, itens) => {
-    const g = mk('div', 'estg');
-    itens.forEach(([v, r]) => { const d = mk('div', 'sv'); d.append(mk('b', '', v), mk('span', '', tr(r))); g.appendChild(d); });
-    corpo.append(mk('h2', '', tr(titulo)), g);
+    corpo.append(mk('h2', '', tr(titulo)), gradeSv(itens));
   };
   const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
   const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;
