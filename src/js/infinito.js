@@ -34,7 +34,8 @@ const Gerador = (() => {
 })();
 const Inf = {prox: null, gerando: false};
 let infAtual = store.get('infatual', null);
-const novaSeed = () => 1 + Math.floor(Math.random() * 999999998);
+/* semente imprevisível (o navegador sorteia de verdade): cada campeonato recebe fases que ninguém mais tem */
+const novaSeed = () => { try{ return 1 + crypto.getRandomValues(new Uint32Array(1))[0] % 999999998; }catch(e){ return 1 + Math.floor(Math.random() * 999999998); } };
 async function gerarNivelInf(modo, num, seed){
   const nivel = nivelInf(modo, num);
   for (let t = 0; t < 4; t++){
