@@ -123,8 +123,7 @@ with sync_playwright() as pw:
     check(A.evaluate('!!cpAuth') and A.evaluate('cpAuth.nome') == 'Ana Souza', 'aparelho reconhecido')
     A.click('#ov-criar [data-close=criar]'); A.click('#btnMenu'); A.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); A.click('#btnCamp'); A.wait_for_timeout(200)
     check(A.is_visible('#cpOrgOk') and not A.is_visible('#cpSenha'), 'depois de entrar não pede mais a senha')
-    A.click('#cpCfg summary'); A.fill('#cpDb', 'https://evil.example.com'); A.click('#cpDbSalvar')
-    check('inválido' in A.inner_text('#cpAviso').lower(), 'endereço que não é Firebase é recusado')
+    check(A.locator('#cpDb, #cpChave, #cpCfg').count() == 0, 'não há opção de usar outro banco de dados')
     A.click('#cpCriar'); A.wait_for_timeout(500)
     check(A.is_visible('#ov-criar'), 'segunda vez: vai direto ao formulário')
     check(A.inner_text('#crQtd') == '3', 'começa com 3 fases sugeridas')
@@ -230,7 +229,7 @@ with sync_playwright() as pw:
     print('6. Erros do banco e segurança do convite')
     MODO['v'] = 'negado'
     A.click('#winActs .btn:has-text("Ver ranking")'); A.wait_for_timeout(1200)
-    check('regras' in A.inner_text('#lbAviso').lower(), 'regras não publicadas: mensagem clara')
+    check('tente de novo' in A.inner_text('#lbAviso').lower() and 'regras' not in A.inner_text('#lbAviso').lower(), 'recusa do servidor: mensagem simples, sem termos técnicos')
     MODO['v'] = None
     ctxD, D = novo(b)
     D.goto(URL + '#c=' + cod + '&db=' + 'https%3A%2F%2Fevil.example.com'); D.wait_for_timeout(400)

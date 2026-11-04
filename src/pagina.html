@@ -267,12 +267,6 @@
     <h2>Meus campeonatos</h2>
     <div id="cpLista"></div>
     <p id="cpAviso" class="aviso"></p>
-    <details class="cfg" id="cpCfg"><summary>Avançado: usar outro banco de dados</summary>
-      <p style="margin:8px 0">O jogo já usa o banco oficial. Só preencha isto se quiser usar um banco seu (veja CAMPEONATOS.md).</p>
-      <input class="field" id="cpDb" placeholder="https://seu-projeto-default-rtdb.firebaseio.com" autocapitalize="off" spellcheck="false">
-      <input class="field" id="cpChave" placeholder="Chave da API do app web (apiKey)" autocapitalize="off" spellcheck="false" style="margin-top:8px">
-      <div class="acts"><button class="btn sm" id="cpDbSalvar">Salvar endereço</button></div>
-    </details>
   </div>
 </div>
 
@@ -490,7 +484,7 @@
   <div class="card">
     <button class="ib x" data-close="backup" data-i="close" aria-label="Fechar"></button>
     <h1>Backup do progresso</h1>
-    <p>O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas nem a conexão dos campeonatos.</p>
+    <p>O código guarda fases concluídas, estrelas, recordes, fase do dia, fases criadas, estatísticas e ajustes. Não leva senhas.</p>
     <h2>Salvar</h2>
     <textarea class="field" id="bkCodigo" readonly rows="3" aria-label="Código do backup"></textarea>
     <div class="acts">

@@ -63,7 +63,7 @@ $('#crCriar').onclick = async () => {
     CR.fases = []; CR.veioDeEdicao = false; $('#crNome').value = '';
     fechar('criar'); await abrirLobby(id, cpDb);
     toast(edit ? 'Campeonato atualizado.' : 'Campeonato criado! Toque em Convidar para enviar o link.');
-  }catch(e){ aviso('#crInfo', e && e.cod === 'negado' ? (CR.edit ? 'Não deu para salvar: alguém já entrou no campeonato (ou a sessão acabou).' : 'O banco recusou. As regras de segurança foram publicadas?') : msgNuvem(e), 'erro'); }
+  }catch(e){ aviso('#crInfo', e && e.cod === 'negado' ? (CR.edit ? 'Não deu para salvar: alguém já entrou no campeonato (ou a sessão acabou).' : 'Não foi possível criar agora. Tente de novo em instantes.') : msgNuvem(e), 'erro'); }
   btn.disabled = false;
 };
 
