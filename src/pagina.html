@@ -302,11 +302,11 @@
       <select class="field" id="ocQtd"><option value="3">3 fases</option><option value="5" selected>5 fases</option><option value="8">8 fases</option></select></label>
     <label class="row"><span class="rl">Quais</span>
       <select class="field" id="ocTipo">
-        <option value="jogo">Fases do jogo (de fácil a difícil)</option>
         <option value="crescente">Sorteadas (de fácil a difícil)</option>
         <option value="facil">Sorteadas fáceis</option>
         <option value="medio">Sorteadas médias</option>
         <option value="dificil">Sorteadas difíceis</option>
+        <option value="mestre">Sorteadas mestres (7×7)</option>
       </select></label>
     <div class="acts"><button class="btn pri" id="ocCriar" data-i="trophy">Criar e gerar os QR codes</button></div>
     <p class="aviso" id="ocAviso"></p>
@@ -363,6 +363,8 @@
     <h2><span>Fases</span> (<span id="crQtd">0</span>/10)</h2>
     <div id="crFases"></div>
     <div class="row"><select class="field" id="crFonte"></select><button class="btn sm" id="crAdd">Adicionar</button></div>
+    <label class="row"><span class="rl">Dificuldade</span><select class="field" id="crDif"><option value="crescente">De fácil a difícil</option><option value="facil">Fácil</option><option value="medio">Média</option><option value="dificil">Difícil</option><option value="mestre">Mestre</option></select></label>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.</p>
     <div class="acts">
       <button class="btn sm" data-preset="3">Sugestão: 3 fases</button>
       <button class="btn sm" data-preset="5">5 fases</button>

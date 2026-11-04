@@ -45,10 +45,9 @@ async function textoDeRef(ref){
 }
 /* sorteia as fases do campeonato; só aceita fase de solução única */
 async function sortearFasesOff(tipo, n){
-  if (tipo === 'jogo') return PRESETS[n].map(i => ['b', i]);
   const fases = [];
   for (let k = 0; k < n; k++){
-    const nivel = tipo === 'crescente' ? OFF_NIVEIS[Math.floor(k * 3 / n)] : tipo;
+    const nivel = tipo === 'crescente' ? OFF_CRESCENTE[Math.floor(k * 3 / n)] : tipo;
     let ref = null;
     for (let t = 0; t < 6 && !ref; t++){
       const seed = novaSeed(), f = await Gerador.gerar(seed, NIVEIS_INF[nivel].o);

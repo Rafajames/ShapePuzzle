@@ -740,11 +740,11 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
       <select class="field" id="ocQtd"><option value="3">3 fases</option><option value="5" selected>5 fases</option><option value="8">8 fases</option></select></label>
     <label class="row"><span class="rl">Quais</span>
       <select class="field" id="ocTipo">
-        <option value="jogo">Fases do jogo (de fácil a difícil)</option>
         <option value="crescente">Sorteadas (de fácil a difícil)</option>
         <option value="facil">Sorteadas fáceis</option>
         <option value="medio">Sorteadas médias</option>
         <option value="dificil">Sorteadas difíceis</option>
+        <option value="mestre">Sorteadas mestres (7×7)</option>
       </select></label>
     <div class="acts"><button class="btn pri" id="ocCriar" data-i="trophy">Criar e gerar os QR codes</button></div>
     <p class="aviso" id="ocAviso"></p>
@@ -801,6 +801,8 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
     <h2><span>Fases</span> (<span id="crQtd">0</span>/10)</h2>
     <div id="crFases"></div>
     <div class="row"><select class="field" id="crFonte"></select><button class="btn sm" id="crAdd">Adicionar</button></div>
+    <label class="row"><span class="rl">Dificuldade</span><select class="field" id="crDif"><option value="crescente">De fácil a difícil</option><option value="facil">Fácil</option><option value="medio">Média</option><option value="dificil">Difícil</option><option value="mestre">Mestre</option></select></label>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.</p>
     <div class="acts">
       <button class="btn sm" data-preset="3">Sugestão: 3 fases</button>
       <button class="btn sm" data-preset="5">5 fases</button>
@@ -1132,6 +1134,16 @@ en: {
   "A conexão demorou demais. Tente de novo.": "The connection took too long. Try again.",
   "O serviço de campeonatos está com problema agora. Tente de novo mais tarde.": "The tournament service is having trouble right now. Try again later.",
   "Não foi possível criar agora. Tente de novo em instantes.": "Couldn't create it right now. Try again in a moment.",
+  "Gerando fases novas…": "Creating new levels…",
+  "Não consegui gerar agora. Tente de novo.": "Couldn't create them right now. Try again.",
+  "Difícil (6×6)": "Hard (6×6)",
+  "Mestre (7×7)": "Master (7×7)",
+  "Sorteada (mestre)": "Random (master)",
+  "Dificuldade": "Difficulty",
+  "De fácil a difícil": "From easy to hard",
+  "Média": "Medium",
+  "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Levels are always new, created just for this tournament — never the regular game's levels.",
+  "Sorteadas mestres (7×7)": "Random master levels (7×7)",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1734,6 +1746,16 @@ es: {
   "A conexão demorou demais. Tente de novo.": "La conexión tardó demasiado. Inténtalo de nuevo.",
   "O serviço de campeonatos está com problema agora. Tente de novo mais tarde.": "El servicio de torneos tiene problemas ahora. Inténtalo más tarde.",
   "Não foi possível criar agora. Tente de novo em instantes.": "No se pudo crear ahora. Inténtalo de nuevo en un momento.",
+  "Gerando fases novas…": "Creando niveles nuevos…",
+  "Não consegui gerar agora. Tente de novo.": "No se pudo crear ahora. Inténtalo de nuevo.",
+  "Difícil (6×6)": "Difícil (6×6)",
+  "Mestre (7×7)": "Maestro (7×7)",
+  "Sorteada (mestre)": "Aleatorio (maestro)",
+  "Dificuldade": "Dificultad",
+  "De fácil a difícil": "De fácil a difícil",
+  "Média": "Media",
+  "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Los niveles siempre son nuevos, creados solo para este torneo — nunca los del juego normal.",
+  "Sorteadas mestres (7×7)": "Niveles maestros aleatorios (7×7)",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2681,10 +2703,10 @@ function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h
 /* ---- Campeonato sem internet por QR code: lógica pura (testada em Node) ----
    Tudo viaja dentro do próprio link/QR. Um "pacote" é o campeonato (nome, fases, jogadores) mais os resultados que já se tem:
    {v: 1, i: código, n: nome, f: [fases], j: [nomes], r: {"0": [[tempoMs, jogadas] | null, ...]}}
-   Uma fase é ['b', número da fase do jogo] ou ['g', 'facil'|'medio'|'dificil', semente] (o jogo gera a mesma fase em qualquer aparelho). */
+   Uma fase é ['b', número da fase do jogo] ou ['g', 'facil'|'medio'|'dificil'|'mestre', semente] (o jogo gera a mesma fase em qualquer aparelho). */
 function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
 function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
-const OFF_MAX_J = 12, OFF_MAX_F = 8, OFF_NIVEIS = ['facil', 'medio', 'dificil'];
+const OFF_MAX_J = 12, OFF_MAX_F = 8, OFF_NIVEIS = ['facil', 'medio', 'dificil', 'mestre'], OFF_CRESCENTE = ['facil', 'medio', 'dificil'];
 const defOff = p => JSON.stringify([p.n, p.f, p.j]);
 function limparOff(p, nBuiltin = 999){
   if (!isObj(p) || p.v !== 1) return {erro: 'Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.'};
@@ -4520,10 +4542,9 @@ async function textoDeRef(ref){
 }
 /* sorteia as fases do campeonato; só aceita fase de solução única */
 async function sortearFasesOff(tipo, n){
-  if (tipo === 'jogo') return PRESETS[n].map(i => ['b', i]);
   const fases = [];
   for (let k = 0; k < n; k++){
-    const nivel = tipo === 'crescente' ? OFF_NIVEIS[Math.floor(k * 3 / n)] : tipo;
+    const nivel = tipo === 'crescente' ? OFF_CRESCENTE[Math.floor(k * 3 / n)] : tipo;
     let ref = null;
     for (let t = 0; t < 6 && !ref; t++){
       const seed = novaSeed(), f = await Gerador.gerar(seed, NIVEIS_INF[nivel].o);
@@ -4792,7 +4813,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.04.3';
+const VERSAO = '2026.11.04.4';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5058,8 +5079,37 @@ $('#cpEntrar').onclick = () => {
 
 /* ---- criar ---- */
 const CR = {fases: []};
-const PRESETS = {3: [3, 10, 18], 5: [2, 9, 16, 24, 33], 8: [2, 6, 11, 16, 21, 27, 34, 41]};
-const SORTEIOS = {facil: {nome: 'Sorteada (fácil)', o: {n: 5, minEstrelas: 14}}, medio: {nome: 'Sorteada (média)', o: {n: 5, minEstrelas: 7}}, dificil: {nome: 'Sorteada (difícil)', o: {n: 6, minEstrelas: 10, fila: 3}}};
+/* As fases de um campeonato são sempre novas: geradas na hora (solução única), nunca as fases do jogo normal. */
+const NOME_SORTEADA = {facil: 'Sorteada (fácil)', medio: 'Sorteada (média)', dificil: 'Sorteada (difícil)', mestre: 'Sorteada (mestre)'};
+const NIVEIS_CRESCENTE = ['facil', 'medio', 'dificil'];
+const jaExiste = text => BUILTIN.some(f => f.text === text) || CR.fases.some(f => f.text === text);
+async function gerarFaseCamp(nivel){
+  for (let t = 0; t < 6; t++){
+    const f = await Gerador.gerar(novaSeed(), NIVEIS_INF[nivel].o);
+    if (f && f.unica && !jaExiste(f.text)) return {nome: NOME_SORTEADA[nivel], text: f.text};
+  }
+  return null;
+}
+async function gerarVarias(tipo, n){
+  const fases = [];
+  for (let k = 0; k < n; k++){
+    const f = await gerarFaseCamp(tipo === 'crescente' ? NIVEIS_CRESCENTE[Math.floor(k * 3 / n)] : tipo);
+    if (!f) return null;
+    fases.push(f); CR.fases.push(f);              // já conta para não repetir dentro do mesmo campeonato
+  }
+  return fases;
+}
+async function comGerandoCr(fn){
+  if (CR.gerando) return null;
+  CR.gerando = true; $('#crCriar').disabled = true; $('#crAdd').disabled = true; aviso('#crInfo', 'Gerando fases novas…');
+  let r = null;
+  try{ r = await fn(); }catch(e){}
+  CR.gerando = false; $('#crCriar').disabled = false; $('#crAdd').disabled = false;
+  aviso('#crInfo', r ? '' : 'Não consegui gerar agora. Tente de novo.', r ? '' : 'erro');
+  renderCriar(); return r;
+}
+/* cria n fases novas na dificuldade escolhida e coloca no lugar das atuais */
+const sugerirFases = n => comGerandoCr(async () => { CR.fases = []; const f = await gerarVarias($('#crDif').value, n); if (!f) CR.fases = []; return f; });
 function abrirCriar(edit){
   CR.edit = edit ? {id: CP.id, criado: edit.criado, fim: edit.fim, org: edit.org} : null;
   $('#crTitulo').textContent = tr(edit ? 'Editar campeonato' : 'Novo campeonato');
@@ -5073,11 +5123,10 @@ function abrirCriar(edit){
   CR.veioDeEdicao = !!edit;
   const sel = $('#crFonte'); sel.innerHTML = '';
   const grupo = (rot, itens) => { if (!itens.length) return; const g = mk('optgroup'); g.label = tr(rot); itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
-  grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6, fila)')]]);
-  grupo('Fases do jogo', BUILTIN.map((f, i) => ['b:' + i, tr('Fase ' + (i + 1))]));
+  grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6)')], ['g:mestre', tr('Mestre (7×7)')]]);
   grupo('Minhas fases', custom.map((f, i) => ['c:' + i, f.nome]));
-  if (!CR.fases.length) CR.fases = PRESETS[3].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text}));
   aviso('#crInfo', ''); renderCriar(); abrir('criar');
+  if (!CR.fases.length) sugerirFases(3);
 }
 function renderCriar(){
   const l = $('#crFases'); l.innerHTML = '';
@@ -5088,20 +5137,13 @@ function renderCriar(){
   });
   $('#crQtd').textContent = CR.fases.length;
 }
-function faseDaFonte(v){
-  const [t, x] = v.split(':');
-  if (t === 'b') return {nome: 'Fase ' + (parseInt(x, 10) + 1), text: BUILTIN[x].text};
-  if (t === 'c') return {nome: custom[x].nome, text: custom[x].text};
-  const sc = SORTEIOS[x], f = gerarFase(Math.floor(Math.random() * 1e9) + 1, sc.o);
-  return f ? {nome: sc.nome, text: f.text} : null;
-}
-$('#crAdd').onclick = () => {
+$('#crAdd').onclick = async () => {
   if (CR.fases.length >= MAX_FASES_CAMP){ aviso('#crInfo', 'No máximo ' + MAX_FASES_CAMP + ' fases.', 'erro'); return; }
-  const f = faseDaFonte($('#crFonte').value);
-  if (!f){ aviso('#crInfo', 'Não consegui sortear agora. Tente de novo.', 'erro'); return; }
-  CR.fases.push(f); aviso('#crInfo', ''); renderCriar();
+  const [t, x] = $('#crFonte').value.split(':');
+  if (t === 'c'){ CR.fases.push({nome: custom[x].nome, text: custom[x].text}); aviso('#crInfo', ''); renderCriar(); return; }
+  await comGerandoCr(async () => gerarFaseCamp(x).then(f => f && (CR.fases.push(f), f)));
 };
-document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { CR.fases = PRESETS[b.dataset.preset].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text})); renderCriar(); });
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => sugerirFases(+b.dataset.preset));
 $('#crCriar').onclick = async () => {
   const btn = $('#crCriar'); btn.disabled = true;
   try{

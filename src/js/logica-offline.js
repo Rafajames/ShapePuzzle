@@ -1,10 +1,10 @@
 /* ---- Campeonato sem internet por QR code: lógica pura (testada em Node) ----
    Tudo viaja dentro do próprio link/QR. Um "pacote" é o campeonato (nome, fases, jogadores) mais os resultados que já se tem:
    {v: 1, i: código, n: nome, f: [fases], j: [nomes], r: {"0": [[tempoMs, jogadas] | null, ...]}}
-   Uma fase é ['b', número da fase do jogo] ou ['g', 'facil'|'medio'|'dificil', semente] (o jogo gera a mesma fase em qualquer aparelho). */
+   Uma fase é ['b', número da fase do jogo] ou ['g', 'facil'|'medio'|'dificil'|'mestre', semente] (o jogo gera a mesma fase em qualquer aparelho). */
 function b64u(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
 function deb64u(s){ s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
-const OFF_MAX_J = 12, OFF_MAX_F = 8, OFF_NIVEIS = ['facil', 'medio', 'dificil'];
+const OFF_MAX_J = 12, OFF_MAX_F = 8, OFF_NIVEIS = ['facil', 'medio', 'dificil', 'mestre'], OFF_CRESCENTE = ['facil', 'medio', 'dificil'];
 const defOff = p => JSON.stringify([p.n, p.f, p.j]);
 function limparOff(p, nBuiltin = 999){
   if (!isObj(p) || p.v !== 1) return {erro: 'Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.'};

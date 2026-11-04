@@ -1,7 +1,36 @@
 /* ---- criar ---- */
 const CR = {fases: []};
-const PRESETS = {3: [3, 10, 18], 5: [2, 9, 16, 24, 33], 8: [2, 6, 11, 16, 21, 27, 34, 41]};
-const SORTEIOS = {facil: {nome: 'Sorteada (fácil)', o: {n: 5, minEstrelas: 14}}, medio: {nome: 'Sorteada (média)', o: {n: 5, minEstrelas: 7}}, dificil: {nome: 'Sorteada (difícil)', o: {n: 6, minEstrelas: 10, fila: 3}}};
+/* As fases de um campeonato são sempre novas: geradas na hora (solução única), nunca as fases do jogo normal. */
+const NOME_SORTEADA = {facil: 'Sorteada (fácil)', medio: 'Sorteada (média)', dificil: 'Sorteada (difícil)', mestre: 'Sorteada (mestre)'};
+const NIVEIS_CRESCENTE = ['facil', 'medio', 'dificil'];
+const jaExiste = text => BUILTIN.some(f => f.text === text) || CR.fases.some(f => f.text === text);
+async function gerarFaseCamp(nivel){
+  for (let t = 0; t < 6; t++){
+    const f = await Gerador.gerar(novaSeed(), NIVEIS_INF[nivel].o);
+    if (f && f.unica && !jaExiste(f.text)) return {nome: NOME_SORTEADA[nivel], text: f.text};
+  }
+  return null;
+}
+async function gerarVarias(tipo, n){
+  const fases = [];
+  for (let k = 0; k < n; k++){
+    const f = await gerarFaseCamp(tipo === 'crescente' ? NIVEIS_CRESCENTE[Math.floor(k * 3 / n)] : tipo);
+    if (!f) return null;
+    fases.push(f); CR.fases.push(f);              // já conta para não repetir dentro do mesmo campeonato
+  }
+  return fases;
+}
+async function comGerandoCr(fn){
+  if (CR.gerando) return null;
+  CR.gerando = true; $('#crCriar').disabled = true; $('#crAdd').disabled = true; aviso('#crInfo', 'Gerando fases novas…');
+  let r = null;
+  try{ r = await fn(); }catch(e){}
+  CR.gerando = false; $('#crCriar').disabled = false; $('#crAdd').disabled = false;
+  aviso('#crInfo', r ? '' : 'Não consegui gerar agora. Tente de novo.', r ? '' : 'erro');
+  renderCriar(); return r;
+}
+/* cria n fases novas na dificuldade escolhida e coloca no lugar das atuais */
+const sugerirFases = n => comGerandoCr(async () => { CR.fases = []; const f = await gerarVarias($('#crDif').value, n); if (!f) CR.fases = []; return f; });
 function abrirCriar(edit){
   CR.edit = edit ? {id: CP.id, criado: edit.criado, fim: edit.fim, org: edit.org} : null;
   $('#crTitulo').textContent = tr(edit ? 'Editar campeonato' : 'Novo campeonato');
@@ -15,11 +44,10 @@ function abrirCriar(edit){
   CR.veioDeEdicao = !!edit;
   const sel = $('#crFonte'); sel.innerHTML = '';
   const grupo = (rot, itens) => { if (!itens.length) return; const g = mk('optgroup'); g.label = tr(rot); itens.forEach(([v, t]) => g.appendChild(new Option(t, v))); sel.appendChild(g); };
-  grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6, fila)')]]);
-  grupo('Fases do jogo', BUILTIN.map((f, i) => ['b:' + i, tr('Fase ' + (i + 1))]));
+  grupo('Sortear uma nova fase', [['g:facil', tr('Fácil (5×5)')], ['g:medio', tr('Média (5×5)')], ['g:dificil', tr('Difícil (6×6)')], ['g:mestre', tr('Mestre (7×7)')]]);
   grupo('Minhas fases', custom.map((f, i) => ['c:' + i, f.nome]));
-  if (!CR.fases.length) CR.fases = PRESETS[3].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text}));
   aviso('#crInfo', ''); renderCriar(); abrir('criar');
+  if (!CR.fases.length) sugerirFases(3);
 }
 function renderCriar(){
   const l = $('#crFases'); l.innerHTML = '';
@@ -30,20 +58,13 @@ function renderCriar(){
   });
   $('#crQtd').textContent = CR.fases.length;
 }
-function faseDaFonte(v){
-  const [t, x] = v.split(':');
-  if (t === 'b') return {nome: 'Fase ' + (parseInt(x, 10) + 1), text: BUILTIN[x].text};
-  if (t === 'c') return {nome: custom[x].nome, text: custom[x].text};
-  const sc = SORTEIOS[x], f = gerarFase(Math.floor(Math.random() * 1e9) + 1, sc.o);
-  return f ? {nome: sc.nome, text: f.text} : null;
-}
-$('#crAdd').onclick = () => {
+$('#crAdd').onclick = async () => {
   if (CR.fases.length >= MAX_FASES_CAMP){ aviso('#crInfo', 'No máximo ' + MAX_FASES_CAMP + ' fases.', 'erro'); return; }
-  const f = faseDaFonte($('#crFonte').value);
-  if (!f){ aviso('#crInfo', 'Não consegui sortear agora. Tente de novo.', 'erro'); return; }
-  CR.fases.push(f); aviso('#crInfo', ''); renderCriar();
+  const [t, x] = $('#crFonte').value.split(':');
+  if (t === 'c'){ CR.fases.push({nome: custom[x].nome, text: custom[x].text}); aviso('#crInfo', ''); renderCriar(); return; }
+  await comGerandoCr(async () => gerarFaseCamp(x).then(f => f && (CR.fases.push(f), f)));
 };
-document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { CR.fases = PRESETS[b.dataset.preset].map(i => ({nome: 'Fase ' + (i + 1), text: BUILTIN[i].text})); renderCriar(); });
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => sugerirFases(+b.dataset.preset));
 $('#crCriar').onclick = async () => {
   const btn = $('#crCriar'); btn.disabled = true;
   try{

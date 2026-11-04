@@ -23,7 +23,7 @@ const ruim=(o,m)=>eq(typeof limparOff(Object.assign({},base,o),50).erro,'string'
 ruim({v:2},'versão');ruim({i:'abc'},'código do campeonato');ruim({n:'x'},'nome curto');ruim({j:['Rafa']},'1 jogador');
 ruim({j:Array.from({length:13},(_,i)=>'Jogador'+i)},'13 jogadores');ruim({j:['Rafa','rafa']},'nomes repetidos');
 ruim({f:[]},'sem fases');ruim({f:Array.from({length:9},()=>['b',1])},'9 fases');ruim({f:[['b',99]]},'fase fora do jogo');
-ruim({f:[['g','mestre',5]]},'nível não permitido');ruim({f:[['g','facil',0]]},'semente inválida');ruim({f:[['x',1]]},'tipo');
+ruim({f:[['g','impossivel',5]]},'nível não permitido');ruim({f:[['g','facil',0]]},'semente inválida');ruim({f:[['x',1]]},'tipo');
 // resultados: lixo é limpo
 const r1=limparOff(Object.assign({},base,{r:{0:[[60000,10],[1e12,5],null],9:[[1,1]],x:1,1:[[0,3],[-5,2],'a']}}),50).pacote.r;
 eq(r1,{0:[[60000,10],[864e5,5],null]},'resultados limpos (índice inválido, zero e negativos saem)');
