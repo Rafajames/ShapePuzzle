@@ -73,7 +73,7 @@ function humorDaFase(cur){
   return 'calma';
 }
 /* a música de cada tema (menu → Som → Estilo → "Música do tema") */
-const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira'};
+const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel'};
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
@@ -84,7 +84,7 @@ function carregar(cur, manter){
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur), escolhaPecas(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
-  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.ultVit = null; S.msgCamp = ''; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
   S.t = {acum: 0, ult: performance.now(), ativo: ehCamp(cur)};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();

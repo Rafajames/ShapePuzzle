@@ -230,8 +230,9 @@ async function cpEnviarResultado(c, res){
     return tr('Não consegui enviar: {m}', {m: tr(msgNuvem(e))});
   }
 }
-function vitoriaCamp(c, res, add){
-  cpEnviarResultado(c, res).then(msg => { $('#winTexto').textContent = msg; });
+function vitoriaCamp(c, res, add, reabrir){
+  if (reabrir) $('#winTexto').textContent = S.msgCamp || '';
+  else cpEnviarResultado(c, res).then(msg => { S.msgCamp = msg; $('#winTexto').textContent = msg; });
   const proxima = c.idx + 1 < c.total && CP.camp && CP.id === c.camp && CP.camp.fases[c.idx + 1];
   if (proxima) add('Próxima fase do campeonato', 'pri', () => setTimeout(() => jogarFaseCamp(c.idx + 1), 50));
   add('Ver ranking', proxima ? '' : 'pri', () => setTimeout(() => abrirLobby(c.camp, c.db), 50), 'trophy');

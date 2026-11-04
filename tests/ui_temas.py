@@ -10,7 +10,7 @@ def check(c, m):
     print(('  ok   ' if c else '  FALHA ') + m)
     if not c: falhas.append(m)
 FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')"
-TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira']
+TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel']
 def rgb(c):
     c = c.strip()
     if c.startswith('#'):
@@ -32,21 +32,21 @@ with sync_playwright() as pw:
     pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(300)
 
     print('Padrão e menu')
-    check(pg.evaluate("document.documentElement.dataset.tema") == 'escuro', 'quem não escolheu nada continua com o tema escuro de sempre')
+    check(pg.evaluate("document.documentElement.dataset.tema") == 'madeira', 'quem não escolheu nada começa com o tema Madeira')
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     ops = pg.evaluate("[...document.querySelectorAll('#selTema option')].map(o=>o.value)")
-    check(ops == ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira'], f'seletor com os 8 temas: {ops}')
+    check(ops == ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'], f'seletor com os 9 temas, Madeira primeiro: {ops}')
     check(pg.is_visible('#selTema'), 'seletor aparece no menu')
     check(pg.evaluate("document.querySelector('#selTema').closest('label').textContent.includes('Tema')"), 'rótulo "Tema"')
 
     print('Trocar de tema')
     fundos = {}
-    for t in TEMAS[1:] + ['escuro']:
+    for t in TEMAS + ['escuro']:
         pg.select_option('#selTema', t); pg.wait_for_timeout(150)
         check(pg.evaluate("document.documentElement.dataset.tema") == t, f'{t}: aplicado')
         fundos[t] = pg.evaluate("getComputedStyle(document.body).backgroundColor") + '|' + pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bg')")
         check(pg.evaluate("document.querySelector('meta[name=theme-color]').content") != '', f'{t}: cor da barra do navegador definida')
-    check(len(set(fundos.values())) >= 7, 'cada tema tem um fundo diferente')
+    check(len(set(fundos.values())) >= 8, 'cada tema tem um fundo diferente')
     pg.select_option('#selTema', 'oceano'); pg.wait_for_timeout(150)
     check(pg.evaluate("JSON.parse(localStorage.getItem('shapepuzzle.tema'))") == 'oceano', 'escolha salva no aparelho')
     pg.reload(); pg.wait_for_timeout(300)
@@ -113,7 +113,7 @@ with sync_playwright() as pw:
     ops = pg.evaluate("[...document.querySelectorAll('#selHumor option')].map(o=>o.value)")
     check(ops[:2] == ['auto', 'tema'] and set(['noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira']) <= set(ops), f'Estilo de música tem "Música do tema" e um clima para cada tema: {ops}')
     pg.select_option('#selHumor', 'tema'); pg.wait_for_timeout(200)
-    esperado = {'escuro': 'noite', 'claro': 'manha', 'oceano': 'mare', 'floresta': 'mata', 'poente': 'entardecer', 'retro': 'chip', 'madeira': 'madeira'}
+    esperado = {'escuro': 'noite', 'claro': 'manha', 'oceano': 'mare', 'floresta': 'mata', 'poente': 'entardecer', 'retro': 'chip', 'madeira': 'madeira', 'pixel': 'pixel'}
     for t, h in esperado.items():
         pg.select_option('#selTema', t); pg.wait_for_timeout(200)
         check(pg.evaluate("Som.humorAtual()") == h, f'tema {t}: música {h}')

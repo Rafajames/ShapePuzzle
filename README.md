@@ -64,8 +64,8 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 
 ## Temas, acessibilidade e idiomas
 
-- Menu → **Tema**: Automático (segue o claro/escuro do aparelho), Escuro (padrão), Claro, Oceano, Floresta, Pôr do sol, **Retrô (8 bits)** (cantos retos, molduras duplas e blocos com brilho de pixel) e **Madeira** (nogueira, carvalho e blocos pintados). A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.
-- Menu → **Som → Estilo**: além de Calma, Animada e Noturna, cada tema tem a sua música (Meia-noite, Manhã, Maré, Mata, Entardecer, Chiptune e Madeira, todas geradas por código). Escolha **Música do tema** para ela mudar sozinha junto com o tema.
+- Menu → **Tema**: Automático (segue o claro/escuro do aparelho), **Madeira** (padrão), **Pixel Art**, Escuro, Claro, Oceano, Floresta, Pôr do sol, **Retrô (8 bits)** (cantos retos, molduras duplas e blocos com brilho de pixel) e os dois visuais especiais: Madeira (nogueira, carvalho e blocos pintados) e **Pixel Art** (céu azul em faixas, cartões cor de creme com contorno em degraus e blocos com borda de pixel). A escolha fica salva; as cores das peças não mudam. Com alto contraste ligado, o tema escuro é usado.
+- Menu → **Som → Estilo**: além de Calma, Animada e Noturna, cada tema tem a sua música (Meia-noite, Manhã, Maré, Mata, Entardecer, Chiptune, Madeira e Pixel, todas geradas por código). Escolha **Música do tema** para ela mudar sozinha junto com o tema.
 - Menu → **Acessibilidade**: modo para daltônicos (um símbolo em cada cor), alto contraste, texto maior e reduzir animações (segue também a configuração do aparelho).
 - **Teclado**: setas movem o cursor no tabuleiro, `1`–`6` escolhe a peça, `R` gira, `T` espelha, `Enter`/`Espaço` encaixa ou tira a peça, `Z` desfaz, `P` pega a peça.
 - **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
@@ -98,6 +98,7 @@ A cada publicação o GitHub roda todos os testes (lógica das fases, regras do 
 
 - **Desfazer**: botão no topo (ou tecla Z) tira a última peça encaixada.
 - **Peças por vez**: no menu, automático (5 ou mais), de 1 a 6 ou "Todas" — vale para todas as fases; campeonatos e tutorial mantêm a regra deles.
+- **Festa ao completar**: confetes e fogos de artifício assim que a última peça é encaixada (desligados com "menos animação"). A tela de conclusão tem botão de fechar; tocar no selo da fase reabre o resultado.
 - **Tela inicial**: botão Continuar (mostra a fase em que você parou) e atalhos para fase do dia, desafio da semana, modo infinito, campeonatos, estatísticas e menu; "Como jogar" fica recolhido. No menu, o ícone da casinha volta para ela. Não exige login.
 - **Tutorial inicial**: uma fase de ensino guiada (selecionar, girar, espelhar, encaixar) antes da Fase 1, só na primeira vez; dá para rever em Menu → Jogo → "Rever o tutorial".
 - **Estrelas**: cada fase vale até 3 estrelas (sem dica e sem recolocar peças = 3). Aparecem ao vencer e no menu.

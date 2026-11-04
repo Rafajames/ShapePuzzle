@@ -19,13 +19,17 @@ function tentarColocar(p, gx, gy){
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
   selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
-  selo.hidden = false;
+  selo.hidden = false; selo.setAttribute('role', 'button'); selo.tabIndex = 0; selo.setAttribute('aria-label', tr('Ver o resultado'));
 }
+/* depois de fechar o resultado, tocar no selo da fase abre de novo */
+function reabrirVitoria(){ if (S.venceu && S.ultVit) mostrarVitoria(S.ultVit, true); }
+$('#selo').onclick = reabrirVitoria;
+$('#selo').onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); reabrirVitoria(); } };
 function vencer(){
   tick();
   S.venceu = true; atualizarDesfazer(); anunciar(tr('Fase concluída!'));
   $('#board').classList.add('win');
-  renderSelo();
+  renderSelo(); Festa.iniciar();
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
@@ -51,7 +55,8 @@ function vencer(){
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
   setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
 }
-function mostrarVitoria(res){
+function mostrarVitoria(res, reabrir){
+  S.ultVit = res;
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i >= LIMITE_FASES - 1;
   $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
@@ -75,7 +80,7 @@ function mostrarVitoria(res){
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
-  if (c.k === 'x') vitoriaCamp(c, res, add);
+  if (c.k === 'x') vitoriaCamp(c, res, add, reabrir);
   else if (c.k === 'o') vitoriaOff(c, res, add);
   else if (c.k === 'u'){ add('Ir para a Fase 1', 'pri', () => carregar({k: 'b', i: 0})); add('Jogar o tutorial de novo', '', abrirTutorial); }
   else {

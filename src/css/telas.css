@@ -152,3 +152,6 @@ details.como .how{margin:10px 0 0}
 @media (max-height:640px){.home #logo{display:none}}
 
 .home #btnJogar{margin-top:14px}
+
+#festa{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
+#selo[role=button]{cursor:pointer;pointer-events:auto}

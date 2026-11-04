@@ -84,6 +84,17 @@ const HUMORES = {
       {bass:50, pad:[54,57,62], arp:[62,66,69,74,78,81,86]}    // D
     ]
   },
+  pixel: {   /* tema Pixel Art: aventura em dó maior, pulsos quadrados suaves e chimbal de ruído */
+    bpm: 104, padV: 0.012, filtro: 2800, tipo: 'square', decay: 0.42, harm: 2, harmV: 0.12, plV: 0.42, prob: [0.88, 0.66, 0.5], pulso: true,
+    padTipos: [['square', 0], ['triangle', 12]], baixoTipo: 'triangle', baixoV: 0.14, pulsoTipo: 'triangle', send: 0.2, fb: 0.25, atk: 0.004,
+    perc: {tipo: 'ruido', f: 9000, v: 0.022, cada: 2, dur: 0.035},
+    acordes: [
+      {bass:36, pad:[52,55,60], arp:[67,69,72,76,79,81,84]},   // C
+      {bass:33, pad:[52,57,60], arp:[64,67,69,72,76,79,81]},   // Am
+      {bass:41, pad:[53,57,60], arp:[65,67,69,72,74,77,81]},   // F
+      {bass:43, pad:[55,59,62], arp:[67,69,71,74,76,79,83]}    // G
+    ]
+  },
   madeira: {   /* tema Madeira: marimba e toquinhos de madeira */
     bpm: 84, padV: 0.02, filtro: 1800, tipo: 'sine', decay: 0.9, harm: 4, harmV: 0.35, prob: [0.75, 0.55, 0.38], pulso: false, send: 0.4,
     perc: {tipo: 'tom', f: 620, v: 0.03, cada: 4, dur: 0.05},

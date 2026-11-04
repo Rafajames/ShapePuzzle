@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0c0c12">
+<meta name="theme-color" content="#24150b">
 <meta name="description" content="Shape Puzzle — quebra-cabeça lógico: preencha o tabuleiro 5x5 com as peças e cubra cada estrela com a cor certa.">
 <meta property="og:title" content="Shape Puzzle">
 <meta property="og:description" content="Quebra-cabeça lógico: preencha o tabuleiro 5x5 e cubra cada estrela com a cor certa. 50 fases, fase do dia e editor.">
@@ -22,7 +22,8 @@
 try{var __t=JSON.parse(localStorage.getItem('shapepuzzle.tema')),__c=JSON.parse(localStorage.getItem('shapepuzzle.a11y')||'{}');
 if(__t==='auto')__t=matchMedia('(prefers-color-scheme: light)').matches?'claro':'escuro';
 if(__c&&__c.cont)__t='escuro';
-document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente','retro','madeira'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
+if(__t===null||__t===undefined)__t='madeira';
+document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente','retro','madeira','pixel'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
 </script>
 <style>
 :root{
@@ -339,6 +340,9 @@ details.como .how{margin:10px 0 0}
 @media (max-height:640px){.home #logo{display:none}}
 
 .home #btnJogar{margin-top:14px}
+
+#festa{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
+#selo[role=button]{cursor:pointer;pointer-events:auto}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -456,6 +460,61 @@ html[data-tema="madeira"] .pc{border-radius:14%;background:linear-gradient(180de
 html[data-tema="madeira"] .star{box-shadow:0 0 0 3px var(--ring),0 1px 3px rgba(0,0,0,.4)}
 html[data-tema="madeira"] #selo{background:linear-gradient(135deg,#f2ab57,#d0782a);color:#24120a;box-shadow:0 6px 18px rgba(0,0,0,.5)}
 html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
+/* ======================= Tema Pixel Art =======================
+   Céu azul em faixas, cartões cor de creme com contorno "serrilhado" (cantos em degrau), blocos com borda e brilho de pixel.
+   Só troca a aparência: as cores das peças são as mesmas. Diferente do Retrô (escuro), este é claro e alegre. */
+html[data-tema="pixel"]{
+  --bg:#a8dcf5; --bg2:#8fd0f2; --panel:#fdf3d8; --line:#1d2b53; --txt:#1d2b53; --mut:#3a4775;
+  --accent:#d7264b; --acc2:#1d62d6; --onacc:#fff;
+  --t0:rgba(29,43,83,.06); --t1:rgba(29,43,83,.1); --t2:rgba(29,43,83,.18);
+  --board:#1d2b53; --cel1:#e8eefb; --cel2:#d5def2; --cline:#9aa9d1;
+  --card1:#fdf3d8; --card2:#f6e7bd; --ovbg:rgba(20,28,60,.72); --toast:#fdf3d8; --fieldbg:#fffaea;
+  --shb:rgba(20,28,60,.35); --shc:rgba(20,28,60,.45);
+  --soft:#27356a; --strong:#0f1838; --acctxt:#b0123f; --gold:#7a4f00; --goldln:rgba(122,79,0,.6);
+  --ok:#0a6e3f; --bad:#b3261e; --info:#1257a8; --staroff:#a9b3cf;
+  --ring:rgba(29,43,83,.8); --gokbg:rgba(255,255,255,.55); --gokln:#1d2b53; --selln:#1d2b53;
+  --handbg:rgba(29,43,83,.35); --handln:#1d2b53;
+}
+html[data-tema="pixel"] *{border-radius:0!important}
+html[data-tema="pixel"] body{
+  background:linear-gradient(#a8dcf5 0 34%,#9bd5f3 34% 58%,#8fd0f2 58% 80%,#82c9f0 80%) fixed;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono","Courier New",monospace;font-weight:700;-webkit-font-smoothing:none;
+}
+/* nuvens de pixel */
+html[data-tema="pixel"] body::before{content:"";position:fixed;left:8%;top:9%;width:8px;height:8px;background:#fff;pointer-events:none;z-index:-1;opacity:.9;
+  box-shadow:16px 0 #fff,24px 0 #fff,32px 0 #fff,8px 8px #fff,16px 8px #fff,24px 8px #fff,32px 8px #fff,40px 8px #fff,48px 8px #fff,0 16px #fff,8px 16px #fff,16px 16px #fff,24px 16px #fff,32px 16px #fff,40px 16px #fff,48px 16px #fff,56px 16px #fff,
+    220px 70px #fff,228px 70px #fff,236px 70px #fff,212px 78px #fff,220px 78px #fff,228px 78px #fff,236px 78px #fff,244px 78px #fff,212px 86px #fff,220px 86px #fff,228px 86px #fff,236px 86px #fff,244px 86px #fff,252px 86px #fff}
+html[data-tema="pixel"] :is(h1,h2,.btn,.pill,.tile,summary,.t1,.t2,.rl,.daily b){text-transform:uppercase;letter-spacing:.5px}
+/* contorno com cantos em degrau: quatro sombras sólidas (sem canto) + brilho e sombra de pixel por dentro */
+html[data-tema="pixel"] :is(.card,.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast,.reserva){
+  border-color:transparent;
+  box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(29,43,83,.14);
+}
+html[data-tema="pixel"] .card{background:var(--card1);margin-top:3px;margin-bottom:3px;box-shadow:-4px 0 0 0 var(--line),4px 0 0 0 var(--line),0 -4px 0 0 var(--line),0 4px 0 0 var(--line),inset 0 4px 0 rgba(255,255,255,.6),inset 0 -4px 0 rgba(29,43,83,.1),8px 12px 0 0 rgba(20,28,60,.35)}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily){background:#fff;color:var(--txt)}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#fff6cf}
+html[data-tema="pixel"] :is(.btn,.ib):active{transform:translateY(3px);box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 -3px 0 rgba(29,43,83,.14)}
+html[data-tema="pixel"] .btn.pri{background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
+html[data-tema="pixel"] .btn.pri:hover{background:#e63b5f}
+html[data-tema="pixel"] .tile:disabled{background:#c9d3ea;color:#5c6890}
+html[data-tema="pixel"] .field,html[data-tema="pixel"] input,html[data-tema="pixel"] textarea,html[data-tema="pixel"] select{background:var(--fieldbg);color:var(--txt);font-weight:700}
+html[data-tema="pixel"] .field{text-transform:none}
+/* tabuleiro: moldura azul-marinho com degraus e casas de xadrez claras */
+html[data-tema="pixel"] #board,html[data-tema="pixel"] #edBoard{box-shadow:-6px 0 0 0 var(--line),6px 0 0 0 var(--line),0 -6px 0 0 var(--line),0 6px 0 0 var(--line),8px 12px 0 0 rgba(20,28,60,.35)}
+html[data-tema="pixel"] .cell{box-shadow:inset 0 0 0 1px var(--cline)}
+html[data-tema="pixel"] .reserva{background:#fff6dc;margin:3px}
+/* blocos: contorno escuro, brilho no canto de cima e sombra no de baixo */
+html[data-tema="pixel"] .fill{inset:0;background:var(--c);box-shadow:inset 0 0 0 2px #1d2b53,inset calc(var(--cell)*.16) calc(var(--cell)*.16) 0 rgba(255,255,255,.5),inset calc(var(--cell)*-.12) calc(var(--cell)*-.12) 0 rgba(0,0,0,.28)}
+html[data-tema="pixel"] .pc{background:var(--c);box-shadow:inset 0 0 0 2px #1d2b53,inset calc(var(--s)*.16) calc(var(--s)*.16) 0 rgba(255,255,255,.5),inset calc(var(--s)*-.12) calc(var(--s)*-.12) 0 rgba(0,0,0,.28)}
+html[data-tema="pixel"] #flut{filter:none}
+html[data-tema="pixel"] .star{width:24%;height:24%;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ring)}
+html[data-tema="pixel"] .cell.gok::after,html[data-tema="pixel"] .cell.gbad::after{inset:1px}
+html[data-tema="pixel"] .solp{inset:1px;box-shadow:inset 0 0 0 3px #fff}
+html[data-tema="pixel"] #selo{background:#2fb35a;color:#fff;box-shadow:-3px 0 0 #1d2b53,3px 0 0 #1d2b53,0 -3px 0 #1d2b53,0 3px 0 #1d2b53,6px 8px 0 rgba(20,28,60,.4)}
+html[data-tema="pixel"] .pw.sel{box-shadow:0 0 0 3px var(--line)}
+html[data-tema="pixel"] #logo{image-rendering:pixelated}
+html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
+@media (max-width:350px){html[data-tema="pixel"] #titulo .t1{font-size:14px}html[data-tema="pixel"] #titulo .t2{font-size:10px}}
 </style>
 </head>
 <body>
@@ -592,6 +651,7 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
         <option value="entardecer">Entardecer</option>
         <option value="chip">Chiptune</option>
         <option value="madeira">Marimba</option>
+        <option value="pixel">Pixel (aventura)</option>
       </select></label>
     <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
@@ -602,13 +662,14 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
     <label class="row"><span class="rl">Tema</span>
       <select class="field" id="selTema">
         <option value="auto">Automático (segue o aparelho)</option>
+        <option value="madeira">Madeira</option>
+        <option value="pixel">Pixel Art</option>
         <option value="escuro">Escuro</option>
         <option value="claro">Claro</option>
         <option value="oceano">Oceano</option>
         <option value="floresta">Floresta</option>
         <option value="poente">Pôr do sol</option>
         <option value="retro">Retrô (8 bits)</option>
-        <option value="madeira">Madeira</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
     </div></details>
@@ -644,6 +705,7 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
 <!-- Vitória -->
 <div class="ov" id="ov-win">
   <div class="card vit" id="cardWin">
+    <button class="ib x" data-close="win" data-i="close" aria-label="Fechar"></button>
     <div class="big" data-i="check"></div>
     <h1 id="winTitulo">Fase concluída!</h1>
     <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
@@ -1147,6 +1209,9 @@ en: {
   "Sorteadas mestres (7×7)": "Random master levels (7×7)",
   "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "After you finish the levels shown, 10 more unlock — and after level 50 the game creates new levels, the same for everyone.",
   "Todas as fases estão completas. Que tal criar as suas?": "All levels are complete. How about creating your own?",
+  "Pixel (aventura)": "Pixel (adventure)",
+  "Pixel Art": "Pixel Art",
+  "Ver o resultado": "See the result",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1761,6 +1826,9 @@ es: {
   "Sorteadas mestres (7×7)": "Niveles maestros aleatorios (7×7)",
   "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "Al terminar los niveles que aparecen, se desbloquean 10 más — y después del 50 el juego crea niveles nuevos, iguales para todos.",
   "Todas as fases estão completas. Que tal criar as suas?": "Todos los niveles están completos. ¿Y si creas los tuyos?",
+  "Pixel (aventura)": "Pixel (aventura)",
+  "Pixel Art": "Pixel Art",
+  "Ver o resultado": "Ver el resultado",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2639,8 +2707,8 @@ const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
-const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira'];
-const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira'];
+const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira', 'pixel'];
+const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel'];
 const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
 const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };
 function limparBackup(env){
@@ -2879,9 +2947,10 @@ function aplicarIdioma(){
 const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
 let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
 /* ---- tema ---- */
-const TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira'];
-const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b'};
-let tema = store.get('tema', 'escuro'); if (!TEMAS.includes(tema)) tema = 'escuro';
+const TEMAS = ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const TEMA_PADRAO = 'madeira';
+const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b', pixel: '#a8dcf5'};
+let tema = store.get('tema', TEMA_PADRAO); if (!TEMAS.includes(tema)) tema = TEMA_PADRAO;
 const mqClaro = matchMedia('(prefers-color-scheme: light)');
 const temaAtivo = () => a11y.cont ? 'escuro' : tema === 'auto' ? (mqClaro.matches ? 'claro' : 'escuro') : tema;
 function aplicarTema(){
@@ -3086,6 +3155,17 @@ const HUMORES = {
       {bass:48, pad:[52,55,60], arp:[64,67,72,76,79,84,88]},   // C
       {bass:43, pad:[55,59,62], arp:[62,67,71,74,79,83,86]},   // G
       {bass:50, pad:[54,57,62], arp:[62,66,69,74,78,81,86]}    // D
+    ]
+  },
+  pixel: {   /* tema Pixel Art: aventura em dó maior, pulsos quadrados suaves e chimbal de ruído */
+    bpm: 104, padV: 0.012, filtro: 2800, tipo: 'square', decay: 0.42, harm: 2, harmV: 0.12, plV: 0.42, prob: [0.88, 0.66, 0.5], pulso: true,
+    padTipos: [['square', 0], ['triangle', 12]], baixoTipo: 'triangle', baixoV: 0.14, pulsoTipo: 'triangle', send: 0.2, fb: 0.25, atk: 0.004,
+    perc: {tipo: 'ruido', f: 9000, v: 0.022, cada: 2, dur: 0.035},
+    acordes: [
+      {bass:36, pad:[52,55,60], arp:[67,69,72,76,79,81,84]},   // C
+      {bass:33, pad:[52,57,60], arp:[64,67,69,72,76,79,81]},   // Am
+      {bass:41, pad:[53,57,60], arp:[65,67,69,72,74,77,81]},   // F
+      {bass:43, pad:[55,59,62], arp:[67,69,71,74,76,79,83]}    // G
     ]
   },
   madeira: {   /* tema Madeira: marimba e toquinhos de madeira */
@@ -3364,7 +3444,7 @@ function humorDaFase(cur){
   return 'calma';
 }
 /* a música de cada tema (menu → Som → Estilo → "Música do tema") */
-const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira'};
+const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel'};
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
@@ -3375,7 +3455,7 @@ function carregar(cur, manter){
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur), escolhaPecas(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
-  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.ultVit = null; S.msgCamp = ''; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
   S.t = {acum: 0, ult: performance.now(), ativo: ehCamp(cur)};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
@@ -3736,13 +3816,17 @@ function tentarColocar(p, gx, gy){
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
   selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
-  selo.hidden = false;
+  selo.hidden = false; selo.setAttribute('role', 'button'); selo.tabIndex = 0; selo.setAttribute('aria-label', tr('Ver o resultado'));
 }
+/* depois de fechar o resultado, tocar no selo da fase abre de novo */
+function reabrirVitoria(){ if (S.venceu && S.ultVit) mostrarVitoria(S.ultVit, true); }
+$('#selo').onclick = reabrirVitoria;
+$('#selo').onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); reabrirVitoria(); } };
 function vencer(){
   tick();
   S.venceu = true; atualizarDesfazer(); anunciar(tr('Fase concluída!'));
   $('#board').classList.add('win');
-  renderSelo();
+  renderSelo(); Festa.iniciar();
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
@@ -3768,7 +3852,8 @@ function vencer(){
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
   setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
 }
-function mostrarVitoria(res){
+function mostrarVitoria(res, reabrir){
+  S.ultVit = res;
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i >= LIMITE_FASES - 1;
   $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
@@ -3792,7 +3877,7 @@ function mostrarVitoria(res){
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
-  if (c.k === 'x') vitoriaCamp(c, res, add);
+  if (c.k === 'x') vitoriaCamp(c, res, add, reabrir);
   else if (c.k === 'o') vitoriaOff(c, res, add);
   else if (c.k === 'u'){ add('Ir para a Fase 1', 'pri', () => carregar({k: 'b', i: 0})); add('Jogar o tutorial de novo', '', abrirTutorial); }
   else {
@@ -3834,6 +3919,71 @@ function aposTransformar(){
   else atualizarGhostHover();
 }
 
+/* ======================= Festa: confetes e fogos de artifício =======================
+   Uma tela transparente por cima de tudo, só por alguns segundos, quando a última peça é encaixada.
+   "Menos animação" (acessibilidade) desliga. Não bloqueia toques. */
+const Festa = (() => {
+  let cv = null, raf = 0;
+  function parar(){ cancelAnimationFrame(raf); raf = 0; if (cv){ cv.remove(); cv = null; } }
+  function iniciar(){
+    if (a11y.mov || document.hidden) return;
+    parar();
+    cv = document.createElement('canvas'); cv.id = 'festa'; cv.setAttribute('aria-hidden', 'true'); document.body.appendChild(cv);
+    const dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const g = cv.getContext('2d'); g.scale(dpr, dpr);
+    const cores = [...Object.values(COR), '#ffffff', '#ffd84d', '#ff7ab8'];
+    const rnd = (a, b) => a + Math.random() * (b - a), pick = a => a[(Math.random() * a.length) | 0];
+    const conf = [], fogos = [], fagulhas = [];
+    const escala = Math.min(1.3, Math.max(.7, Math.min(W, H) / 700));
+    /* confetes: dois canhões nos cantos de baixo + uma chuva leve do alto */
+    for (let lado = 0; lado < 2; lado++) for (let i = 0; i < 55; i++){
+      const dir = lado ? -1 : 1, a = rnd(.9, 1.35);
+      conf.push({x: lado ? W + 4 : -4, y: H * rnd(.6, .85), vx: dir * Math.cos(a) * rnd(9, 20) * escala, vy: -Math.sin(a) * rnd(11, 22) * escala, w: rnd(6, 11), h: rnd(9, 16), r: rnd(0, 6.28), vr: rnd(-.3, .3), cor: pick(cores), atraso: rnd(0, .25), osc: rnd(0, 6.28)});
+    }
+    for (let i = 0; i < 50; i++) conf.push({x: rnd(0, W), y: rnd(-H * .5, -10), vx: rnd(-1, 1), vy: rnd(1.5, 4), w: rnd(6, 10), h: rnd(8, 14), r: rnd(0, 6.28), vr: rnd(-.2, .2), cor: pick(cores), atraso: rnd(.6, 2.2), osc: rnd(0, 6.28)});
+    /* fogos: foguete sobe e explode em faíscas */
+    [.15, .55, 1, 1.45, 1.95, 2.5].forEach(t => fogos.push({t, x: W * rnd(.18, .82), alvo: H * rnd(.14, .42), y: H + 10, estado: 0, cor: pick(cores)}));
+    const explodir = f => {
+      const n = Math.round(70 * Math.min(1.2, escala)), cor2 = pick(cores), forma = Math.random();
+      for (let i = 0; i < n; i++){
+        const a = i / n * 6.2832 + rnd(-.05, .05), v = (forma < .4 ? 1 : rnd(.4, 1)) * rnd(3.2, 6.4) * escala;
+        fagulhas.push({x: f.x, y: f.y, px: f.x, py: f.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vida: 1, dec: rnd(.011, .018), cor: i % 4 === 0 ? cor2 : f.cor});
+      }
+    };
+    const T0 = performance.now(); let antes = T0;
+    function quadro(agora){
+      const dt = Math.min(2.5, (agora - antes) / 16.67); antes = agora;
+      const seg = (agora - T0) / 1000;
+      g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, H);
+      /* confetes */
+      for (const c of conf){
+        if (seg < c.atraso) continue;
+        c.vy += .38 * dt; c.vx *= Math.pow(.985, dt); c.vy *= Math.pow(.992, dt); c.x += (c.vx + Math.sin(seg * 3 + c.osc) * .6) * dt; c.y += c.vy * dt; c.r += c.vr * dt;
+        if (c.y > H + 20) continue;
+        g.save(); g.translate(c.x, c.y); g.rotate(c.r); g.scale(1, Math.cos(seg * 5 + c.osc)); g.fillStyle = c.cor; g.fillRect(-c.w / 2, -c.h / 2, c.w, c.h); g.restore();
+      }
+      /* fogos */
+      g.globalCompositeOperation = 'lighter';
+      for (const f of fogos){
+        if (seg < f.t || f.estado === 2) continue;
+        if (f.estado === 0){
+          f.y -= (H * .018 + 4) * dt; g.fillStyle = '#ffe9a8'; g.fillRect(f.x - 1.5, f.y, 3, 10);
+          if (f.y <= f.alvo){ f.estado = 2; explodir(f); }
+        }
+      }
+      for (const s of fagulhas){
+        if (s.vida <= 0) continue;
+        s.px = s.x; s.py = s.y; s.vy += .07 * dt; s.vx *= Math.pow(.985, dt); s.vy *= Math.pow(.985, dt); s.x += s.vx * dt; s.y += s.vy * dt; s.vida -= s.dec * dt;
+        g.globalAlpha = Math.max(0, s.vida); g.strokeStyle = s.cor; g.lineWidth = 2.2; g.beginPath(); g.moveTo(s.px, s.py); g.lineTo(s.x, s.y); g.stroke();
+      }
+      g.globalAlpha = 1;
+      if (seg < 5.5) raf = requestAnimationFrame(quadro); else parar();
+    }
+    raf = requestAnimationFrame(quadro);
+  }
+  return {iniciar, parar, ativa: () => !!cv};
+})();
 /* ---- arrastar ---- */
 function criarFlutuante(){
   const d = S.drag, f = $('#flut'); f.innerHTML = ''; f.appendChild(pecaEl(d.piece.formato, d.piece.id, 'big')); f.hidden = false;
@@ -4868,7 +5018,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.1';
+const VERSAO = '2026.11.05.2';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5364,8 +5514,9 @@ async function cpEnviarResultado(c, res){
     return tr('Não consegui enviar: {m}', {m: tr(msgNuvem(e))});
   }
 }
-function vitoriaCamp(c, res, add){
-  cpEnviarResultado(c, res).then(msg => { $('#winTexto').textContent = msg; });
+function vitoriaCamp(c, res, add, reabrir){
+  if (reabrir) $('#winTexto').textContent = S.msgCamp || '';
+  else cpEnviarResultado(c, res).then(msg => { S.msgCamp = msg; $('#winTexto').textContent = msg; });
   const proxima = c.idx + 1 < c.total && CP.camp && CP.id === c.camp && CP.camp.fases[c.idx + 1];
   if (proxima) add('Próxima fase do campeonato', 'pri', () => setTimeout(() => jogarFaseCamp(c.idx + 1), 50));
   add('Ver ranking', proxima ? '' : 'pri', () => setTimeout(() => abrirLobby(c.camp, c.db), 50), 'trophy');

@@ -1,0 +1,55 @@
+/* ======================= Tema Pixel Art =======================
+   Céu azul em faixas, cartões cor de creme com contorno "serrilhado" (cantos em degrau), blocos com borda e brilho de pixel.
+   Só troca a aparência: as cores das peças são as mesmas. Diferente do Retrô (escuro), este é claro e alegre. */
+html[data-tema="pixel"]{
+  --bg:#a8dcf5; --bg2:#8fd0f2; --panel:#fdf3d8; --line:#1d2b53; --txt:#1d2b53; --mut:#3a4775;
+  --accent:#d7264b; --acc2:#1d62d6; --onacc:#fff;
+  --t0:rgba(29,43,83,.06); --t1:rgba(29,43,83,.1); --t2:rgba(29,43,83,.18);
+  --board:#1d2b53; --cel1:#e8eefb; --cel2:#d5def2; --cline:#9aa9d1;
+  --card1:#fdf3d8; --card2:#f6e7bd; --ovbg:rgba(20,28,60,.72); --toast:#fdf3d8; --fieldbg:#fffaea;
+  --shb:rgba(20,28,60,.35); --shc:rgba(20,28,60,.45);
+  --soft:#27356a; --strong:#0f1838; --acctxt:#b0123f; --gold:#7a4f00; --goldln:rgba(122,79,0,.6);
+  --ok:#0a6e3f; --bad:#b3261e; --info:#1257a8; --staroff:#a9b3cf;
+  --ring:rgba(29,43,83,.8); --gokbg:rgba(255,255,255,.55); --gokln:#1d2b53; --selln:#1d2b53;
+  --handbg:rgba(29,43,83,.35); --handln:#1d2b53;
+}
+html[data-tema="pixel"] *{border-radius:0!important}
+html[data-tema="pixel"] body{
+  background:linear-gradient(#a8dcf5 0 34%,#9bd5f3 34% 58%,#8fd0f2 58% 80%,#82c9f0 80%) fixed;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono","Courier New",monospace;font-weight:700;-webkit-font-smoothing:none;
+}
+/* nuvens de pixel */
+html[data-tema="pixel"] body::before{content:"";position:fixed;left:8%;top:9%;width:8px;height:8px;background:#fff;pointer-events:none;z-index:-1;opacity:.9;
+  box-shadow:16px 0 #fff,24px 0 #fff,32px 0 #fff,8px 8px #fff,16px 8px #fff,24px 8px #fff,32px 8px #fff,40px 8px #fff,48px 8px #fff,0 16px #fff,8px 16px #fff,16px 16px #fff,24px 16px #fff,32px 16px #fff,40px 16px #fff,48px 16px #fff,56px 16px #fff,
+    220px 70px #fff,228px 70px #fff,236px 70px #fff,212px 78px #fff,220px 78px #fff,228px 78px #fff,236px 78px #fff,244px 78px #fff,212px 86px #fff,220px 86px #fff,228px 86px #fff,236px 86px #fff,244px 86px #fff,252px 86px #fff}
+html[data-tema="pixel"] :is(h1,h2,.btn,.pill,.tile,summary,.t1,.t2,.rl,.daily b){text-transform:uppercase;letter-spacing:.5px}
+/* contorno com cantos em degrau: quatro sombras sólidas (sem canto) + brilho e sombra de pixel por dentro */
+html[data-tema="pixel"] :is(.card,.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast,.reserva){
+  border-color:transparent;
+  box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(29,43,83,.14);
+}
+html[data-tema="pixel"] .card{background:var(--card1);margin-top:3px;margin-bottom:3px;box-shadow:-4px 0 0 0 var(--line),4px 0 0 0 var(--line),0 -4px 0 0 var(--line),0 4px 0 0 var(--line),inset 0 4px 0 rgba(255,255,255,.6),inset 0 -4px 0 rgba(29,43,83,.1),8px 12px 0 0 rgba(20,28,60,.35)}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily){background:#fff;color:var(--txt)}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#fff6cf}
+html[data-tema="pixel"] :is(.btn,.ib):active{transform:translateY(3px);box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 -3px 0 rgba(29,43,83,.14)}
+html[data-tema="pixel"] .btn.pri{background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
+html[data-tema="pixel"] .btn.pri:hover{background:#e63b5f}
+html[data-tema="pixel"] .tile:disabled{background:#c9d3ea;color:#5c6890}
+html[data-tema="pixel"] .field,html[data-tema="pixel"] input,html[data-tema="pixel"] textarea,html[data-tema="pixel"] select{background:var(--fieldbg);color:var(--txt);font-weight:700}
+html[data-tema="pixel"] .field{text-transform:none}
+/* tabuleiro: moldura azul-marinho com degraus e casas de xadrez claras */
+html[data-tema="pixel"] #board,html[data-tema="pixel"] #edBoard{box-shadow:-6px 0 0 0 var(--line),6px 0 0 0 var(--line),0 -6px 0 0 var(--line),0 6px 0 0 var(--line),8px 12px 0 0 rgba(20,28,60,.35)}
+html[data-tema="pixel"] .cell{box-shadow:inset 0 0 0 1px var(--cline)}
+html[data-tema="pixel"] .reserva{background:#fff6dc;margin:3px}
+/* blocos: contorno escuro, brilho no canto de cima e sombra no de baixo */
+html[data-tema="pixel"] .fill{inset:0;background:var(--c);box-shadow:inset 0 0 0 2px #1d2b53,inset calc(var(--cell)*.16) calc(var(--cell)*.16) 0 rgba(255,255,255,.5),inset calc(var(--cell)*-.12) calc(var(--cell)*-.12) 0 rgba(0,0,0,.28)}
+html[data-tema="pixel"] .pc{background:var(--c);box-shadow:inset 0 0 0 2px #1d2b53,inset calc(var(--s)*.16) calc(var(--s)*.16) 0 rgba(255,255,255,.5),inset calc(var(--s)*-.12) calc(var(--s)*-.12) 0 rgba(0,0,0,.28)}
+html[data-tema="pixel"] #flut{filter:none}
+html[data-tema="pixel"] .star{width:24%;height:24%;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ring)}
+html[data-tema="pixel"] .cell.gok::after,html[data-tema="pixel"] .cell.gbad::after{inset:1px}
+html[data-tema="pixel"] .solp{inset:1px;box-shadow:inset 0 0 0 3px #fff}
+html[data-tema="pixel"] #selo{background:#2fb35a;color:#fff;box-shadow:-3px 0 0 #1d2b53,3px 0 0 #1d2b53,0 -3px 0 #1d2b53,0 3px 0 #1d2b53,6px 8px 0 rgba(20,28,60,.4)}
+html[data-tema="pixel"] .pw.sel{box-shadow:0 0 0 3px var(--line)}
+html[data-tema="pixel"] #logo{image-rendering:pixelated}
+html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
+@media (max-width:350px){html[data-tema="pixel"] #titulo .t1{font-size:14px}html[data-tema="pixel"] #titulo .t2{font-size:10px}}
