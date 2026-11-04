@@ -8,7 +8,7 @@ function tentarColocar(p, gx, gy){
     return false;
   }
   limparDica(); iniciaTempo();
-  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++;
+  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++; tutorialEvento('colocou');
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
   Som.encaixar(); vibrar(14);
   { const falta = S.jogo.total - S.jogo.mapa.size; anunciar(falta ? tr(falta === 1 ? 'Peça encaixada. Falta 1 peça.' : 'Peça encaixada. Faltam {n} peças.', {n: falta}) : tr('Peça encaixada.')); }
@@ -29,7 +29,8 @@ function vencer(){
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
-  Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
+  if (c.k === 'u') tutorialFeito();
+  else { Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst(); }
   if (c.k === 'r'){ corridaFeita(); return; }
   if (c.k === 'o') registrarOff(c, t, j);
   if (c.k === 'i') registrarInf(c, t, j, est);
@@ -53,8 +54,8 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
+  $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
@@ -76,6 +77,7 @@ function mostrarVitoria(res){
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
   if (c.k === 'x') vitoriaCamp(c, res, add);
   else if (c.k === 'o') vitoriaOff(c, res, add);
+  else if (c.k === 'u'){ add('Ir para a Fase 1', 'pri', () => carregar({k: 'b', i: 0})); add('Jogar o tutorial de novo', '', abrirTutorial); }
   else {
   const compartilharRes = () => {
     const base = urlBase();
@@ -103,11 +105,11 @@ function mostrarVitoria(res){
 
 function acaoGirar(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; anunciar(tr('Peça girada.')); aposTransformar();
+  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; anunciar(tr('Peça girada.')); tutorialEvento('girou'); aposTransformar();
 }
 function acaoFlip(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; anunciar(tr('Peça espelhada.')); aposTransformar();
+  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; anunciar(tr('Peça espelhada.')); tutorialEvento('espelhou'); aposTransformar();
 }
 function aposTransformar(){
   renderReserva();

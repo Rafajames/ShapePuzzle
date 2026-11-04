@@ -1,0 +1,72 @@
+# Fase de tutorial: aparece na primeira vez, guia em 3 passos, termina na Fase 1 e pode ser revista ou pulada.
+import os, sys
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SAIDA = os.path.join(RAIZ, 'tests', 'saida') + os.sep
+os.makedirs(SAIDA, exist_ok=True)
+from playwright.sync_api import sync_playwright
+URL = 'http://127.0.0.1:8765/index.html'
+falhas = []; erros = []
+def check(c, m):
+    print(('  ok   ' if c else '  FALHA ') + m)
+    if not c: falhas.append(m)
+COLOCA = "(()=>{const r=dicaDe(S.jogo); if(r.tipo!=='ok') return false; r.peca.formato=r.o; return tentarColocar(r.peca,r.px,r.py);})()"
+with sync_playwright() as pw:
+    b = pw.chromium.launch()
+    for nome, kw in (('celular', dict(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)), ('computador', dict(viewport={'width': 1200, 'height': 800}))):
+        print('Primeira vez no ' + nome)
+        ctx = b.new_context(locale='pt-BR', **kw); pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e)))
+        pg.goto(URL); pg.wait_for_timeout(300)
+        check(pg.is_visible('#btnJogar'), 'a tela inicial continua aparecendo')
+        pg.click('#btnJogar'); pg.wait_for_timeout(400)
+        check(pg.evaluate("S.cur.k") == 'u', 'quem nunca jogou começa no tutorial, não na fase 1')
+        check(pg.evaluate("S.n") == 5 and pg.evaluate("S.jogo.total") == 6 and pg.evaluate("visiveis(S.jogo).length") == 6, 'tabuleiro 5×5 com as 6 peças à vista')
+        check('Tutorial' in pg.inner_text('#titulo .t1'), 'título "Tutorial"')
+        check('Passo 1' in pg.inner_text('#dica'), 'passo 1 na dica')
+        check(pg.is_visible('#tutoPular'), 'botão de pular')
+        check(pg.evaluate("document.documentElement.scrollHeight") <= kw['viewport']['height'], 'sem rolagem')
+        pg.screenshot(path=SAIDA + f'tutorial-fase-{nome}.png')
+        pg.evaluate("S.sel = visiveis(S.jogo)[0]; renderReserva();")
+        pg.evaluate(COLOCA); pg.wait_for_timeout(150)
+        check('Passo 2' in pg.inner_text('#dica'), 'colocar uma peça leva ao passo 2 (girar)')
+        pg.evaluate("S.sel = visiveis(S.jogo)[0]; renderReserva(); acaoGirar()"); pg.wait_for_timeout(150)
+        check('Passo 3' in pg.inner_text('#dica') and 'amarela' in pg.inner_text('#dica'), 'girar leva ao passo 3 (espelhar)')
+        pg.evaluate("S.sel = visiveis(S.jogo)[0]; renderReserva(); acaoFlip()"); pg.wait_for_timeout(150)
+        check('Pronto' in pg.inner_text('#dica'), 'espelhar leva à mensagem final')
+        antes = pg.evaluate("Est.vitorias")
+        n = 0
+        while not pg.evaluate("S.venceu") and n < 30: pg.evaluate(COLOCA); n += 1
+        pg.wait_for_selector('#ov-win.on', timeout=6000); pg.wait_for_timeout(300)
+        check('Tutorial concluído' in pg.inner_text('#winTitulo'), 'vitória: tutorial concluído')
+        check('Ir para a Fase 1' in pg.inner_text('#winActs') and 'tutorial de novo' in pg.inner_text('#winActs'), 'botões: ir para a Fase 1 e jogar de novo')
+        check(pg.evaluate("tuto.fim") is True and pg.evaluate("Est.vitorias") == antes, 'tutorial concluído é lembrado e não conta nas estatísticas')
+        check(pg.evaluate("Object.keys(recs).length") == 0 and pg.evaluate("prog.done.length") == 0, 'não cria recorde nem libera fase')
+        pg.screenshot(path=SAIDA + f'tutorial-fase-vitoria-{nome}.png')
+        pg.click('#winActs >> text=Ir para a Fase 1'); pg.wait_for_timeout(300)
+        check(pg.evaluate("S.cur.k + S.cur.i") == 'b0', 'leva à Fase 1')
+        pg.reload(); pg.wait_for_timeout(300); pg.click('#btnJogar'); pg.wait_for_timeout(300)
+        check(pg.evaluate("S.cur.k") == 'b', 'depois de concluído, abrir o jogo não repete o tutorial')
+        pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
+        check('Rever o tutorial' in pg.inner_text('#btnTuto'), 'menu tem "Rever o tutorial"')
+        pg.click('#btnTuto'); pg.wait_for_timeout(300)
+        check(pg.evaluate("S.cur.k") == 'u' and 'Passo 1' in pg.inner_text('#dica'), 'rever abre o tutorial do começo')
+        pg.evaluate("selPecasTeste = 1") if False else None
+        ctx.close()
+    print('Pular e escolha de peças')
+    ctx = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True); pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e)))
+    pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(300)
+    pg.evaluate("pecasPref = 2; aplicarPecas()"); pg.wait_for_timeout(100)
+    check(pg.evaluate("visiveis(S.jogo).length") == 6, 'a escolha de peças por vez não mexe no tutorial')
+    pg.click('#tutoPular'); pg.wait_for_timeout(300)
+    check(pg.evaluate("S.cur.k + S.cur.i") == 'b0' and pg.evaluate("tuto.fim") is True and pg.evaluate("visiveis(S.jogo).length") == 2, 'pular leva à fase 1 (agora com a escolha de 2 peças)')
+    pg.reload(); pg.wait_for_timeout(300); pg.click('#btnJogar'); pg.wait_for_timeout(300)
+    check(pg.evaluate("S.cur.k") == 'b', 'pular também não repete o tutorial')
+    ctx.close()
+    print('Quem já jogou antes não vê o tutorial sozinho')
+    ctx = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}); ctx.add_init_script("try{localStorage.setItem('shapepuzzle.prog','{\"max\":3,\"done\":[0,1,2]}')}catch(e){}")
+    pg = ctx.new_page(); pg.on('pageerror', lambda e: erros.append(str(e))); pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(300)
+    check(pg.evaluate("S.cur.k") == 'b' and pg.evaluate("S.cur.i") == 3, 'com progresso salvo, vai direto para a fase em que parou')
+    ctx.close(); b.close()
+print('erros de página:', erros)
+if erros: falhas.append('erros de página')
+print('\nFALHAS:' if falhas else '\nTUDO OK', falhas if falhas else '')
+sys.exit(1 if falhas else 0)

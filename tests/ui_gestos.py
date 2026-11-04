@@ -32,10 +32,10 @@ with sync_playwright() as pw:
     d=pg.locator('#btnDica').bounding_box(); r=pg.locator('#btnReset').bounding_box(); t=pg.locator('#titulo').bounding_box()
     check(abs((d['y'])-(r['y']))<2 and r['x']>d['x'] and r['x']-d['x']<70 and d['y']<80,'Dica e Reiniciar lado a lado no topo')
     check(pg.evaluate("document.querySelectorAll('.pw').length")==5,'5 peças visíveis na fase 15 (fase com 8 peças)')
-    for idx,esp in [(0,6),(9,6),(10,5),(19,5),(20,4),(29,4),(30,3),(49,3)]:
+    for idx,esp in [(0,6),(9,6),(10,5),(19,5),(20,5),(29,5),(30,5),(49,5)]:
         pg.evaluate(f"carregar({{k:'b',i:{idx}}})"); pg.wait_for_timeout(80)
         vis=pg.evaluate("visiveis(S.jogo).length"); tot=pg.evaluate("S.jogo.total"); fl=pg.evaluate("S.jogo.fila")
-        check(vis==min(tot,fl or tot) and (fl in (esp,1,2,3) or not fl),f'fase {idx+1}: {vis} peças à vista (padrão {esp})')
+        check(vis==min(tot,fl or tot) and (fl == esp or not fl),f'fase {idx+1}: {vis} peças à vista (padrão {esp})')
     pg.evaluate("carregar({k:'b',i:14})"); pg.wait_for_timeout(200)
     check(pg.evaluate("document.documentElement.scrollHeight")<=844,'sem rolagem vertical')
     print('   tamanho da casa no celular 390x844:',pg.evaluate('S.cell'),'px')

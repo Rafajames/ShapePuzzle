@@ -99,7 +99,7 @@ with sync_playwright() as pw:
     pg.click('#btnSem'); pg.wait_for_function("S.cur && S.cur.k === 's'", timeout=25000); pg.wait_for_timeout(400)
     ch = pg.evaluate("S.cur.semana"); texto = pg.evaluate("S.cur.text")
     check(ch == pg.evaluate("semanaDe(dataHoje())"), f'a fase é da semana {ch}')
-    check(pg.inner_text('#titulo .t1') == 'Semana 45' and pg.inner_text('#titulo .t2') == 'desafio da semana' and pg.evaluate("S.n") == 6 and pg.evaluate("S.jogo.fila") == 3, 'tabuleiro 6×6, 3 peças por vez')
+    check(pg.inner_text('#titulo .t1') == 'Semana 45' and pg.inner_text('#titulo .t2') == 'desafio da semana' and pg.evaluate("S.n") == 6 and pg.evaluate("S.jogo.fila") == 5, 'tabuleiro 6×6, 5 peças por vez (mínimo padrão)')
     check(pg.evaluate("document.querySelector('#btnDica').disabled") is False, 'dicas continuam valendo no desafio da semana')
     check(pg.evaluate("JSON.parse(localStorage.getItem('shapepuzzle.semfase')).text") == texto, 'a fase da semana fica guardada no aparelho')
     pg.screenshot(path=SAIDA + 'semana.png')

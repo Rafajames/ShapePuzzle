@@ -8,9 +8,9 @@ Quebra-cabeça lógico: encaixe todas as peças no tabuleiro até preencher tudo
 
 Versão web em um único `index.html` (sem instalar nada), que roda no computador e no celular:
 
-- **50 fases** com dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas 3, 2 ou 1 peças da fila (as outras entram conforme você encaixa). Todas as fases novas têm solução única.
+- **50 fases** com dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e as peças vão entrando conforme você encaixa (sempre pelo menos 5 visíveis, a não ser que você escolha menos). Todas as fases novas têm solução única.
 - **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
-- **Peças por vez**: nas primeiras 10 fases aparecem 6 peças; depois 5, 4 e, da fase 31 em diante, 3 (algumas fases do final usam fila de 1 a 3). Ao encaixar uma, a seguinte entra.
+- **Peças por vez**: nas primeiras 10 fases aparecem 6 peças; depois, no mínimo 5 (o jogo nunca reduz sozinho para menos, para quem só quer relaxar). Quem quiser mais desafio escolhe menos no menu. Ao encaixar uma, a seguinte entra.
 - **No celular**: dois toques giram a peça 90° e deslizar o dedo espelha. No computador ficam os botões e as teclas R e T.
 - **Dica**: mostra onde vai uma peça. Partidas com dica não valem recorde.
 - **Tempo, jogadas e recorde** por fase.
@@ -53,7 +53,7 @@ Traduções novas: adicione a frase em `src/idiomas/en.js` e `es.js` (a chave é
 
 ## Desafios e continuar de onde parou
 
-- **Desafio da semana** (Menu → atalho): uma fase difícil (6×6, 3 peças por vez) igual para todo mundo, que muda toda segunda-feira. Mostra a sequência de semanas seguidas e entra nas estatísticas, no recorde e no backup.
+- **Desafio da semana** (Menu → atalho): uma fase difícil (6×6) igual para todo mundo, que muda toda segunda-feira. Mostra a sequência de semanas seguidas e entra nas estatísticas, no recorde e no backup.
 - **Contra o relógio** (Menu → atalho): 3 minutos para resolver o máximo de fases novas (começa fácil e sobe). Sem dicas; o tempo corre mesmo com o menu aberto. Guarda o melhor resultado, o total de corridas e de fases.
 - **Fase em andamento**: o jogo guarda onde cada peça está, o tempo e as jogadas; ao reabrir, a fase volta como estava (campeonato e corrida não entram).
 - **Relógio justo**: tela bloqueada, aba escondida ou celular congelado não contam no tempo da fase nem nas estatísticas (só o campeonato corre pelo relógio de parede, de propósito).
@@ -97,7 +97,8 @@ A cada publicação o GitHub roda todos os testes (lógica das fases, regras do 
 ## Extras de jogo
 
 - **Desfazer**: botão no topo (ou tecla Z) tira a última peça encaixada.
-- **Peças por vez**: no menu, escolha de 2 a 6 ou "Todas" (fases com fila própria e campeonatos mantêm a regra delas).
+- **Peças por vez**: no menu, automático (5 ou mais), de 1 a 6 ou "Todas" — vale para todas as fases; campeonatos e tutorial mantêm a regra deles.
+- **Tutorial inicial**: uma fase de ensino guiada (selecionar, girar, espelhar, encaixar) antes da Fase 1, só na primeira vez; dá para rever em Menu → Jogo → "Rever o tutorial".
 - **Estrelas**: cada fase vale até 3 estrelas (sem dica e sem recolocar peças = 3). Aparecem ao vencer e no menu.
 - **Vibração leve** no celular (pode desligar no menu).
 

@@ -5,7 +5,7 @@ function ajustar(){
   const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); fitFileiras(); };
   pos(30); void document.body.offsetWidth;   /* encolhe antes de medir: um tabuleiro largo demais faz o celular alargar a janela */
   const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
-  const cheio = () => document.documentElement.scrollHeight > innerHeight + 1;
+  const cheio = () => document.documentElement.scrollHeight > innerHeight;
   const achar = (compacto, min) => { document.body.classList.toggle('compacto', compacto); let c = c0; pos(c); while (c > min && cheio()){ c -= 2; pos(c); } return c; };
   const normal = achar(false, 30), normalCheio = cheio();
   if (normalCheio || normal < 38){      /* tela baixa: tenta o modo compacto e fica com o que der o tabuleiro maior */
@@ -32,6 +32,7 @@ if (linkInicial) $('#splashMsg').hidden = false;
 if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato sem internet! Toque em Jogar para abrir.'); $('#splashMsg').hidden = false; }
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
-carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
+if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};

@@ -66,7 +66,7 @@ with sync_playwright() as pw:
     pg.reload(); pg.click('#btnJogar'); pg.wait_for_timeout(400)
     pg.evaluate("carregar({k:'b',i:20})"); pg.wait_for_timeout(200)
     check(pg.evaluate("pecasPref") == 2 and pg.evaluate("visiveis(S.jogo).length") == 2, 'a escolha fica salva no aparelho')
-    check(pg.evaluate("filaPadraoDe({k:'x'})") == 4, 'campeonatos ignoram a escolha (sempre 4)')
+    check(pg.evaluate("filaPadraoDe({k:'x'})") == 5 and pg.evaluate("escolhaPecas({k:'x'})") == 0 and pg.evaluate("escolhaPecas({k:'u'})") == 0, 'campeonatos e tutorial ignoram a escolha (padrão 5)')
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200); pg.select_option('#selPecas', '99'); pg.wait_for_timeout(200); pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")
     check(pg.evaluate("visiveis(S.jogo).length") == pg.evaluate("S.jogo.total") and pg.evaluate("S.jogo.fila") == 0, '"Todas" mostra todas as peças')
     check(pg.evaluate("document.documentElement.scrollHeight") <= 720, 'sem rolagem com todas as peças')
@@ -75,9 +75,11 @@ with sync_playwright() as pw:
     check(pg.evaluate("visiveis(S.jogo).length") == 6, 'voltar ao automático restaura 6 na fase 1')
     fixa = pg.evaluate("(()=>{const i=BUILTIN.findIndex(f=>parseFase(f.text).fila); return i;})()")
     if fixa >= 0:
-        pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200); pg.select_option('#selPecas', '6'); pg.wait_for_timeout(200); pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")
+        pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200); pg.select_option('#selPecas', '3'); pg.wait_for_timeout(200); pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")
         pg.evaluate(f"carregar({{k:'b',i:{fixa}}})"); pg.wait_for_timeout(200)
-        check(pg.evaluate("S.jogo.filaFixa") is True and pg.evaluate("S.jogo.fila") == pg.evaluate(f"parseFase(BUILTIN[{fixa}].text).fila"), 'fase com FILA própria mantém a dela')
+        check(pg.evaluate("visiveis(S.jogo).length") == 3, 'a escolha do jogador vale mesmo em fase com FILA própria')
+        pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200); pg.select_option('#selPecas', 'auto'); pg.wait_for_timeout(200); pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")
+        check(pg.evaluate("S.jogo.fila") in (0, 5, 6) and pg.evaluate("visiveis(S.jogo).length") >= 5, 'no automático nenhuma fase mostra menos de 5 peças')
     else:
         print('   (nenhuma fase embutida com FILA própria)')
     ctx.close()

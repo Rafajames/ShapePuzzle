@@ -122,9 +122,10 @@ window.addEventListener('pointercancel', e => fimGesto(e, true));
 /* ---- tutorial dos gestos (só no celular): mostra o que fazer, passo a passo ---- */
 let tuto = Object.assign({sel: false, giro: false, esp: false, fim: false}, store.get('tuto', {}));
 const TUTO_TXT = {sel: 'Toque numa peça para selecioná-la.', giro: 'Agora dê dois toques rápidos na peça para girá-la.', esp: 'Muito bem! Agora deslize o dedo por aqui, fora da peça, para espelhá-la.'};
-const tutoAtivo = () => matchMedia('(pointer:coarse)').matches && !tuto.fim && !S.venceu;
+const tutoAtivo = () => matchMedia('(pointer:coarse)').matches && !tuto.fim && !S.venceu && !(S.cur && S.cur.k === 'u');
 const passoTuto = () => !S.sel ? 'sel' : !tuto.giro ? 'giro' : 'esp';
 function marcarTuto(k){
+  tutorialEvento(k === 'giro' ? 'girou' : 'espelhou');
   if (tuto[k]) return;
   tuto[k] = true;
   if (tuto.giro && tuto.esp){ tuto.fim = true; toast('Isso mesmo! Agora é só encaixar as peças no tabuleiro.'); }
@@ -133,7 +134,7 @@ function marcarTuto(k){
 function atualizarTuto(){
   const mao = $('#mao'), pular = $('#tutoPular'); if (!mao) return;
   const ativo = tutoAtivo();
-  pular.hidden = !ativo;
+  pular.hidden = !(ativo || tutorialAtivo());
   if (S.sel && !tuto.sel){ tuto.sel = true; store.set('tuto', tuto); }
   const alvo = ativo && !S.drag && !document.querySelector('.ov.on') ? document.querySelector(passoTuto() === 'sel' ? '#reserva .pw' : passoTuto() === 'giro' ? '#reserva .pw.sel' : '#dica') : null;
   if (!alvo){ mao.className = ''; mao.dataset.passo = ''; return; }
@@ -142,8 +143,11 @@ function atualizarTuto(){
   if (mao.dataset.passo !== passo){ mao.className = ''; void mao.offsetWidth; mao.dataset.passo = passo; }
   mao.className = 'on ' + (passo === 'sel' ? 'toque' : passo === 'giro' ? 'duplo' : 'desliza');
 }
-$('#tutoPular').onclick = () => { tuto.fim = true; store.set('tuto', tuto); atualizarTuto(); renderDica(); toast('Tudo bem! Você pode rever o tutorial no menu.'); };
-$('#btnTuto').onclick = () => { tuto = {sel: false, giro: false, esp: false, fim: false}; store.set('tuto', tuto); fechar('menu'); S.sel = null; renderReserva(); renderDica(); ajustar(); atualizarTuto(); };
+$('#tutoPular').onclick = () => {
+  const noTutorial = tutorialAtivo(); tuto.fim = true; store.set('tuto', tuto);
+  if (noTutorial) carregar({k: 'b', i: 0}); else { atualizarTuto(); renderDica(); }
+  toast('Tudo bem! Você pode rever o tutorial no menu.');
+};
 
 /* ---- teclado ---- */
 function tirarDaCasa(x, y){

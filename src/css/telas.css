@@ -124,8 +124,7 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 @keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (pointer:coarse){.tools{display:none}}
-@media (pointer:fine){#blocoTuto{display:none}}
-#dica.tuto{color:var(--strong);font-weight:700;font-size:14px}
+#dica.tuto{color:var(--strong);font-weight:700;font-size:14px;max-height:80px}
 #mao{position:fixed;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;z-index:85;pointer-events:none;display:none;
   background:var(--handbg);border:2px solid var(--handln);box-shadow:0 4px 14px rgba(0,0,0,.45)}
 #mao.on{display:block}

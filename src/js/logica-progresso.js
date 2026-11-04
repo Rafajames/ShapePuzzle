@@ -63,7 +63,7 @@ function limparBackup(env){
     if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
     if (isObj(c.a11y)){ q.a11y = {}; for (const k of ['dalt', 'cont', 'texto', 'mov']) if (typeof c.a11y[k] === 'boolean') q.a11y[k] = c.a11y[k]; }
     if (BK_HUMORES.includes(c.humor)) q.humor = c.humor;
-    if (c.pecas === 'auto' || (c.pecas >= 2 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 2, 99);
+    if (c.pecas === 'auto' || (c.pecas >= 1 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 1, 99);
     for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
     if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;
     o.cfg = q; }

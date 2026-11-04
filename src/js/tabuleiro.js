@@ -70,8 +70,9 @@ function renderReserva(){
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
-  $('#dica').classList.toggle('tuto', tutoAtivo());
-  if (tutoAtivo()) t = TUTO_TXT[passoTuto()];
+  $('#dica').classList.toggle('tuto', tutoAtivo() || tutorialAtivo());
+  if (tutorialAtivo()) t = tutorialTexto();
+  else if (tutoAtivo()) t = TUTO_TXT[passoTuto()];
   else if (S.venceu) t = 'Fase concluída!';
   else if (toque) t = S.sel ? 'Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.';
   else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';

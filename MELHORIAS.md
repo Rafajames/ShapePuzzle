@@ -10,7 +10,7 @@ Lista de ideias discutidas, por prioridade. Marque aqui o que for sendo feito.
 
 ## Boas, menos urgentes
 5. **Modo para daltônicos** — um símbolo em cada cor, ligável no menu. _Feito (menu → Acessibilidade)._
-6. **Escolher quantas peças aparecem** — ajuste opcional (hoje: 6 → 3 conforme a dificuldade). _Feito (menu → Peças por vez)._
+6. **Escolher quantas peças aparecem** — ajuste opcional (padrão mínimo de 5; o jogador pode reduzir para 1–4). _Feito (menu → Peças por vez)._
 7. **Campeonato mais fácil de divulgar** — QR code do convite e botão "compartilhar ranking" (texto para WhatsApp).
 8. **Editor de fases maior** — fases 6×6 e 7×7 e escolha de quantas peças aparecem por vez.
 9. **Vibração leve no celular** e uma estrela de desempenho por fase (tempo/jogadas). _Feito: 3 estrelas = sem dica e sem recolocar peças; 2 = até 50% de jogadas a mais; 1 = o resto. Vibração liga/desliga no menu._
@@ -42,3 +42,5 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 11. **Limite de campeonatos por organizador.**
 
 - **Campeonato sem internet por QR code** — _Feito (Campeonatos → Campeonato sem internet)._
+
+- **Fase de tutorial antes da Fase 1** — guiada passo a passo, só para quem está começando. _Feito._

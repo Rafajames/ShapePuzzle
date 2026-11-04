@@ -92,12 +92,12 @@ with sync_playwright() as pw:
 
     print('Difícil e Mestre')
     iniciar(pg, 'dificil')
-    check(pg.evaluate("S.n") == 6 and pg.evaluate("S.jogo.fila") == 3, '6×6 com fila de 3')
+    check(pg.evaluate("S.n") == 6 and pg.evaluate("S.jogo.fila") == 5, '6×6 com fila de 5 (mínimo padrão)')
     check(pg.inner_text('#titulo .t2').startswith('Difícil'), 'título mostra a dificuldade')
     pg.screenshot(path=SAIDA + 'infinito-dificil.png')
     pg.evaluate("S.hist=[]")
     iniciar(pg, 'mestre', 40000)
-    check(pg.evaluate("S.n") == 7 and pg.evaluate("S.jogo.fila") == 2, '7×7 com fila de 2')
+    check(pg.evaluate("S.n") == 7 and pg.evaluate("S.jogo.fila") == 5, '7×7 com fila de 5 (mínimo padrão)')
     check(pg.evaluate("buscar(S.jogo.grade.map(r=>r.map(()=>false)), S.jogo.reserva, S.jogo.gab, 2, 2e7).n") == 1, 'fase mestre também tem solução única')
     pg.screenshot(path=SAIDA + 'infinito-mestre.png')
 

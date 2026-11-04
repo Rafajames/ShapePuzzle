@@ -12,6 +12,7 @@ def check(c, m):
     if not c: falhas.append(m)
 def novo(b, w=390, h=844, init=None):
     ctx = b.new_context(locale='pt-BR', viewport={'width': w, 'height': h}, device_scale_factor=2)
+    ctx.add_init_script("try{localStorage.setItem('shapepuzzle.tuto',JSON.stringify({sel:true,giro:true,esp:true,fim:true}))}catch(e){}")
     if init: ctx.add_init_script(init)
     pg = ctx.new_page()
     pg.on('pageerror', lambda e: erros.append('pageerror: ' + str(e)))
@@ -46,7 +47,7 @@ with sync_playwright() as p:
     pg.screenshot(path=SC + 'v3-01-menu.png')
     pg.locator('#tiles .tile').nth(30).click(); pg.wait_for_timeout(300)
     check(pg.evaluate('S.n') == 6 and pg.locator('#board .cell').count() == 36, 'fase 31: tabuleiro 6×6 (36 casas)')
-    check(n_visiveis(pg) == 3, 'fase 31: 3 peças por vez (padrão do nível)')
+    check(n_visiveis(pg) == 5, 'fase 31: 5 peças por vez (mínimo padrão)')
     check(pg.inner_text('#titulo .t2') == '6×6', 'subtítulo mostra 6×6')
     pg.screenshot(path=SC + 'v3-02-fase31.png')
     check(pg.evaluate("document.documentElement.scrollWidth") <= 390, 'fase 31 sem rolagem horizontal')
@@ -54,7 +55,7 @@ with sync_playwright() as p:
 
     print('2. Fila de 3 (fase 36, 6×6)')
     ctx, pg = novo(b); pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(200)
-    abrir_fase(pg, 35)
+    pg.evaluate("pecasPref = 3"); abrir_fase(pg, 35)
     check(n_visiveis(pg) == 3, 'só 3 peças aparecem')
     check('11 restantes' in pg.inner_text('#contagem').lower(), 'contador: ' + pg.inner_text('#contagem'))
     check(pg.evaluate("document.querySelector('#toast').classList.contains('on')") and 'fila' in pg.inner_text('#toast').lower(), 'aviso explica a fila: ' + pg.inner_text('#toast')[:60])
@@ -73,7 +74,7 @@ with sync_playwright() as p:
 
     print('3. Uma peça por vez (fase 40) — jogar inteira e testar devolução à frente')
     ctx, pg = novo(b); pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(200)
-    abrir_fase(pg, 39)
+    pg.evaluate("pecasPref = 1"); abrir_fase(pg, 39)
     check(n_visiveis(pg) == 1, 'só 1 peça aparece')
     check(pg.evaluate('!!S.sel') and pg.is_enabled('#btnGirar'), 'a peça da vez já vem selecionada')
     uid1 = pg.evaluate("+document.querySelector('.pw').dataset.uid")
@@ -116,7 +117,7 @@ with sync_playwright() as p:
 
     print('5. Dica e girar/espelhar na fila de 1 (touch-friendly)')
     ctx, pg = novo(b); pg.goto(URL); pg.click('#btnJogar'); pg.wait_for_timeout(200)
-    abrir_fase(pg, 46)
+    pg.evaluate("pecasPref = 1"); abrir_fase(pg, 46)
     pg.click('#btnDica'); pg.wait_for_timeout(150)
     check(pg.locator('#board .cell.dica').count() > 0, 'dica destaca onde vai a peça da vez')
     pg.click('#btnGirar'); pg.click('#btnFlip'); pg.wait_for_timeout(60)

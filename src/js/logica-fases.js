@@ -54,14 +54,19 @@ function girar(f){
 function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
-const FILA_PADRAO = 4;   /* fases fora da lista (do dia, criadas, compartilhadas) mostram 4 peças por vez */
-/* Fases da lista: começam com 6 peças à vista e vão diminuindo até 3 (fases com "FILA:" própria mantêm a delas). */
-const filaDaFase = i => i < 10 ? 6 : i < 20 ? 5 : i < 30 ? 4 : 3;
-function novoJogo(texto, filaPadrao = FILA_PADRAO){
+/* Peças à vista: por padrão nunca menos de 5 (jogar para relaxar); quem quiser mais difícil escolhe menos em Menu → Jogo → Peças por vez. */
+const MIN_FILA = 5, FILA_PADRAO = 5;
+const filaDaFase = i => i < 10 ? 6 : 5;
+/* escolha: o que a pessoa escolheu (1 a 6; 99 = todas) ou 0 para o automático. Devolve quantas peças aparecem por vez (0 = todas). */
+function filaEfetiva(total, filaFase, filaPadrao, escolha){
+  const alvo = escolha === 99 ? total : escolha || Math.max(filaFase || filaPadrao, MIN_FILA);
+  return alvo >= total ? 0 : alvo;
+}
+function novoJogo(texto, filaPadrao = FILA_PADRAO, escolha = 0){
   const {gab, pecas, n, fila: filaFase} = parseFase(texto);
-  const filaAuto = !filaFase && pecas.length > filaPadrao, fila = filaFase || (filaAuto ? filaPadrao : 0);
+  const fila = filaEfetiva(pecas.length, filaFase, filaPadrao, escolha), filaAuto = !escolha && fila > 0;
   return {
-    n, fila, filaAuto, filaFixa: !!filaFase, total: pecas.length,
+    n, fila, filaAuto, filaFase, total: pecas.length,
     gab,
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),

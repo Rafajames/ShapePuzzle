@@ -2,9 +2,9 @@
    Fases novas geradas na hora (solução única), em segundo plano para o jogo não travar. */
 const NIVEIS_INF = {
   facil: {nome: 'Fácil', desc: '5×5, com muitas estrelas-guia', fila: 6, o: {n: 5, minEstrelas: 14}},
-  medio: {nome: 'Médio', desc: '5×5, com poucas estrelas-guia', fila: 4, o: {n: 5, minEstrelas: 7}},
-  dificil: {nome: 'Difícil', desc: '6×6, só 3 peças por vez', fila: 0, o: {n: 6, pMin: 9, pMax: 11, minEstrelas: 10, fila: 3}},
-  mestre: {nome: 'Mestre', desc: '7×7, só 2 peças por vez', fila: 0, o: {n: 7, pMin: 12, pMax: 15, minEstrelas: 9, fila: 2}}
+  medio: {nome: 'Médio', desc: '5×5, com poucas estrelas-guia', fila: 5, o: {n: 5, minEstrelas: 7}},
+  dificil: {nome: 'Difícil', desc: '6×6, com poucas estrelas-guia', fila: 5, o: {n: 6, pMin: 9, pMax: 11, minEstrelas: 10, fila: 3}},
+  mestre: {nome: 'Mestre', desc: '7×7, o mais desafiador', fila: 5, o: {n: 7, pMin: 12, pMax: 15, minEstrelas: 9, fila: 2}}
 };
 const MODOS_INF = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
 const nivelInf = (modo, num) => modo !== 'crescente' ? modo : num < 5 ? 'facil' : num < 10 ? 'medio' : num < 15 ? 'dificil' : 'mestre';

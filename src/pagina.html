@@ -115,14 +115,14 @@
     <details class="sec"><summary data-i="rotate">Jogo</summary><div class="sb">
     <label class="row"><span class="rl">Peças por vez</span>
       <select class="field" id="selPecas">
-        <option value="auto">Automático (por fase)</option>
-        <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+        <option value="auto">Automático (5 ou mais)</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         <option value="5">5</option><option value="6">6</option>
         <option value="99">Todas</option>
       </select></label>
-    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. O padrão é pelo menos 5, para jogar relaxado; escolha menos para deixar mais difícil. Campeonatos e o tutorial usam sempre o padrão.</p>
     <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
-    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
+    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial</button></div>
     </div></details>
     <details class="sec"><summary data-i="note">Som</summary><div class="sb">
     <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
@@ -519,6 +519,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js entrada.js compartilhar.js menu.js infinito.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js entrada.js tutorial.js compartilhar.js menu.js infinito.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
 </body>
 </html>

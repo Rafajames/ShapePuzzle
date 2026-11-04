@@ -21,14 +21,15 @@ let estrelasFase = store.get('est', {});
 /* 3 estrelas: sem dica e sem recolocar peças; 2: sem dica e até 50% de jogadas a mais; 1: concluiu */
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
-if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
+if (pecasPref !== 'auto' && ![1, 2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
 /* campeonato (online ou sem internet): tempo pelo relógio de parede, sem dicas */
 const ehCamp = c => c.k === 'x' || c.k === 'o';
-const filaPadraoDe = cur => ehCamp(cur) ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+const filaPadraoDe = cur => cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+/* a escolha da pessoa vale em qualquer fase, menos em campeonato e no tutorial (iguais para todos) */
+const escolhaPecas = cur => ehCamp(cur) || cur.k === 'u' || pecasPref === 'auto' ? 0 : pecasPref;
 function aplicarPecas(){
-  const j = S.jogo; if (!j || j.filaFixa || ehCamp(S.cur)) return;
-  const f = filaPadraoDe(S.cur);
-  j.filaAuto = j.total > f; j.fila = j.filaAuto ? f : 0;
+  const j = S.jogo; if (!j || ehCamp(S.cur) || S.cur.k === 'u') return;
+  j.fila = filaEfetiva(j.total, j.filaFase, filaPadraoDe(S.cur), escolhaPecas(S.cur)); j.filaAuto = !escolhaPecas(S.cur) && j.fila > 0;
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
   S.ultFila = j.fila; limparGhost(); renderTudo(); ajustar(); atualizarTuto();
 }
@@ -79,7 +80,7 @@ function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
   if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
-  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur));
+  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur), escolhaPecas(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
@@ -110,6 +111,7 @@ function renderTitulo(){
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.k === 'u'){ t1.textContent = tr('Tutorial'); t2.textContent = tr('aprenda a jogar'); }
   else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
   else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }

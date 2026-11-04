@@ -1,7 +1,7 @@
 /* ======================= Desafios: da semana e contra o relógio ======================= */
 const nomeSemana = ch => tr('Semana {n}', {n: +ch.slice(6)});
 
-/* Desafio da semana: a mesma fase (6×6, 3 peças por vez) para todo mundo, escolhida pela semana. Fica guardada para não gerar de novo. */
+/* Desafio da semana: a mesma fase (6×6) para todo mundo, escolhida pela semana. Fica guardada para não gerar de novo. */
 async function faseDaSemana(ch){
   const c = store.get('semfase', null);
   if (c && c.sem === ch && typeof c.text === 'string' && faseValida(c.text)) return c.text;

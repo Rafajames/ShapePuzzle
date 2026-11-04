@@ -25,7 +25,7 @@ igual(L.resumoBackup(r.dados), {fases: 4, estrelas: 6, recordes: 1, dias: 1, sem
 console.log('Limpeza de dados perigosos ou estranhos');
 const sujo = L.limparBackup(env({prog: {max: 1e9, done: ['a', 3, -4]}, est: {'x': 3, '4': 99, '5': 0}, rec: {'zzz': {t: 1, j: 1}, 'b:ok': {t: -5, j: 3}, 'b:fase02': {t: 1000.7, j: 4}},
   dias: {'ontem': {t: 1}, '2026-02-30x': {t: 1}, '2026-10-10': {t: 5000}}, custom: [{nome: '<b>x</b>', text: lv[1].text}, {nome: 'lixo', text: 'GABARITO:\n1,1\nPECAS_CUSTOM:\n1:0-0;\n'}, {nome: 'dup', text: lv[1].text}, 7, null],
-  stats: {tempo: -5, vitorias: 'abc'}, cfg: {lang: 'xx', tema: 'rosa', humor: 'bagunça', pecas: 1, vol: 7, a11y: {dalt: 'sim', cont: true}, vibra: 'x', evil: 1}, __proto__x: 1, extra: {a: 1}}));
+  stats: {tempo: -5, vitorias: 'abc'}, cfg: {lang: 'xx', tema: 'rosa', humor: 'bagunça', pecas: 0, vol: 7, a11y: {dalt: 'sim', cont: true}, vibra: 'x', evil: 1}, __proto__x: 1, extra: {a: 1}}));
 igual(!!sujo.dados, true, 'aceita o que dá e descarta o resto');
 const d = sujo.dados;
 igual(d.prog, {max: 999, done: [0, 3]}, 'prog é limitado'); igual(d.est, {4: 3}, 'estrelas: só 1 a 3, em fases numeradas');

@@ -198,7 +198,7 @@ with sync_playwright() as p:
 
     ctx3, pg3 = novo(b)
     pg3.goto(URL + '#f=%%%lixo&n=x'); pg3.wait_for_timeout(500)
-    check(pg3.evaluate('S.cur.k') == 'b', 'link inválido cai na fase normal (sem travar)')
+    check(pg3.evaluate('S.cur.k') in ('b', 'u'), 'link inválido cai na fase normal ou no tutorial (sem travar)')
     ctx3.close()
 
     # ---------------------------------------------------------------- 7. toque de verdade

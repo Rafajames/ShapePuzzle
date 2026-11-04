@@ -311,8 +311,7 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 @keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (pointer:coarse){.tools{display:none}}
-@media (pointer:fine){#blocoTuto{display:none}}
-#dica.tuto{color:var(--strong);font-weight:700;font-size:14px}
+#dica.tuto{color:var(--strong);font-weight:700;font-size:14px;max-height:80px}
 #mao{position:fixed;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;z-index:85;pointer-events:none;display:none;
   background:var(--handbg);border:2px solid var(--handln);box-shadow:0 4px 14px rgba(0,0,0,.45)}
 #mao.on{display:block}
@@ -542,14 +541,14 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
     <details class="sec"><summary data-i="rotate">Jogo</summary><div class="sb">
     <label class="row"><span class="rl">Peças por vez</span>
       <select class="field" id="selPecas">
-        <option value="auto">Automático (por fase)</option>
-        <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+        <option value="auto">Automático (5 ou mais)</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         <option value="5">5</option><option value="6">6</option>
         <option value="99">Todas</option>
       </select></label>
-    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. Fases com fila própria e campeonatos mantêm a regra delas.</p>
+    <p style="margin:6px 0 0;font-size:12px;color:var(--mut)">Quantas peças aparecem na seleção. O padrão é pelo menos 5, para jogar relaxado; escolha menos para deixar mais difícil. Campeonatos e o tutorial usam sempre o padrão.</p>
     <label class="row" id="rowVibra"><input type="checkbox" id="chkVibra"> Vibração leve no celular</label>
-    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial dos gestos</button></div>
+    <div class="acts" id="blocoTuto"><button class="btn sm" id="btnTuto" data-i="bulb">Rever o tutorial</button></div>
     </div></details>
     <details class="sec"><summary data-i="note">Som</summary><div class="sb">
     <label class="row"><input type="checkbox" id="chkMusica"> Música</label>
@@ -1085,6 +1084,25 @@ en: {
   "Entardecer": "Dusk",
   "Chiptune": "Chiptune",
   "Marimba": "Marimba",
+  "Tutorial": "Tutorial",
+  "aprenda a jogar": "learn to play",
+  "Tutorial concluído!": "Tutorial complete!",
+  "Agora você já sabe o básico. Vamos para a Fase 1?": "Now you know the basics. Ready for Level 1?",
+  "Muito bem!": "Well done!",
+  "Ir para a Fase 1": "Go to Level 1",
+  "Jogar o tutorial de novo": "Play the tutorial again",
+  "Rever o tutorial": "Replay the tutorial",
+  "Automático (5 ou mais)": "Automatic (5 or more)",
+  "Quantas peças aparecem na seleção. O padrão é pelo menos 5, para jogar relaxado; escolha menos para deixar mais difícil. Campeonatos e o tutorial usam sempre o padrão.": "How many pieces appear in the tray. The default is at least 5, for relaxed play; choose fewer to make it harder. Tournaments and the tutorial always use the default.",
+  "6×6, com poucas estrelas-guia": "6×6, with few guide stars",
+  "7×7, o mais desafiador": "7×7, the most challenging",
+  "Passo 1: arraste uma peça até o quadro, ou toque nela e depois numa casa. Cada peça vai na região da sua cor.": "Step 1: drag a piece onto the board, or tap it and then tap a cell. Each piece goes in the area of its color.",
+  "Passo 1: arraste uma peça até o quadro, ou clique nela e depois numa casa. Cada peça vai na região da sua cor.": "Step 1: drag a piece onto the board, or click it and then click a cell. Each piece goes in the area of its color.",
+  "Passo 2: algumas peças precisam girar. Toque na peça e use Girar (ou dois toques rápidos nela).": "Step 2: some pieces need to rotate. Tap the piece and use Rotate (or double-tap it).",
+  "Passo 2: algumas peças precisam girar. Clique na peça e use Girar (ou aperte R).": "Step 2: some pieces need to rotate. Click the piece and use Rotate (or press R).",
+  "Passo 3: a peça amarela precisa ser espelhada. Toque nela e use Espelhar (ou deslize o dedo fora dela).": "Step 3: the yellow piece needs to be flipped. Tap it and use Flip (or swipe your finger outside it).",
+  "Passo 3: a peça amarela precisa ser espelhada. Clique nela e use Espelhar (ou aperte T).": "Step 3: the yellow piece needs to be flipped. Click it and use Flip (or press T).",
+  "Pronto, você já sabe o básico! Complete o quadro. Se errar, toque numa peça já colocada para tirá-la, ou use Desfazer.": "Done, you know the basics! Fill the board. If you slip up, tap a placed piece to take it back, or use Undo.",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1671,6 +1689,25 @@ es: {
   "Entardecer": "Atardecer",
   "Chiptune": "Chiptune",
   "Marimba": "Marimba",
+  "Tutorial": "Tutorial",
+  "aprenda a jogar": "aprende a jugar",
+  "Tutorial concluído!": "¡Tutorial completado!",
+  "Agora você já sabe o básico. Vamos para a Fase 1?": "Ya sabes lo básico. ¿Vamos al nivel 1?",
+  "Muito bem!": "¡Muy bien!",
+  "Ir para a Fase 1": "Ir al nivel 1",
+  "Jogar o tutorial de novo": "Jugar el tutorial de nuevo",
+  "Rever o tutorial": "Repetir el tutorial",
+  "Automático (5 ou mais)": "Automático (5 o más)",
+  "Quantas peças aparecem na seleção. O padrão é pelo menos 5, para jogar relaxado; escolha menos para deixar mais difícil. Campeonatos e o tutorial usam sempre o padrão.": "Cuántas piezas aparecen en la bandeja. Por defecto son al menos 5, para jugar relajado; elige menos para hacerlo más difícil. Los torneos y el tutorial usan siempre el valor por defecto.",
+  "6×6, com poucas estrelas-guia": "6×6, con pocas estrellas guía",
+  "7×7, o mais desafiador": "7×7, el más desafiante",
+  "Passo 1: arraste uma peça até o quadro, ou toque nela e depois numa casa. Cada peça vai na região da sua cor.": "Paso 1: arrastra una pieza al tablero, o tócala y luego toca una casilla. Cada pieza va en la zona de su color.",
+  "Passo 1: arraste uma peça até o quadro, ou clique nela e depois numa casa. Cada peça vai na região da sua cor.": "Paso 1: arrastra una pieza al tablero, o haz clic en ella y luego en una casilla. Cada pieza va en la zona de su color.",
+  "Passo 2: algumas peças precisam girar. Toque na peça e use Girar (ou dois toques rápidos nela).": "Paso 2: algunas piezas necesitan girar. Toca la pieza y usa Girar (o toca dos veces).",
+  "Passo 2: algumas peças precisam girar. Clique na peça e use Girar (ou aperte R).": "Paso 2: algunas piezas necesitan girar. Haz clic en la pieza y usa Girar (o pulsa R).",
+  "Passo 3: a peça amarela precisa ser espelhada. Toque nela e use Espelhar (ou deslize o dedo fora dela).": "Paso 3: la pieza amarilla necesita voltearse. Tócala y usa Voltear (o desliza el dedo fuera de ella).",
+  "Passo 3: a peça amarela precisa ser espelhada. Clique nela e use Espelhar (ou aperte T).": "Paso 3: la pieza amarilla necesita voltearse. Haz clic en ella y usa Voltear (o pulsa T).",
+  "Pronto, você já sabe o básico! Complete o quadro. Se errar, toque numa peça já colocada para tirá-la, ou use Desfazer.": "¡Listo, ya sabes lo básico! Completa el tablero. Si te equivocas, toca una pieza colocada para quitarla, o usa Deshacer.",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2185,14 +2222,19 @@ function girar(f){
 function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
-const FILA_PADRAO = 4;   /* fases fora da lista (do dia, criadas, compartilhadas) mostram 4 peças por vez */
-/* Fases da lista: começam com 6 peças à vista e vão diminuindo até 3 (fases com "FILA:" própria mantêm a delas). */
-const filaDaFase = i => i < 10 ? 6 : i < 20 ? 5 : i < 30 ? 4 : 3;
-function novoJogo(texto, filaPadrao = FILA_PADRAO){
+/* Peças à vista: por padrão nunca menos de 5 (jogar para relaxar); quem quiser mais difícil escolhe menos em Menu → Jogo → Peças por vez. */
+const MIN_FILA = 5, FILA_PADRAO = 5;
+const filaDaFase = i => i < 10 ? 6 : 5;
+/* escolha: o que a pessoa escolheu (1 a 6; 99 = todas) ou 0 para o automático. Devolve quantas peças aparecem por vez (0 = todas). */
+function filaEfetiva(total, filaFase, filaPadrao, escolha){
+  const alvo = escolha === 99 ? total : escolha || Math.max(filaFase || filaPadrao, MIN_FILA);
+  return alvo >= total ? 0 : alvo;
+}
+function novoJogo(texto, filaPadrao = FILA_PADRAO, escolha = 0){
   const {gab, pecas, n, fila: filaFase} = parseFase(texto);
-  const filaAuto = !filaFase && pecas.length > filaPadrao, fila = filaFase || (filaAuto ? filaPadrao : 0);
+  const fila = filaEfetiva(pecas.length, filaFase, filaPadrao, escolha), filaAuto = !escolha && fila > 0;
   return {
-    n, fila, filaAuto, filaFixa: !!filaFase, total: pecas.length,
+    n, fila, filaAuto, filaFase, total: pecas.length,
     gab,
     grade: Array.from({length: n}, () => Array(n).fill(0)),
     mapa: new Map(),
@@ -2584,7 +2626,7 @@ function limparBackup(env){
     if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
     if (isObj(c.a11y)){ q.a11y = {}; for (const k of ['dalt', 'cont', 'texto', 'mov']) if (typeof c.a11y[k] === 'boolean') q.a11y[k] = c.a11y[k]; }
     if (BK_HUMORES.includes(c.humor)) q.humor = c.humor;
-    if (c.pecas === 'auto' || (c.pecas >= 2 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 2, 99);
+    if (c.pecas === 'auto' || (c.pecas >= 1 && c.pecas <= 99)) q.pecas = c.pecas === 'auto' ? 'auto' : inteiro(c.pecas, 1, 99);
     for (const k of ['vibra', 'musica', 'sfx']) if (typeof c[k] === 'boolean') q[k] = c[k];
     if (typeof c.vol === 'number' && c.vol >= 0 && c.vol <= 1) q.vol = c.vol;
     o.cfg = q; }
@@ -3219,14 +3261,15 @@ let estrelasFase = store.get('est', {});
 /* 3 estrelas: sem dica e sem recolocar peças; 2: sem dica e até 50% de jogadas a mais; 1: concluiu */
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
-if (pecasPref !== 'auto' && ![2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
+if (pecasPref !== 'auto' && ![1, 2, 3, 4, 5, 6, 99].includes(pecasPref)) pecasPref = 'auto';
 /* campeonato (online ou sem internet): tempo pelo relógio de parede, sem dicas */
 const ehCamp = c => c.k === 'x' || c.k === 'o';
-const filaPadraoDe = cur => ehCamp(cur) ? FILA_PADRAO : pecasPref !== 'auto' ? pecasPref : cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+const filaPadraoDe = cur => cur.k === 'b' ? filaDaFase(cur.i) : cur.k === 'i' || cur.k === 'r' ? (NIVEIS_INF[cur.nivel].fila || FILA_PADRAO) : FILA_PADRAO;
+/* a escolha da pessoa vale em qualquer fase, menos em campeonato e no tutorial (iguais para todos) */
+const escolhaPecas = cur => ehCamp(cur) || cur.k === 'u' || pecasPref === 'auto' ? 0 : pecasPref;
 function aplicarPecas(){
-  const j = S.jogo; if (!j || j.filaFixa || ehCamp(S.cur)) return;
-  const f = filaPadraoDe(S.cur);
-  j.filaAuto = j.total > f; j.fila = j.filaAuto ? f : 0;
+  const j = S.jogo; if (!j || ehCamp(S.cur) || S.cur.k === 'u') return;
+  j.fila = filaEfetiva(j.total, j.filaFase, filaPadraoDe(S.cur), escolhaPecas(S.cur)); j.filaAuto = !escolhaPecas(S.cur) && j.fila > 0;
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
   S.ultFila = j.fila; limparGhost(); renderTudo(); ajustar(); atualizarTuto();
 }
@@ -3277,7 +3320,7 @@ function carregar(cur, manter){
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
   if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
-  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur));
+  S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur), escolhaPecas(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
@@ -3308,6 +3351,7 @@ function renderTitulo(){
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
+  else if (c.k === 'u'){ t1.textContent = tr('Tutorial'); t2.textContent = tr('aprenda a jogar'); }
   else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
   else if (c.k === 'r'){ t1.textContent = tr('Corrida'); t2.textContent = qtd(Corrida.feitas, ' feita', ' feitas') + ' · ' + tr(NIVEIS_INF[c.nivel].nome); }
   else if (c.k === 'i'){ t1.textContent = tr('Infinito {n}', {n: c.num + 1}); t2.textContent = tr(NIVEIS_INF[c.nivel].nome) + (S.jogo.n > TAM ? ' · ' + S.jogo.n + '×' + S.jogo.n : ''); }
@@ -3472,8 +3516,9 @@ function renderReserva(){
 function renderDica(){
   const toque = matchMedia('(pointer:coarse)').matches;
   let t;
-  $('#dica').classList.toggle('tuto', tutoAtivo());
-  if (tutoAtivo()) t = TUTO_TXT[passoTuto()];
+  $('#dica').classList.toggle('tuto', tutoAtivo() || tutorialAtivo());
+  if (tutorialAtivo()) t = tutorialTexto();
+  else if (tutoAtivo()) t = TUTO_TXT[passoTuto()];
   else if (S.venceu) t = 'Fase concluída!';
   else if (toque) t = S.sel ? 'Dois toques giram · deslizar o dedo espelha · toque numa casa para encaixar.' : 'Toque numa peça para selecionar. Depois, dois toques giram e deslizar espelha.';
   else if (!S.sel && S.jogo.fila) t = 'Peças em fila: encaixe a peça da vez para ver a próxima. Dá para tirar uma peça já colocada tocando nela.';
@@ -3626,7 +3671,7 @@ function tentarColocar(p, gx, gy){
     return false;
   }
   limparDica(); iniciaTempo();
-  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++;
+  S.ultimaIdu = colocar(S.jogo, p, gx, gy); S.hist.push(S.ultimaIdu); S.jog++; tutorialEvento('colocou');
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
   Som.encaixar(); vibrar(14);
   { const falta = S.jogo.total - S.jogo.mapa.size; anunciar(falta ? tr(falta === 1 ? 'Peça encaixada. Falta 1 peça.' : 'Peça encaixada. Faltam {n} peças.', {n: falta}) : tr('Peça encaixada.')); }
@@ -3647,7 +3692,8 @@ function vencer(){
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
-  Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst();
+  if (c.k === 'u') tutorialFeito();
+  else { Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst(); }
   if (c.k === 'r'){ corridaFeita(); return; }
   if (c.k === 'o') registrarOff(c, t, j);
   if (c.k === 'i') registrarInf(c, t, j, est);
@@ -3671,8 +3717,8 @@ function vencer(){
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
-  $('#winTitulo').textContent = tr(ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = tr(c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
+  $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
@@ -3694,6 +3740,7 @@ function mostrarVitoria(res){
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
   if (c.k === 'x') vitoriaCamp(c, res, add);
   else if (c.k === 'o') vitoriaOff(c, res, add);
+  else if (c.k === 'u'){ add('Ir para a Fase 1', 'pri', () => carregar({k: 'b', i: 0})); add('Jogar o tutorial de novo', '', abrirTutorial); }
   else {
   const compartilharRes = () => {
     const base = urlBase();
@@ -3721,11 +3768,11 @@ function mostrarVitoria(res){
 
 function acaoGirar(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; anunciar(tr('Peça girada.')); aposTransformar();
+  p.formato = girar(p.formato); Som.girar(); S.anim = 'giro'; anunciar(tr('Peça girada.')); tutorialEvento('girou'); aposTransformar();
 }
 function acaoFlip(){
   const p = S.sel; if (!p){ toast('Selecione uma peça primeiro'); return; }
-  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; anunciar(tr('Peça espelhada.')); aposTransformar();
+  p.formato = inverter(p.formato); Som.flip(); S.anim = 'flip'; anunciar(tr('Peça espelhada.')); tutorialEvento('espelhou'); aposTransformar();
 }
 function aposTransformar(){
   renderReserva();
@@ -3857,9 +3904,10 @@ window.addEventListener('pointercancel', e => fimGesto(e, true));
 /* ---- tutorial dos gestos (só no celular): mostra o que fazer, passo a passo ---- */
 let tuto = Object.assign({sel: false, giro: false, esp: false, fim: false}, store.get('tuto', {}));
 const TUTO_TXT = {sel: 'Toque numa peça para selecioná-la.', giro: 'Agora dê dois toques rápidos na peça para girá-la.', esp: 'Muito bem! Agora deslize o dedo por aqui, fora da peça, para espelhá-la.'};
-const tutoAtivo = () => matchMedia('(pointer:coarse)').matches && !tuto.fim && !S.venceu;
+const tutoAtivo = () => matchMedia('(pointer:coarse)').matches && !tuto.fim && !S.venceu && !(S.cur && S.cur.k === 'u');
 const passoTuto = () => !S.sel ? 'sel' : !tuto.giro ? 'giro' : 'esp';
 function marcarTuto(k){
+  tutorialEvento(k === 'giro' ? 'girou' : 'espelhou');
   if (tuto[k]) return;
   tuto[k] = true;
   if (tuto.giro && tuto.esp){ tuto.fim = true; toast('Isso mesmo! Agora é só encaixar as peças no tabuleiro.'); }
@@ -3868,7 +3916,7 @@ function marcarTuto(k){
 function atualizarTuto(){
   const mao = $('#mao'), pular = $('#tutoPular'); if (!mao) return;
   const ativo = tutoAtivo();
-  pular.hidden = !ativo;
+  pular.hidden = !(ativo || tutorialAtivo());
   if (S.sel && !tuto.sel){ tuto.sel = true; store.set('tuto', tuto); }
   const alvo = ativo && !S.drag && !document.querySelector('.ov.on') ? document.querySelector(passoTuto() === 'sel' ? '#reserva .pw' : passoTuto() === 'giro' ? '#reserva .pw.sel' : '#dica') : null;
   if (!alvo){ mao.className = ''; mao.dataset.passo = ''; return; }
@@ -3877,8 +3925,11 @@ function atualizarTuto(){
   if (mao.dataset.passo !== passo){ mao.className = ''; void mao.offsetWidth; mao.dataset.passo = passo; }
   mao.className = 'on ' + (passo === 'sel' ? 'toque' : passo === 'giro' ? 'duplo' : 'desliza');
 }
-$('#tutoPular').onclick = () => { tuto.fim = true; store.set('tuto', tuto); atualizarTuto(); renderDica(); toast('Tudo bem! Você pode rever o tutorial no menu.'); };
-$('#btnTuto').onclick = () => { tuto = {sel: false, giro: false, esp: false, fim: false}; store.set('tuto', tuto); fechar('menu'); S.sel = null; renderReserva(); renderDica(); ajustar(); atualizarTuto(); };
+$('#tutoPular').onclick = () => {
+  const noTutorial = tutorialAtivo(); tuto.fim = true; store.set('tuto', tuto);
+  if (noTutorial) carregar({k: 'b', i: 0}); else { atualizarTuto(); renderDica(); }
+  toast('Tudo bem! Você pode rever o tutorial no menu.');
+};
 
 /* ---- teclado ---- */
 function tirarDaCasa(x, y){
@@ -3931,6 +3982,36 @@ window.addEventListener('keydown', e => {
   else if (k === 'e' && S.hover) tirarDaCasa(S.hover.x, S.hover.y);
 });
 
+/* ======================= Fase de tutorial =======================
+   Uma fase pequena e guiada, antes da Fase 1: arrastar, girar e espelhar. Aparece sozinha na primeira vez e pode ser revista no menu. */
+const TUTORIAL = {k: 'u', nome: 'Tutorial', text: 'FILA: 6\nGABARITO:\n1,1,1,1,1\n6,6,16,16,16\n6,6,11,11,16\n1,1,6,11,11\n1,1,6,6,6\nPECAS_CUSTOM:\n6:0-0;1-0;0-1;1-1;\n1:0-0;0-1;0-2;0-3;0-4;\n11:1-2;0-1;1-1;0-0;\n16:0-1;1-1;2-1;0-0;\n1:0-0;1-0;0-1;1-1;\n6:0-2;1-2;0-1;0-0;\n'};
+/* o que a pessoa já fez nesta tentativa; o passo atual é o primeiro que falta */
+const Tut = {colocou: false, girou: false, espelhou: false};
+const tutorialAtivo = () => !!S.cur && S.cur.k === 'u' && !S.venceu;
+const passoTutorial = () => !Tut.colocou ? 0 : !Tut.girou ? 1 : !Tut.espelhou ? 2 : 3;
+function tutorialTexto(){
+  const toque = matchMedia('(pointer:coarse)').matches;
+  return [
+    toque ? 'Passo 1: arraste uma peça até o quadro, ou toque nela e depois numa casa. Cada peça vai na região da sua cor.' : 'Passo 1: arraste uma peça até o quadro, ou clique nela e depois numa casa. Cada peça vai na região da sua cor.',
+    toque ? 'Passo 2: algumas peças precisam girar. Toque na peça e use Girar (ou dois toques rápidos nela).' : 'Passo 2: algumas peças precisam girar. Clique na peça e use Girar (ou aperte R).',
+    toque ? 'Passo 3: a peça amarela precisa ser espelhada. Toque nela e use Espelhar (ou deslize o dedo fora dela).' : 'Passo 3: a peça amarela precisa ser espelhada. Clique nela e use Espelhar (ou aperte T).',
+    'Pronto, você já sabe o básico! Complete o quadro. Se errar, toque numa peça já colocada para tirá-la, ou use Desfazer.'
+  ][passoTutorial()];
+}
+/* chamado quando a pessoa coloca, gira ou espelha uma peça */
+function tutorialEvento(ev){
+  if (!tutorialAtivo() || Tut[ev]) return;
+  Tut[ev] = true; renderDica();
+  if (ev === 'espelhou') toast('Muito bem!');
+}
+function abrirTutorial(){
+  Tut.colocou = Tut.girou = Tut.espelhou = false;
+  fecharTodos('ov-splash'); carregar(Object.assign({}, TUTORIAL));
+}
+function tutorialFeito(){
+  tuto = {sel: true, giro: true, esp: true, fim: true}; store.set('tuto', tuto);
+}
+$('#btnTuto').onclick = abrirTutorial;
 /* ---- compartilhar ---- */
 const urlBase = () => location.origin + location.pathname;
 const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
@@ -4147,9 +4228,9 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) naviga
    Fases novas geradas na hora (solução única), em segundo plano para o jogo não travar. */
 const NIVEIS_INF = {
   facil: {nome: 'Fácil', desc: '5×5, com muitas estrelas-guia', fila: 6, o: {n: 5, minEstrelas: 14}},
-  medio: {nome: 'Médio', desc: '5×5, com poucas estrelas-guia', fila: 4, o: {n: 5, minEstrelas: 7}},
-  dificil: {nome: 'Difícil', desc: '6×6, só 3 peças por vez', fila: 0, o: {n: 6, pMin: 9, pMax: 11, minEstrelas: 10, fila: 3}},
-  mestre: {nome: 'Mestre', desc: '7×7, só 2 peças por vez', fila: 0, o: {n: 7, pMin: 12, pMax: 15, minEstrelas: 9, fila: 2}}
+  medio: {nome: 'Médio', desc: '5×5, com poucas estrelas-guia', fila: 5, o: {n: 5, minEstrelas: 7}},
+  dificil: {nome: 'Difícil', desc: '6×6, com poucas estrelas-guia', fila: 5, o: {n: 6, pMin: 9, pMax: 11, minEstrelas: 10, fila: 3}},
+  mestre: {nome: 'Mestre', desc: '7×7, o mais desafiador', fila: 5, o: {n: 7, pMin: 12, pMax: 15, minEstrelas: 9, fila: 2}}
 };
 const MODOS_INF = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
 const nivelInf = (modo, num) => modo !== 'crescente' ? modo : num < 5 ? 'facil' : num < 10 ? 'medio' : num < 15 ? 'dificil' : 'mestre';
@@ -4241,7 +4322,7 @@ $('#btnInf').onclick = abrirInf;
 /* ======================= Desafios: da semana e contra o relógio ======================= */
 const nomeSemana = ch => tr('Semana {n}', {n: +ch.slice(6)});
 
-/* Desafio da semana: a mesma fase (6×6, 3 peças por vez) para todo mundo, escolhida pela semana. Fica guardada para não gerar de novo. */
+/* Desafio da semana: a mesma fase (6×6) para todo mundo, escolhida pela semana. Fica guardada para não gerar de novo. */
 async function faseDaSemana(ch){
   const c = store.get('semfase', null);
   if (c && c.sem === ch && typeof c.text === 'string' && faseValida(c.text)) return c.text;
@@ -4676,7 +4757,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.03.4';
+const VERSAO = '2026.11.04.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5178,7 +5259,7 @@ function ajustar(){
   const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); fitFileiras(); };
   pos(30); void document.body.offsetWidth;   /* encolhe antes de medir: um tabuleiro largo demais faz o celular alargar a janela */
   const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
-  const cheio = () => document.documentElement.scrollHeight > innerHeight + 1;
+  const cheio = () => document.documentElement.scrollHeight > innerHeight;
   const achar = (compacto, min) => { document.body.classList.toggle('compacto', compacto); let c = c0; pos(c); while (c > min && cheio()){ c -= 2; pos(c); } return c; };
   const normal = achar(false, 30), normalCheio = cheio();
   if (normalCheio || normal < 38){      /* tela baixa: tenta o modo compacto e fica com o que der o tabuleiro maior */
@@ -5205,7 +5286,8 @@ if (linkInicial) $('#splashMsg').hidden = false;
 if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato sem internet! Toque em Jogar para abrir.'); $('#splashMsg').hidden = false; }
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
-carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
+if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
