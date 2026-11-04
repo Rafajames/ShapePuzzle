@@ -33,7 +33,11 @@ if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
 const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
-if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+const alvoB = {k: 'b', i: Math.min(prog.max, LIMITE_FASES - 1)};
+if (primeiraVez) abrirTutorial();
+else if (!linkInicial && !andamento && alvoB.i >= FASES_FIXAS && !fasesGer[alvoB.i]){   /* aparelho novo com progresso: mostra a última fase fixa e troca assim que a nova ficar pronta */
+  carregar({k: 'b', i: FASES_FIXAS - 1}); abrirFaseGer(alvoB, false, true);
+} else carregar(linkInicial || (andamento && andamento.cur) || alvoB);
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 renderInicio();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};

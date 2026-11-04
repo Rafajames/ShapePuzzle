@@ -36,7 +36,7 @@ function vencer(){
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
-    prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
+    prog.max = Math.max(prog.max, Math.min(c.i + 1, LIMITE_FASES - 1));
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
@@ -53,9 +53,9 @@ function vencer(){
 }
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
-  const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
+  const ultima = c.k === 'b' && c.i >= LIMITE_FASES - 1;
   $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
+  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'Todas as fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';

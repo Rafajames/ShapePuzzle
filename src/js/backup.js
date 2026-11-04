@@ -57,7 +57,7 @@ async function conferirBackup(){
 function gravarBackup(d, comCfg, limpar){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
-  if (d.prog) d.prog = {max: Math.min(d.prog.max, BUILTIN.length - 1), done: d.prog.done.filter(i => i < BUILTIN.length)};
+  if (d.prog) d.prog = {max: Math.min(d.prog.max, LIMITE_FASES - 1), done: d.prog.done.filter(i => i < LIMITE_FASES)};
   grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
   if (limpar){ store.set('infatual', null); store.set('andamento', null); }
   if (comCfg && d.cfg){

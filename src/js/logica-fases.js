@@ -55,6 +55,15 @@ function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
 /* Peças à vista: por padrão nunca menos de 5 (jogar para relaxar); quem quiser mais difícil escolhe menos em Menu → Jogo → Peças por vez. */
+/* Fases além das 50 do jogo: nascem de uma semente que depende só do número da fase, então são iguais para todo mundo.
+   Quem avança vê mais 10 por vez (LOTE). A dificuldade sobe: 6×6 até a 70; depois 7×7 (de cinco em cinco, uma 6×6 para respirar) com menos estrelas-guia. */
+const FASES_FIXAS = 50, LOTE_FASES = 10, LIMITE_FASES = 1000;
+function opcoesFaseB(i){
+  if (i < 70 || i % 5 === 4) return {n: 6, pMin: 9, pMax: 11, minEstrelas: Math.max(8, 10 - Math.floor((i - FASES_FIXAS) / 10)), fila: 3};
+  return {n: 7, pMin: 12, pMax: 15, minEstrelas: Math.max(5, 9 - Math.floor((i - 70) / 10)), fila: 2};
+}
+const seedFaseB = (i, t = 0) => 1 + (Math.imul(i + 1, 2654435761) >>> 0) % 999999000 + t * 7919;
+const fasesVisiveisDe = (max, nFixas, teste) => Math.min(LIMITE_FASES, Math.max((Math.floor(max / LOTE_FASES) + 1) * LOTE_FASES, teste ? nFixas : 0));
 const MIN_FILA = 5, FILA_PADRAO = 5;
 const filaDaFase = i => i < 10 ? 6 : 5;
 /* escolha: o que a pessoa escolheu (1 a 6; 99 = todas) ou 0 para o automático. Devolve quantas peças aparecem por vez (0 = todas). */

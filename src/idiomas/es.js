@@ -170,6 +170,8 @@ es: {
   "Média": "Media",
   "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Los niveles siempre son nuevos, creados solo para este torneo — nunca los del juego normal.",
   "Sorteadas mestres (7×7)": "Niveles maestros aleatorios (7×7)",
+  "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "Al terminar los niveles que aparecen, se desbloquean 10 más — y después del 50 el juego crea niveles nuevos, iguales para todos.",
+  "Todas as fases estão completas. Que tal criar as suas?": "Todos los niveles están completos. ¿Y si creas los tuyos?",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",

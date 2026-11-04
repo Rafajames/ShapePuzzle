@@ -41,7 +41,11 @@ with sync_playwright() as pw:
     check(not pg.is_visible('#selTema'), 'tocar de novo esconde')
     pg.click('#ov-menu summary:has-text("Fases")'); pg.wait_for_timeout(200)
     check(not pg.is_visible('#tiles .tile'), 'dá para fechar a seção das fases')
-    check(pg.evaluate("document.querySelector('#ov-menu .card').scrollHeight") < aberto_h * 0.6, 'menu com tudo fechado é bem mais curto')
+    fechado_h = pg.evaluate("document.querySelector('#ov-menu .card').scrollHeight")
+    estado = pg.evaluate("[...document.querySelectorAll('#ov-menu details.sec')].map(d=>d.open)")
+    pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); tudo_h = pg.evaluate("document.querySelector('#ov-menu .card').scrollHeight")
+    pg.evaluate("(e)=>document.querySelectorAll('#ov-menu details.sec').forEach((d,i)=>d.open=e[i])", estado); pg.wait_for_timeout(100)
+    check(fechado_h < tudo_h * 0.6, f'menu com tudo fechado é bem mais curto ({fechado_h} contra {tudo_h})')
 
     print('Teclado')
     pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=false)")

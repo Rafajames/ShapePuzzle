@@ -16,7 +16,7 @@ with sync_playwright() as pw:
     b=pw.chromium.launch(); ctx=b.new_context(locale='pt-BR', viewport={'width':390,'height':844}); pg=ctx.new_page()
     pg.on('pageerror',lambda e:erros.append(str(e)))
     pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
-    check(pg.locator('#tiles .tile').nth(39).is_disabled(),'fase 40 trancada no início')
+    check(pg.locator('#tiles .tile').count()==10 and pg.locator('#tiles .tile:disabled').count()==9,'no início só aparecem 10 fases (as outras ainda não)')
     check('senha' not in pg.content().lower().replace('senha de organizador','').replace('senha','',0) or True,'-')
     pg.click('#btnTeste'); pg.wait_for_timeout(200)
     check(pg.is_visible('#ov-teste'),'botão pede a senha')
@@ -35,6 +35,6 @@ with sync_playwright() as pw:
     check(pg.evaluate('modoTeste') and pg.locator('#tiles .tile:disabled').count()==0,'aparelho lembra o modo de teste')
     pg.click('#btnTeste'); pg.wait_for_timeout(200)
     pg.click('#btnMenu') if not pg.is_visible('#ov-menu') else None
-    check(not pg.evaluate('modoTeste') and pg.locator('#tiles .tile').nth(39).is_disabled(),'sair do modo de teste tranca de novo')
+    check(not pg.evaluate('modoTeste') and pg.locator('#tiles .tile').count()==10,'sair do modo de teste tranca de novo')
     b.close()
 print('ERROS:',erros or 'nenhum'); print('RESULTADO:','TUDO OK' if not falhas and not erros else falhas)

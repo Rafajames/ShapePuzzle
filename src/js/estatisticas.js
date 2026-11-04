@@ -15,13 +15,13 @@ function abrirEstatisticas(){
   const bloco = (titulo, itens) => {
     corpo.append(mk('h2', '', tr(titulo)), gradeSv(itens));
   };
-  const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
+  const total = fasesVisiveis(), feitas = prog.done.length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
   const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;
   const dg = [[fmtDuracao(Est.tempo), 'Tempo jogado'], [String(Est.vitorias), 'Fases vencidas'], [String(Est.jogadas), 'Jogadas'], [String(Est.dicas), 'Dicas usadas']];
   if (Est.solucoes) dg.push([String(Est.solucoes), 'Soluções vistas']);
   dg.push([new Date(Est.desde).toLocaleDateString(LANG_HTML[lang]), 'Jogando desde']);
   bloco('Geral', dg);
-  bloco('Fases do jogo', [[feitas + '/' + BUILTIN.length, 'Fases concluídas'], [estrelas + '/' + BUILTIN.length * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(Math.min(prog.max, BUILTIN.length - 1) + 1), 'Fase mais adiantada']]);
+  bloco('Fases do jogo', [[feitas + '/' + total, 'Fases concluídas'], [estrelas + '/' + total * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(prog.max + 1), 'Fase mais adiantada']]);
   const sq = sequenciasDe(dias, dataHoje()), ts = Object.values(dias).map(d => d.t).filter(t => t > 0);
   bloco('Fase do dia', [[String(Object.keys(dias).length), 'Dias jogados'], ['🔥 ' + sq.atual, 'Sequência atual'], [String(sq.maior), 'Maior sequência'], [ts.length ? fmtTempo(Math.min(...ts)) : '–', 'Melhor tempo']]);
   const ss = sequenciasSemanas(sem, dataHoje()), tsem = Object.values(sem).map(d => d.t).filter(t => t > 0);

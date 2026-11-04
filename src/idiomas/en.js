@@ -170,6 +170,8 @@ en: {
   "Média": "Medium",
   "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Levels are always new, created just for this tournament — never the regular game's levels.",
   "Sorteadas mestres (7×7)": "Random master levels (7×7)",
+  "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "After you finish the levels shown, 10 more unlock — and after level 50 the game creates new levels, the same for everyone.",
+  "Todas as fases estão completas. Que tal criar as suas?": "All levels are complete. How about creating your own?",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",

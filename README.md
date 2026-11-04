@@ -8,7 +8,7 @@ Quebra-cabeça lógico: encaixe todas as peças no tabuleiro até preencher tudo
 
 Versão web em um único `index.html` (sem instalar nada), que roda no computador e no celular:
 
-- **50 fases** com dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e as peças vão entrando conforme você encaixa (sempre pelo menos 5 visíveis, a não ser que você escolha menos). Todas as fases novas têm solução única.
+- **Fases que crescem com você**: aparecem 10 por vez e, ao terminar as que estão à vista, mais 10 são liberadas (até a 1000). As 50 primeiras são fixas; da 51 em diante o jogo gera fases novas de solução única (6×6 e depois 7×7, cada vez com menos estrelas-guia), sempre as mesmas para todo mundo, porque a semente depende só do número da fase. As 50 primeiras têm dificuldade crescente: as 30 primeiras em 5×5; da 31 em diante o tabuleiro cresce (6×6 e 7×7) e as peças vão entrando conforme você encaixa (sempre pelo menos 5 visíveis, a não ser que você escolha menos). Todas as fases novas têm solução única.
 - **Fase do dia**: um desafio novo por dia, igual para todo mundo, com sequência de dias seguidos.
 - **Peças por vez**: nas primeiras 10 fases aparecem 6 peças; depois, no mínimo 5 (o jogo nunca reduz sozinho para menos, para quem só quer relaxar). Quem quiser mais desafio escolhe menos no menu. Ao encaixar uma, a seguinte entra.
 - **No celular**: dois toques giram a peça 90° e deslizar o dedo espelha. No computador ficam os botões e as teclas R e T.

@@ -554,6 +554,7 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
       <p style="margin:0 0 10px">Complete uma fase para liberar a próxima.</p>
     <div class="tiles" id="tiles"></div>
     <p class="vazio2" style="margin-top:10px">Da fase 31 em diante o tabuleiro cresce (6×6 e 7×7) e, em algumas fases, só aparecem as próximas peças da fila.</p>
+    <p class="vazio2" style="margin-top:6px">Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.</p>
     </div></details>
     <details class="sec"><summary data-i="edit">Minhas fases</summary><div class="sb">
     <div id="customList"></div>
@@ -1144,6 +1145,8 @@ en: {
   "Média": "Medium",
   "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Levels are always new, created just for this tournament — never the regular game's levels.",
   "Sorteadas mestres (7×7)": "Random master levels (7×7)",
+  "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "After you finish the levels shown, 10 more unlock — and after level 50 the game creates new levels, the same for everyone.",
+  "Todas as fases estão completas. Que tal criar as suas?": "All levels are complete. How about creating your own?",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1756,6 +1759,8 @@ es: {
   "Média": "Media",
   "As fases são sempre novas, criadas só para este campeonato — nunca as fases do jogo normal.": "Los niveles siempre son nuevos, creados solo para este torneo — nunca los del juego normal.",
   "Sorteadas mestres (7×7)": "Niveles maestros aleatorios (7×7)",
+  "Ao terminar as fases que aparecem, mais 10 são liberadas — e depois da 50 o jogo cria fases novas, iguais para todo mundo.": "Al terminar los niveles que aparecen, se desbloquean 10 más — y después del 50 el juego crea niveles nuevos, iguales para todos.",
+  "Todas as fases estão completas. Que tal criar as suas?": "Todos los niveles están completos. ¿Y si creas los tuyos?",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2258,6 +2263,15 @@ function inverter(f){ return f.map(r => r.slice().reverse()); }
 
 let _uid = 1;
 /* Peças à vista: por padrão nunca menos de 5 (jogar para relaxar); quem quiser mais difícil escolhe menos em Menu → Jogo → Peças por vez. */
+/* Fases além das 50 do jogo: nascem de uma semente que depende só do número da fase, então são iguais para todo mundo.
+   Quem avança vê mais 10 por vez (LOTE). A dificuldade sobe: 6×6 até a 70; depois 7×7 (de cinco em cinco, uma 6×6 para respirar) com menos estrelas-guia. */
+const FASES_FIXAS = 50, LOTE_FASES = 10, LIMITE_FASES = 1000;
+function opcoesFaseB(i){
+  if (i < 70 || i % 5 === 4) return {n: 6, pMin: 9, pMax: 11, minEstrelas: Math.max(8, 10 - Math.floor((i - FASES_FIXAS) / 10)), fila: 3};
+  return {n: 7, pMin: 12, pMax: 15, minEstrelas: Math.max(5, 9 - Math.floor((i - 70) / 10)), fila: 2};
+}
+const seedFaseB = (i, t = 0) => 1 + (Math.imul(i + 1, 2654435761) >>> 0) % 999999000 + t * 7919;
+const fasesVisiveisDe = (max, nFixas, teste) => Math.min(LIMITE_FASES, Math.max((Math.floor(max / LOTE_FASES) + 1) * LOTE_FASES, teste ? nFixas : 0));
 const MIN_FILA = 5, FILA_PADRAO = 5;
 const filaDaFase = i => i < 10 ? 6 : 5;
 /* escolha: o que a pessoa escolheu (1 a 6; 99 = todas) ou 0 para o automático. Devolve quantas peças aparecem por vez (0 = todas). */
@@ -3310,7 +3324,7 @@ function aplicarPecas(){
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
   S.ultFila = j.fila; limparGhost(); renderTudo(); ajustar(); atualizarTuto();
 }
-{ const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, BUILTIN.length - 1)); }
+{ const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, LIMITE_FASES - 1)); }
 /* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
 const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
 let modoTeste = store.get('teste', false) === true;
@@ -3330,13 +3344,13 @@ function faseDoDia(data){
   return cacheDia[data];
 }
 function faseDe(cur){
-  if (cur.k === 'b') return BUILTIN[cur.i];
+  if (cur.k === 'b') return BUILTIN[cur.i] || (fasesGer[cur.i] ? {nome: 'fase' + (cur.i + 1), text: fasesGer[cur.i]} : undefined);
   if (cur.k === 'c') return custom[cur.i];
   if (cur.k === 'd') return faseDoDia(cur.data);
   return cur;
 }
 function chaveFase(cur){
-  if (cur.k === 'b') return 'b:' + BUILTIN[cur.i].nome;
+  if (cur.k === 'b') return 'b:' + faseDe(cur).nome;
   if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
   if (cur.k === 'd') return 'd:' + cur.data;
   if (cur.k === 's') return 's:' + cur.semana;
@@ -3354,6 +3368,7 @@ const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: '
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
+  if (cur.k === 'b' && cur.i >= FASES_FIXAS && cur.i < LIMITE_FASES && !fasesGer[cur.i]){ abrirFaseGer(cur, manter); return; }
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
   if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
@@ -3366,6 +3381,7 @@ function carregar(cur, manter){
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
   renderTudo(); ajustar(); atualizarTuto(); aplicarHumor(); avisoFila();
+  if (cur.k === 'b') prepararProximaGer(cur.i + 1);
 }
 function avisoFila(){
   const f = S.jogo.fila;
@@ -3385,7 +3401,7 @@ function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDic
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
-  if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + BUILTIN.length)); }
+  if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + fasesVisiveis())); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
@@ -3737,7 +3753,7 @@ function vencer(){
   if (c.k === 'i') registrarInf(c, t, j, est);
   if (c.k === 'b' && !modoTeste){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
-    prog.max = Math.max(prog.max, Math.min(c.i + 1, BUILTIN.length - 1));
+    prog.max = Math.max(prog.max, Math.min(c.i + 1, LIMITE_FASES - 1));
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
@@ -3754,9 +3770,9 @@ function vencer(){
 }
 function mostrarVitoria(res){
   const c = S.cur, acts = $('#winActs');
-  const ultima = c.k === 'b' && c.i === BUILTIN.length - 1;
+  const ultima = c.k === 'b' && c.i >= LIMITE_FASES - 1;
   $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
-  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'As ' + BUILTIN.length + ' fases estão completas. Que tal criar as suas?'
+  $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'Todas as fases estão completas. Que tal criar as suas?'
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
@@ -4172,7 +4188,7 @@ function renderDiario(){
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
-  BUILTIN.forEach((f, i) => {
+  for (let i = 0, total = fasesVisiveis(); i < total; i++){
     const feito = prog.done.includes(i), trancada = i > prog.max && !modoTeste;
     const b = mk('button', 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : ''));
     b.disabled = trancada;
@@ -4180,7 +4196,7 @@ function abrirMenu(){
     b.setAttribute('aria-label', tr('Fase ' + (i + 1)) + (feito ? ', ' + tr('concluída') + (estrelasFase[i] ? ', ' + tr(estrelasFase[i] === 1 ? '1 estrela de 3' : estrelasFase[i] + ' estrelas de 3') : '') : '') + (trancada ? ', ' + tr('bloqueada') : ''));
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
-  });
+  }
   renderDiario(); renderCustom(); atualizarInstalar(); renderTeste();
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
   $('#selHumor').value = humorPref;
@@ -4377,6 +4393,44 @@ function abrirInf(){
 }
 $('#btnInf').onclick = abrirInf;
 
+/* ======================= Fases além das 50 =======================
+   Geradas na hora (solução única) em segundo plano e guardadas no aparelho. Como a semente só depende do número da fase, todo mundo recebe as mesmas. */
+let fasesGer = store.get('fasesger', {});
+const GerB = {pend: {}, abrindo: false};
+const fasesVisiveis = () => fasesVisiveisDe(prog.max, BUILTIN.length, modoTeste);
+function guardarFaseGer(i, text){
+  fasesGer[i] = text;
+  const ks = Object.keys(fasesGer).map(Number);
+  if (ks.length > 250) ks.sort((a, b) => a - b).slice(0, ks.length - 250).forEach(k => delete fasesGer[k]);   // as antigas são refeitas se precisar
+  store.set('fasesger', fasesGer);
+}
+function gerarFaseGer(i){
+  if (fasesGer[i]) return Promise.resolve(fasesGer[i]);
+  if (GerB.pend[i]) return GerB.pend[i];
+  const p = (async () => {
+    try{
+      for (let t = 0; t < 10; t++){
+        const f = await Gerador.gerar(seedFaseB(i, t), opcoesFaseB(i));
+        if (f && f.unica){ guardarFaseGer(i, f.text); return f.text; }
+      }
+    }catch(e){}
+    return null;
+  })();
+  GerB.pend[i] = p; p.then(() => { delete GerB.pend[i]; });
+  return p;
+}
+/* abre a fase gerada (mostrando "gerando…" se ainda não estiver pronta). soParado: só troca se a pessoa ainda não mexeu em nada. */
+async function abrirFaseGer(cur, manter, soParado){
+  if (GerB.abrindo) return;
+  GerB.abrindo = true; mostrarGerando(true);
+  const texto = await gerarFaseGer(cur.i);
+  mostrarGerando(false); GerB.abrindo = false;
+  if (!texto){ toast('Não consegui gerar uma fase agora. Tente de novo.'); return; }
+  if (soParado && (S.jog > 0 || !S.cur || S.cur.k !== 'b')) return;
+  carregar(cur, manter); renderInicio();
+}
+/* enquanto a pessoa joga uma fase, a próxima já vai sendo preparada */
+function prepararProximaGer(i){ if (i >= FASES_FIXAS && i < LIMITE_FASES && !fasesGer[i] && Gerador.emSegundoPlano) gerarFaseGer(i); }
 /* ======================= Desafios: da semana e contra o relógio ======================= */
 const nomeSemana = ch => tr('Semana {n}', {n: +ch.slice(6)});
 
@@ -4474,13 +4528,13 @@ function abrirEstatisticas(){
   const bloco = (titulo, itens) => {
     corpo.append(mk('h2', '', tr(titulo)), gradeSv(itens));
   };
-  const feitas = prog.done.filter(i => i < BUILTIN.length).length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
+  const total = fasesVisiveis(), feitas = prog.done.length, estrelas = Object.keys(estrelasFase).reduce((a, k) => a + (+estrelasFase[k] || 0), 0);
   const tres = Object.keys(estrelasFase).filter(k => estrelasFase[k] === 3).length;
   const dg = [[fmtDuracao(Est.tempo), 'Tempo jogado'], [String(Est.vitorias), 'Fases vencidas'], [String(Est.jogadas), 'Jogadas'], [String(Est.dicas), 'Dicas usadas']];
   if (Est.solucoes) dg.push([String(Est.solucoes), 'Soluções vistas']);
   dg.push([new Date(Est.desde).toLocaleDateString(LANG_HTML[lang]), 'Jogando desde']);
   bloco('Geral', dg);
-  bloco('Fases do jogo', [[feitas + '/' + BUILTIN.length, 'Fases concluídas'], [estrelas + '/' + BUILTIN.length * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(Math.min(prog.max, BUILTIN.length - 1) + 1), 'Fase mais adiantada']]);
+  bloco('Fases do jogo', [[feitas + '/' + total, 'Fases concluídas'], [estrelas + '/' + total * 3, 'Estrelas'], [String(tres), 'Fases com 3 estrelas'], [String(prog.max + 1), 'Fase mais adiantada']]);
   const sq = sequenciasDe(dias, dataHoje()), ts = Object.values(dias).map(d => d.t).filter(t => t > 0);
   bloco('Fase do dia', [[String(Object.keys(dias).length), 'Dias jogados'], ['🔥 ' + sq.atual, 'Sequência atual'], [String(sq.maior), 'Maior sequência'], [ts.length ? fmtTempo(Math.min(...ts)) : '–', 'Melhor tempo']]);
   const ss = sequenciasSemanas(sem, dataHoje()), tsem = Object.values(sem).map(d => d.t).filter(t => t > 0);
@@ -4775,7 +4829,7 @@ async function conferirBackup(){
 function gravarBackup(d, comCfg, limpar){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
-  if (d.prog) d.prog = {max: Math.min(d.prog.max, BUILTIN.length - 1), done: d.prog.done.filter(i => i < BUILTIN.length)};
+  if (d.prog) d.prog = {max: Math.min(d.prog.max, LIMITE_FASES - 1), done: d.prog.done.filter(i => i < LIMITE_FASES)};
   grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
   if (limpar){ store.set('infatual', null); store.set('andamento', null); }
   if (comCfg && d.cfg){
@@ -4814,7 +4868,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.04.5';
+const VERSAO = '2026.11.05.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5353,7 +5407,11 @@ if (OFF.pendente){ $('#splashMsg').textContent = tr('Você recebeu um campeonato
 if (CP.convite){ $('#splashMsg').textContent = tr('Você foi convidado para um campeonato! Toque em Jogar para ver.'); $('#splashMsg').hidden = false; }
 const andamento = linkInicial ? null : lerAndamento();
 const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
-if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
+const alvoB = {k: 'b', i: Math.min(prog.max, LIMITE_FASES - 1)};
+if (primeiraVez) abrirTutorial();
+else if (!linkInicial && !andamento && alvoB.i >= FASES_FIXAS && !fasesGer[alvoB.i]){   /* aparelho novo com progresso: mostra a última fase fixa e troca assim que a nova ficar pronta */
+  carregar({k: 'b', i: FASES_FIXAS - 1}); abrirFaseGer(alvoB, false, true);
+} else carregar(linkInicial || (andamento && andamento.cur) || alvoB);
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 renderInicio();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};

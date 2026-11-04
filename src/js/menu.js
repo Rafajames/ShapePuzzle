@@ -47,7 +47,7 @@ function renderDiario(){
 }
 function abrirMenu(){
   const t = $('#tiles'); t.innerHTML = '';
-  BUILTIN.forEach((f, i) => {
+  for (let i = 0, total = fasesVisiveis(); i < total; i++){
     const feito = prog.done.includes(i), trancada = i > prog.max && !modoTeste;
     const b = mk('button', 'tile' + (feito ? ' done' : '') + (trancada ? ' lock' : '') + (S.cur && S.cur.k === 'b' && S.cur.i === i ? ' atual' : ''));
     b.disabled = trancada;
@@ -55,7 +55,7 @@ function abrirMenu(){
     b.setAttribute('aria-label', tr('Fase ' + (i + 1)) + (feito ? ', ' + tr('concluída') + (estrelasFase[i] ? ', ' + tr(estrelasFase[i] === 1 ? '1 estrela de 3' : estrelasFase[i] + ' estrelas de 3') : '') : '') + (trancada ? ', ' + tr('bloqueada') : ''));
     b.onclick = () => { fechar('menu'); carregar({k: 'b', i}); };
     t.appendChild(b);
-  });
+  }
   renderDiario(); renderCustom(); atualizarInstalar(); renderTeste();
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
   $('#selHumor').value = humorPref;

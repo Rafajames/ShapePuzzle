@@ -33,7 +33,7 @@ function aplicarPecas(){
   if (S.sel && !visiveis(j).includes(S.sel)) S.sel = null;
   S.ultFila = j.fila; limparGhost(); renderTudo(); ajustar(); atualizarTuto();
 }
-{ const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, BUILTIN.length - 1)); }
+{ const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, LIMITE_FASES - 1)); }
 /* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
 const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
 let modoTeste = store.get('teste', false) === true;
@@ -53,13 +53,13 @@ function faseDoDia(data){
   return cacheDia[data];
 }
 function faseDe(cur){
-  if (cur.k === 'b') return BUILTIN[cur.i];
+  if (cur.k === 'b') return BUILTIN[cur.i] || (fasesGer[cur.i] ? {nome: 'fase' + (cur.i + 1), text: fasesGer[cur.i]} : undefined);
   if (cur.k === 'c') return custom[cur.i];
   if (cur.k === 'd') return faseDoDia(cur.data);
   return cur;
 }
 function chaveFase(cur){
-  if (cur.k === 'b') return 'b:' + BUILTIN[cur.i].nome;
+  if (cur.k === 'b') return 'b:' + faseDe(cur).nome;
   if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
   if (cur.k === 'd') return 'd:' + cur.data;
   if (cur.k === 's') return 's:' + cur.semana;
@@ -77,6 +77,7 @@ const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: '
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
+  if (cur.k === 'b' && cur.i >= FASES_FIXAS && cur.i < LIMITE_FASES && !fasesGer[cur.i]){ abrirFaseGer(cur, manter); return; }
   if (!faseDe(cur)) cur = {k: 'b', i: 0};
   const antes = manter ? {t: S.t, jog: S.jog} : null;
   if (cur.k !== 'r') Corrida.ativa = false;     /* escolher outra fase abandona a corrida */
@@ -89,6 +90,7 @@ function carregar(cur, manter){
   removerFlutuante(); limparGhost(); limparDica();
   $('#board').classList.remove('win');
   renderTudo(); ajustar(); atualizarTuto(); aplicarHumor(); avisoFila();
+  if (cur.k === 'b') prepararProximaGer(cur.i + 1);
 }
 function avisoFila(){
   const f = S.jogo.fila;
@@ -108,7 +110,7 @@ function renderTudo(){ renderTitulo(); renderBoard(); renderReserva(); renderDic
 
 function renderTitulo(){
   const c = S.cur, t1 = $('#titulo .t1'), t2 = $('#titulo .t2');
-  if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + BUILTIN.length)); }
+  if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + fasesVisiveis())); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
   else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
