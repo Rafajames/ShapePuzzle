@@ -61,6 +61,7 @@ function renderReserva(){
   });
   S.anim = null;
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">' + tr('Todas as peças estão no tabuleiro.') + '</div>';
+  if (S.venceu && S.acoesVit && S.acoesVit.length && !S.jogo.reserva.length){ const g = mk('div', 'vitAcoes'); S.acoesVit.forEach(a => g.appendChild(botaoAcao(a))); el.appendChild(g); }
   { const j = S.jogo, resta = j.reserva.length;
     $('#contagem').textContent = !resta ? '' : tr(j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes')); }
   fitFileiras(); atualizarTuto();

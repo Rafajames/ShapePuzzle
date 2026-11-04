@@ -34,6 +34,9 @@ html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#fff6
 html[data-tema="pixel"] :is(.btn,.ib):active{transform:translateY(3px);box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 -3px 0 rgba(29,43,83,.14)}
 html[data-tema="pixel"] .btn.pri{background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
 html[data-tema="pixel"] .btn.pri:hover{background:#e63b5f}
+html[data-tema="pixel"] .pill{background:#fff6dc;color:var(--txt)}
+html[data-tema="pixel"] .pill.rec{background:#ffeab0;color:var(--gold)}
+html[data-tema="pixel"] .pill.dc{color:var(--info)}
 html[data-tema="pixel"] .tile:disabled{background:#c9d3ea;color:#5c6890}
 html[data-tema="pixel"] .field,html[data-tema="pixel"] input,html[data-tema="pixel"] textarea,html[data-tema="pixel"] select{background:var(--fieldbg);color:var(--txt);font-weight:700}
 html[data-tema="pixel"] .field{text-transform:none}

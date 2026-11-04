@@ -55,6 +55,11 @@ function vencer(){
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
   setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
 }
+/* botão de uma ação da vitória (usado na tela de conclusão e no painel de baixo) */
+function botaoAcao(a){
+  const b = mk('button', 'btn ' + a.cls); if (a.icone) b.innerHTML = ic(a.icone); b.append(tr(a.txt));
+  b.onclick = () => { if (a.fn.fecha !== false) fechar('win'); a.fn(); }; return b;
+}
 function mostrarVitoria(res, reabrir){
   S.ultVit = res;
   const c = S.cur, acts = $('#winActs');
@@ -74,7 +79,8 @@ function mostrarVitoria(res, reabrir){
     : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
     : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j));
   acts.innerHTML = '';
-  const add = (txt, cls, fn, icone) => { const b = mk('button', 'btn ' + cls); if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
+  S.acoesVit = [];
+  const add = (txt, cls, fn, icone) => { S.acoesVit.push({txt, cls, fn, icone}); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
   if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo));
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
@@ -98,6 +104,8 @@ function mostrarVitoria(res, reabrir){
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);
   }
+  S.acoesVit.forEach(a => acts.appendChild(botaoAcao(a)));
+  renderReserva(); ajustar();         /* os mesmos botões também ficam embaixo, para quem fecha a tela de conclusão */
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
   if (!a11y.mov) Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
     const d = mk('i', 'conf'); d.style.background = cor;

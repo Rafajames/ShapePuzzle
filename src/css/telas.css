@@ -155,3 +155,12 @@ details.como .how{margin:10px 0 0}
 
 #festa{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
 #selo[role=button]{cursor:pointer;pointer-events:auto}
+
+/* ações depois de completar a fase (painel de baixo) */
+.vitAcoes{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
+.vitAcoes .btn{padding:10px 8px;font-size:13px;justify-content:center;text-align:center;line-height:1.2}
+.vitAcoes .btn.pri{grid-column:1/-1;padding:12px 8px;font-size:14px}
+.vitAcoes .btn:only-child{grid-column:1/-1}
+body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padding:8px 6px;font-size:12px}
+.vitAcoes .btn.pri ~ .btn:nth-child(even):last-child{grid-column:1/-1}
+.vitAcoes:not(:has(.pri)) .btn:nth-child(odd):last-child{grid-column:1/-1}

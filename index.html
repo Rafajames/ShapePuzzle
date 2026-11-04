@@ -343,6 +343,15 @@ details.como .how{margin:10px 0 0}
 
 #festa{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
 #selo[role=button]{cursor:pointer;pointer-events:auto}
+
+/* ações depois de completar a fase (painel de baixo) */
+.vitAcoes{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
+.vitAcoes .btn{padding:10px 8px;font-size:13px;justify-content:center;text-align:center;line-height:1.2}
+.vitAcoes .btn.pri{grid-column:1/-1;padding:12px 8px;font-size:14px}
+.vitAcoes .btn:only-child{grid-column:1/-1}
+body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padding:8px 6px;font-size:12px}
+.vitAcoes .btn.pri ~ .btn:nth-child(even):last-child{grid-column:1/-1}
+.vitAcoes:not(:has(.pri)) .btn:nth-child(odd):last-child{grid-column:1/-1}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -496,6 +505,9 @@ html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#fff6
 html[data-tema="pixel"] :is(.btn,.ib):active{transform:translateY(3px);box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 -3px 0 rgba(29,43,83,.14)}
 html[data-tema="pixel"] .btn.pri{background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
 html[data-tema="pixel"] .btn.pri:hover{background:#e63b5f}
+html[data-tema="pixel"] .pill{background:#fff6dc;color:var(--txt)}
+html[data-tema="pixel"] .pill.rec{background:#ffeab0;color:var(--gold)}
+html[data-tema="pixel"] .pill.dc{color:var(--info)}
 html[data-tema="pixel"] .tile:disabled{background:#c9d3ea;color:#5c6890}
 html[data-tema="pixel"] .field,html[data-tema="pixel"] input,html[data-tema="pixel"] textarea,html[data-tema="pixel"] select{background:var(--fieldbg);color:var(--txt);font-weight:700}
 html[data-tema="pixel"] .field{text-transform:none}
@@ -3455,7 +3467,7 @@ function carregar(cur, manter){
   S.cur = cur; S.jogo = novoJogo(faseDe(cur).text, filaPadraoDe(cur), escolhaPecas(cur));
   if (S.n !== S.jogo.n){ S.n = S.jogo.n; montarBoard(); }
   $('#selo').hidden = true;
-  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.ultVit = null; S.msgCamp = ''; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
+  S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; S.drag = null; S.venceu = false; S.ultVit = null; S.acoesVit = []; S.msgCamp = ''; S.jog = 0; S.dicas = 0; S.ultimaIdu = 0; S.hist = []; S.dicaNivel = 0; S.dicaSig = ''; S.dicaConta = ''; S.dicaPeca = 0; S.solVista = false; if (S.sol) pararSolucao();
   S.t = {acum: 0, ult: performance.now(), ativo: ehCamp(cur)};
   if (antes){ S.t = antes.t; S.jog = antes.jog; }
   removerFlutuante(); limparGhost(); limparDica();
@@ -3641,6 +3653,7 @@ function renderReserva(){
   });
   S.anim = null;
   if (!S.jogo.reserva.length) el.innerHTML = '<div class="vazio">' + tr('Todas as peças estão no tabuleiro.') + '</div>';
+  if (S.venceu && S.acoesVit && S.acoesVit.length && !S.jogo.reserva.length){ const g = mk('div', 'vitAcoes'); S.acoesVit.forEach(a => g.appendChild(botaoAcao(a))); el.appendChild(g); }
   { const j = S.jogo, resta = j.reserva.length;
     $('#contagem').textContent = !resta ? '' : tr(j.fila === 1 ? 'Peça ' + (j.total - resta + 1) + ' de ' + j.total : resta + (resta === 1 ? ' restante' : ' restantes')); }
   fitFileiras(); atualizarTuto();
@@ -3852,6 +3865,11 @@ function vencer(){
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
   setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
 }
+/* botão de uma ação da vitória (usado na tela de conclusão e no painel de baixo) */
+function botaoAcao(a){
+  const b = mk('button', 'btn ' + a.cls); if (a.icone) b.innerHTML = ic(a.icone); b.append(tr(a.txt));
+  b.onclick = () => { if (a.fn.fecha !== false) fechar('win'); a.fn(); }; return b;
+}
 function mostrarVitoria(res, reabrir){
   S.ultVit = res;
   const c = S.cur, acts = $('#winActs');
@@ -3871,7 +3889,8 @@ function mostrarVitoria(res, reabrir){
     : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
     : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j));
   acts.innerHTML = '';
-  const add = (txt, cls, fn, icone) => { const b = mk('button', 'btn ' + cls); if (icone) b.innerHTML = ic(icone); b.append(tr(txt)); b.onclick = () => { if (fn.fecha !== false) fechar('win'); fn(); }; acts.appendChild(b); };
+  S.acoesVit = [];
+  const add = (txt, cls, fn, icone) => { S.acoesVit.push({txt, cls, fn, icone}); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
   if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo));
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
@@ -3895,6 +3914,8 @@ function mostrarVitoria(res, reabrir){
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);
   }
+  S.acoesVit.forEach(a => acts.appendChild(botaoAcao(a)));
+  renderReserva(); ajustar();         /* os mesmos botões também ficam embaixo, para quem fecha a tela de conclusão */
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
   if (!a11y.mov) Object.values(COR).forEach((cor, n) => { for (let i = 0; i < 8; i++){
     const d = mk('i', 'conf'); d.style.background = cor;
@@ -5018,7 +5039,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.2';
+const VERSAO = '2026.11.05.3';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
