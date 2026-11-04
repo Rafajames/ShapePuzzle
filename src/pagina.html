@@ -65,19 +65,31 @@
 </div>
 <div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 
-<!-- Abertura -->
+<!-- Tela inicial -->
 <div class="ov on" id="ov-splash">
-  <div class="card">
+  <div class="card home">
     <div id="logo"></div>
     <h1 style="text-align:center">Shape Puzzle</h1>
-    <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
-    <ul class="how">
-      <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
-      <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
-      <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
-    </ul>
+    <p style="text-align:center">Preencha todo o tabuleiro com as peças.</p>
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
-    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px">Jogar</button>
+    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
+    <p id="jogarSub" class="jogarSub" hidden></p>
+    <div class="homeGrade">
+      <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
+      <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
+      <button class="btn" id="hInf" data-i="infinity">Modo infinito</button>
+      <button class="btn" id="hCamp" data-i="trophy">Campeonatos</button>
+      <button class="btn" id="hEst" data-i="stats">Estatísticas</button>
+      <button class="btn" id="hMenu" data-i="menu">Menu</button>
+    </div>
+    <details class="como">
+      <summary>Como jogar</summary>
+      <ul class="how">
+        <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
+        <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+        <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
+      </ul>
+    </details>
     <p style="text-align:center;margin-top:12px;font-size:12px">♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.</p>
   </div>
 </div>
@@ -86,6 +98,7 @@
 <div class="ov" id="ov-menu">
   <div class="card">
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
+    <button class="ib x" id="btnInicio" data-i="home" aria-label="Tela inicial" title="Tela inicial" style="right:56px"></button>
     <h1>Menu</h1>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>

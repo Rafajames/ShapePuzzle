@@ -327,6 +327,18 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 @keyframes aFlip{from{transform:scaleX(-1)}to{transform:none}}
 main{touch-action:pan-y}
 
+
+.home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
+.homeGrade{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.homeGrade .btn{justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
+.homeGrade .btn svg.i{flex:none}
+details.como{margin-top:14px}
+details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
+details.como>summary::-webkit-details-marker{display:none}
+details.como .how{margin:10px 0 0}
+@media (max-height:640px){.home #logo{display:none}}
+
+.home #btnJogar{margin-top:14px}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -491,19 +503,31 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
 </div>
 <div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 
-<!-- Abertura -->
+<!-- Tela inicial -->
 <div class="ov on" id="ov-splash">
-  <div class="card">
+  <div class="card home">
     <div id="logo"></div>
     <h1 style="text-align:center">Shape Puzzle</h1>
-    <p style="text-align:center">Preencha todo o tabuleiro 5×5 com as peças.</p>
-    <ul class="how">
-      <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
-      <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
-      <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
-    </ul>
+    <p style="text-align:center">Preencha todo o tabuleiro com as peças.</p>
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
-    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px">Jogar</button>
+    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
+    <p id="jogarSub" class="jogarSub" hidden></p>
+    <div class="homeGrade">
+      <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
+      <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
+      <button class="btn" id="hInf" data-i="infinity">Modo infinito</button>
+      <button class="btn" id="hCamp" data-i="trophy">Campeonatos</button>
+      <button class="btn" id="hEst" data-i="stats">Estatísticas</button>
+      <button class="btn" id="hMenu" data-i="menu">Menu</button>
+    </div>
+    <details class="como">
+      <summary>Como jogar</summary>
+      <ul class="how">
+        <li><b>1</b><span>Arraste as peças para o tabuleiro — ou toque numa peça e depois na casa onde quer encaixá-la.</span></li>
+        <li><b>2</b><span data-th>Gire e espelhe a peça para ela caber (no celular: dois toques giram a peça e deslizar o dedo espelha; no computador: botões ou teclas <kbd>R</kbd> e <kbd>T</kbd>).</span></li>
+        <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
+      </ul>
+    </details>
     <p style="text-align:center;margin-top:12px;font-size:12px">♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.</p>
   </div>
 </div>
@@ -512,6 +536,7 @@ html[data-tema="madeira"] #flut{filter:drop-shadow(0 8px 10px rgba(20,8,0,.6))}
 <div class="ov" id="ov-menu">
   <div class="card">
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
+    <button class="ib x" id="btnInicio" data-i="home" aria-label="Tela inicial" title="Tela inicial" style="right:56px"></button>
     <h1>Menu</h1>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
@@ -1103,6 +1128,11 @@ en: {
   "Passo 3: a peça amarela precisa ser espelhada. Toque nela e use Espelhar (ou deslize o dedo fora dela).": "Step 3: the yellow piece needs to be flipped. Tap it and use Flip (or swipe your finger outside it).",
   "Passo 3: a peça amarela precisa ser espelhada. Clique nela e use Espelhar (ou aperte T).": "Step 3: the yellow piece needs to be flipped. Click it and use Flip (or press T).",
   "Pronto, você já sabe o básico! Complete o quadro. Se errar, toque numa peça já colocada para tirá-la, ou use Desfazer.": "Done, you know the basics! Fill the board. If you slip up, tap a placed piece to take it back, or use Undo.",
+  "Continuar": "Continue",
+  "Como jogar": "How to play",
+  "Sua fase em andamento": "Your level in progress",
+  "Preencha todo o tabuleiro com as peças.": "Fill the whole board with the pieces.",
+  "Tela inicial": "Home screen",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1708,6 +1738,11 @@ es: {
   "Passo 3: a peça amarela precisa ser espelhada. Toque nela e use Espelhar (ou deslize o dedo fora dela).": "Paso 3: la pieza amarilla necesita voltearse. Tócala y usa Voltear (o desliza el dedo fuera de ella).",
   "Passo 3: a peça amarela precisa ser espelhada. Clique nela e use Espelhar (ou aperte T).": "Paso 3: la pieza amarilla necesita voltearse. Haz clic en ella y usa Voltear (o pulsa T).",
   "Pronto, você já sabe o básico! Complete o quadro. Se errar, toque numa peça já colocada para tirá-la, ou use Desfazer.": "¡Listo, ya sabes lo básico! Completa el tablero. Si te equivocas, toca una pieza colocada para quitarla, o usa Deshacer.",
+  "Continuar": "Continuar",
+  "Como jogar": "Cómo jugar",
+  "Sua fase em andamento": "Tu nivel en curso",
+  "Preencha todo o tabuleiro com as peças.": "Llena todo el tablero con las piezas.",
+  "Tela inicial": "Pantalla de inicio",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2822,6 +2857,7 @@ function aplicarIdioma(){
     const v = r.el.getAttribute(r.a); if (v !== r.shown && v !== r.orig) continue;
     r.el.setAttribute(r.a, tr(r.orig)); r.shown = r.el.getAttribute(r.a);
   }
+  if (window.__pronto) renderInicio();
   for (const r of REG.html){ if (r.el.innerHTML !== r.shown && r.el.innerHTML !== r.orig) continue; r.el.innerHTML = tr(r.orig); r.shown = r.el.innerHTML; }
 }
 
@@ -2883,6 +2919,7 @@ const ICONES = {
   code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
   share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
   infinity:'<path d="M12 12c-2-3-3.5-4.5-5.5-4.5a4.5 4.5 0 0 0 0 9c2 0 3.5-1.500 5.500-4.500zm0 0c2 3 3.500 4.500 5.500 4.500a4.500 4.500 0 0 0 0-9c-2 0-3.500 1.500-5.500 4.500z"/>',
+  home:'<path d="M4 11l8-7 8 7M6 10v10h12V10"/>',
   stats:'<path d="M5 20V11M12 20V4M19 20v-7"/>',
   qr:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/>',
   eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -3332,6 +3369,7 @@ function carregar(cur, manter){
 }
 function avisoFila(){
   const f = S.jogo.fila;
+  if ($('#ov-splash').classList.contains('on')){ S.ultFila = f; return; }   /* a tela inicial está aberta: o aviso espera a pessoa entrar */
   if (pecasPref !== 'auto' && S.jogo.filaAuto){ S.ultFila = f; return; }
   if (S.jogo.filaAuto){
     const ch = 'avFila' + f;
@@ -4100,8 +4138,27 @@ function iconeMusica(){
 $('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
+function sairDaAbertura(){ Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); }
+$('#btnJogar').onclick = () => { sairDaAbertura(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
   if (OFF.pendente){ const id = OFF.pendente; OFF.pendente = null; abrirOffV(id); } };
+/* atalhos da tela inicial: se há um convite esperando, ele vem primeiro */
+const atalhoInicio = fn => () => { if (CP.convite || OFF.pendente) return $('#btnJogar').onclick(); sairDaAbertura(); fn(); };
+$('#hDia').onclick = atalhoInicio(() => $('#btnDia').onclick());
+$('#hSem').onclick = atalhoInicio(() => $('#btnSem').onclick());
+$('#hInf').onclick = atalhoInicio(() => $('#btnInf').onclick());
+$('#hCamp').onclick = atalhoInicio(() => $('#btnCamp').onclick());
+$('#hEst').onclick = atalhoInicio(() => $('#btnEst').onclick());
+$('#hMenu').onclick = atalhoInicio(() => abrirMenu());
+$('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
+/* "Continuar" quando já há o que continuar; mostra qual fase */
+function renderInicio(){
+  if (!S.jogo) return;
+  const volta = prog.done.length > 0 || !!andamento;
+  $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
+  const sub = $('#jogarSub'), c = S.cur;
+  const txt = !volta ? '' : c && c.k === 'b' ? tr('Fase ' + (c.i + 1)) : c && c.k === 'u' ? '' : tr('Sua fase em andamento');
+  sub.textContent = txt; sub.hidden = !txt;
+}
 
 /* ---- menu ---- */
 function renderDiario(){
@@ -4757,7 +4814,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.04.1';
+const VERSAO = '2026.11.04.2';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5289,6 +5346,7 @@ const andamento = linkInicial ? null : lerAndamento();
 const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
 if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
+renderInicio();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
 </body>

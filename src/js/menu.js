@@ -13,8 +13,27 @@ function iconeMusica(){
 $('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-$('#btnJogar').onclick = () => { Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
+function sairDaAbertura(){ Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); }
+$('#btnJogar').onclick = () => { sairDaAbertura(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
   if (OFF.pendente){ const id = OFF.pendente; OFF.pendente = null; abrirOffV(id); } };
+/* atalhos da tela inicial: se há um convite esperando, ele vem primeiro */
+const atalhoInicio = fn => () => { if (CP.convite || OFF.pendente) return $('#btnJogar').onclick(); sairDaAbertura(); fn(); };
+$('#hDia').onclick = atalhoInicio(() => $('#btnDia').onclick());
+$('#hSem').onclick = atalhoInicio(() => $('#btnSem').onclick());
+$('#hInf').onclick = atalhoInicio(() => $('#btnInf').onclick());
+$('#hCamp').onclick = atalhoInicio(() => $('#btnCamp').onclick());
+$('#hEst').onclick = atalhoInicio(() => $('#btnEst').onclick());
+$('#hMenu').onclick = atalhoInicio(() => abrirMenu());
+$('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
+/* "Continuar" quando já há o que continuar; mostra qual fase */
+function renderInicio(){
+  if (!S.jogo) return;
+  const volta = prog.done.length > 0 || !!andamento;
+  $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
+  const sub = $('#jogarSub'), c = S.cur;
+  const txt = !volta ? '' : c && c.k === 'b' ? tr('Fase ' + (c.i + 1)) : c && c.k === 'u' ? '' : tr('Sua fase em andamento');
+  sub.textContent = txt; sub.hidden = !txt;
+}
 
 /* ---- menu ---- */
 function renderDiario(){

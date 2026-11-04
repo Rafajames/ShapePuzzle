@@ -140,3 +140,15 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 @keyframes aFlip{from{transform:scaleX(-1)}to{transform:none}}
 main{touch-action:pan-y}
 
+
+.home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
+.homeGrade{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.homeGrade .btn{justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
+.homeGrade .btn svg.i{flex:none}
+details.como{margin-top:14px}
+details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
+details.como>summary::-webkit-details-marker{display:none}
+details.como .how{margin:10px 0 0}
+@media (max-height:640px){.home #logo{display:none}}
+
+.home #btnJogar{margin-top:14px}

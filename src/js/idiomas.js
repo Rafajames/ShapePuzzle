@@ -62,6 +62,7 @@ function aplicarIdioma(){
     const v = r.el.getAttribute(r.a); if (v !== r.shown && v !== r.orig) continue;
     r.el.setAttribute(r.a, tr(r.orig)); r.shown = r.el.getAttribute(r.a);
   }
+  if (window.__pronto) renderInicio();
   for (const r of REG.html){ if (r.el.innerHTML !== r.shown && r.el.innerHTML !== r.orig) continue; r.el.innerHTML = tr(r.orig); r.shown = r.el.innerHTML; }
 }
 

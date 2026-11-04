@@ -97,7 +97,7 @@ with sync_playwright() as pw:
     check(not sobras_pt, 'nada em inglês/espanhol sobrando: ' + str(sobras_pt[:5]))
     # recarregar mantém a escolha
     pg.select_option('#selIdioma', 'en'); pg.wait_for_timeout(200); pg.reload(); pg.wait_for_timeout(300)
-    check(pg.evaluate('lang') == 'en' and pg.inner_text('#btnJogar').strip() == 'Play', 'depois de recarregar continua em inglês')
+    check(pg.evaluate('lang') == 'en' and pg.inner_text('#btnJogar').strip() in ('Play', 'Continue'), 'depois de recarregar continua em inglês')
     ctx.close(); b.close()
 print('erros de página:', erros)
 if erros: falhas.append('erros de página')

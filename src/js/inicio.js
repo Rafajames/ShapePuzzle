@@ -35,4 +35,5 @@ const andamento = linkInicial ? null : lerAndamento();
 const primeiraVez = !linkInicial && !andamento && !OFF.pendente && !CP.convite && !tuto.fim && !prog.done.length;
 if (primeiraVez) abrirTutorial(); else carregar(linkInicial || (andamento && andamento.cur) || {k: 'b', i: Math.min(prog.max, Math.max(0, BUILTIN.length - 1))});
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
+renderInicio();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};

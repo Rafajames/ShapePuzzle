@@ -92,6 +92,7 @@ function carregar(cur, manter){
 }
 function avisoFila(){
   const f = S.jogo.fila;
+  if ($('#ov-splash').classList.contains('on')){ S.ultFila = f; return; }   /* a tela inicial está aberta: o aviso espera a pessoa entrar */
   if (pecasPref !== 'auto' && S.jogo.filaAuto){ S.ultFila = f; return; }
   if (S.jogo.filaAuto){
     const ch = 'avFila' + f;

@@ -98,6 +98,7 @@ A cada publicação o GitHub roda todos os testes (lógica das fases, regras do 
 
 - **Desfazer**: botão no topo (ou tecla Z) tira a última peça encaixada.
 - **Peças por vez**: no menu, automático (5 ou mais), de 1 a 6 ou "Todas" — vale para todas as fases; campeonatos e tutorial mantêm a regra deles.
+- **Tela inicial**: botão Continuar (mostra a fase em que você parou) e atalhos para fase do dia, desafio da semana, modo infinito, campeonatos, estatísticas e menu; "Como jogar" fica recolhido. No menu, o ícone da casinha volta para ela. Não exige login.
 - **Tutorial inicial**: uma fase de ensino guiada (selecionar, girar, espelhar, encaixar) antes da Fase 1, só na primeira vez; dá para rever em Menu → Jogo → "Rever o tutorial".
 - **Estrelas**: cada fase vale até 3 estrelas (sem dica e sem recolocar peças = 3). Aparecem ao vencer e no menu.
 - **Vibração leve** no celular (pode desligar no menu).
