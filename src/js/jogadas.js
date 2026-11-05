@@ -44,9 +44,9 @@ function vencer(){
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
-  contaAgendar();
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
   if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
+  aposVitoriaConta();
   if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
@@ -105,6 +105,7 @@ function mostrarVitoria(res, reabrir){
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);
   }
+  add('Início', '', irInicio, 'home');
   S.acoesVit.forEach(a => acts.appendChild(botaoAcao(a)));
   renderReserva(); ajustar();         /* os mesmos botões também ficam embaixo, para quem fecha a tela de conclusão */
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());

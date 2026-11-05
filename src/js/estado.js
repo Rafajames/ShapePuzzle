@@ -18,6 +18,7 @@ let humorPref = store.get('humor', 'auto');
 let vibraOn = store.get('vibra', true) !== false;
 const vibrar = p => { if (vibraOn && navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} };
 let estrelasFase = store.get('est', {});
+let cart = limparCart(store.get('cart', null));   /* carteira de estrelas (ver logica-conta.js) */
 /* 3 estrelas: sem dica e sem recolocar peças; 2: sem dica e até 50% de jogadas a mais; 1: concluiu */
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');

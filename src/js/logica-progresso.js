@@ -58,6 +58,7 @@ function limparBackup(env){
       if (isObj(d.inf.feitas) && d.inf.feitas[k] > 0) o.inf.feitas[k] = inteiro(d.inf.feitas[k], 0, 1e7);
       const p = isObj(d.inf.porNivel) ? d.inf.porNivel[k] : null;
       if (isObj(p) && k !== 'crescente') o.inf.porNivel[k] = {n: inteiro(p.n, 0, 1e7), t: inteiro(p.t, 0, 864e7), est: inteiro(p.est, 0, 1e8), e3: inteiro(p.e3, 0, 1e7)}; } }
+  if (isObj(d.cart)) o.cart = limparCart(d.cart);
   if (isObj(d.cfg)){ const c = d.cfg, q = {};
     if (['pt', 'en', 'es'].includes(c.lang)) q.lang = c.lang;
     if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
@@ -98,6 +99,7 @@ function juntarDados(a, b){
     for (const k of Object.keys(b.inf.porNivel)){ const p = x.porNivel[k], q = b.inf.porNivel[k];
       x.porNivel[k] = p ? {n: Math.max(p.n, q.n), t: p.t && q.t ? Math.min(p.t, q.t) : (p.t || q.t), est: Math.max(p.est, q.est), e3: Math.max(p.e3, q.e3)} : q; }
     o.inf = x; }
+  if (b.cart) o.cart = juntarCart(o.cart, b.cart);
   return o;
 }
 /* Soma de verificação simples (FNV-1a) para perceber um código copiado pela metade. */

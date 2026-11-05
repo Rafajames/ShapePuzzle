@@ -122,13 +122,6 @@
           ".validate": false
         }
       }
-    },
-    "foto": {
-      "$uid": {
-        ".read": true,
-        ".write": "auth != null && auth.uid === $uid",
-        ".validate": "newData.isString() && newData.val().length <= 12000 && newData.val().matches(/^data:image\\/jpeg;base64,[A-Za-z0-9+\\/=]+$/)"
-      }
     }
   }
 }

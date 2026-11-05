@@ -1,6 +1,6 @@
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.4';
+const VERSAO = '2026.11.05.5';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};

@@ -10,7 +10,8 @@
 #titulo{flex:1;min-width:0;text-align:center;line-height:1.15;padding:0 4px}
 #titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media (max-width:350px){.top{gap:4px}.nav{gap:4px}.top .ib{width:40px;height:40px;border-radius:12px}#titulo .t1{font-size:16px}}
+@media (max-width:420px){.top{gap:4px}.nav{gap:2px}.top .ib{width:36px;height:40px;border-radius:12px}#titulo{padding:0 2px}}
+@media (max-width:350px){.top{gap:3px}.nav{gap:2px}#titulo .t1{font-size:15px}}
 
 /* estatísticas */
 .stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap}

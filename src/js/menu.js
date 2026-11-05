@@ -24,7 +24,8 @@ $('#hInf').onclick = atalhoInicio(() => $('#btnInf').onclick());
 $('#hCamp').onclick = atalhoInicio(() => $('#btnCamp').onclick());
 $('#hEst').onclick = atalhoInicio(() => $('#btnEst').onclick());
 $('#hMenu').onclick = atalhoInicio(() => abrirMenu());
-$('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
+const irInicio = () => { fecharTodos('ov-splash'); renderInicio(); $('#ov-splash').classList.add('on'); };
+$('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
   if (window.__pronto) renderConta();

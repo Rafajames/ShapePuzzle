@@ -90,12 +90,16 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 - **Estatísticas** (Menu → Estatísticas): tempo jogado, vitórias, jogadas, dicas, fases e estrelas, melhores tempos, sequência de dias da fase do dia, progresso no infinito e fases criadas. Tudo fica só no aparelho.
 - **Backup do progresso** (Menu → Backup do progresso): gera um **código** (copiar/colar) ou um **arquivo** `.json` com progresso, estrelas, recordes, fases criadas, estatísticas, infinito e ajustes. Para restaurar, cole o código ou escolha o arquivo e decida entre **Juntar** (mantém o melhor dos dois lados e não mexe nos ajustes do aparelho) ou **Substituir**. O backup **nunca** leva senhas, logins de organizador nem o modo de teste, e o código tem verificação contra cópia incompleta.
 
-## Conta (login opcional com o Google)
+## Conta (login opcional com o Google) e área do usuário
 
 - Na tela inicial, **Entrar com Google** (opcional): o jogo guarda o progresso na nuvem, **junta** o que já existe no aparelho com o que está na nuvem (nunca se perde nada) e permite continuar em outro aparelho. Sem conta, o jogo funciona igual.
-- **Nome de usuário** editável (2 a 20 caracteres; também vira o nome nos campeonatos), **avatar** (12 avatares em pixel art ou uma foto reduzida para 64×64) e **moldura** (Madeira liberada; Ouro, Pixel e Festa já aparecem com cadeado — o espaço para liberar depois por conquistas, loja ou brindes).
-- Dados na nuvem: `pub/<uid>` (nome, avatar, moldura, fases concluídas — público), `foto/<uid>` (público) e `priv/<uid>` (progresso, só o dono lê). O botão **Apagar meus dados da nuvem** remove tudo. As regras estão em `firebase-rules.json`.
-- O Firebase só é baixado quando a pessoa usa a conta (`src/js/conta.js`). Console: ativar **Authentication → Google** e liberar `rafajames.github.io` em **Authorized domains**. Teste: `tests/ui_conta.py` (Google e banco simulados).
+- **Apelido:** a primeira escolha é grátis; qualquer troca depois custa 30 estrelas. Vale também como nome nos campeonatos.
+- **Estrelas** (moeda): vêm das estrelas das fases (1 a 3), +2 por fase do dia, +5 por desafio da semana e prêmios de conquistas (mais tarde, anúncios premiados). O saldo nunca é guardado: é recalculado (`src/js/logica-conta.js`); só gastos, ganhos avulsos e conquistas resgatadas ficam na carteira (`cart`), que vai junto no backup e na nuvem.
+- **Avatares** (24, em pixel art gerados por código) e **molduras** (8): uns são livres, outros se compram com estrelas e outros são prêmio de conquista (14 conquistas). Sem foto: o jogo não coleta imagens.
+- **Área do usuário:** coleção com contadores, conquistas com barra de progresso e de onde vêm as estrelas.
+- **Início:** botão de casinha na barra da fase e na tela de conclusão.
+- Dados na nuvem: `pub/<uid>` (apelido, avatar, moldura, fases concluídas — público) e `priv/<uid>` (progresso e carteira, só o dono lê). **Apagar minha conta e meus dados** confirma com o Google, remove tudo e apaga a conta do Firebase. As regras estão em `firebase-rules.json`.
+- O Firebase só é baixado quando a pessoa usa a conta (`src/js/conta.js`). Console: ativar **Authentication → Google** e liberar `rafajames.github.io` em **Authorized domains**. Testes: `tests/conta-logica.js` e `tests/ui_conta.py` (Google e banco simulados).
 
 ## Testes automáticos
 

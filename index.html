@@ -99,7 +99,8 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 #titulo{flex:1;min-width:0;text-align:center;line-height:1.15;padding:0 4px}
 #titulo .t1{display:block;font-weight:700;font-size:18px;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #titulo .t2{display:block;font-size:12px;color:var(--mut);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media (max-width:350px){.top{gap:4px}.nav{gap:4px}.top .ib{width:40px;height:40px;border-radius:12px}#titulo .t1{font-size:16px}}
+@media (max-width:420px){.top{gap:4px}.nav{gap:2px}.top .ib{width:36px;height:40px;border-radius:12px}#titulo{padding:0 2px}}
+@media (max-width:350px){.top{gap:3px}.nav{gap:2px}#titulo .t1{font-size:15px}}
 
 /* estatísticas */
 .stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap}
@@ -353,24 +354,40 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .vitAcoes .btn.pri ~ .btn:nth-child(even):last-child{grid-column:1/-1}
 .vitAcoes:not(:has(.pri)) .btn:nth-child(odd):last-child{grid-column:1/-1}
 
-/* conta, avatar e molduras */
+/* conta, avatar, molduras e área do usuário */
 .contaChip{width:100%;margin-top:12px;justify-content:flex-start;padding:7px 12px;gap:10px;text-align:left}
-.contaChip small{margin-left:auto;color:var(--mut);font-size:12px}
+.contaChip small{margin-left:auto;color:var(--mut);font-size:12px;white-space:nowrap}
 .contaChip .cnN{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:4px;vertical-align:middle}
-.av svg,.av img{display:block;width:100%;height:100%;image-rendering:pixelated}
+.av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:5px;vertical-align:middle}
+.av svg{display:block;width:100%;height:100%;image-rendering:pixelated}
 .av.m-madeira{box-shadow:0 0 0 2px #7a4b1f,0 0 0 4px #e0b36a}
 .av.m-ouro{box-shadow:0 0 0 2px #b8860b,0 0 0 4px #ffd84d,0 0 9px #ffd84d}
 .av.m-pixel{box-shadow:0 0 0 3px #1b2a49,0 0 0 5px #5ec2ff}
 .av.m-festa{box-shadow:0 0 0 2px #e5484d,0 0 0 4px #e5a50a,0 0 0 6px #3e63dd}
-.cnTopo{display:flex;align-items:center;gap:14px;margin:8px 0 4px}
+.av.m-gelo{box-shadow:0 0 0 2px #7fd4ff,0 0 0 4px #e6f7ff,0 0 9px #7fd4ff}
+.av.m-fogo{box-shadow:0 0 0 2px #c2260f,0 0 0 4px #ff9a1f,0 0 9px #ff6a00}
+.av.m-arco{box-shadow:0 0 0 2px #e5484d,0 0 0 4px #e5a50a,0 0 0 6px #46a758}
+.cnTopo{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
 .cnTopo .av{margin:8px}
-.cnQuem{display:flex;flex-direction:column;min-width:0}.cnQuem b{font-size:18px;overflow:hidden;text-overflow:ellipsis}.cnQuem small{color:var(--mut);font-size:12px}
-.cnGrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px}
-.cnGrade button{position:relative;display:flex;justify-content:center;padding:2px;border-radius:14px;border:2px solid transparent;background:transparent;cursor:pointer;color:inherit}
+.cnQuem{display:flex;flex-direction:column;min-width:0;flex:1}.cnQuem b{font-size:18px;overflow:hidden;text-overflow:ellipsis}.cnQuem small{color:var(--mut);font-size:12px}
+.cnSaldo{display:flex;flex-direction:column;align-items:center;padding:6px 12px;border-radius:14px;border:1px solid var(--goldln);background:var(--t1);flex:none}
+.cnSaldo b{font-size:22px;color:var(--gold);line-height:1.1}.cnSaldo b::before{content:'★ '}.cnSaldo small{font-size:11px;color:var(--mut)}
+.cnBem,.cnTeaser{margin:10px 0;padding:10px 12px;border-radius:12px;border:1px solid var(--goldln);background:var(--t1);font-size:14px}
+.cnDica{margin:8px 0 0;font-size:12px;color:var(--mut)}
+#ov-conta details.sec>summary span{min-width:0}
+.cnGrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
+.cnGrade button{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 2px 4px;border-radius:14px;border:2px solid transparent;background:transparent;cursor:pointer;color:inherit}
 .cnGrade button[aria-checked=true]{border-color:var(--accent);background:var(--t1)}
-.cnGrade button:disabled{opacity:.55;cursor:default}
-.cnLock{position:absolute;right:4px;bottom:4px;display:flex;background:var(--card1);border-radius:50%;padding:2px}.cnLock svg{width:13px;height:13px}
+.cnGrade button.trava .av{opacity:.5}
+.cnPreco{font-size:11px;font-weight:700;color:var(--gold);min-height:14px;display:flex;align-items:center}.cnPreco svg{width:13px;height:13px;color:var(--mut)}
+.cnConq,.cnOrigem{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cnConq li{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--t0);display:grid;gap:4px}
+.cnConq li.ok{border-color:var(--goldln)}
+.cnQt{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.cnQp{font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap}
+.cnConq small{color:var(--mut);font-size:12px}.cnQv{justify-self:end}
+.cnBarra{height:6px;border-radius:3px;background:var(--t2);overflow:hidden}.cnBarra i{display:block;height:100%;background:var(--accent)}
+.cnConq li.ok .cnBarra i{background:var(--gold)}
+.cnOrigem li{display:flex;justify-content:space-between;gap:8px;font-size:14px}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -552,6 +569,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
 <div id="app">
   <header class="top">
     <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
+    <button class="ib" id="btnCasa" data-i="home" aria-label="Tela inicial" title="Tela inicial"></button>
     <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 50</span></div>
     <div class="nav">
       <button class="ib" id="btnDesfazer" data-i="undo" aria-label="Desfazer (Z)" title="Desfazer (Z)" disabled></button>
@@ -1014,29 +1032,41 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
   </div>
 </div>
 
-<!-- Conta (login opcional com o Google) -->
+<!-- Conta (login opcional com o Google) e área do usuário -->
 <div class="ov" id="ov-conta">
   <div class="card">
     <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
     <h1>Sua conta</h1>
     <div id="cnFora">
-      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
-      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.</p>
+      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
+      <p id="cnTeaser" class="cnTeaser" hidden></p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
       <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
     </div>
     <div id="cnDentro" hidden>
-      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div></div>
-      <h2>Nome de usuário</h2>
-      <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Nome de usuário"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
-      <h2>Avatar</h2>
-      <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
-      <div class="acts"><button class="btn sm" id="cnFoto" data-i="camera">Usar uma foto</button></div>
-      <input type="file" id="cnArq" accept="image/*" hidden>
-      <h2>Moldura</h2>
-      <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
-      <h2>Progresso na nuvem</h2>
-      <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
-      <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar meus dados da nuvem</button></div>
+      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
+      <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
+      <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
+        <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
+        <p class="cnDica" id="cnNomeDica"></p>
+      </div></details>
+      <details class="sec" id="cnSecAv"><summary data-i="user"><span id="cnTitAv">Avatares</span></summary><div class="sb">
+        <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
+      </div></details>
+      <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
+        <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      </div></details>
+      <details class="sec" id="cnSecConq"><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
+        <ul class="cnConq" id="cnConq"></ul>
+      </div></details>
+      <details class="sec" id="cnSecEst"><summary data-i="stats"><span>De onde vêm minhas estrelas</span></summary><div class="sb">
+        <ul class="cnOrigem" id="cnOrigem"></ul>
+        <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
+      </div></details>
+      <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
+        <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
+        <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
+      </div></details>
     </div>
     <p class="aviso" id="cnAviso"></p>
   </div>
@@ -1316,6 +1346,70 @@ en: {
   "Nome salvo.": "Name saved.",
   "Foto salva.": "Photo saved.",
   "Não consegui usar essa imagem. Tente outra.": "I couldn't use that image. Try another.",
+  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.": "Signing in is optional. With a Google account you keep your progress in the cloud, continue on another device, collect stars to unlock avatars and frames and, soon, appear in the ranking and challenge friends.",
+  "Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.": "Your nickname and avatar are visible to other players. Your email and password are never shown to anyone.",
+  "Bem-vindo!": "Welcome!",
+  "Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.": "Choose your nickname. The first choice is free; after that, changing it costs stars.",
+  "estrelas": "stars",
+  "Apelido": "Nickname",
+  "Avatares": "Avatars",
+  "Molduras": "Frames",
+  "Conquistas": "Achievements",
+  "De onde vêm minhas estrelas": "Where my stars come from",
+  "Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.": "Play levels, the daily level and the weekly challenge, and complete achievements to earn more.",
+  "Conta e nuvem": "Account and cloud",
+  "Apagar minha conta e meus dados": "Delete my account and data",
+  "Início": "Home",
+  "Estrelas das fases": "Stars from levels",
+  "Outros ganhos": "Other earnings",
+  "Gastas": "Spent",
+  "Jogue a fase do dia {n} dias seguidos": "Play the daily level {n} days in a row",
+  "Conclua {n} fases no modo infinito": "Finish {n} levels in infinite mode",
+  "Conquista: {nome}! +{n} ★": "Achievement: {nome}! +{n} ★",
+  "{k} conquistas novas! +{n} ★": "{k} new achievements! +{n} ★",
+  "prêmio de conquista": "achievement reward",
+  "custa {n} estrelas": "costs {n} stars",
+  "Este item é prêmio da conquista “{nome}”.": "This item is the reward for the “{nome}” achievement.",
+  "Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.": "You need {n} more ★ for this item. Play levels, the daily level and the weekly challenge to earn more.",
+  "Liberar “{nome}” por {n} ★? Você tem {s} ★.": "Unlock “{nome}” for {n} ★? You have {s} ★.",
+  "Liberado! Sobraram {n} ★.": "Unlocked! {n} ★ left.",
+  "Você já tem {n} ★ esperando por você.": "You already have {n} ★ waiting for you.",
+  "Confirmar apelido": "Confirm nickname",
+  "Trocar por {n} ★": "Change for {n} ★",
+  "Grátis agora. Depois, cada troca custa {n} ★.": "Free now. After that, each change costs {n} ★.",
+  "Cada troca de apelido custa {n} ★.": "Each nickname change costs {n} ★.",
+  "Apagar sua conta e os dados guardados na nuvem? O progresso e as estrelas deste aparelho continuam.": "Delete your account and the data saved in the cloud? Progress and stars on this device stay.",
+  "Cancelado. Nada foi apagado.": "Cancelled. Nothing was deleted.",
+  "Não consegui confirmar com o Google. Nada foi apagado.": "I couldn't confirm with Google. Nothing was deleted.",
+  "Sua conta e seus dados foram apagados da nuvem.": "Your account and data were deleted from the cloud.",
+  "Use de 2 a 20 letras ou números no apelido.": "Use 2 to 20 letters or numbers for the nickname.",
+  "Apelido salvo. Bom jogo!": "Nickname saved. Have fun!",
+  "Esse já é o seu apelido.": "That is already your nickname.",
+  "Faltam {n} ★ para trocar o apelido. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.": "You need {n} more ★ to change your nickname. Play levels, the daily level and the weekly challenge to earn more.",
+  "Trocar o apelido custa {n} ★ (você tem {s} ★). Trocar?": "Changing your nickname costs {n} ★ (you have {s} ★). Change it?",
+  "Apelido trocado! Sobraram {n} ★.": "Nickname changed! {n} ★ left.",
+  "Gelo": "Ice",
+  "Fogo": "Fire",
+  "Arco-íris": "Rainbow",
+  "avatar": "avatar",
+  "moldura": "frame",
+  "Primeiros passos": "First steps",
+  "Pegando o jeito": "Getting the hang of it",
+  "Mão na massa": "Hands on",
+  "Cinquentão": "Fifty up",
+  "Centenário": "Centenary",
+  "Brilho inicial": "First sparkle",
+  "Caçador de estrelas": "Star hunter",
+  "Chuva de estrelas": "Star shower",
+  "Três dias seguidos": "Three days in a row",
+  "Semana perfeita": "Perfect week",
+  "Mês de fogo": "Month on fire",
+  "Desafio do dia": "Daily challenge",
+  "Sem fim": "Never-ending",
+  "Ganhe {n} estrelas nas fases": "Earn {n} stars in levels",
+  "Complete a fase do dia": "Complete the daily level",
+  "Complete o desafio da semana": "Complete the weekly challenge",
+  "Conclua {n} fases": "Finish {n} levels",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1977,6 +2071,70 @@ es: {
   "Nome salvo.": "Nombre guardado.",
   "Foto salva.": "Foto guardada.",
   "Não consegui usar essa imagem. Tente outra.": "No pude usar esa imagen. Prueba otra.",
+  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.": "Iniciar sesión es opcional. Con una cuenta de Google guardas tu progreso en la nube, continúas en otro dispositivo, juntas estrellas para desbloquear avatares y marcos y, pronto, apareces en el ranking y desafías a tus amigos.",
+  "Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.": "Tu apodo y tu avatar son visibles para otros jugadores. Tu correo y tu contraseña no se muestran a nadie.",
+  "Bem-vindo!": "¡Bienvenido!",
+  "Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.": "Elige tu apodo. La primera elección es gratis; después, cambiarlo cuesta estrellas.",
+  "estrelas": "estrellas",
+  "Apelido": "Apodo",
+  "Avatares": "Avatares",
+  "Molduras": "Marcos",
+  "Conquistas": "Logros",
+  "De onde vêm minhas estrelas": "De dónde vienen mis estrellas",
+  "Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.": "Juega niveles, el nivel del día y el desafío de la semana, y completa logros para ganar más.",
+  "Conta e nuvem": "Cuenta y nube",
+  "Apagar minha conta e meus dados": "Borrar mi cuenta y mis datos",
+  "Início": "Inicio",
+  "Estrelas das fases": "Estrellas de los niveles",
+  "Outros ganhos": "Otras ganancias",
+  "Gastas": "Gastadas",
+  "Jogue a fase do dia {n} dias seguidos": "Juega el nivel del día {n} días seguidos",
+  "Conclua {n} fases no modo infinito": "Completa {n} niveles en el modo infinito",
+  "Conquista: {nome}! +{n} ★": "Logro: {nome}! +{n} ★",
+  "{k} conquistas novas! +{n} ★": "¡{k} logros nuevos! +{n} ★",
+  "prêmio de conquista": "premio de un logro",
+  "custa {n} estrelas": "cuesta {n} estrellas",
+  "Este item é prêmio da conquista “{nome}”.": "Este artículo es el premio del logro “{nome}”.",
+  "Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.": "Faltan {n} ★ para este artículo. Juega niveles, el nivel del día y el desafío de la semana para ganar más.",
+  "Liberar “{nome}” por {n} ★? Você tem {s} ★.": "¿Desbloquear “{nome}” por {n} ★? Tienes {s} ★.",
+  "Liberado! Sobraram {n} ★.": "¡Desbloqueado! Te quedan {n} ★.",
+  "Você já tem {n} ★ esperando por você.": "Ya tienes {n} ★ esperándote.",
+  "Confirmar apelido": "Confirmar apodo",
+  "Trocar por {n} ★": "Cambiar por {n} ★",
+  "Grátis agora. Depois, cada troca custa {n} ★.": "Gratis ahora. Después, cada cambio cuesta {n} ★.",
+  "Cada troca de apelido custa {n} ★.": "Cada cambio de apodo cuesta {n} ★.",
+  "Apagar sua conta e os dados guardados na nuvem? O progresso e as estrelas deste aparelho continuam.": "¿Borrar tu cuenta y los datos guardados en la nube? El progreso y las estrellas de este dispositivo se mantienen.",
+  "Cancelado. Nada foi apagado.": "Cancelado. No se borró nada.",
+  "Não consegui confirmar com o Google. Nada foi apagado.": "No pude confirmar con Google. No se borró nada.",
+  "Sua conta e seus dados foram apagados da nuvem.": "Tu cuenta y tus datos fueron borrados de la nube.",
+  "Use de 2 a 20 letras ou números no apelido.": "Usa de 2 a 20 letras o números en el apodo.",
+  "Apelido salvo. Bom jogo!": "Apodo guardado. ¡A jugar!",
+  "Esse já é o seu apelido.": "Ese ya es tu apodo.",
+  "Faltam {n} ★ para trocar o apelido. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.": "Faltan {n} ★ para cambiar el apodo. Juega niveles, el nivel del día y el desafío de la semana para ganar más.",
+  "Trocar o apelido custa {n} ★ (você tem {s} ★). Trocar?": "Cambiar el apodo cuesta {n} ★ (tienes {s} ★). ¿Cambiarlo?",
+  "Apelido trocado! Sobraram {n} ★.": "¡Apodo cambiado! Te quedan {n} ★.",
+  "Gelo": "Hielo",
+  "Fogo": "Fuego",
+  "Arco-íris": "Arcoíris",
+  "avatar": "avatar",
+  "moldura": "marco",
+  "Primeiros passos": "Primeros pasos",
+  "Pegando o jeito": "Cogiendo el truco",
+  "Mão na massa": "Manos a la obra",
+  "Cinquentão": "Cincuentón",
+  "Centenário": "Centenario",
+  "Brilho inicial": "Primer destello",
+  "Caçador de estrelas": "Cazador de estrellas",
+  "Chuva de estrelas": "Lluvia de estrellas",
+  "Três dias seguidos": "Tres días seguidos",
+  "Semana perfeita": "Semana perfecta",
+  "Mês de fogo": "Mes en llamas",
+  "Desafio do dia": "Desafío del día",
+  "Sem fim": "Sin fin",
+  "Ganhe {n} estrelas nas fases": "Gana {n} estrellas en los niveles",
+  "Complete a fase do dia": "Completa el nivel del día",
+  "Complete o desafio da semana": "Completa el desafío de la semana",
+  "Conclua {n} fases": "Completa {n} niveles",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2886,6 +3044,7 @@ function limparBackup(env){
       if (isObj(d.inf.feitas) && d.inf.feitas[k] > 0) o.inf.feitas[k] = inteiro(d.inf.feitas[k], 0, 1e7);
       const p = isObj(d.inf.porNivel) ? d.inf.porNivel[k] : null;
       if (isObj(p) && k !== 'crescente') o.inf.porNivel[k] = {n: inteiro(p.n, 0, 1e7), t: inteiro(p.t, 0, 864e7), est: inteiro(p.est, 0, 1e8), e3: inteiro(p.e3, 0, 1e7)}; } }
+  if (isObj(d.cart)) o.cart = limparCart(d.cart);
   if (isObj(d.cfg)){ const c = d.cfg, q = {};
     if (['pt', 'en', 'es'].includes(c.lang)) q.lang = c.lang;
     if (BK_TEMAS.includes(c.tema)) q.tema = c.tema;
@@ -2926,10 +3085,93 @@ function juntarDados(a, b){
     for (const k of Object.keys(b.inf.porNivel)){ const p = x.porNivel[k], q = b.inf.porNivel[k];
       x.porNivel[k] = p ? {n: Math.max(p.n, q.n), t: p.t && q.t ? Math.min(p.t, q.t) : (p.t || q.t), est: Math.max(p.est, q.est), e3: Math.max(p.e3, q.e3)} : q; }
     o.inf = x; }
+  if (b.cart) o.cart = juntarCart(o.cart, b.cart);
   return o;
 }
 /* Soma de verificação simples (FNV-1a) para perceber um código copiado pela metade. */
 function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+/* ---- Estrelas, itens e conquistas da conta (lógica pura: roda no navegador e nos testes) ----
+   O saldo nunca é guardado: sai das estrelas das fases + bônus (fase do dia, desafio da semana) + conquistas resgatadas
+   + ganhos avulsos (anúncios premiados) − o que foi gasto. Só o que não dá para recalcular fica na "carteira":
+   cart = {g: ganhos avulsos {chave: estrelas}, s: gastos {chave: estrelas}, v: conquistas já resgatadas}. */
+const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30;
+/* Itens: 'av:pN' (avatar) e 'mold:id' (moldura). livre = todo mundo tem; preco = comprado com estrelas; (sem nenhum dos dois) = só por conquista. */
+const ITENS = {};
+for (let i = 1; i <= 24; i++) ITENS['av:p' + i] = i <= 6 ? {livre: true} : i <= 10 ? {preco: 15} : i <= 14 ? {preco: 30} : i <= 18 ? {preco: 60} : {};
+Object.assign(ITENS, {'mold:': {livre: true}, 'mold:madeira': {livre: true}, 'mold:pixel': {preco: 30}, 'mold:festa': {preco: 50}, 'mold:ouro': {preco: 100},
+  'mold:gelo': {}, 'mold:fogo': {}, 'mold:arco': {}});
+/* m = o que se mede; n = quanto precisa; est = estrelas de prêmio; item = avatar ou moldura que libera */
+const CONQUISTAS = [
+  {id: 'fases5', m: 'fases', n: 5, est: 5}, {id: 'fases10', m: 'fases', n: 10, est: 10, item: 'av:p21'}, {id: 'fases25', m: 'fases', n: 25, est: 20},
+  {id: 'fases50', m: 'fases', n: 50, est: 40, item: 'av:p24'}, {id: 'fases100', m: 'fases', n: 100, est: 80, item: 'mold:arco'},
+  {id: 'estr30', m: 'estrelas', n: 30, est: 5}, {id: 'estr100', m: 'estrelas', n: 100, est: 15, item: 'mold:fogo'}, {id: 'estr300', m: 'estrelas', n: 300, est: 40, item: 'av:p23'},
+  {id: 'seq3', m: 'seq', n: 3, est: 5}, {id: 'seq7', m: 'seq', n: 7, est: 15, item: 'mold:gelo'}, {id: 'seq30', m: 'seq', n: 30, est: 60},
+  {id: 'dia1', m: 'dias', n: 1, est: 3, item: 'av:p19'}, {id: 'sem1', m: 'sem', n: 1, est: 8, item: 'av:p20'}, {id: 'inf10', m: 'inf', n: 10, est: 10, item: 'av:p22'}
+];
+const cartDe = d => { const c = d && d.cart || {}; return {g: Object.assign({}, c.g), s: Object.assign({}, c.s), v: Array.isArray(c.v) ? c.v.slice() : []}; };
+const somaVals = o => Object.values(o || {}).reduce((a, b) => a + b, 0);
+function medidasConta(d, hoje){
+  d = d || {};
+  return {fases: d.prog ? d.prog.done.length : 0, estrelas: somaVals(d.est), seq: sequenciasDe(d.dias, hoje || '').maior, dias: d.dias ? Object.keys(d.dias).length : 0,
+    sem: d.sem ? Object.keys(d.sem).length : 0, inf: d.inf ? somaVals(d.inf.feitas) : 0};
+}
+function saldoConta(d){
+  const c = cartDe(d), m = medidasConta(d);
+  const conq = CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0);
+  return m.estrelas + BONUS_DIA * m.dias + BONUS_SEMANA * m.sem + conq + somaVals(c.g) - somaVals(c.s);
+}
+/* ganhos por origem, para mostrar de onde vêm as estrelas */
+function origemEstrelas(d){
+  const c = cartDe(d), m = medidasConta(d);
+  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), outros: somaVals(c.g), gastas: somaVals(c.s)};
+}
+function itensDe(d){
+  const c = cartDe(d), r = new Set(Object.keys(ITENS).filter(k => ITENS[k].livre));
+  for (const k of Object.keys(c.s)) if (k.startsWith('i:') && ITENS[k.slice(2)]) r.add(k.slice(2));
+  for (const q of CONQUISTAS) if (q.item && c.v.includes(q.id)) r.add(q.item);
+  return r;
+}
+const conquistasNovas = (d, hoje) => { const c = cartDe(d), m = medidasConta(d, hoje); return CONQUISTAS.filter(q => !c.v.includes(q.id) && m[q.m] >= q.n); };
+function resgatarConquistas(d, hoje){
+  const novas = conquistasNovas(d, hoje), c = cartDe(d);
+  novas.forEach(q => c.v.push(q.id));
+  return {cart: c, novas, estrelas: novas.reduce((a, q) => a + q.est, 0)};
+}
+function comprarItem(d, chave){
+  const it = ITENS[chave], c = cartDe(d);
+  if (!it) return {erro: 'inexistente'};
+  if (itensDe(d).has(chave)) return {erro: 'ja-tem'};
+  if (!it.preco) return {erro: 'so-conquista'};
+  if (saldoConta(d) < it.preco) return {erro: 'saldo', falta: it.preco - saldoConta(d)};
+  c.s['i:' + chave] = it.preco;
+  return {cart: c, preco: it.preco};
+}
+const trocasDeApelido = d => Object.keys(cartDe(d).s).filter(k => k.startsWith('n:')).length;
+function pagarApelido(d){
+  const c = cartDe(d), s = saldoConta(d);
+  if (s < NOME_CUSTO) return {erro: 'saldo', falta: NOME_CUSTO - s};
+  c.s['n:' + (trocasDeApelido(d) + 1)] = NOME_CUSTO;
+  return {cart: c, preco: NOME_CUSTO};
+}
+/* carteira: junta duas (de dois aparelhos) sem perder nada */
+function juntarCart(a, b){
+  const x = cartDe({cart: a}), y = cartDe({cart: b});
+  for (const k of Object.keys(y.g)) x.g[k] = Math.max(x.g[k] || 0, y.g[k]);
+  for (const k of Object.keys(y.s)) x.s[k] = Math.max(x.s[k] || 0, y.s[k]);
+  y.v.forEach(id => { if (!x.v.includes(id)) x.v.push(id); });
+  return x;
+}
+function limparCart(c){
+  const o = {g: {}, s: {}, v: []};
+  if (!c || typeof c !== 'object') return o;
+  const ok = k => /^[a-z]{1,4}:[\w:.-]{0,40}$/.test(k);
+  for (const [campo, fonte] of [['g', c.g], ['s', c.s]]){
+    if (!fonte || typeof fonte !== 'object') continue;
+    for (const k of Object.keys(fonte).slice(0, 3000)) if (ok(k) && fonte[k] >= 0) o[campo][k] = Math.min(1e6, Math.round(+fonte[k]));
+  }
+  if (Array.isArray(c.v)) o.v = [...new Set(c.v.filter(id => CONQUISTAS.some(q => q.id === id)))];
+  return o;
+}
 /* ---- Campeonato sem internet por QR code: lógica pura (testada em Node) ----
    Tudo viaja dentro do próprio link/QR. Um "pacote" é o campeonato (nome, fases, jogadores) mais os resultados que já se tem:
    {v: 1, i: código, n: nome, f: [fases], j: [nomes], r: {"0": [[tempoMs, jogadas] | null, ...]}}
@@ -3538,6 +3780,7 @@ let humorPref = store.get('humor', 'auto');
 let vibraOn = store.get('vibra', true) !== false;
 const vibrar = p => { if (vibraOn && navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} };
 let estrelasFase = store.get('est', {});
+let cart = limparCart(store.get('cart', null));   /* carteira de estrelas (ver logica-conta.js) */
 /* 3 estrelas: sem dica e sem recolocar peças; 2: sem dica e até 50% de jogadas a mais; 1: concluiu */
 function estrelasDe(j, total, dicas){ return dicas ? 1 : j <= total ? 3 : j <= Math.ceil(total * 1.5) ? 2 : 1; }
 let pecasPref = store.get('pecas', 'auto');
@@ -3991,9 +4234,9 @@ function vencer(){
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
-  contaAgendar();
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
   if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
+  aposVitoriaConta();
   if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
@@ -4052,6 +4295,7 @@ function mostrarVitoria(res, reabrir){
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
   else if (c.k !== 't') add('Fases', '', abrirMenu);
   }
+  add('Início', '', irInicio, 'home');
   S.acoesVit.forEach(a => acts.appendChild(botaoAcao(a)));
   renderReserva(); ajustar();         /* os mesmos botões também ficam embaixo, para quem fecha a tela de conclusão */
   const card = $('#cardWin'); card.querySelectorAll('.conf').forEach(n => n.remove());
@@ -4474,7 +4718,8 @@ $('#hInf').onclick = atalhoInicio(() => $('#btnInf').onclick());
 $('#hCamp').onclick = atalhoInicio(() => $('#btnCamp').onclick());
 $('#hEst').onclick = atalhoInicio(() => $('#btnEst').onclick());
 $('#hMenu').onclick = atalhoInicio(() => abrirMenu());
-$('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
+const irInicio = () => { fecharTodos('ov-splash'); renderInicio(); $('#ov-splash').classList.add('on'); };
+$('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
   if (window.__pronto) renderConta();
@@ -5082,7 +5327,7 @@ $('#ovImportar').onclick = () => {
 $('#ovExcluir').onclick = () => { if (confirmarTirarOff()){ delete offs[OFF.id]; salvarOffs(); fechar('offv'); abrirOffHub(); } };
 /* ======================= Backup do progresso ======================= */
 const BK = {pend: null};
-const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
+const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf, cart,
   cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
 const envelopeBackup = dados => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dados || dadosAtuais()});
 const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
@@ -5140,7 +5385,7 @@ function gravarBackup(d, comCfg, limpar, msg){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
   if (d.prog) d.prog = {max: Math.min(d.prog.max, LIMITE_FASES - 1), done: d.prog.done.filter(i => i < LIMITE_FASES)};
-  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf);
+  grava('prog', d.prog); grava('est', d.est); grava('rec', d.rec); grava('dias', d.dias); grava('sem', d.sem); grava('corr', d.corr); grava('custom', d.custom); grava('stats', d.stats); grava('inf', d.inf); grava('cart', d.cart);
   if (limpar){ store.set('infatual', null); store.set('andamento', null); }
   if (comCfg && d.cfg){
     const c = d.cfg;
@@ -5178,7 +5423,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.4';
+const VERSAO = '2026.11.05.5';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5683,59 +5928,82 @@ function vitoriaCamp(c, res, add, reabrir){
 }
 
 
-/* ======================= Conta (login opcional com o Google) =======================
-   O jogo inteiro funciona sem conta. Com ela: nome, avatar e moldura, e o progresso guardado na nuvem
-   (juntando o que já existe no aparelho com o que está na nuvem — nunca se perde nada).
-   O Firebase só é baixado quando a pessoa usa a conta. */
+/* ======================= Conta (login opcional com o Google) e área do usuário =======================
+   O jogo inteiro funciona sem conta. Com ela: apelido, avatar e moldura, estrelas para gastar e o progresso guardado
+   na nuvem (juntando o que já existe no aparelho com o que está na nuvem — nunca se perde nada).
+   O Firebase só é baixado quando a pessoa usa a conta. As regras do saldo ficam em logica-conta.js. */
 const FB_VERSAO = '10.14.1';
 const FB_SCRIPTS = ['firebase-app-compat.js', 'firebase-auth-compat.js'].map(f => `https://www.gstatic.com/firebasejs/${FB_VERSAO}/${f}`);
 const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebaseapp.com', projectId: 'shapepuzzle-76162'};
-const N_AVATARES = 12;
-const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
-/* Molduras: `livre` = qualquer um usa; as outras ficam com cadeado, prontas para serem liberadas depois (conquistas, loja, brindes). */
-const MOLDURAS = [{id: '', nome: 'Sem moldura', livre: true}, {id: 'madeira', nome: 'Madeira', livre: true},
-  {id: 'ouro', nome: 'Ouro', livre: false}, {id: 'pixel', nome: 'Pixel', livre: false}, {id: 'festa', nome: 'Festa', livre: false}];
-let conta = store.get('conta', null);   // {uid, nome, av, mold, foto?, sujo?, fotoSuja?, ultima?, expirou?}
 const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
 const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
+const N_AVATARES = 24, N_LIVRES = 6;
+const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
+const MOLDURAS = ['', 'madeira', 'pixel', 'festa', 'ouro', 'gelo', 'fogo', 'arco'];
+const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+/* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
+const NOME_CONQ = {fases5: 'Primeiros passos', fases10: 'Pegando o jeito', fases25: 'Mão na massa', fases50: 'Cinquentão', fases100: 'Centenário',
+  estr30: 'Brilho inicial', estr100: 'Caçador de estrelas', estr300: 'Chuva de estrelas', seq3: 'Três dias seguidos', seq7: 'Semana perfeita', seq30: 'Mês de fogo',
+  dia1: 'Desafio do dia', sem1: 'Desafio da semana', inf10: 'Sem fim'};
+const DESC_CONQ = q => q.m === 'fases' ? tr('Conclua {n} fases', {n: q.n}) : q.m === 'estrelas' ? tr('Ganhe {n} estrelas nas fases', {n: q.n})
+  : q.m === 'seq' ? tr('Jogue a fase do dia {n} dias seguidos', {n: q.n}) : q.m === 'dias' ? tr('Complete a fase do dia') : q.m === 'sem' ? tr('Complete o desafio da semana')
+  : tr('Conclua {n} fases no modo infinito', {n: q.n});
+let conta = store.get('conta', null);   // {uid, nome, av, mold, novo?, sujo?, ultima?, expirou?}
 let fbAuth = null, contaOcupada = false, contaTimer = null;
 
 /* ---------- avatar ---------- */
 const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
-const avPadrao = uid => 'p' + (1 + hashTxt(String(uid)) % N_AVATARES);
-const avValido = id => id === 'foto' || (/^p\d{1,2}$/.test(id) && +id.slice(1) >= 1 && +id.slice(1) <= N_AVATARES) ? id : 'p1';
-const moldValida = id => MOLDURAS.some(m => m.id === id && m.livre) ? id : '';
-const ehFoto = f => typeof f === 'string' && f.length <= 12000 && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(f);
+const avPadrao = uid => 'p' + (1 + hashTxt(String(uid)) % N_LIVRES);
+const avValido = id => /^p\d{1,2}$/.test(id) && +id.slice(1) >= 1 && +id.slice(1) <= N_AVATARES ? id : 'p1';
+const moldValida = id => MOLDURAS.includes(id) ? id : '';
 function svgAvatar(id){
   const n = +String(id).slice(1) || 1;
   let h = (Math.imul(n, 2654435761) >>> 0) || 1;
   const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
   for (let i = 0; i < 6; i++) rnd();
-  const cor = PALETA_AV[(n - 1) % PALETA_AV.length];
+  const cor = PALETA_AV[(n - 1) % PALETA_AV.length], fundo = n > 12 ? '#2b2540' : '#fff6dc';
   let r = '';
   for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
     if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
   }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="#fff6dc"/><g fill="${cor}">${r}</g></svg>`;
+  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="${fundo}"/><g fill="${cor}">${r}</g></svg>`;
 }
-/* Monta o avatar de uma conta ({av, foto, mold}) com a moldura, no tamanho `tam` (px). */
+/* Monta o avatar de uma conta ({av, mold}) com a moldura, no tamanho `tam` (px). */
 function avatarEl(c, tam){
   const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : ''));
   e.style.setProperty('--t', (tam || 40) + 'px');
-  if (c && c.av === 'foto' && ehFoto(c.foto)){ const i = new Image(); i.alt = ''; i.src = c.foto; e.appendChild(i); }
-  else e.innerHTML = svgAvatar(c && c.av && c.av !== 'foto' ? c.av : 'p1');
+  e.innerHTML = svgAvatar(c && c.av ? c.av : 'p1');
   return e;
 }
 
-/* ---------- tela inicial e tela da conta ---------- */
+/* ---------- estrelas e conquistas ---------- */
+const saldoAtual = () => saldoConta(dadosAtuais());
+function guardarCart(c){ cart = c; store.set('cart', cart); }
+/* Resgata as conquistas que já foram cumpridas; avisa só quem está com conta (sem conta, elas ficam guardadas para o primeiro login). */
+function verificarConquistas(avisar){
+  const r = resgatarConquistas(dadosAtuais(), dataHoje());
+  if (!r.novas.length) return;
+  guardarCart(r.cart);
+  if (avisar && conta){
+    toast(r.novas.length === 1 ? tr('Conquista: {nome}! +{n} ★', {nome: tr(NOME_CONQ[r.novas[0].id]), n: r.estrelas}) : tr('{k} conquistas novas! +{n} ★', {k: r.novas.length, n: r.estrelas}));
+  }
+  renderConta();
+}
+/* Chamada a cada fase vencida. */
+function aposVitoriaConta(){ verificarConquistas(true); contaAgendar(); }
+
+/* ---------- tela inicial e área do usuário ---------- */
 function renderConta(){
   const b = $('#hConta'); if (!b) return;
   b.textContent = '';
-  if (!conta){ b.innerHTML = ic('user'); b.appendChild(mk('span', '', tr('Entrar com Google'))); b.appendChild(mk('small', '', tr('opcional'))); b.setAttribute('aria-label', tr('Entrar com Google')); }
-  else {
+  const s = saldoAtual();
+  if (!conta){
+    b.innerHTML = ic('user'); b.appendChild(mk('span', '', tr('Entrar com Google'))); b.appendChild(mk('small', '', s > 0 ? '★ ' + s : tr('opcional')));
+    b.setAttribute('aria-label', tr('Entrar com Google'));
+  } else {
     b.appendChild(avatarEl(conta, 30));
     const nm = mk('span', 'cnN', conta.nome); b.appendChild(nm);
-    b.appendChild(mk('small', '', tr('Meu perfil'))); b.setAttribute('aria-label', tr('Meu perfil') + ': ' + conta.nome);
+    b.appendChild(mk('small', '', '★ ' + s)); b.setAttribute('aria-label', tr('Meu perfil') + ': ' + conta.nome + ', ' + s + ' ' + tr('estrelas'));
   }
   if ($('#ov-conta').classList.contains('on')) montarConta();
 }
@@ -5746,30 +6014,72 @@ function textoUltima(){
   if (conta.sujo) return 'Há mudanças para enviar à nuvem.';
   return conta.ultima ? tr('Sincronizado às {hora}', {hora: new Date(conta.ultima).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}) : 'Ainda não sincronizado.';
 }
+/* uma casinha de avatar ou moldura: marcada, comprável (com preço) ou só por conquista (cadeado) */
+function celulaItem(chave, el, rotulo, marcado, d, donos){
+  const it = ITENS[chave], tem = donos.has(chave);
+  const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', marcado ? 'true' : 'false'); b.dataset.item = chave;
+  b.appendChild(el);
+  if (!tem){
+    const l = mk('small', 'cnPreco');
+    if (it.preco) l.textContent = '★ ' + it.preco; else l.innerHTML = ic('lock');
+    b.appendChild(l); b.classList.add('trava');
+    b.setAttribute('aria-label', rotulo + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
+  } else b.setAttribute('aria-label', rotulo);
+  b.onclick = () => tocarItem(chave, rotulo);
+  return b;
+}
+function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); return q ? tr(NOME_CONQ[q.id]) : ''; }
+function tocarItem(chave, rotulo){
+  const d = dadosAtuais(), campo = chave.startsWith('av:') ? 'av' : 'mold', id = chave.slice(campo === 'av' ? 3 : 5);
+  if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
+  const it = ITENS[chave];
+  if (!it.preco){ aviso('#cnAviso', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)})); return; }
+  const r = comprarItem(d, chave);
+  if (r.erro === 'saldo'){ aviso('#cnAviso', tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: r.falta}), 'erro'); return; }
+  if (!r.cart) return;
+  if (!confirm(tr('Liberar “{nome}” por {n} ★? Você tem {s} ★.', {nome: rotulo, n: it.preco, s: saldoConta(d)}))) return;
+  guardarCart(r.cart); mudarPerfil({[campo]: id}); contaAgendar(2000);
+  aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
+}
 function montarConta(){
   $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
-  if (!conta) return;
+  const s = saldoAtual();
+  if (!conta){
+    const t = $('#cnTeaser'); t.hidden = s <= 0; t.textContent = s > 0 ? tr('Você já tem {n} ★ esperando por você.', {n: s}) : ''; return;
+  }
+  const d = dadosAtuais(), donos = itensDe(d);
   $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(conta, 64));
-  $('#cnNomeTxt').textContent = conta.nome; if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta.nome;
+  $('#cnNomeTxt').textContent = conta.nome; $('#cnSaldo').textContent = s;
+  if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta.nome;
+  $('#cnBemvindo').hidden = !conta.novo;
+  $('#cnNomeOk').textContent = tr(conta.novo ? 'Confirmar apelido' : 'Trocar por {n} ★', {n: NOME_CUSTO});
+  $('#cnNomeDica').textContent = conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
   estadoConta(textoUltima());
   const ga = $('#cnAvatares'); ga.textContent = '';
-  const ids = []; for (let i = 1; i <= N_AVATARES; i++) ids.push('p' + i);
-  if (ehFoto(conta.foto)) ids.push('foto');
-  ids.forEach((id, i) => {
-    const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', conta.av === id ? 'true' : 'false');
-    b.setAttribute('aria-label', id === 'foto' ? tr('Minha foto') : tr('Avatar {n}', {n: i + 1})); b.dataset.av = id;
-    b.appendChild(avatarEl({av: id, foto: conta.foto}, 44)); b.onclick = () => mudarPerfil({av: id}); ga.appendChild(b);
-  });
+  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), conta.av === id, d, donos)); }
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(m => {
-    const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', conta.mold === m.id ? 'true' : 'false'); b.dataset.mold = m.id;
-    b.setAttribute('aria-label', tr(m.nome) + (m.livre ? '' : ' — ' + tr('Em breve'))); b.disabled = !m.livre; b.title = m.livre ? tr(m.nome) : tr('Em breve');
-    b.appendChild(avatarEl({av: conta.av, foto: conta.foto, mold: m.id}, 40));
-    if (!m.livre){ const l = mk('i', 'cnLock'); l.innerHTML = ic('lock'); b.appendChild(l); }
-    b.onclick = () => mudarPerfil({mold: m.id}); gm.appendChild(b);
+  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: conta.av, mold: id}, 40), tr(NOME_MOLDURA[id]), conta.mold === id, d, donos)));
+  const nAv = [...donos].filter(k => k.startsWith('av:')).length, nMo = [...donos].filter(k => k.startsWith('mold:')).length;
+  $('#cnTitAv').textContent = tr('Avatares') + ' ' + nAv + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + nMo + '/' + MOLDURAS.length;
+  const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
+  const feitas = cart.v.length;
+  $('#cnTitConq').textContent = tr('Conquistas') + ' ' + feitas + '/' + CONQUISTAS.length;
+  CONQUISTAS.forEach(q => {
+    const ok = cart.v.includes(q.id), v = Math.min(q.n, med[q.m]);
+    const li = mk('li', ok ? 'ok' : '');
+    const topo = mk('div', 'cnQt'), premio = mk('span', 'cnQp');
+    topo.appendChild(mk('b', '', (ok ? '✓ ' : '') + tr(NOME_CONQ[q.id])));
+    premio.textContent = '+' + q.est + ' ★' + (q.item ? ' · ' + tr(q.item.startsWith('av:') ? 'avatar' : 'moldura') : '');
+    topo.appendChild(premio);
+    li.appendChild(topo); li.appendChild(mk('small', '', DESC_CONQ(q)));
+    const barra = mk('div', 'cnBarra'); const i = mk('i'); i.style.width = Math.round(100 * v / q.n) + '%'; barra.appendChild(i); li.appendChild(barra);
+    li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
+  const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+    .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
-function abrirConta(){ aviso('#cnAviso', ''); montarConta(); abrir('conta'); }
+function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
 
 /* ---------- Firebase (carregado só quando precisa) ---------- */
 const carregarScript = src => new Promise((ok, no) => {
@@ -5783,16 +6093,16 @@ function firebaseAuth(){
   return fbAuth;
 }
 const usuarioPronto = a => new Promise(ok => { let off = null, feito = false; off = a.onAuthStateChanged(u => { feito = true; if (off) off(); ok(u); }); if (feito && off) off(); });
-async function contaToken(){
+async function contaUsuario(){
   const a = await firebaseAuth(), u = a.currentUser || await usuarioPronto(a);
-  if (!u || (conta && u.uid !== conta.uid)) return null;
-  return u.getIdToken();
+  return !u || (conta && u.uid !== conta.uid) ? null : u;
 }
+async function contaToken(){ const u = await contaUsuario(); return u ? u.getIdToken() : null; }
 const nv = (m, caminho, corpo, tk) => nuvem(cpDb, m, caminho, corpo, tk);
 const aplicarNomeCamp = () => { if (conta && !cpAuth){ cpNome = conta.nome; store.set('cpnome', cpNome); } };
 const salvarConta = () => { store.set('conta', conta); renderConta(); };
 
-/* ---------- entrar / sair ---------- */
+/* ---------- entrar / sair / apagar ---------- */
 async function contaEntrar(){
   aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
   try{
@@ -5817,13 +6127,10 @@ async function contaPosLogin(user){
   const pub = await nv('GET', 'pub/' + user.uid, undefined, tk);
   if (pub && pub.nome){
     conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
-    if (conta.av === 'foto'){
-      let f = null; try{ f = await nv('GET', 'foto/' + user.uid, undefined, tk); }catch(e){}
-      if (ehFoto(f)) conta.foto = f; else conta.av = avPadrao(user.uid);
-    }
   } else {
+    /* primeira vez: o apelido só vai para a nuvem depois que a pessoa o escolher (a primeira escolha é grátis) */
     let n = limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
-    conta = {uid: user.uid, nome: n, av: avPadrao(user.uid), mold: '', sujo: true};
+    conta = {uid: user.uid, nome: n, av: avPadrao(user.uid), mold: '', novo: true};
   }
   aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
   await contaSync({aplicar: true});
@@ -5832,13 +6139,18 @@ async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
   conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
 }
+/* Apaga tudo da nuvem e a própria conta. Pede para confirmar com o Google antes (o Firebase exige um login recente para isso). */
 async function contaApagar(){
-  if (!conta || !confirm(tr('Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.'))) return;
+  if (!conta || !confirm(tr('Apagar sua conta e os dados guardados na nuvem? O progresso e as estrelas deste aparelho continuam.'))) return;
   try{
-    const tk = await contaToken(); if (!tk) throw new Error('sessao');
-    for (const c of ['pub', 'priv', 'foto']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
+    const u = await contaUsuario(); if (!u) throw new Error('sessao');
+    try{ await u.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()); }
+    catch(e){ aviso('#cnAviso', COD_FECHOU.includes(e && e.code) ? 'Cancelado. Nada foi apagado.' : 'Não consegui confirmar com o Google. Nada foi apagado.', 'erro'); return; }
+    const tk = await u.getIdToken();
+    for (const c of ['pub', 'priv']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
+    await u.delete();
   }catch(e){ aviso('#cnAviso', 'Não consegui apagar agora. Confira a internet e tente de novo.', 'erro'); return; }
-  await contaSair(); aviso('#cnAviso', 'Seus dados foram apagados da nuvem.', 'ok');
+  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
 }
 
 /* ---------- sincronização ---------- */
@@ -5846,7 +6158,7 @@ const estavel = v => JSON.stringify(v, (k, x) => x && typeof x === 'object' && !
 const semCfg = d => { const o = JSON.parse(JSON.stringify(d || {})); delete o.cfg; if (o.prog && o.prog.done) o.prog.done.sort((a, b) => a - b); return o; };
 const fasesFeitas = d => Math.min(1000, d && d.prog ? d.prog.done.length : 0);
 async function contaPublicar(tk, dados){
-  if (conta.av === 'foto' && conta.fotoSuja && ehFoto(conta.foto)){ await nv('PUT', 'foto/' + conta.uid, conta.foto, tk); conta.fotoSuja = false; }
+  if (conta.novo) return;   /* sem apelido escolhido ainda: nada público */
   await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
 }
 async function contaSync(op){
@@ -5875,9 +6187,9 @@ async function contaSync(op){
     estadoConta(e && e.cod === 'negado' ? 'A nuvem recusou a gravação. Tente sair e entrar de novo.' : 'Sem conexão agora. Tentamos de novo mais tarde.');
   }finally{ contaOcupada = false; }
 }
-/* Chamada a cada fase vencida: sincroniza em segundo plano, com folga para não gastar rede à toa. */
-function contaAgendar(){ if (!conta) return; clearTimeout(contaTimer); contaTimer = setTimeout(() => contaSync({aplicar: false}), 30000); }
-/* Envia só o perfil (nome, avatar, moldura) depois de uma edição. */
+/* Sincroniza em segundo plano, com folga para não gastar rede à toa (30 s depois de uma fase; 2 s depois de gastar estrelas). */
+function contaAgendar(ms){ if (!conta) return; clearTimeout(contaTimer); contaTimer = setTimeout(() => contaSync({aplicar: false}), ms || 30000); }
+/* Envia só o perfil (apelido, avatar, moldura) depois de uma edição. */
 async function contaPerfilRapido(){
   try{ const tk = await contaToken(); if (!tk) throw new Error('sessao'); await contaPublicar(tk, dadosLimpos()); conta.sujo = false; store.set('conta', conta); estadoConta(textoUltima()); }
   catch(e){ conta.sujo = true; store.set('conta', conta); estadoConta('Sem conexão agora. Tentamos de novo mais tarde.'); }
@@ -5889,15 +6201,17 @@ function mudarPerfil(m){
   if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
   conta.sujo = true; salvarConta(); montarConta(); contaPerfilRapido();
 }
-function reduzirFoto(file){
-  return new Promise((ok, no) => {
-    const url = URL.createObjectURL(file), im = new Image();
-    im.onload = () => {
-      const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), l = Math.min(im.width, im.height);
-      x.drawImage(im, (im.width - l) / 2, (im.height - l) / 2, l, l, 0, 0, 64, 64); URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', 0.72));
-    };
-    im.onerror = () => { URL.revokeObjectURL(url); no(new Error('img')); }; im.src = url;
-  });
+function trocarApelido(){
+  const n = limparNome($('#cnNome').value);
+  if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no apelido.', 'erro'); return; }
+  if (conta.novo){
+    conta.novo = false; mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo. Bom jogo!', 'ok'); contaAgendar(1500); return;
+  }
+  if (n === conta.nome){ aviso('#cnAviso', 'Esse já é o seu apelido.'); return; }
+  const d = dadosAtuais(), r = pagarApelido(d);
+  if (r.erro){ aviso('#cnAviso', tr('Faltam {n} ★ para trocar o apelido. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: r.falta}), 'erro'); return; }
+  if (!confirm(tr('Trocar o apelido custa {n} ★ (você tem {s} ★). Trocar?', {n: NOME_CUSTO, s: saldoConta(d)}))) return;
+  guardarCart(r.cart); mudarPerfil({nome: n}); contaAgendar(2000); aviso('#cnAviso', tr('Apelido trocado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
 
 $('#hConta').onclick = abrirConta;
@@ -5905,19 +6219,10 @@ $('#cnEntrar').onclick = contaEntrar;
 $('#cnSair').onclick = contaSair;
 $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
-$('#cnNomeOk').onclick = () => {
-  const n = limparNome($('#cnNome').value);
-  if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no nome.', 'erro'); return; }
-  mudarPerfil({nome: n}); aviso('#cnAviso', 'Nome salvo.', 'ok');
-};
+$('#cnNomeOk').onclick = trocarApelido;
 $('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
-$('#cnFoto').onclick = () => $('#cnArq').click();
-$('#cnArq').onchange = async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try{ const d = await reduzirFoto(f); if (!ehFoto(d)) throw new Error('img'); conta.foto = d; conta.fotoSuja = true; mudarPerfil({av: 'foto'}); aviso('#cnAviso', 'Foto salva.', 'ok'); }
-  catch(e){ aviso('#cnAviso', 'Não consegui usar essa imagem. Tente outra.', 'erro'); }
-};
 
+verificarConquistas(false);
 renderConta();
 if (conta){
   setTimeout(() => { if (navigator.onLine !== false) contaSync({aplicar: $('#ov-splash').classList.contains('on')}); }, 2500);

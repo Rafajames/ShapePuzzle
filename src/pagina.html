@@ -24,6 +24,7 @@
 <div id="app">
   <header class="top">
     <button class="ib" id="btnMenu" data-i="menu" aria-label="Fases e opções"></button>
+    <button class="ib" id="btnCasa" data-i="home" aria-label="Tela inicial" title="Tela inicial"></button>
     <div id="titulo"><span class="t1">Fase 1</span><span class="t2">de 50</span></div>
     <div class="nav">
       <button class="ib" id="btnDesfazer" data-i="undo" aria-label="Desfazer (Z)" title="Desfazer (Z)" disabled></button>
@@ -486,29 +487,41 @@
   </div>
 </div>
 
-<!-- Conta (login opcional com o Google) -->
+<!-- Conta (login opcional com o Google) e área do usuário -->
 <div class="ov" id="ov-conta">
   <div class="card">
     <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
     <h1>Sua conta</h1>
     <div id="cnFora">
-      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
-      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.</p>
+      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
+      <p id="cnTeaser" class="cnTeaser" hidden></p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
       <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
     </div>
     <div id="cnDentro" hidden>
-      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div></div>
-      <h2>Nome de usuário</h2>
-      <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Nome de usuário"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
-      <h2>Avatar</h2>
-      <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
-      <div class="acts"><button class="btn sm" id="cnFoto" data-i="camera">Usar uma foto</button></div>
-      <input type="file" id="cnArq" accept="image/*" hidden>
-      <h2>Moldura</h2>
-      <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
-      <h2>Progresso na nuvem</h2>
-      <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
-      <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar meus dados da nuvem</button></div>
+      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
+      <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
+      <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
+        <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
+        <p class="cnDica" id="cnNomeDica"></p>
+      </div></details>
+      <details class="sec" id="cnSecAv"><summary data-i="user"><span id="cnTitAv">Avatares</span></summary><div class="sb">
+        <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
+      </div></details>
+      <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
+        <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      </div></details>
+      <details class="sec" id="cnSecConq"><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
+        <ul class="cnConq" id="cnConq"></ul>
+      </div></details>
+      <details class="sec" id="cnSecEst"><summary data-i="stats"><span>De onde vêm minhas estrelas</span></summary><div class="sb">
+        <ul class="cnOrigem" id="cnOrigem"></ul>
+        <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
+      </div></details>
+      <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
+        <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
+        <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
+      </div></details>
     </div>
     <p class="aviso" id="cnAviso"></p>
   </div>
@@ -561,6 +574,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js inicio.js
 </body>
 </html>
