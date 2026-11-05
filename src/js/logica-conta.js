@@ -80,3 +80,13 @@ function limparCart(c){
   if (Array.isArray(c.v)) o.v = [...new Set(c.v.filter(id => CONQUISTAS.some(q => q.id === id)))];
   return o;
 }
+
+/* ---- Filtro simples de apelidos (palavrões e nomes que imitam o jogo) ---- */
+const APELIDO_TRECHOS = ['caralho', 'buceta', 'cuzao', 'viado', 'arrombad', 'porra', 'fuck', 'bitch', 'cunt', 'nigger', 'nigga', 'faggot', 'whore', 'mierda', 'pendejo', 'maricon', 'cabron', 'hitler', 'nazista', 'shapepuzzle', 'rafajames'];
+const APELIDO_EXATAS = ['puta', 'puto', 'fdp', 'merda', 'shit', 'dick', 'rape', 'verga', 'joder', 'admin', 'moderador', 'suporte', 'staff', 'sistema'];
+function apelidoProibido(nome){
+  const t = String(nome || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/[@]/g, 'a').replace(/[$]/g, 's');
+  const junto = t.replace(/[^a-z]/g, '');
+  if (APELIDO_TRECHOS.some(w => junto.includes(w))) return true;
+  return t.split(/[^a-z]+/).filter(Boolean).some(w => APELIDO_EXATAS.includes(w));
+}

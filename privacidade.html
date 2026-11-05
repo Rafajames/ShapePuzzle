@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow"><meta name="theme-color" content="#24150b">
+<title>Shape Puzzle</title>
+<style>
+:root{--bg:#fbf6ea;--tx:#2b1d10;--mut:#6b5846;--ac:#b8651b;--card:#fff;--ln:#e5d8c0}
+@media (prefers-color-scheme:dark){:root{--bg:#1d130b;--tx:#f3e7d3;--mut:#b9a68e;--ac:#f0a050;--card:#2a1c10;--ln:#4a3622}}
+*{box-sizing:border-box}body{overflow-wrap:anywhere;margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 Georgia,'Times New Roman',serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:26px;margin:.4em 0 .1em}h2{font-size:18px;margin:1.6em 0 .3em;color:var(--ac)}p,li{margin:.4em 0}small,.mut{color:var(--mut)}
+a{color:var(--ac)}ul{padding-left:20px}
+.top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.lang button{font:inherit;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:4px 10px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.caixa{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:16px;margin:16px 0}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:var(--ac);color:#fff}
+.btn.perigo{background:#b3261e}.btn[disabled]{opacity:.5;cursor:default}
+[data-l]{display:none}[data-l].on{display:block}
+nav.vol{margin-bottom:8px}
+</style>
+</head><body><main>
+<div class="top"><a href="./" class="mut">Shape Puzzle</a><div class="lang" role="group" aria-label="Language"><button data-x="pt" aria-pressed="false">Português</button><button data-x="en" aria-pressed="false">English</button><button data-x="es" aria-pressed="false">Español</button></div></div>
+<section data-l="pt"><h1>Política de Privacidade — Shape Puzzle</h1><p class="mut">Atualizada em 5 de novembro de 2026.</p>
+<h2>1. Quem somos</h2><p>O Shape Puzzle é um jogo criado por <b>Jamerson Rafael</b> (pessoa física, Brasil), responsável pelos dados tratados no jogo. Para pedidos sobre seus dados, use primeiro a página <a href="excluir-conta.html?l=pt">Excluir minha conta</a>. Para outras dúvidas, abra uma conversa em <a href="https://github.com/Rafajames/ShapePuzzle/issues">https://github.com/Rafajames/ShapePuzzle/issues</a> sem colocar dados pessoais nela.</p>
+<h2>2. Jogar sem conta</h2><p>O jogo funciona sem criar conta. Seu progresso, recordes, estatísticas, configurações e as fases que você cria ficam <b>somente no seu aparelho</b>.</p>
+<h2>3. Conta Google (opcional)</h2><p>Se você entrar com o Google, o serviço Firebase Authentication, do Google, recebe o identificador da sua conta, seu e-mail e seu nome, só para identificar você. O jogo usa o seu primeiro nome apenas como sugestão de apelido, e você escolhe o apelido que quiser. Guardamos:</p>
+<ul><li><b>Perfil público</b>: apelido, avatar, moldura e número de fases concluídas. Outros jogadores podem ver.</li><li><b>Dados privados</b> (só você lê): progresso, recordes, estatísticas, configurações, fases criadas por você e suas estrelas e conquistas, como cópia de segurança para você continuar em outro aparelho.</li></ul>
+<p>Não coletamos fotos, localização, contatos nem outros dados do seu aparelho.</p>
+<h2>4. Campeonatos</h2><p>Ao participar de um campeonato online, o nome que você digita e seu tempo e número de jogadas ficam visíveis para o organizador e para os participantes. Os campeonatos sem internet (por QR code) não enviam nada pela internet.</p>
+<h2>5. Anúncios (versão para Android)</h2><p>A versão para Android poderá mostrar <b>anúncios premiados opcionais</b> do Google AdMob, só quando você escolher assisti-los. Nesse caso o Google pode usar o identificador de publicidade e dados do aparelho, conforme a <a href="https://policies.google.com/technologies/ads">política de anúncios do Google</a>. Na Europa e no Reino Unido pedimos seu consentimento antes. Você pode apagar ou redefinir o identificador de publicidade nas configurações do Android.</p>
+<h2>6. O que não fazemos</h2><p>Não usamos análise de uso nem rastreamento, não criamos perfis de comportamento e <b>não vendemos seus dados</b>.</p>
+<h2>7. Quem trata os dados por nós</h2><p>Google (Firebase Authentication, Firebase Realtime Database e, quando houver anúncios, AdMob), que pode armazenar dados em servidores fora do Brasil, inclusive nos Estados Unidos. O site é hospedado no GitHub Pages, que pode registrar o endereço IP nos seus próprios registros.</p>
+<h2>8. Por quanto tempo guardamos</h2><p>Enquanto sua conta existir. Ao apagar a conta, removemos seu perfil público, seus dados privados e a própria conta. Dados de um campeonato ficam até o organizador excluí-lo.</p>
+<h2>9. Seus direitos</h2><p>Você pode acessar e corrigir seus dados (Sua conta → Apelido), apagá-los (no jogo, em <i>Sua conta → Conta e nuvem → Apagar minha conta e meus dados</i>, ou pela página <a href="excluir-conta.html?l=pt">Excluir minha conta</a>), levar uma cópia (Menu → Backup) e retirar seu consentimento a qualquer momento. Isso vale conforme a LGPD e, para quem está na Europa, o GDPR.</p>
+<h2>10. Crianças</h2><p>O jogo não é direcionado a menores de 13 anos e não coletamos conscientemente dados deles. Criar conta exige 13 anos ou mais (ou a idade mínima do seu país). Se um menor criou uma conta, peça a exclusão pela página <a href="excluir-conta.html?l=pt">Excluir minha conta</a>.</p>
+<h2>11. Segurança</h2><p>As conexões são criptografadas (HTTPS) e as regras do banco de dados limitam quem pode ler e gravar cada dado. Nenhum sistema é totalmente seguro.</p>
+<h2>12. Mudanças</h2><p>Se esta política mudar, atualizaremos a data acima e, em mudanças relevantes, avisaremos dentro do jogo. Veja também os <a href="termos.html?l=pt">Termos de Uso</a>.</p></section>
+<section data-l="en"><h1>Privacy Policy — Shape Puzzle</h1><p class="mut">Updated November 5, 2026.</p>
+<h2>1. Who we are</h2><p>Shape Puzzle is a game created by <b>Jamerson Rafael</b> (an individual, Brazil), who is responsible for the data processed in the game. For requests about your data, please use the <a href="excluir-conta.html?l=en">Delete my account</a> page first. For other questions, open a conversation at <a href="https://github.com/Rafajames/ShapePuzzle/issues">https://github.com/Rafajames/ShapePuzzle/issues</a> without including personal data.</p>
+<h2>2. Playing without an account</h2><p>The game works without an account. Your progress, records, statistics, settings and the levels you create stay <b>only on your device</b>.</p>
+<h2>3. Google account (optional)</h2><p>If you sign in with Google, Google's Firebase Authentication service receives your account identifier, email address and name, only to identify you. The game uses your first name only as a nickname suggestion, and you choose whatever nickname you like. We store:</p>
+<ul><li><b>Public profile</b>: nickname, avatar, frame and number of finished levels. Other players can see it.</li><li><b>Private data</b> (only you can read it): progress, records, statistics, settings, levels you created, and your stars and achievements, as a backup so you can continue on another device.</li></ul>
+<p>We do not collect photos, location, contacts or other data from your device.</p>
+<h2>4. Championships</h2><p>When you join an online championship, the name you type and your time and number of moves are visible to the organizer and the participants. Offline (QR code) championships send nothing over the internet.</p>
+<h2>5. Ads (Android version)</h2><p>The Android version may show <b>optional rewarded ads</b> from Google AdMob, only when you choose to watch them. In that case Google may use the advertising identifier and device data, as described in <a href="https://policies.google.com/technologies/ads">Google's advertising policy</a>. In Europe and the United Kingdom we ask for your consent first. You can delete or reset the advertising ID in your Android settings.</p>
+<h2>6. What we do not do</h2><p>We use no usage analytics or tracking, we build no behavioral profiles and we <b>do not sell your data</b>.</p>
+<h2>7. Who processes data for us</h2><p>Google (Firebase Authentication, Firebase Realtime Database and, when ads exist, AdMob), which may store data on servers outside Brazil, including in the United States. The website is hosted on GitHub Pages, which may log IP addresses in its own records.</p>
+<h2>8. How long we keep it</h2><p>As long as your account exists. When you delete your account we remove your public profile, your private data and the account itself. Data of a championship stays until its organizer deletes it.</p>
+<h2>9. Your rights</h2><p>You can access and correct your data (Your account → Nickname), delete it (in the game, under <i>Your account → Account and cloud → Delete my account and data</i>, or on the <a href="excluir-conta.html?l=en">Delete my account</a> page), take a copy (Menu → Backup) and withdraw consent at any time. This applies under Brazil's LGPD and, for people in Europe, the GDPR.</p>
+<h2>10. Children</h2><p>The game is not directed at children under 13 and we do not knowingly collect their data. Creating an account requires being 13 or older (or the minimum age in your country). If a minor created an account, request deletion on the <a href="excluir-conta.html?l=en">Delete my account</a> page.</p>
+<h2>11. Security</h2><p>Connections are encrypted (HTTPS) and database rules limit who can read and write each piece of data. No system is completely secure.</p>
+<h2>12. Changes</h2><p>If this policy changes we will update the date above and, for relevant changes, notify you in the game. See also the <a href="termos.html?l=en">Terms of Use</a>.</p></section>
+<section data-l="es"><h1>Política de Privacidad — Shape Puzzle</h1><p class="mut">Actualizada el 5 de noviembre de 2026.</p>
+<h2>1. Quiénes somos</h2><p>Shape Puzzle es un juego creado por <b>Jamerson Rafael</b> (persona física, Brasil), responsable de los datos tratados en el juego. Para solicitudes sobre tus datos, usa primero la página <a href="excluir-conta.html?l=es">Borrar mi cuenta</a>. Para otras dudas, abre una conversación en <a href="https://github.com/Rafajames/ShapePuzzle/issues">https://github.com/Rafajames/ShapePuzzle/issues</a> sin incluir datos personales.</p>
+<h2>2. Jugar sin cuenta</h2><p>El juego funciona sin crear una cuenta. Tu progreso, récords, estadísticas, ajustes y los niveles que creas se quedan <b>solo en tu dispositivo</b>.</p>
+<h2>3. Cuenta de Google (opcional)</h2><p>Si entras con Google, el servicio Firebase Authentication, de Google, recibe el identificador de tu cuenta, tu correo y tu nombre, solo para identificarte. El juego usa tu primer nombre solo como sugerencia de apodo, y tú eliges el apodo que quieras. Guardamos:</p>
+<ul><li><b>Perfil público</b>: apodo, avatar, marco y número de niveles completados. Otros jugadores pueden verlo.</li><li><b>Datos privados</b> (solo tú los lees): progreso, récords, estadísticas, ajustes, niveles creados por ti y tus estrellas y logros, como copia de seguridad para que continúes en otro dispositivo.</li></ul>
+<p>No recopilamos fotos, ubicación, contactos ni otros datos de tu dispositivo.</p>
+<h2>4. Torneos</h2><p>Al participar en un torneo en línea, el nombre que escribes y tu tiempo y número de jugadas son visibles para el organizador y los participantes. Los torneos sin internet (por código QR) no envían nada por internet.</p>
+<h2>5. Anuncios (versión para Android)</h2><p>La versión para Android podrá mostrar <b>anuncios con recompensa opcionales</b> de Google AdMob, solo cuando elijas verlos. En ese caso Google puede usar el identificador de publicidad y datos del dispositivo, según la <a href="https://policies.google.com/technologies/ads">política de publicidad de Google</a>. En Europa y el Reino Unido pedimos tu consentimiento antes. Puedes borrar o restablecer el identificador de publicidad en los ajustes de Android.</p>
+<h2>6. Lo que no hacemos</h2><p>No usamos analítica de uso ni rastreo, no creamos perfiles de comportamiento y <b>no vendemos tus datos</b>.</p>
+<h2>7. Quién trata los datos por nosotros</h2><p>Google (Firebase Authentication, Firebase Realtime Database y, cuando haya anuncios, AdMob), que puede almacenar datos en servidores fuera de Brasil, incluido Estados Unidos. El sitio está alojado en GitHub Pages, que puede registrar direcciones IP en sus propios registros.</p>
+<h2>8. Cuánto tiempo los guardamos</h2><p>Mientras exista tu cuenta. Al borrarla, eliminamos tu perfil público, tus datos privados y la cuenta misma. Los datos de un torneo permanecen hasta que su organizador lo elimine.</p>
+<h2>9. Tus derechos</h2><p>Puedes acceder a tus datos y corregirlos (Tu cuenta → Apodo), borrarlos (en el juego, en <i>Tu cuenta → Cuenta y nube → Borrar mi cuenta y mis datos</i>, o en la página <a href="excluir-conta.html?l=es">Borrar mi cuenta</a>), llevarte una copia (Menú → Copia de seguridad) y retirar tu consentimiento en cualquier momento. Esto aplica según la LGPD de Brasil y, para quienes están en Europa, el RGPD.</p>
+<h2>10. Menores</h2><p>El juego no está dirigido a menores de 13 años y no recopilamos conscientemente sus datos. Crear una cuenta exige tener 13 años o más (o la edad mínima de tu país). Si un menor creó una cuenta, pide su eliminación en la página <a href="excluir-conta.html?l=es">Borrar mi cuenta</a>.</p>
+<h2>11. Seguridad</h2><p>Las conexiones están cifradas (HTTPS) y las reglas de la base de datos limitan quién puede leer y escribir cada dato. Ningún sistema es totalmente seguro.</p>
+<h2>12. Cambios</h2><p>Si esta política cambia, actualizaremos la fecha de arriba y, en cambios relevantes, avisaremos dentro del juego. Consulta también los <a href="termos.html?l=es">Términos de Uso</a>.</p></section>
+
+
+</main>
+<script>
+(function(){
+  var ok=['pt','en','es'],q=new URLSearchParams(location.search).get('l'),n=(navigator.language||'pt').slice(0,2);
+  var l=ok.indexOf(q)>=0?q:ok.indexOf(n)>=0?n:'en';
+  function set(x){document.documentElement.lang=x;document.querySelectorAll('[data-l]').forEach(function(e){e.classList.toggle('on',e.getAttribute('data-l')===x)});
+    document.querySelectorAll('.lang button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.x===x?'true':'false')});window.LANG=x;document.title=(document.querySelector('[data-l="'+x+'"] h1')||{}).textContent||document.title}
+  document.querySelectorAll('.lang button').forEach(function(b){b.onclick=function(){set(b.dataset.x)}});set(l);
+})();
+</script>
+
+</body></html>

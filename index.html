@@ -388,6 +388,9 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnBarra{height:6px;border-radius:3px;background:var(--t2);overflow:hidden}.cnBarra i{display:block;height:100%;background:var(--accent)}
 .cnConq li.ok .cnBarra i{background:var(--gold)}
 .cnOrigem li{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.cnTermos{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px;font-size:13px;color:var(--mut)}
+.cnTermos input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--accent)}.cnTermos a{color:var(--accent)}
+.cnLegal{text-align:center}.cnLegal a{color:var(--accent)}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -746,6 +749,11 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
       <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
       <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
     </div>
+    <div class="acts">
+      <a class="btn sm" data-lk="privacidade" target="_blank" rel="noopener" data-i="lock">Política de Privacidade</a>
+      <a class="btn sm" data-lk="termos" target="_blank" rel="noopener" data-i="chat">Termos de Uso</a>
+      <a class="btn sm" data-lk="excluir-conta" target="_blank" rel="noopener" data-i="trash">Excluir minha conta pela internet</a>
+    </div>
     <div class="acts"><button class="btn" id="btnCompJogo" data-i="share">Compartilhar o jogo</button></div>
     <div class="acts"><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
     </div></details>
@@ -1041,7 +1049,8 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
       <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
       <p id="cnTeaser" class="cnTeaser" hidden></p>
       <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
-      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
+      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <div id="cnDentro" hidden>
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
@@ -1066,6 +1075,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
       <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
         <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
         <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
+        <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
       </div></details>
     </div>
     <p class="aviso" id="cnAviso"></p>
@@ -1410,6 +1420,12 @@ en: {
   "Complete a fase do dia": "Complete the daily level",
   "Complete o desafio da semana": "Complete the weekly challenge",
   "Conclua {n} fases": "Finish {n} levels",
+  "Li e aceito os {t} e a {p}.": "I have read and accept the {t} and the {p}.",
+  "Termos de Uso": "Terms of Use",
+  "Política de Privacidade": "Privacy Policy",
+  "Marque que você leu e aceita os termos para entrar.": "Tick that you have read and accept the terms to sign in.",
+  "Esse apelido não é permitido. Escolha outro.": "That nickname is not allowed. Choose another.",
+  "Excluir minha conta pela internet": "Delete my account on the web",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2135,6 +2151,12 @@ es: {
   "Complete a fase do dia": "Completa el nivel del día",
   "Complete o desafio da semana": "Completa el desafío de la semana",
   "Conclua {n} fases": "Completa {n} niveles",
+  "Li e aceito os {t} e a {p}.": "He leído y acepto los {t} y la {p}.",
+  "Termos de Uso": "Términos de Uso",
+  "Política de Privacidade": "Política de Privacidad",
+  "Marque que você leu e aceita os termos para entrar.": "Marca que has leído y aceptas los términos para entrar.",
+  "Esse apelido não é permitido. Escolha outro.": "Ese apodo no está permitido. Elige otro.",
+  "Excluir minha conta pela internet": "Borrar mi cuenta por internet",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3171,6 +3193,16 @@ function limparCart(c){
   }
   if (Array.isArray(c.v)) o.v = [...new Set(c.v.filter(id => CONQUISTAS.some(q => q.id === id)))];
   return o;
+}
+
+/* ---- Filtro simples de apelidos (palavrões e nomes que imitam o jogo) ---- */
+const APELIDO_TRECHOS = ['caralho', 'buceta', 'cuzao', 'viado', 'arrombad', 'porra', 'fuck', 'bitch', 'cunt', 'nigger', 'nigga', 'faggot', 'whore', 'mierda', 'pendejo', 'maricon', 'cabron', 'hitler', 'nazista', 'shapepuzzle', 'rafajames'];
+const APELIDO_EXATAS = ['puta', 'puto', 'fdp', 'merda', 'shit', 'dick', 'rape', 'verga', 'joder', 'admin', 'moderador', 'suporte', 'staff', 'sistema'];
+function apelidoProibido(nome){
+  const t = String(nome || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/[@]/g, 'a').replace(/[$]/g, 's');
+  const junto = t.replace(/[^a-z]/g, '');
+  if (APELIDO_TRECHOS.some(w => junto.includes(w))) return true;
+  return t.split(/[^a-z]+/).filter(Boolean).some(w => APELIDO_EXATAS.includes(w));
 }
 /* ---- Campeonato sem internet por QR code: lógica pura (testada em Node) ----
    Tudo viaja dentro do próprio link/QR. Um "pacote" é o campeonato (nome, fases, jogadores) mais os resultados que já se tem:
@@ -5423,7 +5455,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.5';
+const VERSAO = '2026.11.05.6';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5992,9 +6024,20 @@ function verificarConquistas(avisar){
 /* Chamada a cada fase vencida. */
 function aposVitoriaConta(){ verificarConquistas(true); contaAgendar(); }
 
+/* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */
+const urlLegal = nome => nome + '.html?l=' + lang;
+function ligarLinksLegais(){ document.querySelectorAll('[data-lk]').forEach(a => { a.href = urlLegal(a.dataset.lk); }); }
+function montarTermos(){
+  const aceito = store.get('termos', 0) === 1;
+  $('#cnTermosL').hidden = aceito;
+  if (!aceito) $('#cnTermosT').innerHTML = tr('Li e aceito os {t} e a {p}.', {t: `<a href="${urlLegal('termos')}" target="_blank" rel="noopener">${tr('Termos de Uso')}</a>`, p: `<a href="${urlLegal('privacidade')}" target="_blank" rel="noopener">${tr('Política de Privacidade')}</a>`});
+  $('#cnEntrar').disabled = !aceito && !$('#cnTermos').checked;
+}
+
 /* ---------- tela inicial e área do usuário ---------- */
 function renderConta(){
   const b = $('#hConta'); if (!b) return;
+  ligarLinksLegais();
   b.textContent = '';
   const s = saldoAtual();
   if (!conta){
@@ -6045,6 +6088,7 @@ function montarConta(){
   $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
   const s = saldoAtual();
   if (!conta){
+    montarTermos();
     const t = $('#cnTeaser'); t.hidden = s <= 0; t.textContent = s > 0 ? tr('Você já tem {n} ★ esperando por você.', {n: s}) : ''; return;
   }
   const d = dadosAtuais(), donos = itensDe(d);
@@ -6104,6 +6148,7 @@ const salvarConta = () => { store.set('conta', conta); renderConta(); };
 
 /* ---------- entrar / sair / apagar ---------- */
 async function contaEntrar(){
+  if (store.get('termos', 0) !== 1){ if (!$('#cnTermos').checked){ aviso('#cnAviso', 'Marque que você leu e aceita os termos para entrar.', 'erro'); return; } store.set('termos', 1); }
   aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
   try{
     const a = await firebaseAuth(), prov = new firebase.auth.GoogleAuthProvider();
@@ -6204,6 +6249,7 @@ function mudarPerfil(m){
 function trocarApelido(){
   const n = limparNome($('#cnNome').value);
   if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no apelido.', 'erro'); return; }
+  if (apelidoProibido(n)){ aviso('#cnAviso', 'Esse apelido não é permitido. Escolha outro.', 'erro'); return; }
   if (conta.novo){
     conta.novo = false; mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo. Bom jogo!', 'ok'); contaAgendar(1500); return;
   }
@@ -6216,6 +6262,7 @@ function trocarApelido(){
 
 $('#hConta').onclick = abrirConta;
 $('#cnEntrar').onclick = contaEntrar;
+$('#cnTermos').onchange = montarTermos;
 $('#cnSair').onclick = contaSair;
 $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };

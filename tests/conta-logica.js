@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const logic = html.split('// ==LOGIC-START==')[1].split('// ==LOGIC-END==')[0];
-const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, ITENS, CONQUISTAS, NOME_CUSTO}')();
+const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, apelidoProibido, ITENS, CONQUISTAS, NOME_CUSTO}')();
 let falhas = 0; const ok = (c, m) => { console.log((c ? '  ok   ' : '  FALHA ') + m); if (!c) falhas++; };
 const base = (extra) => Object.assign({prog: {max: 0, done: []}, est: {}, dias: {}, sem: {}, inf: {feitas: {}, porNivel: {}}, cart: {g: {}, s: {}, v: []}}, extra);
 ok(L.saldoConta(base()) === 0, 'começa com 0 estrelas');
@@ -47,4 +47,6 @@ const env = {app: 'shapepuzzle', v: 1, dados: {prog: {max: 3, done: [0, 1, 2]}, 
 const lim = L.limparBackup(env); ok(lim.dados && lim.dados.cart.s['n:1'] === 30 && lim.dados.cart.v[0] === 'fases5', 'backup guarda a carteira');
 const jun = L.juntarDados(L.limparBackup(env).dados, {prog: {max: 5, done: [0, 1, 2, 3, 4]}, cart: {g: {}, s: {'n:2': 30}, v: []}});
 ok(jun.cart.s['n:1'] === 30 && jun.cart.s['n:2'] === 30 && jun.prog.done.length === 5, 'juntar dois aparelhos junta também a carteira');
+ok(L.apelidoProibido('p0rr4') && L.apelidoProibido('F u c k') && L.apelidoProibido('Admin') && L.apelidoProibido('shape_puzzle') && L.apelidoProibido('Pütä'.replace('ü','u').replace('ä','a')), 'filtro barra palavrões, truques com símbolos e nomes que imitam o jogo');
+ok(!L.apelidoProibido('Maria Luz') && !L.apelidoProibido('Computador') && !L.apelidoProibido('Ana123') && !L.apelidoProibido('Estrela'), 'não barra apelidos normais (Computador, Estrela…)');
 console.log(falhas ? '\nCONTA-LOGICA: ' + falhas + ' FALHA(S)' : '\nCONTA-LOGICA: TUDO OK'); process.exit(falhas ? 1 : 0);

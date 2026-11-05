@@ -199,3 +199,6 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnBarra{height:6px;border-radius:3px;background:var(--t2);overflow:hidden}.cnBarra i{display:block;height:100%;background:var(--accent)}
 .cnConq li.ok .cnBarra i{background:var(--gold)}
 .cnOrigem li{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.cnTermos{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px;font-size:13px;color:var(--mut)}
+.cnTermos input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--accent)}.cnTermos a{color:var(--accent)}
+.cnLegal{text-align:center}.cnLegal a{color:var(--accent)}

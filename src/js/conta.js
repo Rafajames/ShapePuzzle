@@ -62,9 +62,20 @@ function verificarConquistas(avisar){
 /* Chamada a cada fase vencida. */
 function aposVitoriaConta(){ verificarConquistas(true); contaAgendar(); }
 
+/* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */
+const urlLegal = nome => nome + '.html?l=' + lang;
+function ligarLinksLegais(){ document.querySelectorAll('[data-lk]').forEach(a => { a.href = urlLegal(a.dataset.lk); }); }
+function montarTermos(){
+  const aceito = store.get('termos', 0) === 1;
+  $('#cnTermosL').hidden = aceito;
+  if (!aceito) $('#cnTermosT').innerHTML = tr('Li e aceito os {t} e a {p}.', {t: `<a href="${urlLegal('termos')}" target="_blank" rel="noopener">${tr('Termos de Uso')}</a>`, p: `<a href="${urlLegal('privacidade')}" target="_blank" rel="noopener">${tr('Política de Privacidade')}</a>`});
+  $('#cnEntrar').disabled = !aceito && !$('#cnTermos').checked;
+}
+
 /* ---------- tela inicial e área do usuário ---------- */
 function renderConta(){
   const b = $('#hConta'); if (!b) return;
+  ligarLinksLegais();
   b.textContent = '';
   const s = saldoAtual();
   if (!conta){
@@ -115,6 +126,7 @@ function montarConta(){
   $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
   const s = saldoAtual();
   if (!conta){
+    montarTermos();
     const t = $('#cnTeaser'); t.hidden = s <= 0; t.textContent = s > 0 ? tr('Você já tem {n} ★ esperando por você.', {n: s}) : ''; return;
   }
   const d = dadosAtuais(), donos = itensDe(d);
@@ -174,6 +186,7 @@ const salvarConta = () => { store.set('conta', conta); renderConta(); };
 
 /* ---------- entrar / sair / apagar ---------- */
 async function contaEntrar(){
+  if (store.get('termos', 0) !== 1){ if (!$('#cnTermos').checked){ aviso('#cnAviso', 'Marque que você leu e aceita os termos para entrar.', 'erro'); return; } store.set('termos', 1); }
   aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
   try{
     const a = await firebaseAuth(), prov = new firebase.auth.GoogleAuthProvider();
@@ -274,6 +287,7 @@ function mudarPerfil(m){
 function trocarApelido(){
   const n = limparNome($('#cnNome').value);
   if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no apelido.', 'erro'); return; }
+  if (apelidoProibido(n)){ aviso('#cnAviso', 'Esse apelido não é permitido. Escolha outro.', 'erro'); return; }
   if (conta.novo){
     conta.novo = false; mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo. Bom jogo!', 'ok'); contaAgendar(1500); return;
   }
@@ -286,6 +300,7 @@ function trocarApelido(){
 
 $('#hConta').onclick = abrirConta;
 $('#cnEntrar').onclick = contaEntrar;
+$('#cnTermos').onchange = montarTermos;
 $('#cnSair').onclick = contaSair;
 $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };

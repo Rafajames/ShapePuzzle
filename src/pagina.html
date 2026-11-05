@@ -201,6 +201,11 @@
       <a class="btn" href="https://github.com/Rafajames" target="_blank" rel="noopener" data-i="user">Rafajames</a>
       <a class="btn" href="https://github.com/Rafajames/ShapePuzzle" target="_blank" rel="noopener" data-i="code">Código do jogo</a>
     </div>
+    <div class="acts">
+      <a class="btn sm" data-lk="privacidade" target="_blank" rel="noopener" data-i="lock">Política de Privacidade</a>
+      <a class="btn sm" data-lk="termos" target="_blank" rel="noopener" data-i="chat">Termos de Uso</a>
+      <a class="btn sm" data-lk="excluir-conta" target="_blank" rel="noopener" data-i="trash">Excluir minha conta pela internet</a>
+    </div>
     <div class="acts"><button class="btn" id="btnCompJogo" data-i="share">Compartilhar o jogo</button></div>
     <div class="acts"><button class="btn sm" id="btnTeste" data-i="lock">Modo de teste</button></div>
     </div></details>
@@ -496,7 +501,8 @@
       <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
       <p id="cnTeaser" class="cnTeaser" hidden></p>
       <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
-      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
+      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <div id="cnDentro" hidden>
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
@@ -521,6 +527,7 @@
       <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
         <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
         <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
+        <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
       </div></details>
     </div>
     <p class="aviso" id="cnAviso"></p>
