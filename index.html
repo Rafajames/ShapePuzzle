@@ -330,8 +330,8 @@ main{touch-action:pan-y}
 
 
 .home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
-.homeGrade{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.homeGrade .btn{justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
+.homeGrade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.homeGrade .btn{min-width:0;overflow-wrap:anywhere;justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
 .homeGrade .btn svg.i{flex:none}
 details.como{margin-top:14px}
 details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
@@ -352,6 +352,25 @@ details.como .how{margin:10px 0 0}
 body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padding:8px 6px;font-size:12px}
 .vitAcoes .btn.pri ~ .btn:nth-child(even):last-child{grid-column:1/-1}
 .vitAcoes:not(:has(.pri)) .btn:nth-child(odd):last-child{grid-column:1/-1}
+
+/* conta, avatar e molduras */
+.contaChip{width:100%;margin-top:12px;justify-content:flex-start;padding:7px 12px;gap:10px;text-align:left}
+.contaChip small{margin-left:auto;color:var(--mut);font-size:12px}
+.contaChip .cnN{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:4px;vertical-align:middle}
+.av svg,.av img{display:block;width:100%;height:100%;image-rendering:pixelated}
+.av.m-madeira{box-shadow:0 0 0 2px #7a4b1f,0 0 0 4px #e0b36a}
+.av.m-ouro{box-shadow:0 0 0 2px #b8860b,0 0 0 4px #ffd84d,0 0 9px #ffd84d}
+.av.m-pixel{box-shadow:0 0 0 3px #1b2a49,0 0 0 5px #5ec2ff}
+.av.m-festa{box-shadow:0 0 0 2px #e5484d,0 0 0 4px #e5a50a,0 0 0 6px #3e63dd}
+.cnTopo{display:flex;align-items:center;gap:14px;margin:8px 0 4px}
+.cnTopo .av{margin:8px}
+.cnQuem{display:flex;flex-direction:column;min-width:0}.cnQuem b{font-size:18px;overflow:hidden;text-overflow:ellipsis}.cnQuem small{color:var(--mut);font-size:12px}
+.cnGrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px}
+.cnGrade button{position:relative;display:flex;justify-content:center;padding:2px;border-radius:14px;border:2px solid transparent;background:transparent;cursor:pointer;color:inherit}
+.cnGrade button[aria-checked=true]{border-color:var(--accent);background:var(--t1)}
+.cnGrade button:disabled{opacity:.55;cursor:default}
+.cnLock{position:absolute;right:4px;bottom:4px;display:flex;background:var(--card1);border-radius:50%;padding:2px}.cnLock svg{width:13px;height:13px}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -583,6 +602,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
+    <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
       <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
@@ -994,6 +1014,34 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
   </div>
 </div>
 
+<!-- Conta (login opcional com o Google) -->
+<div class="ov" id="ov-conta">
+  <div class="card">
+    <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
+    <h1>Sua conta</h1>
+    <div id="cnFora">
+      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.</p>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
+    </div>
+    <div id="cnDentro" hidden>
+      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div></div>
+      <h2>Nome de usuário</h2>
+      <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Nome de usuário"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
+      <h2>Avatar</h2>
+      <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
+      <div class="acts"><button class="btn sm" id="cnFoto" data-i="camera">Usar uma foto</button></div>
+      <input type="file" id="cnArq" accept="image/*" hidden>
+      <h2>Moldura</h2>
+      <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      <h2>Progresso na nuvem</h2>
+      <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
+      <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar meus dados da nuvem</button></div>
+    </div>
+    <p class="aviso" id="cnAviso"></p>
+  </div>
+</div>
+
 <!-- Backup -->
 <div class="ov" id="ov-backup">
   <div class="card">
@@ -1224,6 +1272,50 @@ en: {
   "Pixel (aventura)": "Pixel (adventure)",
   "Pixel Art": "Pixel Art",
   "Ver o resultado": "See the result",
+  "Sua conta": "Your account",
+  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.": "Signing in is optional. With a Google account you keep your progress in the cloud and continue on another device.",
+  "Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.": "Your name and avatar are visible to other players. The game never sees your password or your email.",
+  "Entrar com o Google": "Sign in with Google",
+  "Entrar com Google": "Sign in with Google",
+  "opcional": "optional",
+  "Meu perfil": "My profile",
+  "Nome de usuário": "Username",
+  "Avatar": "Avatar",
+  "Usar uma foto": "Use a photo",
+  "Moldura": "Frame",
+  "Progresso na nuvem": "Progress in the cloud",
+  "Sincronizar agora": "Sync now",
+  "Sair desta conta": "Sign out",
+  "Apagar meus dados da nuvem": "Delete my cloud data",
+  "Sincronizado às {hora}": "Synced at {hora}",
+  "Entre de novo para sincronizar.": "Sign in again to sync.",
+  "Há mudanças para enviar à nuvem.": "There are changes to send to the cloud.",
+  "Ainda não sincronizado.": "Not synced yet.",
+  "Minha foto": "My photo",
+  "Avatar {n}": "Avatar {n}",
+  "Sem moldura": "No frame",
+  "Ouro": "Gold",
+  "Pixel": "Pixel",
+  "Festa": "Party",
+  "Em breve": "Coming soon",
+  "Abrindo o login do Google…": "Opening Google sign-in…",
+  "Login cancelado.": "Sign-in cancelled.",
+  "Conectando…": "Connecting…",
+  "Este endereço ainda não foi liberado para o login. Avise o dono do jogo.": "This address is not enabled for sign-in yet. Tell the game's owner.",
+  "Não consegui entrar agora. Confira a internet e tente de novo.": "I couldn't sign in right now. Check your connection and try again.",
+  "Você saiu. O progresso continua neste aparelho.": "You signed out. Your progress stays on this device.",
+  "Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.": "Delete your profile and saved progress from the cloud? Progress on this device stays.",
+  "Não consegui apagar agora. Confira a internet e tente de novo.": "I couldn't delete right now. Check your connection and try again.",
+  "Seus dados foram apagados da nuvem.": "Your data was deleted from the cloud.",
+  "Sincronizando…": "Syncing…",
+  "Progresso da nuvem recebido! Reiniciando o jogo…": "Cloud progress received! Restarting the game…",
+  "Há progresso novo na nuvem. Toque em Sincronizar agora para recebê-lo.": "There is new progress in the cloud. Tap Sync now to get it.",
+  "A nuvem recusou a gravação. Tente sair e entrar de novo.": "The cloud refused the save. Try signing out and in again.",
+  "Sem conexão agora. Tentamos de novo mais tarde.": "No connection right now. We'll try again later.",
+  "Use de 2 a 20 letras ou números no nome.": "Use 2 to 20 letters or numbers for the name.",
+  "Nome salvo.": "Name saved.",
+  "Foto salva.": "Photo saved.",
+  "Não consegui usar essa imagem. Tente outra.": "I couldn't use that image. Try another.",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1841,6 +1933,50 @@ es: {
   "Pixel (aventura)": "Pixel (aventura)",
   "Pixel Art": "Pixel Art",
   "Ver o resultado": "Ver el resultado",
+  "Sua conta": "Tu cuenta",
+  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.": "Iniciar sesión es opcional. Con una cuenta de Google guardas tu progreso en la nube y continúas en otro dispositivo.",
+  "Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.": "Tu nombre y tu avatar son visibles para otros jugadores. El juego nunca ve tu contraseña ni tu correo.",
+  "Entrar com o Google": "Entrar con Google",
+  "Entrar com Google": "Entrar con Google",
+  "opcional": "opcional",
+  "Meu perfil": "Mi perfil",
+  "Nome de usuário": "Nombre de usuario",
+  "Avatar": "Avatar",
+  "Usar uma foto": "Usar una foto",
+  "Moldura": "Marco",
+  "Progresso na nuvem": "Progreso en la nube",
+  "Sincronizar agora": "Sincronizar ahora",
+  "Sair desta conta": "Salir de esta cuenta",
+  "Apagar meus dados da nuvem": "Borrar mis datos de la nube",
+  "Sincronizado às {hora}": "Sincronizado a las {hora}",
+  "Entre de novo para sincronizar.": "Entra de nuevo para sincronizar.",
+  "Há mudanças para enviar à nuvem.": "Hay cambios para enviar a la nube.",
+  "Ainda não sincronizado.": "Aún sin sincronizar.",
+  "Minha foto": "Mi foto",
+  "Avatar {n}": "Avatar {n}",
+  "Sem moldura": "Sin marco",
+  "Ouro": "Oro",
+  "Pixel": "Píxel",
+  "Festa": "Fiesta",
+  "Em breve": "Próximamente",
+  "Abrindo o login do Google…": "Abriendo el acceso de Google…",
+  "Login cancelado.": "Acceso cancelado.",
+  "Conectando…": "Conectando…",
+  "Este endereço ainda não foi liberado para o login. Avise o dono do jogo.": "Esta dirección aún no está habilitada para el acceso. Avisa al dueño del juego.",
+  "Não consegui entrar agora. Confira a internet e tente de novo.": "No pude entrar ahora. Revisa tu conexión e inténtalo de nuevo.",
+  "Você saiu. O progresso continua neste aparelho.": "Saliste. Tu progreso sigue en este dispositivo.",
+  "Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.": "¿Borrar de la nube tu perfil y el progreso guardado? El progreso de este dispositivo se mantiene.",
+  "Não consegui apagar agora. Confira a internet e tente de novo.": "No pude borrar ahora. Revisa tu conexión e inténtalo de nuevo.",
+  "Seus dados foram apagados da nuvem.": "Tus datos fueron borrados de la nube.",
+  "Sincronizando…": "Sincronizando…",
+  "Progresso da nuvem recebido! Reiniciando o jogo…": "¡Progreso de la nube recibido! Reiniciando el juego…",
+  "Há progresso novo na nuvem. Toque em Sincronizar agora para recebê-lo.": "Hay progreso nuevo en la nube. Toca Sincronizar ahora para recibirlo.",
+  "A nuvem recusou a gravação. Tente sair e entrar de novo.": "La nube rechazó el guardado. Prueba salir y entrar de nuevo.",
+  "Sem conexão agora. Tentamos de novo mais tarde.": "Sin conexión ahora. Lo intentaremos más tarde.",
+  "Use de 2 a 20 letras ou números no nome.": "Usa de 2 a 20 letras o números en el nombre.",
+  "Nome salvo.": "Nombre guardado.",
+  "Foto salva.": "Foto guardada.",
+  "Não consegui usar essa imagem. Tente outra.": "No pude usar esa imagen. Prueba otra.",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3010,6 +3146,7 @@ const ICONES = {
   undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
   reset:'<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>',
   edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+  camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/>',
   share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
@@ -3854,6 +3991,7 @@ function vencer(){
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
+  contaAgendar();
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
   if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
   if (k && !S.dicas && !modoTeste){
@@ -4339,6 +4477,7 @@ $('#hMenu').onclick = atalhoInicio(() => abrirMenu());
 $('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
+  if (window.__pronto) renderConta();
   if (!S.jogo) return;
   const volta = prog.done.length > 0 || !!andamento;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
@@ -4945,12 +5084,12 @@ $('#ovExcluir').onclick = () => { if (confirmarTirarOff()){ delete offs[OFF.id];
 const BK = {pend: null};
 const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
   cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
-const envelopeBackup = () => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dadosAtuais()});
+const envelopeBackup = dados => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dados || dadosAtuais()});
 const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 const b64uParaBytes = t => { t = t.replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; const b = atob(t), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
 const passar = async (u8, stream) => new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer());
-async function codigoBackup(){
-  const json = JSON.stringify(envelopeBackup());
+async function codigoBackup(dados){
+  const json = JSON.stringify(envelopeBackup(dados));
   let bytes = new TextEncoder().encode(json), z = '';
   if (typeof CompressionStream !== 'undefined'){ try{ bytes = await passar(bytes, new CompressionStream('deflate-raw')); z = 'z'; }catch(e){ bytes = new TextEncoder().encode(json); z = ''; } }
   return 'SP1' + z + '.' + somaTexto(json) + '.' + bytesParaB64u(bytes);
@@ -4997,7 +5136,7 @@ async function conferirBackup(){
   $('#bkTxt').textContent = (r.criado ? tr('Backup de {data}:', {data: r.criado.split('-').reverse().join('/')}) + ' ' : '') + partes.join(' · ') + '.';
   $('#bkResumo').hidden = false;
 }
-function gravarBackup(d, comCfg, limpar){
+function gravarBackup(d, comCfg, limpar, msg){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
   if (d.prog) d.prog = {max: Math.min(d.prog.max, LIMITE_FASES - 1), done: d.prog.done.filter(i => i < LIMITE_FASES)};
@@ -5009,7 +5148,7 @@ function gravarBackup(d, comCfg, limpar){
     if (c.humor) store.set('humor', c.humor); if (c.pecas !== undefined) store.set('pecas', c.pecas);
     ['vibra', 'musica', 'sfx', 'vol'].forEach(k => { if (c[k] !== undefined) store.set(k, c[k]); });
   }
-  toast('Backup restaurado! Reiniciando o jogo…');
+  toast(msg || 'Backup restaurado! Reiniciando o jogo…');
   setTimeout(() => location.reload(), 1000);
 }
 function dadosLimpos(){ const r = limparBackup({app: 'shapepuzzle', v: 1, dados: dadosAtuais()}); return r.dados || {}; }
@@ -5039,7 +5178,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.3';
+const VERSAO = '2026.11.05.4';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5544,6 +5683,249 @@ function vitoriaCamp(c, res, add, reabrir){
 }
 
 
+/* ======================= Conta (login opcional com o Google) =======================
+   O jogo inteiro funciona sem conta. Com ela: nome, avatar e moldura, e o progresso guardado na nuvem
+   (juntando o que já existe no aparelho com o que está na nuvem — nunca se perde nada).
+   O Firebase só é baixado quando a pessoa usa a conta. */
+const FB_VERSAO = '10.14.1';
+const FB_SCRIPTS = ['firebase-app-compat.js', 'firebase-auth-compat.js'].map(f => `https://www.gstatic.com/firebasejs/${FB_VERSAO}/${f}`);
+const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebaseapp.com', projectId: 'shapepuzzle-76162'};
+const N_AVATARES = 12;
+const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
+/* Molduras: `livre` = qualquer um usa; as outras ficam com cadeado, prontas para serem liberadas depois (conquistas, loja, brindes). */
+const MOLDURAS = [{id: '', nome: 'Sem moldura', livre: true}, {id: 'madeira', nome: 'Madeira', livre: true},
+  {id: 'ouro', nome: 'Ouro', livre: false}, {id: 'pixel', nome: 'Pixel', livre: false}, {id: 'festa', nome: 'Festa', livre: false}];
+let conta = store.get('conta', null);   // {uid, nome, av, mold, foto?, sujo?, fotoSuja?, ultima?, expirou?}
+const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
+const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
+let fbAuth = null, contaOcupada = false, contaTimer = null;
+
+/* ---------- avatar ---------- */
+const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
+const avPadrao = uid => 'p' + (1 + hashTxt(String(uid)) % N_AVATARES);
+const avValido = id => id === 'foto' || (/^p\d{1,2}$/.test(id) && +id.slice(1) >= 1 && +id.slice(1) <= N_AVATARES) ? id : 'p1';
+const moldValida = id => MOLDURAS.some(m => m.id === id && m.livre) ? id : '';
+const ehFoto = f => typeof f === 'string' && f.length <= 12000 && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(f);
+function svgAvatar(id){
+  const n = +String(id).slice(1) || 1;
+  let h = (Math.imul(n, 2654435761) >>> 0) || 1;
+  const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
+  for (let i = 0; i < 6; i++) rnd();
+  const cor = PALETA_AV[(n - 1) % PALETA_AV.length];
+  let r = '';
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
+    if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
+  }
+  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="#fff6dc"/><g fill="${cor}">${r}</g></svg>`;
+}
+/* Monta o avatar de uma conta ({av, foto, mold}) com a moldura, no tamanho `tam` (px). */
+function avatarEl(c, tam){
+  const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : ''));
+  e.style.setProperty('--t', (tam || 40) + 'px');
+  if (c && c.av === 'foto' && ehFoto(c.foto)){ const i = new Image(); i.alt = ''; i.src = c.foto; e.appendChild(i); }
+  else e.innerHTML = svgAvatar(c && c.av && c.av !== 'foto' ? c.av : 'p1');
+  return e;
+}
+
+/* ---------- tela inicial e tela da conta ---------- */
+function renderConta(){
+  const b = $('#hConta'); if (!b) return;
+  b.textContent = '';
+  if (!conta){ b.innerHTML = ic('user'); b.appendChild(mk('span', '', tr('Entrar com Google'))); b.appendChild(mk('small', '', tr('opcional'))); b.setAttribute('aria-label', tr('Entrar com Google')); }
+  else {
+    b.appendChild(avatarEl(conta, 30));
+    const nm = mk('span', 'cnN', conta.nome); b.appendChild(nm);
+    b.appendChild(mk('small', '', tr('Meu perfil'))); b.setAttribute('aria-label', tr('Meu perfil') + ': ' + conta.nome);
+  }
+  if ($('#ov-conta').classList.contains('on')) montarConta();
+}
+function estadoConta(txt){ const e = $('#cnEstado'); if (e) e.textContent = txt ? tr(txt) : ''; }
+function textoUltima(){
+  if (!conta) return '';
+  if (conta.expirou) return 'Entre de novo para sincronizar.';
+  if (conta.sujo) return 'Há mudanças para enviar à nuvem.';
+  return conta.ultima ? tr('Sincronizado às {hora}', {hora: new Date(conta.ultima).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}) : 'Ainda não sincronizado.';
+}
+function montarConta(){
+  $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
+  if (!conta) return;
+  $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(conta, 64));
+  $('#cnNomeTxt').textContent = conta.nome; if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta.nome;
+  estadoConta(textoUltima());
+  const ga = $('#cnAvatares'); ga.textContent = '';
+  const ids = []; for (let i = 1; i <= N_AVATARES; i++) ids.push('p' + i);
+  if (ehFoto(conta.foto)) ids.push('foto');
+  ids.forEach((id, i) => {
+    const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', conta.av === id ? 'true' : 'false');
+    b.setAttribute('aria-label', id === 'foto' ? tr('Minha foto') : tr('Avatar {n}', {n: i + 1})); b.dataset.av = id;
+    b.appendChild(avatarEl({av: id, foto: conta.foto}, 44)); b.onclick = () => mudarPerfil({av: id}); ga.appendChild(b);
+  });
+  const gm = $('#cnMolduras'); gm.textContent = '';
+  MOLDURAS.forEach(m => {
+    const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', conta.mold === m.id ? 'true' : 'false'); b.dataset.mold = m.id;
+    b.setAttribute('aria-label', tr(m.nome) + (m.livre ? '' : ' — ' + tr('Em breve'))); b.disabled = !m.livre; b.title = m.livre ? tr(m.nome) : tr('Em breve');
+    b.appendChild(avatarEl({av: conta.av, foto: conta.foto, mold: m.id}, 40));
+    if (!m.livre){ const l = mk('i', 'cnLock'); l.innerHTML = ic('lock'); b.appendChild(l); }
+    b.onclick = () => mudarPerfil({mold: m.id}); gm.appendChild(b);
+  });
+}
+function abrirConta(){ aviso('#cnAviso', ''); montarConta(); abrir('conta'); }
+
+/* ---------- Firebase (carregado só quando precisa) ---------- */
+const carregarScript = src => new Promise((ok, no) => {
+  const e = document.createElement('script'); const t = setTimeout(() => no(new Error('rede')), 20000);
+  e.src = src; e.onload = () => { clearTimeout(t); ok(); }; e.onerror = () => { clearTimeout(t); no(new Error('rede')); }; document.head.appendChild(e);
+});
+function firebaseAuth(){
+  if (fbAuth) return fbAuth;
+  fbAuth = (async () => { for (const s of FB_SCRIPTS) await carregarScript(s); firebase.initializeApp(FB_CONFIG); return firebase.auth(); })();
+  fbAuth.catch(() => { fbAuth = null; });
+  return fbAuth;
+}
+const usuarioPronto = a => new Promise(ok => { let off = null, feito = false; off = a.onAuthStateChanged(u => { feito = true; if (off) off(); ok(u); }); if (feito && off) off(); });
+async function contaToken(){
+  const a = await firebaseAuth(), u = a.currentUser || await usuarioPronto(a);
+  if (!u || (conta && u.uid !== conta.uid)) return null;
+  return u.getIdToken();
+}
+const nv = (m, caminho, corpo, tk) => nuvem(cpDb, m, caminho, corpo, tk);
+const aplicarNomeCamp = () => { if (conta && !cpAuth){ cpNome = conta.nome; store.set('cpnome', cpNome); } };
+const salvarConta = () => { store.set('conta', conta); renderConta(); };
+
+/* ---------- entrar / sair ---------- */
+async function contaEntrar(){
+  aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
+  try{
+    const a = await firebaseAuth(), prov = new firebase.auth.GoogleAuthProvider();
+    let r;
+    try{ r = await a.signInWithPopup(prov); }
+    catch(e){
+      const c = e && e.code;
+      if (COD_FECHOU.includes(c)){ aviso('#cnAviso', 'Login cancelado.'); return; }
+      if (COD_BLOQUEOU.includes(c)){ store.set('contaredir', 1); await a.signInWithRedirect(prov); return; }
+      throw e;
+    }
+    aviso('#cnAviso', 'Conectando…');
+    await contaPosLogin(r.user);
+  }catch(e){
+    const dominio = !!e && e.code === COD_DOMINIO;
+    aviso('#cnAviso', dominio ? 'Este endereço ainda não foi liberado para o login. Avise o dono do jogo.' : 'Não consegui entrar agora. Confira a internet e tente de novo.', 'erro');
+  }finally{ $('#cnEntrar').disabled = false; }
+}
+async function contaPosLogin(user){
+  const tk = await user.getIdToken();
+  const pub = await nv('GET', 'pub/' + user.uid, undefined, tk);
+  if (pub && pub.nome){
+    conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
+    if (conta.av === 'foto'){
+      let f = null; try{ f = await nv('GET', 'foto/' + user.uid, undefined, tk); }catch(e){}
+      if (ehFoto(f)) conta.foto = f; else conta.av = avPadrao(user.uid);
+    }
+  } else {
+    let n = limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
+    conta = {uid: user.uid, nome: n, av: avPadrao(user.uid), mold: '', sujo: true};
+  }
+  aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
+  await contaSync({aplicar: true});
+}
+async function contaSair(){
+  try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
+  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
+}
+async function contaApagar(){
+  if (!conta || !confirm(tr('Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.'))) return;
+  try{
+    const tk = await contaToken(); if (!tk) throw new Error('sessao');
+    for (const c of ['pub', 'priv', 'foto']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
+  }catch(e){ aviso('#cnAviso', 'Não consegui apagar agora. Confira a internet e tente de novo.', 'erro'); return; }
+  await contaSair(); aviso('#cnAviso', 'Seus dados foram apagados da nuvem.', 'ok');
+}
+
+/* ---------- sincronização ---------- */
+const estavel = v => JSON.stringify(v, (k, x) => x && typeof x === 'object' && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, c) => (o[c] = x[c], o), {}) : x);
+const semCfg = d => { const o = JSON.parse(JSON.stringify(d || {})); delete o.cfg; if (o.prog && o.prog.done) o.prog.done.sort((a, b) => a - b); return o; };
+const fasesFeitas = d => Math.min(1000, d && d.prog ? d.prog.done.length : 0);
+async function contaPublicar(tk, dados){
+  if (conta.av === 'foto' && conta.fotoSuja && ehFoto(conta.foto)){ await nv('PUT', 'foto/' + conta.uid, conta.foto, tk); conta.fotoSuja = false; }
+  await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
+}
+async function contaSync(op){
+  op = op || {};
+  if (!conta || contaOcupada) return;
+  contaOcupada = true; estadoConta('Sincronizando…');
+  try{
+    const tk = await contaToken();
+    if (!tk){ conta.expirou = true; salvarConta(); return; }
+    conta.expirou = false;
+    let nuv = null;
+    const priv = await nv('GET', 'priv/' + conta.uid, undefined, tk);
+    if (priv && typeof priv.d === 'string'){ const r = await lerBackup(priv.d); if (!r.erro) nuv = r.dados; }
+    const local = dadosLimpos(), junto = nuv ? juntarDados(local, nuv) : local;
+    const mudou = !!nuv && estavel(semCfg(junto)) !== estavel(semCfg(local));
+    const cod = await codigoBackup(junto);
+    if (cod.length <= 250000) await nv('PUT', 'priv/' + conta.uid, {d: cod, ts: Date.now()}, tk);
+    await contaPublicar(tk, junto);
+    conta.sujo = false; conta.ultima = Date.now(); salvarConta();
+    if (mudou){
+      if (op.aplicar){ gravarBackup(junto, false, false, 'Progresso da nuvem recebido! Reiniciando o jogo…'); return; }
+      estadoConta('Há progresso novo na nuvem. Toque em Sincronizar agora para recebê-lo.');
+    }
+  }catch(e){
+    if (conta){ conta.sujo = true; store.set('conta', conta); }
+    estadoConta(e && e.cod === 'negado' ? 'A nuvem recusou a gravação. Tente sair e entrar de novo.' : 'Sem conexão agora. Tentamos de novo mais tarde.');
+  }finally{ contaOcupada = false; }
+}
+/* Chamada a cada fase vencida: sincroniza em segundo plano, com folga para não gastar rede à toa. */
+function contaAgendar(){ if (!conta) return; clearTimeout(contaTimer); contaTimer = setTimeout(() => contaSync({aplicar: false}), 30000); }
+/* Envia só o perfil (nome, avatar, moldura) depois de uma edição. */
+async function contaPerfilRapido(){
+  try{ const tk = await contaToken(); if (!tk) throw new Error('sessao'); await contaPublicar(tk, dadosLimpos()); conta.sujo = false; store.set('conta', conta); estadoConta(textoUltima()); }
+  catch(e){ conta.sujo = true; store.set('conta', conta); estadoConta('Sem conexão agora. Tentamos de novo mais tarde.'); }
+}
+function mudarPerfil(m){
+  if (!conta) return;
+  if (m.av !== undefined) conta.av = m.av;
+  if (m.mold !== undefined) conta.mold = m.mold;
+  if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
+  conta.sujo = true; salvarConta(); montarConta(); contaPerfilRapido();
+}
+function reduzirFoto(file){
+  return new Promise((ok, no) => {
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = () => {
+      const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), l = Math.min(im.width, im.height);
+      x.drawImage(im, (im.width - l) / 2, (im.height - l) / 2, l, l, 0, 0, 64, 64); URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', 0.72));
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); no(new Error('img')); }; im.src = url;
+  });
+}
+
+$('#hConta').onclick = abrirConta;
+$('#cnEntrar').onclick = contaEntrar;
+$('#cnSair').onclick = contaSair;
+$('#cnApagar').onclick = contaApagar;
+$('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
+$('#cnNomeOk').onclick = () => {
+  const n = limparNome($('#cnNome').value);
+  if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no nome.', 'erro'); return; }
+  mudarPerfil({nome: n}); aviso('#cnAviso', 'Nome salvo.', 'ok');
+};
+$('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
+$('#cnFoto').onclick = () => $('#cnArq').click();
+$('#cnArq').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try{ const d = await reduzirFoto(f); if (!ehFoto(d)) throw new Error('img'); conta.foto = d; conta.fotoSuja = true; mudarPerfil({av: 'foto'}); aviso('#cnAviso', 'Foto salva.', 'ok'); }
+  catch(e){ aviso('#cnAviso', 'Não consegui usar essa imagem. Tente outra.', 'erro'); }
+};
+
+renderConta();
+if (conta){
+  setTimeout(() => { if (navigator.onLine !== false) contaSync({aplicar: $('#ov-splash').classList.contains('on')}); }, 2500);
+}
+if (store.get('contaredir')){
+  store.set('contaredir', null);
+  firebaseAuth().then(a => a.getRedirectResult()).then(r => { if (r && r.user){ abrirConta(); return contaPosLogin(r.user); } }).catch(() => {});
+}
 /* ======================= Início ======================= */
 /* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){

@@ -74,6 +74,7 @@
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
+    <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
       <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
@@ -485,6 +486,34 @@
   </div>
 </div>
 
+<!-- Conta (login opcional com o Google) -->
+<div class="ov" id="ov-conta">
+  <div class="card">
+    <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
+    <h1>Sua conta</h1>
+    <div id="cnFora">
+      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.</p>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user">Entrar com o Google</button></div>
+    </div>
+    <div id="cnDentro" hidden>
+      <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div></div>
+      <h2>Nome de usuário</h2>
+      <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Nome de usuário"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
+      <h2>Avatar</h2>
+      <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
+      <div class="acts"><button class="btn sm" id="cnFoto" data-i="camera">Usar uma foto</button></div>
+      <input type="file" id="cnArq" accept="image/*" hidden>
+      <h2>Moldura</h2>
+      <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      <h2>Progresso na nuvem</h2>
+      <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
+      <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar meus dados da nuvem</button></div>
+    </div>
+    <p class="aviso" id="cnAviso"></p>
+  </div>
+</div>
+
 <!-- Backup -->
 <div class="ov" id="ov-backup">
   <div class="card">
@@ -532,6 +561,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js inicio.js
 </body>
 </html>

@@ -8,7 +8,7 @@ const tmp = path.join(os.tmpdir(), 'shapepuzzle-lint.js'); fs.writeFileSync(tmp,
 (async () => {
   const eslint = new ESLint({ overrideConfigFile: true, cwd: os.tmpdir(), overrideConfig: [{
     files: ['**/*.js'],
-    languageOptions: { ecmaVersion: 2022, sourceType: 'script', globals: { ...globals.browser, qrcode: 'readonly', CompressionStream: 'readonly', DecompressionStream: 'readonly' } },
+    languageOptions: { ecmaVersion: 2022, sourceType: 'script', globals: { ...globals.browser, qrcode: 'readonly', firebase: 'readonly', CompressionStream: 'readonly', DecompressionStream: 'readonly' } },
     linterOptions: { reportUnusedDisableDirectives: false },
     rules: { 'no-undef': 'error', 'no-redeclare': 'error', 'no-dupe-keys': 'error', 'no-dupe-args': 'error', 'no-unreachable': 'error',
       'no-const-assign': 'error', 'no-func-assign': 'error', 'no-self-assign': 'error', 'no-unsafe-negation': 'error', 'use-isnan': 'error', 'valid-typeof': 'error',

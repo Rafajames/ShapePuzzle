@@ -81,6 +81,54 @@
           }
         }
       }
+    },
+    "pub": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['nome', 'av', 'n'])",
+        "nome": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
+        },
+        "av": {
+          ".validate": "newData.isString() && newData.val().length <= 12"
+        },
+        "mold": {
+          ".validate": "newData.isString() && newData.val().length <= 12"
+        },
+        "n": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+        },
+        "ts": {
+          ".validate": "newData.isNumber()"
+        },
+        "$outro": {
+          ".validate": false
+        }
+      }
+    },
+    "priv": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['d', 'ts'])",
+        "d": {
+          ".validate": "newData.isString() && newData.val().length <= 250000"
+        },
+        "ts": {
+          ".validate": "newData.isNumber()"
+        },
+        "$outro": {
+          ".validate": false
+        }
+      }
+    },
+    "foto": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.isString() && newData.val().length <= 12000 && newData.val().matches(/^data:image\\/jpeg;base64,[A-Za-z0-9+\\/=]+$/)"
+      }
     }
   }
 }

@@ -2,12 +2,12 @@
 const BK = {pend: null};
 const dadosAtuais = () => ({prog, est: estrelasFase, rec: recs, dias, sem, corr, custom, stats: Est, inf,
   cfg: {lang, tema, a11y, humor: humorPref, pecas: pecasPref, vibra: vibraOn, musica: Som.musica(), sfx: Som.sfx(), vol: Som.volume()}});
-const envelopeBackup = () => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dadosAtuais()});
+const envelopeBackup = dados => ({app: 'shapepuzzle', v: 1, criado: new Date().toISOString(), versao: VERSAO, dados: dados || dadosAtuais()});
 const bytesParaB64u = u8 => { let b = ''; for (let i = 0; i < u8.length; i += 8192) b += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 const b64uParaBytes = t => { t = t.replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; const b = atob(t), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
 const passar = async (u8, stream) => new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer());
-async function codigoBackup(){
-  const json = JSON.stringify(envelopeBackup());
+async function codigoBackup(dados){
+  const json = JSON.stringify(envelopeBackup(dados));
   let bytes = new TextEncoder().encode(json), z = '';
   if (typeof CompressionStream !== 'undefined'){ try{ bytes = await passar(bytes, new CompressionStream('deflate-raw')); z = 'z'; }catch(e){ bytes = new TextEncoder().encode(json); z = ''; } }
   return 'SP1' + z + '.' + somaTexto(json) + '.' + bytesParaB64u(bytes);
@@ -54,7 +54,7 @@ async function conferirBackup(){
   $('#bkTxt').textContent = (r.criado ? tr('Backup de {data}:', {data: r.criado.split('-').reverse().join('/')}) + ' ' : '') + partes.join(' · ') + '.';
   $('#bkResumo').hidden = false;
 }
-function gravarBackup(d, comCfg, limpar){
+function gravarBackup(d, comCfg, limpar, msg){
   restaurando = true;
   const grava = (k, v) => { if (v !== undefined) store.set(k, v); else if (limpar){ try{ localStorage.removeItem('shapepuzzle.' + k); }catch(e){} } };
   if (d.prog) d.prog = {max: Math.min(d.prog.max, LIMITE_FASES - 1), done: d.prog.done.filter(i => i < LIMITE_FASES)};
@@ -66,7 +66,7 @@ function gravarBackup(d, comCfg, limpar){
     if (c.humor) store.set('humor', c.humor); if (c.pecas !== undefined) store.set('pecas', c.pecas);
     ['vibra', 'musica', 'sfx', 'vol'].forEach(k => { if (c[k] !== undefined) store.set(k, c[k]); });
   }
-  toast('Backup restaurado! Reiniciando o jogo…');
+  toast(msg || 'Backup restaurado! Reiniciando o jogo…');
   setTimeout(() => location.reload(), 1000);
 }
 function dadosLimpos(){ const r = limparBackup({app: 'shapepuzzle', v: 1, dados: dadosAtuais()}); return r.dados || {}; }

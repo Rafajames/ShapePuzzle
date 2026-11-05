@@ -142,8 +142,8 @@ main{touch-action:pan-y}
 
 
 .home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
-.homeGrade{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.homeGrade .btn{justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
+.homeGrade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.homeGrade .btn{min-width:0;overflow-wrap:anywhere;justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
 .homeGrade .btn svg.i{flex:none}
 details.como{margin-top:14px}
 details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
@@ -164,3 +164,22 @@ details.como .how{margin:10px 0 0}
 body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padding:8px 6px;font-size:12px}
 .vitAcoes .btn.pri ~ .btn:nth-child(even):last-child{grid-column:1/-1}
 .vitAcoes:not(:has(.pri)) .btn:nth-child(odd):last-child{grid-column:1/-1}
+
+/* conta, avatar e molduras */
+.contaChip{width:100%;margin-top:12px;justify-content:flex-start;padding:7px 12px;gap:10px;text-align:left}
+.contaChip small{margin-left:auto;color:var(--mut);font-size:12px}
+.contaChip .cnN{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:4px;vertical-align:middle}
+.av svg,.av img{display:block;width:100%;height:100%;image-rendering:pixelated}
+.av.m-madeira{box-shadow:0 0 0 2px #7a4b1f,0 0 0 4px #e0b36a}
+.av.m-ouro{box-shadow:0 0 0 2px #b8860b,0 0 0 4px #ffd84d,0 0 9px #ffd84d}
+.av.m-pixel{box-shadow:0 0 0 3px #1b2a49,0 0 0 5px #5ec2ff}
+.av.m-festa{box-shadow:0 0 0 2px #e5484d,0 0 0 4px #e5a50a,0 0 0 6px #3e63dd}
+.cnTopo{display:flex;align-items:center;gap:14px;margin:8px 0 4px}
+.cnTopo .av{margin:8px}
+.cnQuem{display:flex;flex-direction:column;min-width:0}.cnQuem b{font-size:18px;overflow:hidden;text-overflow:ellipsis}.cnQuem small{color:var(--mut);font-size:12px}
+.cnGrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px}
+.cnGrade button{position:relative;display:flex;justify-content:center;padding:2px;border-radius:14px;border:2px solid transparent;background:transparent;cursor:pointer;color:inherit}
+.cnGrade button[aria-checked=true]{border-color:var(--accent);background:var(--t1)}
+.cnGrade button:disabled{opacity:.55;cursor:default}
+.cnLock{position:absolute;right:4px;bottom:4px;display:flex;background:var(--card1);border-radius:50%;padding:2px}.cnLock svg{width:13px;height:13px}

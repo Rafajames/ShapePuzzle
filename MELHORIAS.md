@@ -18,6 +18,7 @@ Lista de ideias discutidas, por prioridade. Marque aqui o que for sendo feito.
 ## Feito a pedido (fora da lista)
 - **Acessibilidade** — jogar só com o teclado (setas, 1–6 escolhe peça, R/T gira/espelha, Enter/Espaço encaixa, Z desfaz), leitor de tela (rótulos e avisos de cada jogada), alto contraste, texto maior, reduzir animações e zoom liberado. _Feito (menu → Acessibilidade)._
 - **Idiomas** — Português, English e Español; o jogo escolhe pelo idioma do aparelho e dá para trocar no menu. _Feito._
+- **Conta com o Google, nome, avatar e moldura** — _Feito (Etapa A)._ Próximas: ranking geral, campeonatos gerais (até 100) com aviso de posição ao abrir, desafiar amigos, loja/anúncios com brinde.
 
 ## Novas ideias (sem banco de dados)
 Feitas: **fase do dia** e **fase por link** (já existiam).

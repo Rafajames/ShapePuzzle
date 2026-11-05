@@ -27,6 +27,7 @@ $('#hMenu').onclick = atalhoInicio(() => abrirMenu());
 $('#btnInicio').onclick = () => { fechar('menu'); renderInicio(); $('#ov-splash').classList.add('on'); };
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
+  if (window.__pronto) renderConta();
   if (!S.jogo) return;
   const volta = prog.done.length > 0 || !!andamento;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');

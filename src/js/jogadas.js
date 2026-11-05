@@ -44,6 +44,7 @@ function vencer(){
     store.set('prog', prog);
     if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
+  contaAgendar();
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
   if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
   if (k && !S.dicas && !modoTeste){
