@@ -1,5 +1,5 @@
 /* ---- compartilhar ---- */
-const urlBase = () => location.origin + location.pathname;
+const urlBase = () => NATIVO ? SITE : location.origin + location.pathname;
 const urlFase = (text, nome) => urlBase() + '#f=' + b64u(text) + '&n=' + encodeURIComponent(nome);
 async function copiar(t){
   let ok = false;

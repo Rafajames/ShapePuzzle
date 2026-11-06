@@ -71,7 +71,7 @@ function aposVitoriaConta(){
 }
 
 /* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */
-const urlLegal = nome => nome + '.html?l=' + lang;
+const urlLegal = nome => (NATIVO ? SITE : '') + nome + '.html?l=' + lang;
 function ligarLinksLegais(){ document.querySelectorAll('[data-lk]').forEach(a => { a.href = urlLegal(a.dataset.lk); }); }
 function montarTermos(){
   const aceito = store.get('termos', 0) === 1;
@@ -259,6 +259,7 @@ const salvarConta = () => { store.set('conta', conta); renderConta(); };
 
 /* ---------- entrar / sair / apagar ---------- */
 async function contaEntrar(){
+  if (NATIVO && !window.loginNativo){ aviso('#cnAviso', 'O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.', 'erro'); return; }
   if (store.get('termos', 0) !== 1){ if (!$('#cnTermos').checked){ aviso('#cnAviso', 'Marque que você leu e aceita os termos para entrar.', 'erro'); return; } store.set('termos', 1); }
   aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
   try{

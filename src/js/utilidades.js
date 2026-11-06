@@ -1,5 +1,9 @@
 /* ======================= Utilidades ======================= */
 const $ = s => document.querySelector(s);
+/* NATIVO: o jogo está rodando dentro do app Android (Capacitor). SITE: endereço público, usado em links e páginas. */
+const NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const SITE = 'https://rafajames.github.io/ShapePuzzle/';
+const LOJA = 'https://play.google.com/store/apps/details?id=io.github.rafajames.shapepuzzle';
 /* mk('div', 'classe', 'texto'): cria um elemento. icBtn: botão só de ícone. fecharTodos: fecha os painéis abertos (menos o `poupar`). */
 const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
 const icBtn = (icone, rotulo, fn, titulo) => { const b = mk('button', 'ib'); b.innerHTML = ic(icone); b.setAttribute('aria-label', rotulo); if (titulo) b.title = titulo; b.onclick = fn; return b; };

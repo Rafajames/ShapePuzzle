@@ -1,6 +1,6 @@
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.4';
+const VERSAO = '2026.11.06.5';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -42,10 +42,11 @@ async function aplicarAtualizacao(){
 }
 function renderAtualizacao(){
   $('#verTxt').textContent = tr('Versão {v}', {v: VERSAO});
-  const b = $('#btnAtualizar'); b.lastChild.textContent = tr(Upd.nova ? 'Atualizar agora' : 'Verificar atualizações');
+  const b = $('#btnAtualizar'); b.lastChild.textContent = tr(NATIVO ? 'Ver atualizações na Play Store' : Upd.nova ? 'Atualizar agora' : 'Verificar atualizações');
 }
 function msgAtualizacao(txt, cls){ const m = $('#updMsg'); m.textContent = txt ? tr(txt) : ''; m.className = cls || ''; }
 $('#btnAtualizar').onclick = async () => {
+  if (NATIVO){ window.open(LOJA, '_blank'); return; }
   if (Upd.nova){ aplicarAtualizacao(); return; }
   const b = $('#btnAtualizar'); b.disabled = true; msgAtualizacao('Procurando…');
   const r = await verificarAtualizacao(false); b.disabled = false;
@@ -55,7 +56,7 @@ $('#btnAtualizar').onclick = async () => {
 };
 $('#updSim').onclick = aplicarAtualizacao;
 $('#updNao').onclick = () => { Upd.dispensada = Upd.nova || ''; $('#upd').hidden = true; };
-if (location.protocol.startsWith('http')){
+if (!NATIVO && location.protocol.startsWith('http')){
   setTimeout(() => verificarAtualizacao(true), 5000);
   setInterval(() => verificarAtualizacao(true), 30 * 60 * 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - Upd.ultimo > 10 * 60 * 1000) verificarAtualizacao(true); });

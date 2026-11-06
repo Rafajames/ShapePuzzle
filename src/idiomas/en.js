@@ -440,6 +440,8 @@ en: {
   "Outro motivo": "Other reason",
   "Enviar denúncia": "Send report",
   "Só neste aparelho. Desbloqueie quando quiser.": "Only on this device. Unblock whenever you want.",
+  "Ver atualizações na Play Store": "See updates on the Play Store",
+  "O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.": "Google sign-in is coming to the app in the next version. Meanwhile, everything is saved on this device.",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",

@@ -143,7 +143,7 @@ let promptInstalar = null;
 const emApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const ehIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 function atualizarInstalar(){
-  const mostrarBtn = !!promptInstalar && !emApp(), mostrarIOS = ehIOS() && !emApp() && !promptInstalar;
+  const mostrarBtn = !NATIVO && !!promptInstalar && !emApp(), mostrarIOS = !NATIVO && ehIOS() && !emApp() && !promptInstalar;
   $('#btnInstalar').hidden = !mostrarBtn; $('#dicaIOS').hidden = !mostrarIOS;
   $('#blocoInstalar').hidden = !(mostrarBtn || mostrarIOS);
 }
@@ -155,7 +155,7 @@ $('#btnInstalar').onclick = async () => {
   try{ await promptInstalar.userChoice; }catch(e){}
   promptInstalar = null; atualizarInstalar();
 };
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+if (!NATIVO && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 
 
@@ -177,3 +177,7 @@ addEventListener('popstate', () => {
   if (location.hash.length > 1) return;     /* abrir um link do jogo (fase, convite) não é "voltar" */
   voltarUmaTela(); armarVoltar();
 });
+/* No app Android, o botão voltar do aparelho chega pelo plugin App: volta uma tela e nunca fecha o jogo. */
+if (NATIVO && window.Capacitor.Plugins && window.Capacitor.Plugins.App){
+  try{ window.Capacitor.Plugins.App.addListener('backButton', () => { voltarUmaTela(); }); }catch(e){}
+}

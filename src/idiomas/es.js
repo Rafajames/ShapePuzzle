@@ -440,6 +440,8 @@ es: {
   "Outro motivo": "Otro motivo",
   "Enviar denúncia": "Enviar denuncia",
   "Só neste aparelho. Desbloqueie quando quiser.": "Solo en este dispositivo. Desbloquea cuando quieras.",
+  "Ver atualizações na Play Store": "Ver actualizaciones en Play Store",
+  "O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.": "El inicio de sesión con Google llegará a la app en la próxima versión. Mientras tanto, todo queda guardado en este dispositivo.",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
