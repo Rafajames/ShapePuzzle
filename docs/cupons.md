@@ -17,7 +17,7 @@ Os cupons ficam no banco do Firebase, no nó `cupons`. Só você cria e muda cup
 | `ate` | texto | `2026-12-31` | último dia em que o cupom vale (opcional) |
 | `desde` | texto | `2026-12-24` | primeiro dia em que o cupom vale (opcional) |
 
-5. Toque em **Adicionar**. Pronto: o cupom já funciona no jogo (Menu → Meu perfil → Cupom). O jogador pode digitar em minúsculas e com espaços; o jogo ajusta.
+5. Toque em **Adicionar**. Pronto: o cupom já funciona no jogo (Meu perfil → aba Estrelas → Cupom). O jogador pode digitar em minúsculas e com espaços; o jogo ajusta.
 
 Exemplo em JSON (também dá para importar pelo menu ⋮ → Importar JSON, mas **importar na raiz apaga o resto do banco** — importe só dentro do nó `cupons`):
 
