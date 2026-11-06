@@ -258,14 +258,25 @@ const aplicarNomeCamp = () => { if (conta && !cpAuth){ cpNome = conta.nome; stor
 const salvarConta = () => { store.set('conta', conta); renderConta(); };
 
 /* ---------- entrar / sair / apagar ---------- */
+/* No app Android o Google não deixa abrir o login dentro do app: a conta é escolhida pela tela nativa do Android
+   (plugin FirebaseAuthentication) e o token vira uma credencial do Firebase do jogo. */
+const authNativo = () => NATIVO && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication;
+async function credencialNativa(){
+  let r;
+  try{ r = await authNativo().signInWithGoogle(); }
+  catch(e){ if (/cancel/i.test(String(e && (e.message || e.code)))) throw {code: 'auth/popup-closed-by-user'}; throw e; }
+  const idt = r && r.credential && r.credential.idToken;
+  if (!idt) throw {code: 'auth/popup-closed-by-user'};
+  return firebase.auth.GoogleAuthProvider.credential(idt);
+}
 async function contaEntrar(){
-  if (NATIVO && !window.loginNativo){ aviso('#cnAviso', 'O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.', 'erro'); return; }
+  if (NATIVO && !authNativo()){ aviso('#cnAviso', 'O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.', 'erro'); return; }
   if (store.get('termos', 0) !== 1){ if (!$('#cnTermos').checked){ aviso('#cnAviso', 'Marque que você leu e aceita os termos para entrar.', 'erro'); return; } store.set('termos', 1); }
   aviso('#cnAviso', 'Abrindo o login do Google…'); $('#cnEntrar').disabled = true;
   try{
     const a = await firebaseAuth(), prov = new firebase.auth.GoogleAuthProvider();
     let r;
-    try{ r = await a.signInWithPopup(prov); }
+    try{ r = authNativo() ? await a.signInWithCredential(await credencialNativa()) : await a.signInWithPopup(prov); }
     catch(e){
       const c = e && e.code;
       if (COD_FECHOU.includes(c)){ aviso('#cnAviso', 'Login cancelado.'); return; }
@@ -296,6 +307,7 @@ async function contaPosLogin(user){
 const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}; guardarPerfil(); } };
 async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
+  try{ if (authNativo()) await authNativo().signOut(); }catch(e){}
   guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
 }
 /* Apaga tudo da nuvem e a própria conta. Pede para confirmar com o Google antes (o Firebase exige um login recente para isso). */
@@ -303,11 +315,12 @@ async function contaApagar(){
   if (!conta || !confirm(tr('Apagar sua conta e os dados guardados na nuvem? O progresso e as estrelas deste aparelho continuam.'))) return;
   try{
     const u = await contaUsuario(); if (!u) throw new Error('sessao');
-    try{ await u.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()); }
+    try{ if (authNativo()) await u.reauthenticateWithCredential(await credencialNativa()); else await u.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()); }
     catch(e){ aviso('#cnAviso', COD_FECHOU.includes(e && e.code) ? 'Cancelado. Nada foi apagado.' : 'Não consegui confirmar com o Google. Nada foi apagado.', 'erro'); return; }
     const tk = await u.getIdToken();
     for (const c of ['pub', 'priv']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
     await u.delete();
+    try{ if (authNativo()) await authNativo().signOut(); }catch(e){}
   }catch(e){ aviso('#cnAviso', 'Não consegui apagar agora. Confira a internet e tente de novo.', 'erro'); return; }
   guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
 }

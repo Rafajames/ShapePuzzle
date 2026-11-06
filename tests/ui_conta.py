@@ -13,15 +13,16 @@ FIM = "try{localStorage.setItem('shapepuzzle.tuto',JSON.stringify({sel:true,giro
 PROG = "try{if(!localStorage.getItem('shapepuzzle.prog')){localStorage.setItem('shapepuzzle.prog',JSON.stringify({max:5,done:[0,1,2,3,4]}));localStorage.setItem('shapepuzzle.est',JSON.stringify({0:3,1:3,2:3,3:3,4:3}))}}catch(e){}"
 BANCO = {}; MODO = {'v': 'ok'}; LOG = []
 FALSO = """(function(){
- var U={uid:'u123',displayName:'Maria Souza',getIdToken:function(){return Promise.resolve('tok_u123')},reauthenticateWithPopup:function(){ if(window.__reauthErro) return Promise.reject({code:window.__reauthErro}); return Promise.resolve({}); },delete:function(){ A.currentUser=null; window.__apagou=1; try{localStorage.removeItem('fakeauth')}catch(e){} return Promise.resolve(); }};
+ var U={uid:'u123',displayName:'Maria Souza',getIdToken:function(){return Promise.resolve('tok_u123')},reauthenticateWithPopup:function(){ if(window.__reauthErro) return Promise.reject({code:window.__reauthErro}); return Promise.resolve({}); },reauthenticateWithCredential:function(c){ window.__reauthCred=c; return Promise.resolve({}); },delete:function(){ A.currentUser=null; window.__apagou=1; try{localStorage.removeItem('fakeauth')}catch(e){} return Promise.resolve(); }};
  var A={currentUser:null,
-  signInWithPopup:function(){ if(window.__popupErro) return Promise.reject({code:window.__popupErro}); A.currentUser=U; try{localStorage.setItem('fakeauth','1')}catch(e){} return Promise.resolve({user:U}); },
+  signInWithCredential:function(c){ window.__credUsada=c; A.currentUser=U; try{localStorage.setItem('fakeauth','1')}catch(e){} return Promise.resolve({user:U}); },
+  signInWithPopup:function(){ window.__usouPopup=1; if(window.__popupErro) return Promise.reject({code:window.__popupErro}); A.currentUser=U; try{localStorage.setItem('fakeauth','1')}catch(e){} return Promise.resolve({user:U}); },
   signInWithRedirect:function(){ window.__redirecionou=1; return Promise.resolve(); },
   getRedirectResult:function(){return Promise.resolve(null)},
   onAuthStateChanged:function(cb){ setTimeout(function(){cb(A.currentUser)},0); return function(){} },
   signOut:function(){A.currentUser=null; try{localStorage.removeItem('fakeauth')}catch(e){} return Promise.resolve()}};
  try{ if(localStorage.getItem('fakeauth')) A.currentUser=U; }catch(e){}
- window.firebase={initializeApp:function(){}, auth:Object.assign(function(){return A},{GoogleAuthProvider:function(){}})};
+ window.firebase={initializeApp:function(){}, auth:Object.assign(function(){return A},{GoogleAuthProvider:Object.assign(function(){},{credential:function(t){return {idToken:t}}})})};
 })();"""
 def gstatic(route, req):
     route.fulfill(status=200, content_type='application/javascript', body=FALSO if 'app-compat' in req.url else '/* auth */')
@@ -136,6 +137,16 @@ with sync_playwright() as pw:
     p.fill('#cnNome', 'Bia'); p.click('#cnNomeOk'); p.wait_for_timeout(700)
     sec(p, '#cnSecNuvem'); p.click('#cnSair'); p.wait_for_timeout(500)
     check(p.evaluate("conta") is None and 'Bia' in p.inner_text('#hConta'), 'ao sair, o visual continua no aparelho')
+    c.close(); BANCO.clear()
+    print('Login nativo no app Android')
+    NAT = "window.Capacitor={isNativePlatform:()=>true,Plugins:{App:{addListener(){return{remove(){}}}},FirebaseAuthentication:{signInWithGoogle(){ if(window.__natCancel) return Promise.reject(new Error('The user canceled the sign-in flow.')); window.__natLogin=(window.__natLogin||0)+1; return Promise.resolve({credential:{idToken:'idt_google'}}); },signOut(){ window.__natSaiu=1; return Promise.resolve(); }}}};"
+    c, p = novo(b, init=NAT + FIM + PROG)
+    p.click('#hConta'); p.check('#cnTermos'); p.evaluate("window.__natCancel = 1"); p.click('#cnEntrar'); p.wait_for_timeout(800)
+    check('cancelado' in p.inner_text('#cnAviso').lower() and p.evaluate("conta") is None, 'cancelar a escolha da conta no Android não entra')
+    p.evaluate("window.__natCancel = 0"); p.click('#cnEntrar'); p.wait_for_timeout(1200)
+    check(p.evaluate("window.__natLogin") == 1 and p.evaluate("window.__credUsada && window.__credUsada.idToken") == 'idt_google' and not p.evaluate("window.__usouPopup") and p.evaluate("conta && conta.uid") == 'u123', 'no app: escolhe a conta pela tela do Android e entra no Firebase com o token (sem janela do navegador)')
+    sec(p, '#cnSecNuvem'); p.click('#cnSair'); p.wait_for_timeout(500)
+    check(p.evaluate("window.__natSaiu") == 1 and p.evaluate("conta") is None, 'sair também desconecta a conta Google do Android')
     c.close(); BANCO.clear()
     print('Sem conta')
     c, p = novo(b)
