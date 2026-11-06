@@ -92,6 +92,7 @@ $('#chkDalt').onchange = e => salvarA11y('dalt', e.target.checked);
 $('#chkCont').onchange = e => salvarA11y('cont', e.target.checked);
 $('#chkTexto').onchange = e => salvarA11y('texto', e.target.checked);
 $('#chkMov').onchange = e => salvarA11y('mov', e.target.checked);
+Object.entries(IDIOMAS).sort((a, b) => a[1].localeCompare(b[1], 'pt')).forEach(([l, nome]) => { const o = mk('option', '', nome); o.value = l; $('#selIdioma').appendChild(o); });
 $('#selIdioma').onchange = e => {
   lang = e.target.value; store.set('lang', lang); aplicarIdioma();
   renderTudo(); renderDiario(); renderCustom(); abrirMenu(); if (window.atualizarTuto) atualizarTuto();

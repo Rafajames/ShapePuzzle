@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="{{LANG}}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow"><meta name="theme-color" content="#24150b">
+<title>Shape Puzzle</title>
+<style>
+:root{--bg:#fbf6ea;--tx:#2b1d10;--mut:#6b5846;--ac:#b8651b;--card:#fff;--ln:#e5d8c0}
+@media (prefers-color-scheme:dark){:root{--bg:#1d130b;--tx:#f3e7d3;--mut:#b9a68e;--ac:#f0a050;--card:#2a1c10;--ln:#4a3622}}
+*{box-sizing:border-box}body{overflow-wrap:anywhere;margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 Georgia,'Times New Roman',serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:26px;margin:.4em 0 .1em}h2{font-size:18px;margin:1.6em 0 .3em;color:var(--ac)}p,li{margin:.4em 0}small,.mut{color:var(--mut)}
+a{color:var(--ac)}ul{padding-left:20px}
+.top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.lang select{font:inherit;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:4px 8px;max-width:100%}
+.caixa{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:16px;margin:16px 0}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:var(--ac);color:#fff}
+.btn.perigo{background:#b3261e}.btn[disabled]{opacity:.5;cursor:default}
+[data-l]{display:none}[data-l].on{display:block}
+nav.vol{margin-bottom:8px}
+</style>
+</head><body><main>

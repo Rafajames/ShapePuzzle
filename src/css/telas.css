@@ -142,7 +142,7 @@ main{touch-action:pan-y}
 
 .home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
 .homeGrade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
-.homeGrade .btn{min-width:0;overflow-wrap:anywhere;justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
+.homeGrade .btn{min-width:0;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto;justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
 .homeGrade .btn svg.i{flex:none}
 details.como{margin-top:14px}
 details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
@@ -264,3 +264,6 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .rk .rkMais svg{width:18px;height:18px}
 .rk.bloq .nm{color:var(--mut);font-style:italic}
 .dnQuem{display:flex;align-items:center;gap:8px;margin:6px 0 2px;font-size:17px}
+/* idiomas com palavras longas (alemão, russo…): hifeniza em vez de quebrar no meio da palavra */
+.daily b,.daily small,.tile,.atalhos .daily{hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+@media (max-width:360px){.homeGrade .btn{font-size:12px;padding:10px 9px;gap:6px}}

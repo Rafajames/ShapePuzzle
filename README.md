@@ -69,7 +69,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 - Menu → **Acessibilidade**: modo para daltônicos (um símbolo em cada cor), alto contraste, texto maior e reduzir animações (segue também a configuração do aparelho).
 - **Teclado**: setas movem o cursor no tabuleiro, `1`–`6` escolhe a peça, `R` gira, `T` espelha, `Enter`/`Espaço` encaixa ou tira a peça, `Z` desfaz, `P` pega a peça.
 - **Leitor de tela**: tabuleiro, peças e botões têm rótulos e cada jogada é anunciada.
-- **Idiomas**: Português, English e Español, escolhidos pelo idioma do aparelho e trocáveis em Menu → Idioma. As traduções ficam no bloco `DICT` do `index.html`; `tests/idiomas.js` confere se nada ficou sem tradução.
+- **Idiomas** (13): português do Brasil e de Portugal, inglês, espanhol, francês, alemão, italiano, holandês, polonês, sueco, russo, ucraniano e turco. O jogo escolhe pelo idioma do aparelho e dá para trocar em Menu → Idioma. Cada tradução é um arquivo em `src/idiomas/` (chave = frase em português); no `index.html` as chaves vão uma vez só, para o arquivo não crescer à toa. `node tests/conferir-idioma.js todos` confere marcadores, tags e textos da loja; `tests/idiomas.js` confere se nada ficou sem tradução; `tests/ui_idiomas_todos.py` confere se tudo cabe na tela de 320 px. Para um idioma novo: copie `src/idiomas/en.js`, traduza os valores, acrescente o nome em `NOMES_IDIOMA` (src/js/idiomas.js), crie `src/paginas/<idioma>.html` e `docs/loja/<idioma>.md`.
 
 ## Dica, solução e QR code
 
@@ -105,7 +105,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 - **Área do usuário:** coleção com contadores, conquistas com barra de progresso e de onde vêm as estrelas.
 - **Início:** botão de casinha na barra da fase e na tela de conclusão.
 - Dados na nuvem: `pub/<uid>` (apelido, avatar, moldura, fases concluídas — público) e `priv/<uid>` (progresso e carteira, só o dono lê). **Apagar minha conta e meus dados** confirma com o Google, remove tudo e apaga a conta do Firebase. As regras estão em `firebase-rules.json`.
-- **Páginas públicas:** `privacidade.html`, `termos.html` e `excluir-conta.html` (PT/EN/ES), exigidas pela Play Store; o aceite dos termos é pedido antes do primeiro login; apelidos ofensivos são barrados. Roteiro completo da loja em `docs/play-store.md`.
+- **Páginas públicas:** `privacidade.html`, `termos.html` e `excluir-conta.html` (nos 13 idiomas, geradas pelo `node build.js` a partir de `src/paginas/`), exigidas pela Play Store; o aceite dos termos é pedido antes do primeiro login; apelidos ofensivos são barrados. Roteiro completo da loja em `docs/play-store.md`.
 - O Firebase só é baixado quando a pessoa usa a conta (`src/js/conta.js`). Console: ativar **Authentication → Google** e liberar `rafajames.github.io` em **Authorized domains**. Testes: `tests/conta-logica.js` e `tests/ui_conta.py` (Google e banco simulados).
 
 ## Testes automáticos

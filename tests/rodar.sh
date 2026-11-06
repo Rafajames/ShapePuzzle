@@ -13,7 +13,7 @@ rodar "index.html confere com src/" node build.js --conferir
 rodar "lint" node tests/lint.js
 for t in logica campeonato-logica regras solucao backup progresso offline idiomas fases-geradas conta-logica; do rodar "$t" node tests/$t.js; done
 # testes de tela: rodam em paralelo (PARALELO=1 para rodar um de cada vez); o log de cada um fica em tests/saida/log-*.txt
-UI="ui_geral ui_tamanhos ui_campeonato ui_gestos ui_tutorial ui_desfazer_pecas ui_estrelas ui_modo_teste ui_tela ui_fileiras ui_idiomas ui_acessibilidade ui_dica_solucao_qr ui_temas ui_atualizacao ui_infinito ui_estatisticas_backup ui_menu ui_andamento_desafios ui_offline ui_tutorial_fase ui_inicio ui_fases_crescem ui_festa ui_conta ui_paginas ui_ranking ui_voltar ui_nativo"
+UI="ui_geral ui_tamanhos ui_campeonato ui_gestos ui_tutorial ui_desfazer_pecas ui_estrelas ui_modo_teste ui_tela ui_fileiras ui_idiomas ui_acessibilidade ui_dica_solucao_qr ui_temas ui_atualizacao ui_infinito ui_estatisticas_backup ui_menu ui_andamento_desafios ui_offline ui_tutorial_fase ui_inicio ui_fases_crescem ui_festa ui_conta ui_paginas ui_ranking ui_voltar ui_nativo ui_idiomas_todos"
 mkdir -p tests/saida
 P=${PARALELO:-3}
 echo; echo "=== testes de tela ($P de cada vez) ==="

@@ -10,8 +10,7 @@ main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
 h1{font-size:26px;margin:.4em 0 .1em}h2{font-size:18px;margin:1.6em 0 .3em;color:var(--ac)}p,li{margin:.4em 0}small,.mut{color:var(--mut)}
 a{color:var(--ac)}ul{padding-left:20px}
 .top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.lang button{font:inherit;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:4px 10px;cursor:pointer}
-.lang button[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.lang select{font:inherit;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:4px 8px;max-width:100%}
 .caixa{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:16px;margin:16px 0}
 .btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:var(--ac);color:#fff}
 .btn.perigo{background:#b3261e}.btn[disabled]{opacity:.5;cursor:default}
@@ -19,49 +18,115 @@ a{color:var(--ac)}ul{padding-left:20px}
 nav.vol{margin-bottom:8px}
 </style>
 </head><body><main>
-<div class="top"><a href="./" class="mut">Shape Puzzle</a><div class="lang" role="group" aria-label="Language"><button data-x="pt" aria-pressed="false">Português</button><button data-x="en" aria-pressed="false">English</button><button data-x="es" aria-pressed="false">Español</button></div></div>
-<section data-l="pt"><h1>Excluir minha conta — Shape Puzzle</h1>
-<p>Esta página apaga sua conta do Shape Puzzle e os dados guardados na nuvem, sem precisar abrir o jogo.</p>
-<h2>O que será apagado</h2><ul><li>Seu perfil público: apelido, avatar, moldura e número de fases concluídas.</li><li>Sua cópia de segurança na nuvem: progresso, recordes, estatísticas, configurações, fases criadas e estrelas.</li><li>A conta em si (login com o Google no Shape Puzzle).</li></ul>
-<h2>O que continua</h2><ul><li>O progresso e as estrelas guardados <b>no seu aparelho</b>. Para removê-los, limpe os dados do site ou do app nas configurações do aparelho.</li><li>Resultados de campeonatos que você já enviou: peça ao organizador para excluir o campeonato.</li></ul>
-<div class="caixa"><p id="msg-pt" role="status" aria-live="polite" class="mut">Para confirmar que a conta é sua, entre com o Google.</p>
-<p><button class="btn" id="entrar-pt">Entrar com o Google</button> <button class="btn perigo" id="apagar-pt" hidden>Apagar minha conta e meus dados</button></p></div>
-<p><small>Mais detalhes na <a href="privacidade.html?l=pt">Política de Privacidade</a>.</small></p></section>
+<div class="top"><a href="./" class="mut">Shape Puzzle</a><label class="lang"><span hidden>Language</span><select aria-label="Language"><option value="de">Deutsch</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="pt">Português (Brasil)</option><option value="pt-PT">Português (Portugal)</option><option value="sv">Svenska</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="uk">Українська</option></select></label></div>
+<section data-l="de"><h1>Mein Konto löschen — Shape Puzzle</h1>
+<p>Auf dieser Seite löschen Sie Ihr Shape-Puzzle-Konto und die in der Cloud gespeicherten Daten, ohne das Spiel öffnen zu müssen.</p>
+<h2>Was gelöscht wird</h2><ul><li>Ihr öffentliches Profil: Spitzname, Avatar, Rahmen, Hintergrund und Anzahl der geschafften Level.</li><li>Ihre Sicherungskopie in der Cloud: Fortschritt, Rekorde, Statistiken, Einstellungen, erstellte Level und Sterne.</li><li>Das Konto selbst (Google-Anmeldung bei Shape Puzzle).</li></ul>
+<h2>Was erhalten bleibt</h2><ul><li>Der Fortschritt und die Sterne, die <b>auf Ihrem Gerät</b> gespeichert sind. Um sie zu entfernen, löschen Sie die Website- oder App-Daten in den Einstellungen Ihres Geräts.</li><li>Bereits gesendete Turnierergebnisse: Bitten Sie den Veranstalter, das Turnier zu löschen.</li></ul>
+<div class="caixa"><p id="msg-de" role="status" aria-live="polite" class="mut">Melden Sie sich mit Google an, um zu bestätigen, dass es Ihr Konto ist.</p>
+<p><button class="btn" id="entrar-de">Mit Google anmelden</button> <button class="btn perigo" id="apagar-de" hidden>Mein Konto und meine Daten löschen</button></p></div>
+<p><small>Weitere Informationen in der <a href="privacidade.html?l=de">Datenschutzerklärung</a>.</small></p></section>
 <section data-l="en"><h1>Delete my account — Shape Puzzle</h1>
 <p>This page deletes your Shape Puzzle account and the data saved in the cloud, without opening the game.</p>
-<h2>What will be deleted</h2><ul><li>Your public profile: nickname, avatar, frame and number of finished levels.</li><li>Your cloud backup: progress, records, statistics, settings, created levels and stars.</li><li>The account itself (Google sign-in for Shape Puzzle).</li></ul>
+<h2>What will be deleted</h2><ul><li>Your public profile: nickname, avatar, frame, background and number of finished levels.</li><li>Your cloud backup: progress, records, statistics, settings, created levels and stars.</li><li>The account itself (Google sign-in for Shape Puzzle).</li></ul>
 <h2>What stays</h2><ul><li>The progress and stars saved <b>on your device</b>. To remove them, clear the site or app data in your device settings.</li><li>Championship results you already sent: ask the organizer to delete the championship.</li></ul>
 <div class="caixa"><p id="msg-en" role="status" aria-live="polite" class="mut">To confirm the account is yours, sign in with Google.</p>
 <p><button class="btn" id="entrar-en">Sign in with Google</button> <button class="btn perigo" id="apagar-en" hidden>Delete my account and data</button></p></div>
 <p><small>More details in the <a href="privacidade.html?l=en">Privacy Policy</a>.</small></p></section>
 <section data-l="es"><h1>Borrar mi cuenta — Shape Puzzle</h1>
 <p>Esta página borra tu cuenta de Shape Puzzle y los datos guardados en la nube, sin abrir el juego.</p>
-<h2>Qué se borrará</h2><ul><li>Tu perfil público: apodo, avatar, marco y número de niveles completados.</li><li>Tu copia de seguridad en la nube: progreso, récords, estadísticas, ajustes, niveles creados y estrellas.</li><li>La cuenta en sí (el acceso con Google a Shape Puzzle).</li></ul>
+<h2>Qué se borrará</h2><ul><li>Tu perfil público: apodo, avatar, marco, fondo y número de niveles completados.</li><li>Tu copia de seguridad en la nube: progreso, récords, estadísticas, ajustes, niveles creados y estrellas.</li><li>La cuenta en sí (el acceso con Google a Shape Puzzle).</li></ul>
 <h2>Qué se mantiene</h2><ul><li>El progreso y las estrellas guardados <b>en tu dispositivo</b>. Para quitarlos, borra los datos del sitio o de la app en los ajustes del dispositivo.</li><li>Resultados de torneos que ya enviaste: pide al organizador que elimine el torneo.</li></ul>
 <div class="caixa"><p id="msg-es" role="status" aria-live="polite" class="mut">Para confirmar que la cuenta es tuya, entra con Google.</p>
 <p><button class="btn" id="entrar-es">Entrar con Google</button> <button class="btn perigo" id="apagar-es" hidden>Borrar mi cuenta y mis datos</button></p></div>
 <p><small>Más detalles en la <a href="privacidade.html?l=es">Política de Privacidad</a>.</small></p></section>
-
-
+<section data-l="fr"><h1>Supprimer mon compte — Shape Puzzle</h1>
+<p>Cette page supprime votre compte Shape Puzzle et les données enregistrées dans le cloud, sans avoir à ouvrir le jeu.</p>
+<h2>Ce qui sera supprimé</h2><ul><li>Votre profil public : pseudo, avatar, cadre, fond et nombre de niveaux terminés.</li><li>Votre sauvegarde dans le cloud : progression, records, statistiques, réglages, niveaux créés et étoiles.</li><li>Le compte lui-même (connexion Google à Shape Puzzle).</li></ul>
+<h2>Ce qui est conservé</h2><ul><li>La progression et les étoiles enregistrées <b>sur votre appareil</b>. Pour les supprimer, effacez les données du site ou de l’application dans les paramètres de l’appareil.</li><li>Les résultats de tournois que vous avez déjà envoyés : demandez à l’organisateur de supprimer le tournoi.</li></ul>
+<div class="caixa"><p id="msg-fr" role="status" aria-live="polite" class="mut">Pour confirmer que ce compte est bien le vôtre, connectez-vous avec Google.</p>
+<p><button class="btn" id="entrar-fr">Se connecter avec Google</button> <button class="btn perigo" id="apagar-fr" hidden>Supprimer mon compte et mes données</button></p></div>
+<p><small>Plus de détails dans la <a href="privacidade.html?l=fr">Politique de confidentialité</a>.</small></p></section>
+<section data-l="it"><h1>Elimina il mio account — Shape Puzzle</h1>
+<p>Questa pagina elimina il tuo account Shape Puzzle e i dati salvati nel cloud, senza dover aprire il gioco.</p>
+<h2>Cosa verrà cancellato</h2><ul><li>Il tuo profilo pubblico: nickname, avatar, cornice, sfondo e numero di livelli completati.</li><li>La tua copia di sicurezza nel cloud: progressi, record, statistiche, impostazioni, livelli creati e stelle.</li><li>L'account stesso (accesso con Google a Shape Puzzle).</li></ul>
+<h2>Cosa resta</h2><ul><li>I progressi e le stelle salvati <b>sul tuo dispositivo</b>. Per rimuoverli, cancella i dati del sito o dell'app nelle impostazioni del dispositivo.</li><li>I risultati dei tornei che hai già inviato: chiedi all'organizzatore di eliminare il torneo.</li></ul>
+<div class="caixa"><p id="msg-it" role="status" aria-live="polite" class="mut">Per confermare che l'account è tuo, accedi con Google.</p>
+<p><button class="btn" id="entrar-it">Accedi con Google</button> <button class="btn perigo" id="apagar-it" hidden>Elimina il mio account e i miei dati</button></p></div>
+<p><small>Maggiori dettagli nell'<a href="privacidade.html?l=it">Informativa sulla privacy</a>.</small></p></section>
+<section data-l="nl"><h1>Mijn account verwijderen — Shape Puzzle</h1>
+<p>Via deze pagina verwijder je je Shape Puzzle-account en de gegevens in de cloud, zonder de game te openen.</p>
+<h2>Wat wordt verwijderd</h2><ul><li>Je openbare profiel: bijnaam, avatar, kader, achtergrond en aantal voltooide levels.</li><li>Je back-up in de cloud: voortgang, records, statistieken, instellingen, gemaakte levels en sterren.</li><li>Het account zelf (inloggen met Google bij Shape Puzzle).</li></ul>
+<h2>Wat blijft</h2><ul><li>De voortgang en sterren die <b>op je apparaat</b> zijn opgeslagen. Om die te verwijderen, wis je de gegevens van de site of de app in de instellingen van je apparaat.</li><li>Toernooiresultaten die je al hebt verstuurd: vraag de organisator om het toernooi te verwijderen.</li></ul>
+<div class="caixa"><p id="msg-nl" role="status" aria-live="polite" class="mut">Log in met Google om te bevestigen dat het account van jou is.</p>
+<p><button class="btn" id="entrar-nl">Inloggen met Google</button> <button class="btn perigo" id="apagar-nl" hidden>Mijn account en gegevens verwijderen</button></p></div>
+<p><small>Meer details in het <a href="privacidade.html?l=nl">Privacybeleid</a>.</small></p></section>
+<section data-l="pl"><h1>Usuń moje konto — Shape Puzzle</h1>
+<p>Na tej stronie usuniesz swoje konto Shape Puzzle i dane zapisane w chmurze, bez otwierania gry.</p>
+<h2>Co zostanie usunięte</h2><ul><li>Twój profil publiczny: pseudonim, awatar, ramka, tło i liczba ukończonych poziomów.</li><li>Twoja kopia zapasowa w chmurze: postępy, rekordy, statystyki, ustawienia, utworzone poziomy i gwiazdki.</li><li>Samo konto (logowanie przez Google w Shape Puzzle).</li></ul>
+<h2>Co pozostanie</h2><ul><li>Postępy i gwiazdki zapisane <b>na Twoim urządzeniu</b>. Aby je usunąć, wyczyść dane strony lub aplikacji w ustawieniach urządzenia.</li><li>Już przesłane wyniki turniejów: poproś organizatora o usunięcie turnieju.</li></ul>
+<div class="caixa"><p id="msg-pl" role="status" aria-live="polite" class="mut">Aby potwierdzić, że to Twoje konto, zaloguj się przez Google.</p>
+<p><button class="btn" id="entrar-pl">Zaloguj się przez Google</button> <button class="btn perigo" id="apagar-pl" hidden>Usuń moje konto i dane</button></p></div>
+<p><small>Więcej informacji w <a href="privacidade.html?l=pl">Polityce prywatności</a>.</small></p></section>
+<section data-l="pt"><h1>Excluir minha conta — Shape Puzzle</h1>
+<p>Esta página apaga sua conta do Shape Puzzle e os dados guardados na nuvem, sem precisar abrir o jogo.</p>
+<h2>O que será apagado</h2><ul><li>Seu perfil público: apelido, avatar, moldura, fundo e número de fases concluídas.</li><li>Sua cópia de segurança na nuvem: progresso, recordes, estatísticas, configurações, fases criadas e estrelas.</li><li>A conta em si (login com o Google no Shape Puzzle).</li></ul>
+<h2>O que continua</h2><ul><li>O progresso e as estrelas guardados <b>no seu aparelho</b>. Para removê-los, limpe os dados do site ou do app nas configurações do aparelho.</li><li>Resultados de campeonatos que você já enviou: peça ao organizador para excluir o campeonato.</li></ul>
+<div class="caixa"><p id="msg-pt" role="status" aria-live="polite" class="mut">Para confirmar que a conta é sua, entre com o Google.</p>
+<p><button class="btn" id="entrar-pt">Entrar com o Google</button> <button class="btn perigo" id="apagar-pt" hidden>Apagar minha conta e meus dados</button></p></div>
+<p><small>Mais detalhes na <a href="privacidade.html?l=pt">Política de Privacidade</a>.</small></p></section>
+<section data-l="pt-PT"><h1>Eliminar a minha conta — Shape Puzzle</h1>
+<p>Esta página apaga a tua conta do Shape Puzzle e os dados guardados na nuvem, sem precisares de abrir o jogo.</p>
+<h2>O que será apagado</h2><ul><li>O teu perfil público: alcunha, avatar, moldura, fundo e número de níveis concluídos.</li><li>A tua cópia de segurança na nuvem: progresso, recordes, estatísticas, definições, níveis criados e estrelas.</li><li>A própria conta (início de sessão com o Google no Shape Puzzle).</li></ul>
+<h2>O que se mantém</h2><ul><li>O progresso e as estrelas guardados <b>no teu dispositivo</b>. Para os removeres, limpa os dados do site ou da app nas definições do dispositivo.</li><li>Resultados de campeonatos que já enviaste: pede ao organizador que elimine o campeonato.</li></ul>
+<div class="caixa"><p id="msg-pt-PT" role="status" aria-live="polite" class="mut">Para confirmares que a conta é tua, inicia sessão com o Google.</p>
+<p><button class="btn" id="entrar-pt-PT">Iniciar sessão com o Google</button> <button class="btn perigo" id="apagar-pt-PT" hidden>Apagar a minha conta e os meus dados</button></p></div>
+<p><small>Mais detalhes na <a href="privacidade.html?l=pt-PT">Política de Privacidade</a>.</small></p></section>
+<section data-l="sv"><h1>Radera mitt konto — Shape Puzzle</h1>
+<p>På den här sidan raderar du ditt Shape Puzzle-konto och de uppgifter som sparats i molnet, utan att behöva öppna spelet.</p>
+<h2>Det här raderas</h2><ul><li>Din offentliga profil: smeknamn, avatar, ram, bakgrund och antal klarade nivåer.</li><li>Din säkerhetskopia i molnet: framsteg, rekord, statistik, inställningar, skapade nivåer och stjärnor.</li><li>Själva kontot (inloggningen med Google i Shape Puzzle).</li></ul>
+<h2>Det här finns kvar</h2><ul><li>Framsteg och stjärnor som sparats <b>på din enhet</b>. Ta bort dem genom att rensa webbplatsens eller appens data i enhetens inställningar.</li><li>Turneringsresultat som du redan har skickat: be arrangören att radera turneringen.</li></ul>
+<div class="caixa"><p id="msg-sv" role="status" aria-live="polite" class="mut">Logga in med Google för att bekräfta att kontot är ditt.</p>
+<p><button class="btn" id="entrar-sv">Logga in med Google</button> <button class="btn perigo" id="apagar-sv" hidden>Radera mitt konto och min data</button></p></div>
+<p><small>Mer information finns i <a href="privacidade.html?l=sv">Integritetspolicyn</a>.</small></p></section>
+<section data-l="tr"><h1>Hesabımı sil — Shape Puzzle</h1>
+<p>Bu sayfa, oyunu açmana gerek kalmadan Shape Puzzle hesabını ve bulutta saklanan verilerini siler.</p>
+<h2>Silinecekler</h2><ul><li>Herkese açık profilin: takma ad, avatar, çerçeve, arka plan ve tamamlanan bölüm sayısı.</li><li>Buluttaki yedeğin: ilerleme, rekorlar, istatistikler, ayarlar, oluşturulan bölümler ve yıldızlar.</li><li>Hesabın kendisi (Shape Puzzle'da Google ile giriş).</li></ul>
+<h2>Kalanlar</h2><ul><li><b>Cihazında</b> saklanan ilerleme ve yıldızlar. Bunları kaldırmak için cihaz ayarlarından sitenin ya da uygulamanın verilerini temizle.</li><li>Daha önce gönderdiğin turnuva sonuçları: turnuvayı silmesi için düzenleyen kişiye başvur.</li></ul>
+<div class="caixa"><p id="msg-tr" role="status" aria-live="polite" class="mut">Hesabın sana ait olduğunu doğrulamak için Google ile giriş yap.</p>
+<p><button class="btn" id="entrar-tr">Google ile giriş yap</button> <button class="btn perigo" id="apagar-tr" hidden>Hesabımı ve verilerimi sil</button></p></div>
+<p><small>Daha fazla ayrıntı için <a href="privacidade.html?l=tr">Gizlilik Politikası</a>'na bak.</small></p></section>
+<section data-l="ru"><h1>Удаление аккаунта — Shape Puzzle</h1>
+<p>На этой странице можно удалить ваш аккаунт Shape Puzzle и данные, хранящиеся в облаке, не открывая игру.</p>
+<h2>Что будет удалено</h2><ul><li>Ваш публичный профиль: ник, аватар, рамка, фон и число пройденных уровней.</li><li>Ваша резервная копия в облаке: прогресс, рекорды, статистика, настройки, созданные уровни и звёзды.</li><li>Сам аккаунт (вход через Google в Shape Puzzle).</li></ul>
+<h2>Что останется</h2><ul><li>Прогресс и звёзды, сохранённые <b>на вашем устройстве</b>. Чтобы удалить их, очистите данные сайта или приложения в настройках устройства.</li><li>Уже отправленные результаты турниров: попросите организатора удалить турнир.</li></ul>
+<div class="caixa"><p id="msg-ru" role="status" aria-live="polite" class="mut">Чтобы подтвердить, что аккаунт ваш, войдите через Google.</p>
+<p><button class="btn" id="entrar-ru">Войти через Google</button> <button class="btn perigo" id="apagar-ru" hidden>Удалить мой аккаунт и данные</button></p></div>
+<p><small>Подробнее — в <a href="privacidade.html?l=ru">Политике конфиденциальности</a>.</small></p></section>
+<section data-l="uk"><h1>Видалення акаунта — Shape Puzzle</h1>
+<p>На цій сторінці можна видалити ваш акаунт Shape Puzzle і дані, що зберігаються в хмарі, не відкриваючи гру.</p>
+<h2>Що буде видалено</h2><ul><li>Ваш публічний профіль: нік, аватар, рамка, фон і кількість пройдених рівнів.</li><li>Ваша резервна копія в хмарі: прогрес, рекорди, статистика, налаштування, створені рівні й зірки.</li><li>Сам акаунт (вхід через Google у Shape Puzzle).</li></ul>
+<h2>Що залишиться</h2><ul><li>Прогрес і зірки, збережені <b>на вашому пристрої</b>. Щоб видалити їх, очистьте дані сайту або застосунку в налаштуваннях пристрою.</li><li>Уже надіслані результати турнірів: попросіть організатора видалити турнір.</li></ul>
+<div class="caixa"><p id="msg-uk" role="status" aria-live="polite" class="mut">Щоб підтвердити, що акаунт ваш, увійдіть через Google.</p>
+<p><button class="btn" id="entrar-uk">Увійти через Google</button> <button class="btn perigo" id="apagar-uk" hidden>Видалити мій акаунт і дані</button></p></div>
+<p><small>Докладніше — у <a href="privacidade.html?l=uk">Політиці конфіденційності</a>.</small></p></section>
 </main>
 <script>
 (function(){
-  var ok=['pt','en','es'],q=new URLSearchParams(location.search).get('l'),n=(navigator.language||'pt').slice(0,2);
+  var ok=["de","en","es","fr","it","nl","pl","pt","pt-PT","sv","tr","ru","uk"],q=new URLSearchParams(location.search).get('l'),nav=(navigator.language||'pt').toLowerCase();
+  var n=nav==='pt-pt'?'pt-PT':nav.slice(0,2);
   var l=ok.indexOf(q)>=0?q:ok.indexOf(n)>=0?n:'en';
+  var sel=document.querySelector('.lang select');
   function set(x){document.documentElement.lang=x;document.querySelectorAll('[data-l]').forEach(function(e){e.classList.toggle('on',e.getAttribute('data-l')===x)});
-    document.querySelectorAll('.lang button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.x===x?'true':'false')});window.LANG=x;document.title=(document.querySelector('[data-l="'+x+'"] h1')||{}).textContent||document.title}
-  document.querySelectorAll('.lang button').forEach(function(b){b.onclick=function(){set(b.dataset.x)}});set(l);
+    sel.value=x;window.LANG=x;document.title=(document.querySelector('[data-l="'+x+'"] h1')||{}).textContent||document.title}
+  sel.onchange=function(){set(sel.value)};set(l);
 })();
 </script>
 <script>
 (function(){
   var DB='https://shapepuzzle-76162-default-rtdb.firebaseio.com', CFG={apiKey:'AIzaSyBkKDk5wqXbPr_hPNW4g14Qite7IpUS-DA',authDomain:'shapepuzzle-76162.firebaseapp.com',projectId:'shapepuzzle-76162'};
   var V='10.14.1', SRC=['firebase-app-compat.js','firebase-auth-compat.js'].map(function(f){return 'https://www.gstatic.com/firebasejs/'+V+'/'+f});
-  var T={
-    pt:{ok:'Conectado. Confirme abaixo para apagar tudo.',load:'Carregando…',cancel:'Login cancelado. Nada foi apagado.',falha:'Não consegui entrar agora. Confira a internet e tente de novo.',dom:'Este endereço não está liberado para o login.',conf:'Apagar sua conta e todos os dados guardados na nuvem? Isso não pode ser desfeito.',feito:'Pronto: sua conta e seus dados foram apagados da nuvem.',erro:'Não consegui apagar agora. Confira a internet e tente de novo; nada foi apagado por completo.'},
-    en:{ok:'Signed in. Confirm below to delete everything.',load:'Loading…',cancel:'Sign-in cancelled. Nothing was deleted.',falha:'I could not sign in right now. Check your connection and try again.',dom:'This address is not enabled for sign-in.',conf:'Delete your account and all data saved in the cloud? This cannot be undone.',feito:'Done: your account and data were deleted from the cloud.',erro:'I could not delete right now. Check your connection and try again; nothing was completely deleted.'},
-    es:{ok:'Conectado. Confirma abajo para borrar todo.',load:'Cargando…',cancel:'Acceso cancelado. No se borró nada.',falha:'No pude entrar ahora. Revisa tu conexión e inténtalo de nuevo.',dom:'Esta dirección no está habilitada para el acceso.',conf:'¿Borrar tu cuenta y todos los datos guardados en la nube? No se puede deshacer.',feito:'Listo: tu cuenta y tus datos fueron borrados de la nube.',erro:'No pude borrar ahora. Revisa tu conexión e inténtalo de nuevo; no se borró todo.'}
-  };
+  var T={"de":{"ok":"Angemeldet. Bestätigen Sie unten, um alles zu löschen.","load":"Wird geladen …","cancel":"Anmeldung abgebrochen. Es wurde nichts gelöscht.","falha":"Die Anmeldung hat gerade nicht geklappt. Prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.","dom":"Diese Adresse ist nicht für die Anmeldung freigegeben.","conf":"Ihr Konto und alle in der Cloud gespeicherten Daten löschen? Dies kann nicht rückgängig gemacht werden.","feito":"Erledigt: Ihr Konto und Ihre Daten wurden aus der Cloud gelöscht.","erro":"Löschen ist gerade nicht möglich. Prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut; es wurde nichts vollständig gelöscht."},"en":{"ok":"Signed in. Confirm below to delete everything.","load":"Loading…","cancel":"Sign-in cancelled. Nothing was deleted.","falha":"I could not sign in right now. Check your connection and try again.","dom":"This address is not enabled for sign-in.","conf":"Delete your account and all data saved in the cloud? This cannot be undone.","feito":"Done: your account and data were deleted from the cloud.","erro":"I could not delete right now. Check your connection and try again; nothing was completely deleted."},"es":{"ok":"Conectado. Confirma abajo para borrar todo.","load":"Cargando…","cancel":"Acceso cancelado. No se borró nada.","falha":"No pude entrar ahora. Revisa tu conexión e inténtalo de nuevo.","dom":"Esta dirección no está habilitada para el acceso.","conf":"¿Borrar tu cuenta y todos los datos guardados en la nube? No se puede deshacer.","feito":"Listo: tu cuenta y tus datos fueron borrados de la nube.","erro":"No pude borrar ahora. Revisa tu conexión e inténtalo de nuevo; no se borró todo."},"fr":{"ok":"Connecté. Confirmez ci-dessous pour tout supprimer.","load":"Chargement…","cancel":"Connexion annulée. Rien n’a été supprimé.","falha":"Impossible de se connecter pour le moment. Vérifiez votre connexion internet et réessayez.","dom":"Cette adresse n’est pas autorisée pour la connexion.","conf":"Supprimer votre compte et toutes les données enregistrées dans le cloud ? Cette action est irréversible.","feito":"C’est fait : votre compte et vos données ont été supprimés du cloud.","erro":"Impossible de supprimer pour le moment. Vérifiez votre connexion internet et réessayez ; rien n’a été entièrement supprimé."},"it":{"ok":"Accesso effettuato. Conferma qui sotto per cancellare tutto.","load":"Caricamento…","cancel":"Accesso annullato. Non è stato cancellato nulla.","falha":"Non sono riuscito ad accedere adesso. Controlla la connessione e riprova.","dom":"Questo indirizzo non è abilitato per l'accesso.","conf":"Eliminare il tuo account e tutti i dati salvati nel cloud? Non si può annullare.","feito":"Fatto: il tuo account e i tuoi dati sono stati cancellati dal cloud.","erro":"Non sono riuscito a cancellare adesso. Controlla la connessione e riprova; nulla è stato cancellato del tutto."},"nl":{"ok":"Ingelogd. Bevestig hieronder om alles te verwijderen.","load":"Laden…","cancel":"Inloggen geannuleerd. Er is niets verwijderd.","falha":"Inloggen lukt nu niet. Controleer je internet en probeer het opnieuw.","dom":"Dit adres is niet vrijgegeven om in te loggen.","conf":"Je account en alle gegevens in de cloud verwijderen? Dit kan niet ongedaan worden gemaakt.","feito":"Klaar: je account en je gegevens zijn uit de cloud verwijderd.","erro":"Verwijderen lukt nu niet. Controleer je internet en probeer het opnieuw; er is niets volledig verwijderd."},"pl":{"ok":"Zalogowano. Potwierdź poniżej, aby usunąć wszystko.","load":"Ładowanie…","cancel":"Logowanie anulowane. Nic nie zostało usunięte.","falha":"Nie udało się teraz zalogować. Sprawdź internet i spróbuj ponownie.","dom":"Ten adres nie ma włączonego logowania.","conf":"Usunąć Twoje konto i wszystkie dane zapisane w chmurze? Tej operacji nie można cofnąć.","feito":"Gotowe: Twoje konto i dane zostały usunięte z chmury.","erro":"Nie udało się teraz usunąć. Sprawdź internet i spróbuj ponownie; nic nie zostało usunięte w całości."},"pt":{"ok":"Conectado. Confirme abaixo para apagar tudo.","load":"Carregando…","cancel":"Login cancelado. Nada foi apagado.","falha":"Não consegui entrar agora. Confira a internet e tente de novo.","dom":"Este endereço não está liberado para o login.","conf":"Apagar sua conta e todos os dados guardados na nuvem? Isso não pode ser desfeito.","feito":"Pronto: sua conta e seus dados foram apagados da nuvem.","erro":"Não consegui apagar agora. Confira a internet e tente de novo; nada foi apagado por completo."},"pt-PT":{"ok":"Sessão iniciada. Confirma abaixo para apagar tudo.","load":"A carregar…","cancel":"Início de sessão cancelado. Nada foi apagado.","falha":"Não consegui iniciar sessão agora. Verifica a internet e tenta outra vez.","dom":"Este endereço não está autorizado para iniciar sessão.","conf":"Apagar a tua conta e todos os dados guardados na nuvem? Isto não pode ser desfeito.","feito":"Pronto: a tua conta e os teus dados foram apagados da nuvem.","erro":"Não consegui apagar agora. Verifica a internet e tenta outra vez; nada foi apagado por completo."},"sv":{"ok":"Inloggad. Bekräfta nedan för att radera allt.","load":"Laddar…","cancel":"Inloggningen avbröts. Inget raderades.","falha":"Det gick inte att logga in just nu. Kontrollera internet och försök igen.","dom":"Den här adressen är inte godkänd för inloggning.","conf":"Radera ditt konto och all data som sparats i molnet? Det går inte att ångra.","feito":"Klart: ditt konto och din data har raderats från molnet.","erro":"Det gick inte att radera just nu. Kontrollera internet och försök igen; inget raderades helt."},"tr":{"ok":"Bağlandın. Her şeyi silmek için aşağıdan onayla.","load":"Yükleniyor…","cancel":"Giriş iptal edildi. Hiçbir şey silinmedi.","falha":"Şu an giriş yapamadım. İnternetini kontrol edip tekrar dene.","dom":"Bu adres giriş için etkinleştirilmemiş.","conf":"Hesabın ve bulutta saklanan tüm veriler silinsin mi? Bu işlem geri alınamaz.","feito":"Tamam: hesabın ve verilerin buluttan silindi.","erro":"Şu an silemedim. İnternetini kontrol edip tekrar dene; hiçbir şey tamamen silinmedi."},"ru":{"ok":"Вход выполнен. Подтвердите ниже, чтобы удалить всё.","load":"Загрузка…","cancel":"Вход отменён. Ничего не удалено.","falha":"Сейчас не удалось войти. Проверьте интернет и попробуйте снова.","dom":"Вход с этого адреса не разрешён.","conf":"Удалить ваш аккаунт и все данные, хранящиеся в облаке? Это действие нельзя отменить.","feito":"Готово: ваш аккаунт и данные удалены из облака.","erro":"Сейчас не удалось удалить. Проверьте интернет и попробуйте снова; полностью ничего не удалено."},"uk":{"ok":"Вхід виконано. Підтвердьте нижче, щоб видалити все.","load":"Завантаження…","cancel":"Вхід скасовано. Нічого не видалено.","falha":"Зараз не вдалося ввійти. Перевірте інтернет і спробуйте ще раз.","dom":"Вхід із цієї адреси не дозволено.","conf":"Видалити ваш акаунт і всі дані, що зберігаються в хмарі? Цю дію не можна скасувати.","feito":"Готово: ваш акаунт і дані видалено з хмари.","erro":"Зараз не вдалося видалити. Перевірте інтернет і спробуйте ще раз; повністю нічого не видалено."}};
   var user=null, auth=null;
   function t(k){return (T[window.LANG]||T.en)[k]}
   function say(k){var e=document.getElementById('msg-'+window.LANG); if(e) e.textContent=t(k)}
@@ -71,7 +136,7 @@ nav.vol{margin-bottom:8px}
       .then(function(){firebase.initializeApp(CFG);auth=firebase.auth();return auth});
   }
   function rest(m,c,tk){return fetch(DB+'/'+c+'/'+user.uid+'.json?auth='+encodeURIComponent(tk),{method:m}).then(function(r){if(!r.ok) throw new Error('db')})}
-  ['pt','en','es'].forEach(function(l){
+  Object.keys(T).forEach(function(l){
     document.getElementById('entrar-'+l).onclick=function(){
       say('load');
       load().then(function(a){return a.signInWithPopup(new firebase.auth.GoogleAuthProvider())}).then(function(r){

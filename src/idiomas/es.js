@@ -860,4 +860,4 @@ es: {
   "Código copiado! Guarde onde quiser (ou mande para você mesmo).": "¡Código copiado! Guárdalo donde quieras (o envíatelo a ti mismo).",
   "Backup restaurado! Reiniciando o jogo…": "¡Copia restaurada! Reiniciando el juego…",
   "Substituir todo o progresso e os ajustes deste aparelho pelo do backup?": "¿Reemplazar todo el progreso y los ajustes de este dispositivo por los de la copia?",
-}
+},

@@ -1,4 +1,4 @@
-// Confere os dicionários de tradução (inglês e espanhol) sem abrir o navegador.
+// Confere os dicionários de tradução (todos os idiomas) sem abrir o navegador.
 const fs = require('fs'), path = require('path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const bloco = html.split('/*DICT-START*/')[1].split('/*DICT-END*/')[0];
@@ -10,14 +10,16 @@ const tags = s => (s.match(/<\/?[a-z]+>/g) || []).join('');
 const en = D.en, es = D.es;
 const chaves = Object.keys(en);
 console.log('entradas:', chaves.length);
-if (JSON.stringify(chaves) !== JSON.stringify(Object.keys(es))) falha('en e es têm chaves diferentes');
+const outros = Object.keys(D).filter(l => l !== 'en');
+console.log('idiomas:', ['pt', ...Object.keys(D)].join(', '));
+for (const l of outros) if (JSON.stringify(chaves) !== JSON.stringify(Object.keys(D[l]))) falha('en e ' + l + ' têm chaves diferentes');
 for (const k of chaves){
-  for (const [nome, d] of [['en', en], ['es', es]]){
+  for (const [nome, d] of Object.entries(D)){
     const v = d[k];
     if (typeof v !== 'string' || !v.trim()) { falha(`${nome}: vazio para "${k}"`); continue; }
     if (ph(k) !== ph(v)) falha(`${nome}: marcadores {..} diferentes em "${k}" -> "${v}"`);
     if (tags(k) !== tags(v)) falha(`${nome}: tags HTML diferentes em "${k}"`);
-    if (/[ãõç]/.test(v) && !/Português/.test(v)) falha(`${nome}: sobrou português em "${v}"`);
+    if ((nome === 'en' || nome === 'es') && /[ãõç]/.test(v) && !/Português/.test(v)) falha(`${nome}: sobrou português em "${v}"`);
   }
   if (k === en[k] && !/^(Link|Ranking|Volume|Música|WhatsApp|Telegram|Idioma|Cor|Estilo|Todas|Importar \.txt|Exportar \.txt|de \{n\}|Fácil \(5×5\)|Difícil|Calma|Animada|Entrar|Editar|Abrir|Exportar|Fase|Jogar)/.test(k) && k.length > 20) falha(`en igual ao português: "${k}"`);
 }

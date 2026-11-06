@@ -12,7 +12,7 @@ FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"es
 COLOCA = "(()=>{const r=dicaDe(S.jogo); if(r.tipo!=='ok') return false; r.peca.formato=r.o; return tentarColocar(r.peca,r.px,r.py);})()"
 # palavras e letras que só existem em português (para achar texto que ficou sem tradução)
 PT = re.compile(r"[ãõçê]|\b(peça|peças|fase|fases|tabuleiro|você|não|senha|prazo|ainda|aparelho|jogar|jogada|jogadas|dica|dicas|campeonato|campeonatos)\b", re.I)
-IGNORA = {'Português'}
+IGNORA = {'Português', 'Português (Brasil)', 'Português (Portugal)', 'Français', 'Türkçe'}   # nomes dos idiomas no seletor
 IGNORA_PREFIXO = ('https://', 'Agora aparecem')   # endereço de exemplo e avisos que já estavam na tela antes de trocar
 def textos_visiveis(pg):
     return pg.evaluate("""() => {

@@ -1,0 +1,30 @@
+<script>
+(function(){
+  var DB='https://shapepuzzle-76162-default-rtdb.firebaseio.com', CFG={apiKey:'AIzaSyBkKDk5wqXbPr_hPNW4g14Qite7IpUS-DA',authDomain:'shapepuzzle-76162.firebaseapp.com',projectId:'shapepuzzle-76162'};
+  var V='10.14.1', SRC=['firebase-app-compat.js','firebase-auth-compat.js'].map(function(f){return 'https://www.gstatic.com/firebasejs/'+V+'/'+f});
+  var T={{MENSAGENS}};
+  var user=null, auth=null;
+  function t(k){return (T[window.LANG]||T.en)[k]}
+  function say(k){var e=document.getElementById('msg-'+window.LANG); if(e) e.textContent=t(k)}
+  function load(){
+    if(auth) return Promise.resolve(auth);
+    return SRC.reduce(function(p,s){return p.then(function(){return new Promise(function(ok,no){var e=document.createElement('script');e.src=s;e.onload=ok;e.onerror=function(){no(new Error('rede'))};document.head.appendChild(e)})})},Promise.resolve())
+      .then(function(){firebase.initializeApp(CFG);auth=firebase.auth();return auth});
+  }
+  function rest(m,c,tk){return fetch(DB+'/'+c+'/'+user.uid+'.json?auth='+encodeURIComponent(tk),{method:m}).then(function(r){if(!r.ok) throw new Error('db')})}
+  Object.keys(T).forEach(function(l){
+    document.getElementById('entrar-'+l).onclick=function(){
+      say('load');
+      load().then(function(a){return a.signInWithPopup(new firebase.auth.GoogleAuthProvider())}).then(function(r){
+        user=r.user; say('ok'); document.getElementById('apagar-'+l).hidden=false; document.getElementById('entrar-'+l).hidden=true;
+      }).catch(function(e){say(e&&(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request')?'cancel':e&&e.code==='auth/unauthorized-domain'?'dom':'falha')});
+    };
+    document.getElementById('apagar-'+l).onclick=function(){
+      if(!user||!confirm(t('conf'))) return;
+      user.getIdToken().then(function(tk){return rest('DELETE','pub',tk).then(function(){return rest('DELETE','priv',tk)})})
+        .then(function(){return user.delete()}).then(function(){user=null;document.getElementById('apagar-'+l).hidden=true;say('feito')})
+        .catch(function(){say('erro')});
+    };
+  });
+})();
+</script>

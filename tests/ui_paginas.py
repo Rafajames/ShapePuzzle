@@ -41,7 +41,7 @@ with sync_playwright() as pw:
     c = b.new_context(locale='pt-BR'); p = c.new_page(); p.on('pageerror', lambda e: erros.append(str(e)))
     p.goto(BASE + 'privacidade.html'); p.wait_for_timeout(300)
     check(p.evaluate("document.documentElement.lang") == 'pt', 'sem ?l=, usa o idioma do navegador')
-    p.click('.lang button[data-x=en]'); check('Privacy Policy' in p.inner_text('section.on h1'), 'botões trocam o idioma')
+    p.select_option('.lang select', 'en'); check('Privacy Policy' in p.inner_text('section.on h1'), 'o seletor troca o idioma')
     c.close()
     print('Excluir conta pela web')
     c = b.new_context(locale='pt-BR'); c.route(re.compile(r'https://www\.gstatic\.com/firebasejs/.*'), lambda r, q: r.fulfill(status=200, content_type='application/javascript', body=FALSO if 'app-compat' in q.url else '/**/'))

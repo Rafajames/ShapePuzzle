@@ -5,3 +5,4 @@ __pycache__/
 target/
 java-original/target/
 *.class
+docs/loja/capturas/

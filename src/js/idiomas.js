@@ -1,9 +1,19 @@
 /* ======================= Idiomas =======================
    Os textos do jogo são escritos em português. Para os outros idiomas existe um dicionário (DICT, no bloco acima do jogo) com
    a frase em português como chave. Chaves com {nome} funcionam como modelo: tr('Fase 3') acha o modelo 'Fase {n}'. */
-const IDIOMAS = {pt: 'Português', en: 'English', es: 'Español'};
-const LANG_HTML = {pt: 'pt-BR', en: 'en', es: 'es'};
-function idiomaDoAparelho(){ const l = String(navigator.language || 'pt').toLowerCase(); return l.startsWith('en') ? 'en' : l.startsWith('es') ? 'es' : 'pt'; }
+const NOMES_IDIOMA = {pt: 'Português (Brasil)', 'pt-PT': 'Português (Portugal)', en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', it: 'Italiano',
+  nl: 'Nederlands', pl: 'Polski', sv: 'Svenska', tr: 'Türkçe', ru: 'Русский', uk: 'Українська'};
+/* idiomas disponíveis: o português (texto original) e os que têm dicionário */
+const IDIOMAS = Object.fromEntries(Object.entries(NOMES_IDIOMA).filter(([l]) => l === 'pt' || (window.DICT || {})[l]));
+const LANG_HTML = Object.fromEntries(Object.keys(IDIOMAS).map(l => [l, l === 'pt' ? 'pt-BR' : l]));
+function idiomaDoAparelho(){
+  for (const n of (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'pt'])){
+    const l = String(n).toLowerCase();
+    if (l === 'pt-pt' && IDIOMAS['pt-PT']) return 'pt-PT';
+    if (IDIOMAS[l.slice(0, 2)]) return l.slice(0, 2);
+  }
+  return 'en' in IDIOMAS ? 'en' : 'pt';
+}
 let lang = store.get('lang', null); if (!IDIOMAS[lang]) lang = idiomaDoAparelho();
 const LEX = {};
 function lexico(l){
