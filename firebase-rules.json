@@ -93,6 +93,9 @@
           },
           "mold": {
             ".validate": "newData.isString() && newData.val().length <= 12"
+          },
+          "fun": {
+            ".validate": "newData.isString() && newData.val().length <= 12"
           }
         }
       }
@@ -116,6 +119,9 @@
         },
         "ts": {
           ".validate": "newData.isNumber()"
+        },
+        "fun": {
+          ".validate": "newData.isString() && newData.val().length <= 12"
         },
         "$outro": {
           ".validate": false

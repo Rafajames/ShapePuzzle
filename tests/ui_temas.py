@@ -10,7 +10,7 @@ def check(c, m):
     print(('  ok   ' if c else '  FALHA ') + m)
     if not c: falhas.append(m)
 FIM = "localStorage.setItem('shapepuzzle.tuto','{\"sel\":true,\"giro\":true,\"esp\":true,\"fim\":true}')"
-TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel']
+TEMAS = ['escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel', 'pedra', 'papel']
 def rgb(c):
     c = c.strip()
     if c.startswith('#'):
@@ -35,7 +35,7 @@ with sync_playwright() as pw:
     check(pg.evaluate("document.documentElement.dataset.tema") == 'madeira', 'quem não escolheu nada começa com o tema Madeira')
     pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     ops = pg.evaluate("[...document.querySelectorAll('#selTema option')].map(o=>o.value)")
-    check(ops == ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'], f'seletor com os 9 temas, Madeira primeiro: {ops}')
+    check(ops == ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'pedra', 'papel'], f'seletor com os 11 temas, Madeira primeiro: {ops}')
     check(pg.is_visible('#selTema'), 'seletor aparece no menu')
     check(pg.evaluate("document.querySelector('#selTema').closest('label').textContent.includes('Tema')"), 'rótulo "Tema"')
 
@@ -113,7 +113,7 @@ with sync_playwright() as pw:
     ops = pg.evaluate("[...document.querySelectorAll('#selHumor option')].map(o=>o.value)")
     check(ops[:2] == ['auto', 'tema'] and set(['noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira']) <= set(ops), f'Estilo de música tem "Música do tema" e um clima para cada tema: {ops}')
     pg.select_option('#selHumor', 'tema'); pg.wait_for_timeout(200)
-    esperado = {'escuro': 'noite', 'claro': 'manha', 'oceano': 'mare', 'floresta': 'mata', 'poente': 'entardecer', 'retro': 'chip', 'madeira': 'madeira', 'pixel': 'pixel'}
+    esperado = {'escuro': 'noite', 'claro': 'manha', 'oceano': 'mare', 'floresta': 'mata', 'poente': 'entardecer', 'retro': 'chip', 'madeira': 'madeira', 'pixel': 'pixel', 'pedra': 'caverna', 'papel': 'origami'}
     for t, h in esperado.items():
         pg.select_option('#selTema', t); pg.wait_for_timeout(200)
         check(pg.evaluate("Som.humorAtual()") == h, f'tema {t}: música {h}')

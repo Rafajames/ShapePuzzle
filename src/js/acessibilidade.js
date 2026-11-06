@@ -2,9 +2,9 @@
 const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
 let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
 /* ---- tema ---- */
-const TEMAS = ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const TEMAS = ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'pedra', 'papel'];
 const TEMA_PADRAO = 'madeira';
-const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b', pixel: '#a8dcf5'};
+const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b', pixel: '#a8dcf5', pedra: '#1c1f23', papel: '#efe6d3'};
 let tema = store.get('tema', TEMA_PADRAO); if (!TEMAS.includes(tema)) tema = TEMA_PADRAO;
 const mqClaro = matchMedia('(prefers-color-scheme: light)');
 const temaAtivo = () => a11y.cont ? 'escuro' : tema === 'auto' ? (mqClaro.matches ? 'claro' : 'escuro') : tema;
@@ -66,6 +66,7 @@ const ICONES = {
   calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',
+  grid:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 12h16M12 4v16"/>',
   trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 3 3M16 6h4v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/>',
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',

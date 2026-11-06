@@ -59,7 +59,7 @@ async function entrarGeral(sel){
     }
     if (!minha){
       if (!livre) throw erroNuvem('cheio');
-      await nuvem(cpDb, 'PUT', `p/${livre}/${chave}`, {n: conta.nome, ts: Date.now(), av: conta.av, mold: conta.mold || ''}, tk);
+      await nuvem(cpDb, 'PUT', `p/${livre}/${chave}`, {n: conta.nome, ts: Date.now(), av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}, tk);
       minha = livre;
     }
     av('');
@@ -71,14 +71,14 @@ async function entrarGeral(sel){
 /* ---------- ranking geral ---------- */
 async function buscarRanking(){
   const r = await nuvem(cpDb, 'GET', 'pub', undefined, undefined, 'orderBy=%22n%22&limitToLast=' + RK_BUSCA) || {};
-  const lista = Object.keys(r).map(uid => { const x = r[uid] || {}; return {uid, n: +x.n || 0, ts: +x.ts || 0, nome: limparNome(String(x.nome || '')), av: x.av, mold: x.mold}; })
+  const lista = Object.keys(r).map(uid => { const x = r[uid] || {}; return {uid, n: +x.n || 0, ts: +x.ts || 0, nome: limparNome(String(x.nome || '')), av: x.av, mold: x.mold, fun: x.fun}; })
     .filter(x => x.nome && x.n > 0);
   return posicaoRanking(lista, conta ? conta.uid : '', RK_BUSCA);
 }
 function linhaRanking(r, euUid){
   const d = mk('div', 'rk' + (r.uid === euUid ? ' eu' : ''));
   d.append(mk('span', 'pos', r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-  d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+  d.appendChild(avatarEl(visualDe(r), 24));
   d.append(mk('span', 'nm', r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
   return d;
 }

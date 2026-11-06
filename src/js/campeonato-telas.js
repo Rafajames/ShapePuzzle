@@ -165,7 +165,7 @@ function renderLobby(){
   rk.forEach(r => {
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-    if (r.av) d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+    if (r.av) d.appendChild(avatarEl(visualDe(r), 24));
     d.append(mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
     linhaClicavel(d, r.nome, () => {

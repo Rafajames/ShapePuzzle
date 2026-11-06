@@ -27,7 +27,7 @@ const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
-const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira', 'pixel'];
+const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira', 'pixel', 'caverna', 'origami'];
 const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel'];
 const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
 const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };

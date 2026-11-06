@@ -74,7 +74,7 @@ function humorDaFase(cur){
   return 'calma';
 }
 /* a música de cada tema (menu → Som → Estilo → "Música do tema") */
-const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel'};
+const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel', pedra: 'caverna', papel: 'origami'};
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){

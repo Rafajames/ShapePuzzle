@@ -1,0 +1,9 @@
+/* ======================= Texturas dos temas de cor =======================
+   Escuro, Claro, Oceano, Floresta e Pôr do sol ganham um desenho suave no fundo e no tabuleiro (sem atrapalhar as peças). */
+html[data-tema="escuro"] body{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/22px 22px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="claro"] body{background:linear-gradient(rgba(60,70,160,.06) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(60,70,160,.06) 1px,transparent 1px) 0 0/24px 24px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="oceano"] body{background:repeating-radial-gradient(ellipse 60px 18px at 50% 100%,transparent 0 14px,rgba(127,224,245,.05) 14px 16px,transparent 16px 26px) 0 0/90px 40px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="oceano"] .cell{background-image:radial-gradient(circle at 30% 30%,rgba(127,224,245,.06),transparent 60%)}
+html[data-tema="floresta"] body{background:radial-gradient(ellipse 7px 3px at 30% 40%,rgba(139,232,178,.07) 99%,transparent) 0 0/46px 38px,radial-gradient(ellipse 3px 7px at 70% 75%,rgba(139,232,178,.06) 99%,transparent) 0 0/46px 38px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="floresta"] .cell{background-image:linear-gradient(135deg,rgba(139,232,178,.05),transparent 55%)}
+html[data-tema="poente"] body{background:repeating-linear-gradient(0deg,rgba(255,177,153,.035) 0 2px,transparent 2px 14px),radial-gradient(90% 55% at 50% 0%,rgba(255,122,89,.22) 0%,transparent 70%),radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}

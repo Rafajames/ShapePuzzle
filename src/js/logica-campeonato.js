@@ -37,7 +37,7 @@ function rankear(camp, jogadores){
     const p = jogadores[key] || {}, f = p.f || {};
     let feitas = 0, tempo = 0, jog = 0;
     for (let i = 0; i < N; i++){ const r = f[i]; if (r && r.t > 0){ feitas++; tempo += r.t; jog += r.j || 0; } }
-    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
+    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', fun: p.fun || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
   });
   lista.sort((a, b) => b.feitas - a.feitas || a.tempo - b.tempo || a.jog - b.jog || a.ts - b.ts || (a.key < b.key ? -1 : 1));
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });

@@ -18,7 +18,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 @@script tema-inicial.js
-@@style base.css componentes.css telas.css acessibilidade.css tema-retro.css tema-madeira.css tema-pixel.css
+@@style base.css componentes.css telas.css acessibilidade.css tema-texturas.css tema-retro.css tema-madeira.css tema-pixel.css tema-pedra.css tema-papel.css
 </head>
 <body>
 <div id="app">
@@ -159,6 +159,8 @@
         <option value="chip">Chiptune</option>
         <option value="madeira">Marimba</option>
         <option value="pixel">Pixel (aventura)</option>
+        <option value="caverna">Caverna</option>
+        <option value="origami">Origami</option>
       </select></label>
     <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
@@ -177,6 +179,8 @@
         <option value="floresta">Floresta</option>
         <option value="poente">Pôr do sol</option>
         <option value="retro">Retrô (8 bits)</option>
+        <option value="pedra">Pedra</option>
+        <option value="papel">Papel (origami)</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
     </div></details>
@@ -221,6 +225,7 @@
     <div class="big" data-i="check"></div>
     <h1 id="winTitulo">Fase concluída!</h1>
     <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
+    <p class="winBonus" id="winBonus" hidden></p>
     <p id="winTexto"></p>
     <div class="res" id="winRes"></div>
     <div class="badge" id="winBadge"></div>
@@ -518,6 +523,8 @@
     <h1>Meu perfil</h1>
     <div id="cnDentro">
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
+      <p class="cnBonus" id="cnBonus"></p>
+      <p class="cnCats"><span class="cat-comum">Comum</span><span class="cat-raro">Raro · +1 ★</span><span class="cat-epico">Épico · +2 ★</span><span class="cat-lendario">Lendário · +3 ★</span></p>
       <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
       <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
         <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
@@ -528,6 +535,9 @@
       </div></details>
       <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
         <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      </div></details>
+      <details class="sec" id="cnSecFun"><summary data-i="grid"><span id="cnTitFun">Fundos</span></summary><div class="sb">
+        <div class="cnGrade" id="cnFundos" role="radiogroup" aria-label="Fundo do avatar"></div>
       </div></details>
       <details class="sec" id="cnSecConq"><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
         <ul class="cnConq" id="cnConq"></ul>
@@ -601,6 +611,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js ranking.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js avatares.js conta.js ranking.js inicio.js
 </body>
 </html>

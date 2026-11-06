@@ -7,10 +7,16 @@ const FB_SCRIPTS = ['firebase-app-compat.js', 'firebase-auth-compat.js'].map(f =
 const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebaseapp.com', projectId: 'shapepuzzle-76162'};
 const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
 const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
-const N_AVATARES = 24, N_LIVRES = 6;
+const N_AVATARES = N_AV_P + N_AV_A, N_LIVRES = 6;
 const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
-const MOLDURAS = ['', 'madeira', 'pixel', 'festa', 'ouro', 'gelo', 'fogo', 'arco'];
-const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+const MOLDURAS = Object.keys(ITENS).filter(k => k.startsWith('mold:')).map(k => k.slice(5));
+const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', marmore: 'Mármore', metal: 'Metal', neon: 'Neon', cristal: 'Cristal', lava: 'Lava',
+  galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+const FUNDOS = Object.keys(ITENS).filter(k => k.startsWith('fun:')).map(k => k.slice(4));
+const NOME_FUNDO = {'': 'Fundo padrão', listras: 'Listras', bolinhas: 'Bolinhas', xadrez: 'Xadrez', diagonal: 'Diagonal', ceu: 'Céu', estrelas: 'Noite estrelada', aurora: 'Aurora',
+  oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado'};
+const NOME_CAT = {comum: 'Comum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário'};
+const nomeAvatar = id => id[0] === 'a' ? tr((AV_ANIME[+id.slice(1) - 1] || {}).nome || id) : tr('Avatar {n}', {n: +id.slice(1)});
 /* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
 const NOME_CONQ = {fases5: 'Primeiros passos', fases10: 'Pegando o jeito', fases25: 'Mão na massa', fases50: 'Cinquentão', fases100: 'Centenário',
   estr30: 'Brilho inicial', estr100: 'Caçador de estrelas', estr300: 'Chuva de estrelas', seq3: 'Três dias seguidos', seq7: 'Semana perfeita', seq30: 'Mês de fogo',
@@ -21,16 +27,20 @@ const DESC_CONQ = q => q.m === 'fases' ? tr('Conclua {n} fases', {n: q.n}) : q.m
 let conta = store.get('conta', null);   // {uid, nome, av, mold, novo?, sujo?, ultima?, expirou?}
 let fbAuth = null, contaOcupada = false, contaTimer = null;
 /* Perfil deste aparelho: vale para quem joga sem conta (e serve de ponto de partida no primeiro login). */
-let perfil = Object.assign({nome: '', av: 'p1', mold: ''}, store.get('perfil', {}));
-const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold)};
+let perfil = Object.assign({nome: '', av: 'p1', mold: '', fun: ''}, store.get('perfil', {}));
+const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold), fun: fundoValido(perfil.fun)};
 const guardarPerfil = () => store.set('perfil', perfil);
 
 /* ---------- avatar ---------- */
 const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
 const avPadrao = uid => 'p' + (1 + hashTxt(String(uid)) % N_LIVRES);
-const avValido = id => /^p\d{1,2}$/.test(id) && +id.slice(1) >= 1 && +id.slice(1) <= N_AVATARES ? id : 'p1';
-const moldValida = id => MOLDURAS.includes(id) ? id : '';
-function svgAvatar(id){
+const avValido = id => ITENS['av:' + id] ? id : 'p1';
+const moldValida = id => ITENS['mold:' + id] ? id : '';
+const fundoValido = id => ITENS['fun:' + id] ? id : '';
+/* visual que veio de outra pessoa (ranking, salas): só ids conhecidos */
+const visualDe = x => ({av: avValido(x && x.av), mold: moldValida(x && x.mold), fun: fundoValido(x && x.fun)});
+function svgAvatar(id, semFundo){
+  if (String(id)[0] === 'a') return svgAnime(+String(id).slice(1), semFundo);
   const n = +String(id).slice(1) || 1;
   let h = (Math.imul(n, 2654435761) >>> 0) || 1;
   const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
@@ -40,13 +50,14 @@ function svgAvatar(id){
   for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
     if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
   }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="${fundo}"/><g fill="${cor}">${r}</g></svg>`;
+  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">${semFundo ? '' : `<rect width="8" height="8" fill="${fundo}"/>`}<g fill="${cor}">${r}</g></svg>`;
 }
 /* Monta o avatar de uma conta ({av, mold}) com a moldura, no tamanho `tam` (px). */
 function avatarEl(c, tam){
-  const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : ''));
+  const fun = c && c.fun ? c.fun : '';
+  const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : '') + (fun ? ' f-' + fun : ''));
   e.style.setProperty('--t', (tam || 40) + 'px');
-  e.innerHTML = svgAvatar(c && c.av ? c.av : 'p1');
+  e.innerHTML = svgAvatar(c && c.av ? c.av : 'p1', !!fun);
   return e;
 }
 
@@ -64,7 +75,14 @@ function verificarConquistas(avisar){
   renderConta();
 }
 /* Chamada a cada fase vencida. */
-function aposVitoriaConta(){ verificarConquistas(true); contaAgendar(); }
+function aposVitoriaConta(){
+  const w = $('#winBonus'); if (w){ w.hidden = true; w.textContent = ''; }
+  if (S.cur && S.cur.k !== 'u' && !modoTeste){
+    const r = bonusVitoria(dadosAtuais(), eu(), dataHoje());
+    if (r.ganho){ guardarCart(r.cart); renderConta(); if (w){ w.textContent = tr('Bônus do visual: +{n} ★', {n: r.ganho}) + (r.teto ? ' · ' + tr('limite de hoje atingido') : ''); w.hidden = false; } }
+  }
+  verificarConquistas(true); contaAgendar();
+}
 
 /* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */
 const urlLegal = nome => nome + '.html?l=' + lang;
@@ -106,19 +124,21 @@ function textoUltima(){
 function celulaItem(chave, el, rotulo, marcado, d, donos){
   const it = ITENS[chave], tem = donos.has(chave);
   const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', marcado ? 'true' : 'false'); b.dataset.item = chave;
-  b.appendChild(el);
+  b.appendChild(el); b.classList.add('cat-' + it.cat);
+  const cat = tr(NOME_CAT[it.cat]) + (BONUS_CAT[it.cat] ? ' · +' + BONUS_CAT[it.cat] + ' ★' : '');
+  b.title = rotulo + ' — ' + cat;
   if (!tem){
     const l = mk('small', 'cnPreco');
     if (it.preco) l.textContent = '★ ' + it.preco; else l.innerHTML = ic('lock');
     b.appendChild(l); b.classList.add('trava');
-    b.setAttribute('aria-label', rotulo + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
-  } else b.setAttribute('aria-label', rotulo);
+    b.setAttribute('aria-label', rotulo + ' — ' + cat + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
+  } else b.setAttribute('aria-label', rotulo + ' — ' + cat);
   b.onclick = () => tocarItem(chave, rotulo);
   return b;
 }
 function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); return q ? tr(NOME_CONQ[q.id]) : ''; }
 function tocarItem(chave, rotulo){
-  const d = dadosAtuais(), campo = chave.startsWith('av:') ? 'av' : 'mold', id = chave.slice(campo === 'av' ? 3 : 5);
+  const d = dadosAtuais(), campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
   if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
   const it = ITENS[chave];
   if (!it.preco){ aviso('#cnAviso', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)})); return; }
@@ -145,11 +165,22 @@ function montarConta(){
     : conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
   estadoConta(conta ? textoUltima() : 'Perfil deste aparelho');
   const ga = $('#cnAvatares'); ga.textContent = '';
-  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), c.av === id, d, donos)); }
+  const ids = [...Array.from({length: N_AV_A}, (_, i) => 'a' + (i + 1)), ...Array.from({length: N_AV_P}, (_, i) => 'p' + (i + 1))];
+  const grupo = t => { const g = mk('p'); g.className = 'cnGrupo'; g.textContent = t; ga.appendChild(g); };
+  grupo(tr('Heróis estilo anime'));
+  ids.forEach((id, k) => {
+    if (k === N_AV_A) grupo(tr('Pixel'));
+    ga.appendChild(celulaItem('av:' + id, avatarEl({av: id, fun: c.fun}, 44), nomeAvatar(id), c.av === id, d, donos));
+  });
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
-  const nAv = [...donos].filter(k => k.startsWith('av:')).length, nMo = [...donos].filter(k => k.startsWith('mold:')).length;
-  $('#cnTitAv').textContent = tr('Avatares') + ' ' + nAv + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + nMo + '/' + MOLDURAS.length;
+  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id, fun: c.fun}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
+  const gf = $('#cnFundos'); gf.textContent = '';
+  FUNDOS.forEach(id => gf.appendChild(celulaItem('fun:' + id, avatarEl({av: c.av, fun: id}, 40), tr(NOME_FUNDO[id]), c.fun === id, d, donos)));
+  const conta3 = p => [...donos].filter(k => k.startsWith(p)).length;
+  $('#cnTitAv').textContent = tr('Avatares') + ' ' + conta3('av:') + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + conta3('mold:') + '/' + MOLDURAS.length;
+  $('#cnTitFun').textContent = tr('Fundos') + ' ' + conta3('fun:') + '/' + FUNDOS.length;
+  const bon = bonusEquipado({av: donos.has('av:' + c.av) ? c.av : '', mold: donos.has('mold:' + c.mold) ? c.mold : '', fun: donos.has('fun:' + c.fun) ? c.fun : ''});
+  $('#cnBonus').textContent = bon ? tr('Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).', {n: bon, m: BONUS_DIA_MAX}) : tr('Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.');
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
   const feitas = cart.v.length;
   $('#cnTitConq').textContent = tr('Conquistas') + ' ' + feitas + '/' + CONQUISTAS.length;
@@ -165,7 +196,7 @@ function montarConta(){
     li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
   const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
-  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
 function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
@@ -216,17 +247,17 @@ async function contaPosLogin(user){
   const tk = await user.getIdToken();
   const pub = await nv('GET', 'pub/' + user.uid, undefined, tk);
   if (pub && pub.nome){
-    conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
+    conta = Object.assign({uid: user.uid, nome: limparNome(pub.nome) || 'Jogador'}, visualDe(pub));
   } else {
     /* primeira vez: o apelido só vai para a nuvem depois que a pessoa o escolher (a primeira escolha é grátis) */
     let n = nomeValido(perfil.nome) ? perfil.nome : limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
     const temPerfil = !!store.get('perfil', null);
-    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', novo: true};
+    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', fun: temPerfil ? fundoValido(perfil.fun) : '', novo: true};
   }
   aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
   await contaSync({aplicar: true});
 }
-const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || ''}; guardarPerfil(); } };
+const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}; guardarPerfil(); } };
 async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
   guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
@@ -251,7 +282,7 @@ const semCfg = d => { const o = JSON.parse(JSON.stringify(d || {})); delete o.cf
 const fasesFeitas = d => Math.min(1000, d && d.prog ? d.prog.done.length : 0);
 async function contaPublicar(tk, dados){
   if (conta.novo) return;   /* sem apelido escolhido ainda: nada público */
-  await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
+  await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
 }
 async function contaSync(op){
   op = op || {};
@@ -288,12 +319,13 @@ async function contaPerfilRapido(){
 }
 function mudarPerfil(m){
   if (!conta){
-    for (const k of ['av', 'mold', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
+    for (const k of ['av', 'mold', 'fun', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
     if (m.nome !== undefined && !cpAuth){ cpNome = m.nome; store.set('cpnome', cpNome); }
     guardarPerfil(); renderConta(); montarConta(); return;
   }
   if (m.av !== undefined) conta.av = m.av;
   if (m.mold !== undefined) conta.mold = m.mold;
+  if (m.fun !== undefined) conta.fun = m.fun;
   if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
   conta.sujo = true; salvarConta(); montarConta(); contaPerfilRapido();
 }

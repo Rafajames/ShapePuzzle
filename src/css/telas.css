@@ -214,3 +214,34 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .perfilMenu .av{margin:0}
 .perfilMenu b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cnFora{margin-top:18px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--mut) 35%,transparent)}
+/* ---- molduras com textura (o avatar fica dentro, com uma borda de material) ---- */
+.av[class*=" m-"] svg{border-radius:16%}
+.av.m-marmore,.av.m-metal,.av.m-neon,.av.m-cristal,.av.m-lava,.av.m-galaxia{padding:max(2px,calc(var(--t) * .08))}
+.av.m-marmore{background:repeating-linear-gradient(118deg,transparent 0 5px,rgba(110,110,120,.35) 5px 6px,transparent 6px 13px),linear-gradient(135deg,#fbfbf8,#d8d8d2 30%,#ffffff 46%,#bdbdb5 62%,#f1f1ec);box-shadow:0 0 0 1px #8d8d86}
+.av.m-metal{background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,transparent 1px 3px),linear-gradient(180deg,#eef2f6,#9aa3ad 45%,#d3d9df 55%,#6f7882);box-shadow:0 0 0 1px #3f464d,inset 0 0 0 1px rgba(255,255,255,.5)}
+.av.m-neon{background:#12021f;box-shadow:0 0 0 2px #ff2bd6,0 0 7px 1px #ff2bd6,0 0 13px 2px rgba(43,224,255,.7)}
+.av.m-cristal{background:linear-gradient(135deg,#c9f6ff,#7fd4ff 22%,#ffffff 38%,#a78bfa 58%,#e0f7ff 78%,#8fe3ff);box-shadow:0 0 0 1px #6fb6d9,0 0 8px rgba(165,233,255,.9)}
+.av.m-lava{background:radial-gradient(circle at 18% 28%,#ffe066 0 1.5px,transparent 2.5px),radial-gradient(circle at 78% 72%,#ffb02e 0 1.5px,transparent 2.5px),radial-gradient(circle at 60% 12%,#ffd24d 0 1px,transparent 2px),linear-gradient(135deg,#2a0804,#b3200c 45%,#ff6a00 75%,#ffb02e);box-shadow:0 0 0 1px #2a0804,0 0 8px rgba(255,106,0,.7)}
+.av.m-galaxia{background:radial-gradient(#fff 0 .6px,transparent 1.2px) 0 0/6px 6px,radial-gradient(#ffe9a8 0 .6px,transparent 1.2px) 3px 4px/9px 9px,conic-gradient(from 30deg,#3b1a9e,#ff4fd8,#2be0ff,#5b2ced,#3b1a9e);box-shadow:0 0 0 1px #1a0b4a,0 0 9px rgba(160,90,255,.8)}
+/* ---- fundos do avatar ---- */
+.av[class*=" f-"] svg{background:#fff6dc}
+.av.f-listras svg{background:repeating-linear-gradient(0deg,#ffe3a3 0 12.5%,#fff6dc 12.5% 25%)}
+.av.f-bolinhas svg{background:radial-gradient(circle,#f9a8c0 0 22%,transparent 26%) 0 0/25% 25%,#fff0f4}
+.av.f-xadrez svg{background:conic-gradient(#bcd8ff 25%,#ffffff 0 50%,#bcd8ff 0 75%,#ffffff 0) 0 0/25% 25%}
+.av.f-diagonal svg{background:repeating-linear-gradient(45deg,#bfeccf 0 8%,#effbf3 8% 16%)}
+.av.f-ceu svg{background:radial-gradient(ellipse at 25% 80%,#fff 0 12%,transparent 13%),radial-gradient(ellipse at 75% 85%,#fff 0 10%,transparent 11%),linear-gradient(#5db7ff,#d7f0ff)}
+.av.f-estrelas svg{background:radial-gradient(#fff 0 3%,transparent 5%) 0 0/33% 33%,radial-gradient(#ffe9a8 0 3%,transparent 5%) 16% 20%/41% 41%,linear-gradient(#141a40,#2a2f6e)}
+.av.f-aurora svg{background:linear-gradient(160deg,#08302e,#1fae8f 40%,#6f5cff 72%,#1b1240)}
+.av.f-oceano svg{background:repeating-radial-gradient(circle at 50% 115%,#2b8bd6 0 6%,#5fb6f0 6% 12%)}
+.av.f-cosmos svg{background:radial-gradient(circle at 28% 30%,rgba(255,122,217,.85) 0,transparent 42%),radial-gradient(circle at 76% 72%,rgba(94,194,255,.85) 0,transparent 45%),radial-gradient(#fff 0 2.5%,transparent 4%) 0 0/22% 22%,#120a2e}
+.av.f-dourado svg{background:linear-gradient(135deg,#8a5a00,#ffd84d 32%,#fff3b0 50%,#ffd84d 68%,#8a5a00)}
+/* ---- categorias dos itens ---- */
+.cat-comum{--cat:#9aa0ad}.cat-raro{--cat:#3e9bff}.cat-epico{--cat:#b26bff}.cat-lendario{--cat:#ffb020}
+.cnGrade button::after{content:'';position:absolute;top:3px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--cat);box-shadow:0 0 0 1.5px var(--panel)}
+.cnGrade button.cat-comum::after{display:none}
+.cnGrade button.cat-lendario::after{box-shadow:0 0 0 1.5px var(--panel),0 0 6px var(--cat)}
+.cnGrupo{grid-column:1/-1;margin:6px 2px 0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
+.cnCats{display:flex;flex-wrap:wrap;gap:6px 12px;margin:4px 0 0;font-size:12px;color:var(--mut)}
+.cnCats span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:5px;vertical-align:-1px}
+.cnBonus{margin:8px 0 0;font-size:13px;color:var(--gold)}
+.winBonus{margin:4px 0 0;font-weight:700;color:var(--gold)}

@@ -23,7 +23,7 @@ try{var __t=JSON.parse(localStorage.getItem('shapepuzzle.tema')),__c=JSON.parse(
 if(__t==='auto')__t=matchMedia('(prefers-color-scheme: light)').matches?'claro':'escuro';
 if(__c&&__c.cont)__t='escuro';
 if(__t===null||__t===undefined)__t='madeira';
-document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente','retro','madeira','pixel'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
+document.documentElement.setAttribute('data-tema',['claro','oceano','floresta','poente','retro','madeira','pixel','pedra','papel'].indexOf(__t)>=0?__t:'escuro');}catch(e){}
 </script>
 <style>
 :root{
@@ -403,6 +403,37 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .perfilMenu .av{margin:0}
 .perfilMenu b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cnFora{margin-top:18px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--mut) 35%,transparent)}
+/* ---- molduras com textura (o avatar fica dentro, com uma borda de material) ---- */
+.av[class*=" m-"] svg{border-radius:16%}
+.av.m-marmore,.av.m-metal,.av.m-neon,.av.m-cristal,.av.m-lava,.av.m-galaxia{padding:max(2px,calc(var(--t) * .08))}
+.av.m-marmore{background:repeating-linear-gradient(118deg,transparent 0 5px,rgba(110,110,120,.35) 5px 6px,transparent 6px 13px),linear-gradient(135deg,#fbfbf8,#d8d8d2 30%,#ffffff 46%,#bdbdb5 62%,#f1f1ec);box-shadow:0 0 0 1px #8d8d86}
+.av.m-metal{background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,transparent 1px 3px),linear-gradient(180deg,#eef2f6,#9aa3ad 45%,#d3d9df 55%,#6f7882);box-shadow:0 0 0 1px #3f464d,inset 0 0 0 1px rgba(255,255,255,.5)}
+.av.m-neon{background:#12021f;box-shadow:0 0 0 2px #ff2bd6,0 0 7px 1px #ff2bd6,0 0 13px 2px rgba(43,224,255,.7)}
+.av.m-cristal{background:linear-gradient(135deg,#c9f6ff,#7fd4ff 22%,#ffffff 38%,#a78bfa 58%,#e0f7ff 78%,#8fe3ff);box-shadow:0 0 0 1px #6fb6d9,0 0 8px rgba(165,233,255,.9)}
+.av.m-lava{background:radial-gradient(circle at 18% 28%,#ffe066 0 1.5px,transparent 2.5px),radial-gradient(circle at 78% 72%,#ffb02e 0 1.5px,transparent 2.5px),radial-gradient(circle at 60% 12%,#ffd24d 0 1px,transparent 2px),linear-gradient(135deg,#2a0804,#b3200c 45%,#ff6a00 75%,#ffb02e);box-shadow:0 0 0 1px #2a0804,0 0 8px rgba(255,106,0,.7)}
+.av.m-galaxia{background:radial-gradient(#fff 0 .6px,transparent 1.2px) 0 0/6px 6px,radial-gradient(#ffe9a8 0 .6px,transparent 1.2px) 3px 4px/9px 9px,conic-gradient(from 30deg,#3b1a9e,#ff4fd8,#2be0ff,#5b2ced,#3b1a9e);box-shadow:0 0 0 1px #1a0b4a,0 0 9px rgba(160,90,255,.8)}
+/* ---- fundos do avatar ---- */
+.av[class*=" f-"] svg{background:#fff6dc}
+.av.f-listras svg{background:repeating-linear-gradient(0deg,#ffe3a3 0 12.5%,#fff6dc 12.5% 25%)}
+.av.f-bolinhas svg{background:radial-gradient(circle,#f9a8c0 0 22%,transparent 26%) 0 0/25% 25%,#fff0f4}
+.av.f-xadrez svg{background:conic-gradient(#bcd8ff 25%,#ffffff 0 50%,#bcd8ff 0 75%,#ffffff 0) 0 0/25% 25%}
+.av.f-diagonal svg{background:repeating-linear-gradient(45deg,#bfeccf 0 8%,#effbf3 8% 16%)}
+.av.f-ceu svg{background:radial-gradient(ellipse at 25% 80%,#fff 0 12%,transparent 13%),radial-gradient(ellipse at 75% 85%,#fff 0 10%,transparent 11%),linear-gradient(#5db7ff,#d7f0ff)}
+.av.f-estrelas svg{background:radial-gradient(#fff 0 3%,transparent 5%) 0 0/33% 33%,radial-gradient(#ffe9a8 0 3%,transparent 5%) 16% 20%/41% 41%,linear-gradient(#141a40,#2a2f6e)}
+.av.f-aurora svg{background:linear-gradient(160deg,#08302e,#1fae8f 40%,#6f5cff 72%,#1b1240)}
+.av.f-oceano svg{background:repeating-radial-gradient(circle at 50% 115%,#2b8bd6 0 6%,#5fb6f0 6% 12%)}
+.av.f-cosmos svg{background:radial-gradient(circle at 28% 30%,rgba(255,122,217,.85) 0,transparent 42%),radial-gradient(circle at 76% 72%,rgba(94,194,255,.85) 0,transparent 45%),radial-gradient(#fff 0 2.5%,transparent 4%) 0 0/22% 22%,#120a2e}
+.av.f-dourado svg{background:linear-gradient(135deg,#8a5a00,#ffd84d 32%,#fff3b0 50%,#ffd84d 68%,#8a5a00)}
+/* ---- categorias dos itens ---- */
+.cat-comum{--cat:#9aa0ad}.cat-raro{--cat:#3e9bff}.cat-epico{--cat:#b26bff}.cat-lendario{--cat:#ffb020}
+.cnGrade button::after{content:'';position:absolute;top:3px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--cat);box-shadow:0 0 0 1.5px var(--panel)}
+.cnGrade button.cat-comum::after{display:none}
+.cnGrade button.cat-lendario::after{box-shadow:0 0 0 1.5px var(--panel),0 0 6px var(--cat)}
+.cnGrupo{grid-column:1/-1;margin:6px 2px 0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
+.cnCats{display:flex;flex-wrap:wrap;gap:6px 12px;margin:4px 0 0;font-size:12px;color:var(--mut)}
+.cnCats span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:5px;vertical-align:-1px}
+.cnBonus{margin:8px 0 0;font-size:13px;color:var(--gold)}
+.winBonus{margin:4px 0 0;font-weight:700;color:var(--gold)}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -440,6 +471,15 @@ body.tg .card h1{font-size:30px}body.tg .card h2{font-size:14px}body.tg .reserva
 body.tg .field{font-size:17px}body.tg .tile{font-size:20px}body.tg .daily small{font-size:14px}body.tg #toast{font-size:17px}
 body.rm *,body.rm *::before,body.rm *::after{animation:none!important;transition:none!important}
 body.rm #mao.on{opacity:1}
+/* ======================= Texturas dos temas de cor =======================
+   Escuro, Claro, Oceano, Floresta e Pôr do sol ganham um desenho suave no fundo e no tabuleiro (sem atrapalhar as peças). */
+html[data-tema="escuro"] body{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/22px 22px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="claro"] body{background:linear-gradient(rgba(60,70,160,.06) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(60,70,160,.06) 1px,transparent 1px) 0 0/24px 24px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="oceano"] body{background:repeating-radial-gradient(ellipse 60px 18px at 50% 100%,transparent 0 14px,rgba(127,224,245,.05) 14px 16px,transparent 16px 26px) 0 0/90px 40px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="oceano"] .cell{background-image:radial-gradient(circle at 30% 30%,rgba(127,224,245,.06),transparent 60%)}
+html[data-tema="floresta"] body{background:radial-gradient(ellipse 7px 3px at 30% 40%,rgba(139,232,178,.07) 99%,transparent) 0 0/46px 38px,radial-gradient(ellipse 3px 7px at 70% 75%,rgba(139,232,178,.06) 99%,transparent) 0 0/46px 38px,radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
+html[data-tema="floresta"] .cell{background-image:linear-gradient(135deg,rgba(139,232,178,.05),transparent 55%)}
+html[data-tema="poente"] body{background:repeating-linear-gradient(0deg,rgba(255,177,153,.035) 0 2px,transparent 2px 14px),radial-gradient(90% 55% at 50% 0%,rgba(255,122,89,.22) 0%,transparent 70%),radial-gradient(120% 70% at 50% 0%,var(--bg2) 0%,var(--bg) 62%) fixed}
 /* ======================= Tema Retrô (8 bits) =======================
    Cantos retos, molduras duplas, blocos com brilho de pixel e fonte de máquina. Só troca a aparência: as cores das peças são as mesmas. */
 html[data-tema="retro"]{
@@ -578,6 +618,62 @@ html[data-tema="pixel"] .pw.sel{box-shadow:0 0 0 3px var(--line)}
 html[data-tema="pixel"] #logo{image-rendering:pixelated}
 html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
 @media (max-width:350px){html[data-tema="pixel"] #titulo .t1{font-size:14px}html[data-tema="pixel"] #titulo .t2{font-size:10px}}
+/* ======================= Tema Pedra =======================
+   Ardósia e pedras lascadas: cartões como lajes, tabuleiro de ladrilhos e peças como pedras pintadas. */
+html[data-tema="pedra"]{
+  --bg:#1c1f23; --bg2:#33383e; --panel:#2c3035; --line:#5b626b; --txt:#eef0f2; --mut:#aab2bb;
+  --accent:#7fb3c8; --acc2:#5f93a8; --onacc:#0f1418;
+  --t0:rgba(255,255,255,.04); --t1:rgba(255,255,255,.06); --t2:rgba(255,255,255,.12);
+  --board:#3a3f45; --cel1:#8d949b; --cel2:#848b92; --cline:#5e656c;
+  --card1:#3a3f45; --card2:#2b2f34; --ovbg:rgba(10,12,14,.8); --toast:#3a3f45; --fieldbg:rgba(0,0,0,.3);
+  --shb:rgba(0,0,0,.6); --shc:rgba(0,0,0,.65);
+  --soft:#d5dadf; --strong:#ffffff; --acctxt:#a9d7e9; --gold:#ffd36a; --goldln:rgba(255,211,106,.4);
+  --ok:#8fe3a8; --bad:#ff9a85; --info:#a9d6f5; --staroff:#6c737a;
+  --ring:rgba(20,24,28,.6); --gokbg:rgba(255,255,255,.35); --gokln:rgba(20,24,28,.85); --selln:#ffffff;
+  --handbg:rgba(255,255,255,.4); --handln:#ffffff;
+}
+html[data-tema="pedra"] body{
+  background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.04) 0 6px,transparent 7px) 0 0/58px 52px,radial-gradient(circle at 70% 70%,rgba(0,0,0,.16) 0 9px,transparent 10px) 0 0/58px 52px,
+    radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/7px 7px,linear-gradient(180deg,#33383e,#1c1f23) fixed;
+}
+html[data-tema="pedra"] .card{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/6px 6px,linear-gradient(160deg,var(--card1),var(--card2));border:2px solid #5b626b;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 0 3px #15181b,0 24px 60px rgba(0,0,0,.6)}
+html[data-tema="pedra"] :is(.btn,.ib,.tile,.infop,.daily){background:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px) 0 0/5px 5px,linear-gradient(180deg,#5a6168,#464c52);border-color:#737b83;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 #15181b}
+html[data-tema="pedra"] :is(.btn,.ib):active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 0 #15181b}
+html[data-tema="pedra"] .btn.pri{background:linear-gradient(180deg,#9fd0e2,#6aa1b6);border-color:#c8ecf8;color:#0f1418;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #2c4a56}
+html[data-tema="pedra"] .reserva{background:linear-gradient(180deg,#30353a,#26292d);border:2px solid #4c5258;box-shadow:inset 0 3px 10px rgba(0,0,0,.45)}
+html[data-tema="pedra"] #board,html[data-tema="pedra"] #edBoard{border-radius:8px;box-shadow:0 0 0 6px #4c5258,0 0 0 8px #15181b,0 16px 34px rgba(0,0,0,.55)}
+html[data-tema="pedra"] .cell{background-image:radial-gradient(circle at 30% 25%,rgba(255,255,255,.12),transparent 45%),radial-gradient(circle at 75% 80%,rgba(0,0,0,.12),transparent 40%);box-shadow:inset 0 0 0 1px rgba(40,44,48,.6),inset 0 -2px 0 rgba(0,0,0,.12)}
+html[data-tema="pedra"] .fill{inset:6%;border-radius:22%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),rgba(255,255,255,0) 50%),var(--c);box-shadow:inset 0 -4px 0 rgba(0,0,0,.3),0 2px 3px rgba(0,0,0,.5)}
+html[data-tema="pedra"] .pc{border-radius:22%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),rgba(255,255,255,0) 50%),var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.3),0 2px 3px rgba(0,0,0,.5)}
+html[data-tema="pedra"] #selo{background:linear-gradient(135deg,#9fd0e2,#6aa1b6);color:#0f1418}
+/* ======================= Tema Papel =======================
+   Papel de origami: fibras no fundo, cartões dobrados, tabuleiro quadriculado de caderno e peças como papel colorido. */
+html[data-tema="papel"]{
+  --bg:#efe6d3; --bg2:#fbf6ea; --panel:#fffaf0; --line:#cdbf9f; --txt:#2b2418; --mut:#6e6250;
+  --accent:#b8364a; --acc2:#2f6db5; --onacc:#ffffff;
+  --t0:rgba(80,60,20,.035); --t1:rgba(80,60,20,.05); --t2:rgba(80,60,20,.1);
+  --board:#e2d6bd; --cel1:#fffdf7; --cel2:#f8f3e6; --cline:#cdd8ea;
+  --card1:#fffaf0; --card2:#f6eedb; --ovbg:rgba(230,220,196,.8); --toast:#fffaf0; --fieldbg:rgba(255,255,255,.85);
+  --shb:rgba(90,70,30,.22); --shc:rgba(90,70,30,.28);
+  --soft:#3e3526; --strong:#1c160d; --acctxt:#b02f43; --gold:#7f5600; --goldln:rgba(127,86,0,.45);
+  --ok:#1f7a4a; --bad:#c42a4a; --info:#1b5bb5; --staroff:#c9bc9c;
+  --ring:rgba(60,40,10,.3); --gokbg:rgba(60,40,10,.12); --gokln:rgba(60,40,10,.55); --selln:rgba(60,40,10,.7);
+  --handbg:rgba(60,40,10,.22); --handln:rgba(60,40,10,.85);
+}
+html[data-tema="papel"] body{
+  background:repeating-linear-gradient(17deg,rgba(120,90,40,.035) 0 1px,transparent 1px 7px),repeating-linear-gradient(-63deg,rgba(120,90,40,.03) 0 1px,transparent 1px 11px),linear-gradient(180deg,#fbf6ea,#efe6d3) fixed;
+  font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+html[data-tema="papel"] .card{background:linear-gradient(135deg,rgba(255,255,255,.7),transparent 40%),repeating-linear-gradient(17deg,rgba(120,90,40,.03) 0 1px,transparent 1px 7px),var(--card1);border:1px solid #d9ccad;box-shadow:0 1px 0 #fff inset,6px 6px 0 rgba(90,70,30,.12),0 18px 40px rgba(90,70,30,.2)}
+html[data-tema="papel"] :is(.btn,.ib,.tile,.infop,.daily){background:linear-gradient(135deg,#ffffff,#f3ead6);border-color:#d6c8a6;box-shadow:2px 2px 0 rgba(90,70,30,.15)}
+html[data-tema="papel"] :is(.btn,.ib):active{transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(90,70,30,.15)}
+html[data-tema="papel"] .btn.pri{background:linear-gradient(135deg,#c03a4e,#a32a3d);border-color:#8e2233;color:#fff;box-shadow:2px 2px 0 rgba(120,20,30,.3)}
+html[data-tema="papel"] .reserva{background:#f6eedb;border:1px dashed #c9b88f}
+html[data-tema="papel"] #board,html[data-tema="papel"] #edBoard{border-radius:4px;box-shadow:0 0 0 4px #fffdf7,0 0 0 5px #d9ccad,6px 8px 0 5px rgba(90,70,30,.12)}
+html[data-tema="papel"] .cell{box-shadow:inset 0 0 0 1px #d4deef}
+html[data-tema="papel"] .fill{inset:4%;border-radius:6%;background:linear-gradient(135deg,rgba(255,255,255,.35) 0 48%,rgba(0,0,0,.08) 52%),var(--c);box-shadow:1px 2px 0 rgba(60,40,10,.25)}
+html[data-tema="papel"] .pc{border-radius:6%;background:linear-gradient(135deg,rgba(255,255,255,.35) 0 48%,rgba(0,0,0,.08) 52%),var(--c);box-shadow:1px 2px 0 rgba(60,40,10,.25)}
+html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e);color:#fff}
 </style>
 </head>
 <body>
@@ -719,6 +815,8 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
         <option value="chip">Chiptune</option>
         <option value="madeira">Marimba</option>
         <option value="pixel">Pixel (aventura)</option>
+        <option value="caverna">Caverna</option>
+        <option value="origami">Origami</option>
       </select></label>
     <label class="row"><span class="rl">Volume</span><input type="range" id="rngVol" min="0" max="100"></label>
     <label class="row"><input type="checkbox" id="chkSfx"> Efeitos sonoros</label>
@@ -737,6 +835,8 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
         <option value="floresta">Floresta</option>
         <option value="poente">Pôr do sol</option>
         <option value="retro">Retrô (8 bits)</option>
+        <option value="pedra">Pedra</option>
+        <option value="papel">Papel (origami)</option>
       </select></label>
     <p id="temaNota" hidden style="margin:6px 0 0;font-size:12px;color:var(--mut)">Com alto contraste ligado, o tema escuro é usado.</p>
     </div></details>
@@ -781,6 +881,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <div class="big" data-i="check"></div>
     <h1 id="winTitulo">Fase concluída!</h1>
     <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
+    <p class="winBonus" id="winBonus" hidden></p>
     <p id="winTexto"></p>
     <div class="res" id="winRes"></div>
     <div class="badge" id="winBadge"></div>
@@ -1078,6 +1179,8 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <h1>Meu perfil</h1>
     <div id="cnDentro">
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
+      <p class="cnBonus" id="cnBonus"></p>
+      <p class="cnCats"><span class="cat-comum">Comum</span><span class="cat-raro">Raro · +1 ★</span><span class="cat-epico">Épico · +2 ★</span><span class="cat-lendario">Lendário · +3 ★</span></p>
       <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
       <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
         <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
@@ -1088,6 +1191,9 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
       </div></details>
       <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
         <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+      </div></details>
+      <details class="sec" id="cnSecFun"><summary data-i="grid"><span id="cnTitFun">Fundos</span></summary><div class="sb">
+        <div class="cnGrade" id="cnFundos" role="radiogroup" aria-label="Fundo do avatar"></div>
       </div></details>
       <details class="sec" id="cnSecConq"><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
         <ul class="cnConq" id="cnConq"></ul>
@@ -1495,6 +1601,53 @@ en: {
   "Entrar com o Google (opcional)": "Sign in with Google (optional)",
   "Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.": "Your profile already works on this device. With a Google account you keep your progress in the cloud, continue on another device, appear on the overall ranking and play the weekly championship.",
   "Avatar, moldura, conquistas e estrelas": "Avatar, frame, achievements and stars",
+  "Bônus do visual: +{n} ★": "Look bonus: +{n} ★",
+  "limite de hoje atingido": "today's limit reached",
+  "Heróis estilo anime": "Anime-style heroes",
+  "Fundos": "Backgrounds",
+  "Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).": "Your look gives +{n} ★ for every level you beat (up to {m} ★ a day).",
+  "Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.": "Rare, epic and legendary items give extra stars for every level you beat.",
+  "Bônus do visual": "Look bonus",
+  "Comum": "Common",
+  "Raro": "Rare",
+  "Épico": "Epic",
+  "Lendário": "Legendary",
+  "Raro · +1 ★": "Rare · +1 ★",
+  "Épico · +2 ★": "Epic · +2 ★",
+  "Lendário · +3 ★": "Legendary · +3 ★",
+  "Fundo do avatar": "Avatar background",
+  "Fundo padrão": "Default background",
+  "Listras": "Stripes",
+  "Bolinhas": "Polka dots",
+  "Xadrez": "Checkered",
+  "Diagonal": "Diagonal",
+  "Céu": "Sky",
+  "Noite estrelada": "Starry night",
+  "Aurora": "Aurora",
+  "Cosmos": "Cosmos",
+  "Dourado": "Golden",
+  "Mármore": "Marble",
+  "Metal": "Metal",
+  "Neon": "Neon",
+  "Cristal": "Crystal",
+  "Lava": "Lava",
+  "Galáxia": "Galaxy",
+  "Ninja da Névoa": "Mist Ninja",
+  "Menina-gato": "Cat Girl",
+  "Samurai Errante": "Wandering Samurai",
+  "Aprendiz de Magia": "Magic Apprentice",
+  "Piloto de Robô": "Robot Pilot",
+  "Espadachim de Prata": "Silver Swordsman",
+  "Garota Mágica": "Magical Girl",
+  "Espírito-raposa": "Fox Spirit",
+  "Dragãozinho": "Little Dragon",
+  "Rei das Sombras": "Shadow King",
+  "Anjo da Aurora": "Dawn Angel",
+  "Androide": "Android",
+  "Pedra": "Stone",
+  "Papel (origami)": "Paper (origami)",
+  "Caverna": "Cave",
+  "Origami": "Origami",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2263,6 +2416,53 @@ es: {
   "Entrar com o Google (opcional)": "Entrar con Google (opcional)",
   "Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.": "Tu perfil ya funciona en este dispositivo. Con una cuenta de Google guardas el progreso en la nube, sigues en otro dispositivo, apareces en el ranking general y juegas el torneo de la semana.",
   "Avatar, moldura, conquistas e estrelas": "Avatar, marco, logros y estrellas",
+  "Bônus do visual: +{n} ★": "Bono del look: +{n} ★",
+  "limite de hoje atingido": "límite de hoy alcanzado",
+  "Heróis estilo anime": "Héroes estilo anime",
+  "Fundos": "Fondos",
+  "Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).": "Tu look da +{n} ★ por cada nivel superado (hasta {m} ★ al día).",
+  "Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.": "Los objetos raros, épicos y legendarios dan estrellas extra por cada nivel superado.",
+  "Bônus do visual": "Bono del look",
+  "Comum": "Común",
+  "Raro": "Raro",
+  "Épico": "Épico",
+  "Lendário": "Legendario",
+  "Raro · +1 ★": "Raro · +1 ★",
+  "Épico · +2 ★": "Épico · +2 ★",
+  "Lendário · +3 ★": "Legendario · +3 ★",
+  "Fundo do avatar": "Fondo del avatar",
+  "Fundo padrão": "Fondo predeterminado",
+  "Listras": "Rayas",
+  "Bolinhas": "Lunares",
+  "Xadrez": "Cuadros",
+  "Diagonal": "Diagonal",
+  "Céu": "Cielo",
+  "Noite estrelada": "Noche estrellada",
+  "Aurora": "Aurora",
+  "Cosmos": "Cosmos",
+  "Dourado": "Dorado",
+  "Mármore": "Mármol",
+  "Metal": "Metal",
+  "Neon": "Neón",
+  "Cristal": "Cristal",
+  "Lava": "Lava",
+  "Galáxia": "Galaxia",
+  "Ninja da Névoa": "Ninja de la Niebla",
+  "Menina-gato": "Chica gato",
+  "Samurai Errante": "Samurái Errante",
+  "Aprendiz de Magia": "Aprendiz de Magia",
+  "Piloto de Robô": "Piloto de Robot",
+  "Espadachim de Prata": "Espadachín de Plata",
+  "Garota Mágica": "Chica Mágica",
+  "Espírito-raposa": "Espíritu zorro",
+  "Dragãozinho": "Dragoncito",
+  "Rei das Sombras": "Rey de las Sombras",
+  "Anjo da Aurora": "Ángel del Alba",
+  "Androide": "Androide",
+  "Pedra": "Piedra",
+  "Papel (origami)": "Papel (origami)",
+  "Caverna": "Cueva",
+  "Origami": "Origami",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3078,7 +3278,7 @@ function rankear(camp, jogadores){
     const p = jogadores[key] || {}, f = p.f || {};
     let feitas = 0, tempo = 0, jog = 0;
     for (let i = 0; i < N; i++){ const r = f[i]; if (r && r.t > 0){ feitas++; tempo += r.t; jog += r.j || 0; } }
-    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
+    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', fun: p.fun || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
   });
   lista.sort((a, b) => b.feitas - a.feitas || a.tempo - b.tempo || a.jog - b.jog || a.ts - b.ts || (a.key < b.key ? -1 : 1));
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
@@ -3166,7 +3366,7 @@ const sequenciasSemanas = (sem, hoje) => sequenciaNum(Object.keys(sem || {}).map
 
 /* ---- Backup do progresso (lógica pura: validar, resumir e juntar) ---- */
 const BK_NIVEIS = ['crescente', 'facil', 'medio', 'dificil', 'mestre'];
-const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira', 'pixel'];
+const BK_HUMORES = ['auto', 'tema', 'calma', 'animada', 'noturna', 'noite', 'manha', 'mare', 'mata', 'entardecer', 'chip', 'madeira', 'pixel', 'caverna', 'origami'];
 const BK_TEMAS = ['auto', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'madeira', 'pixel'];
 const isObj = x => x && typeof x === 'object' && !Array.isArray(x);
 const inteiro = (v, min, max) => { v = Math.round(+v); return isFinite(v) ? Math.min(max, Math.max(min, v)) : min; };
@@ -3248,11 +3448,33 @@ function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h
    + ganhos avulsos (anúncios premiados) − o que foi gasto. Só o que não dá para recalcular fica na "carteira":
    cart = {g: ganhos avulsos {chave: estrelas}, s: gastos {chave: estrelas}, v: conquistas já resgatadas}. */
 const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30, BONUS_CAMP_SEMANA = 10;
-/* Itens: 'av:pN' (avatar) e 'mold:id' (moldura). livre = todo mundo tem; preco = comprado com estrelas; (sem nenhum dos dois) = só por conquista. */
+/* Itens: 'av:pN' / 'av:aN' (avatar), 'mold:id' (moldura) e 'fun:id' (fundo do avatar).
+   Cada item tem uma categoria. A categoria define o preço em estrelas e o bônus que o item dá, equipado, a cada fase vencida.
+   comum = todo mundo tem; conq = só por conquista (sem preço). */
+const CATEGORIAS = ['comum', 'raro', 'epico', 'lendario'];
+const PRECO_CAT = {raro: 20, epico: 50, lendario: 120};
+const BONUS_CAT = {comum: 0, raro: 1, epico: 2, lendario: 3};
+const BONUS_DIA_MAX = 30;      /* teto diário do bônus dos itens (repetir fase fácil não vira fábrica de estrelas) */
+const N_AV_P = 24, N_AV_A = 12;
 const ITENS = {};
-for (let i = 1; i <= 24; i++) ITENS['av:p' + i] = i <= 6 ? {livre: true} : i <= 10 ? {preco: 15} : i <= 14 ? {preco: 30} : i <= 18 ? {preco: 60} : {};
-Object.assign(ITENS, {'mold:': {livre: true}, 'mold:madeira': {livre: true}, 'mold:pixel': {preco: 30}, 'mold:festa': {preco: 50}, 'mold:ouro': {preco: 100},
-  'mold:gelo': {}, 'mold:fogo': {}, 'mold:arco': {}});
+const item = (chave, cat, conq) => { ITENS[chave] = cat === 'comum' ? {cat, livre: true} : conq ? {cat, conq: true} : {cat, preco: PRECO_CAT[cat]}; };
+for (let i = 1; i <= N_AV_P; i++) item('av:p' + i, i <= 6 ? 'comum' : i <= 14 ? 'raro' : i <= 18 ? 'epico' : {19: 'raro', 20: 'raro', 21: 'raro', 22: 'epico', 23: 'lendario', 24: 'epico'}[i], i >= 19);
+for (let i = 1; i <= N_AV_A; i++) item('av:a' + i, i <= 4 ? 'raro' : i <= 8 ? 'epico' : 'lendario');
+[['', 'comum'], ['madeira', 'comum'], ['pixel', 'raro'], ['festa', 'raro'], ['marmore', 'raro'], ['metal', 'raro'], ['neon', 'epico'], ['cristal', 'epico'], ['lava', 'epico'],
+ ['galaxia', 'lendario'], ['ouro', 'lendario'], ['gelo', 'epico', 1], ['fogo', 'epico', 1], ['arco', 'lendario', 1]].forEach(([id, cat, q]) => item('mold:' + id, cat, q));
+[['', 'comum'], ['listras', 'comum'], ['bolinhas', 'comum'], ['xadrez', 'raro'], ['diagonal', 'raro'], ['ceu', 'raro'], ['estrelas', 'epico'], ['aurora', 'epico'],
+ ['oceano', 'epico'], ['cosmos', 'lendario'], ['dourado', 'lendario']].forEach(([id, cat]) => item('fun:' + id, cat));
+const catItem = chave => (ITENS[chave] || {}).cat || 'comum';
+/* bônus por fase vencida com o visual equipado ({av, mold, fun}) */
+const bonusEquipado = e => !e ? 0 : BONUS_CAT[catItem('av:' + (e.av || ''))] + BONUS_CAT[catItem('mold:' + (e.mold || ''))] + BONUS_CAT[catItem('fun:' + (e.fun || ''))];
+/* soma o bônus de uma vitória na carteira (chave do dia), respeitando o teto diário; só vale para itens que a pessoa tem */
+function bonusVitoria(d, e, hoje){
+  const donos = itensDe(d), eq = {
+    av: donos.has('av:' + (e && e.av)) ? e.av : '', mold: donos.has('mold:' + (e && e.mold || '')) ? e.mold : '', fun: donos.has('fun:' + (e && e.fun || '')) ? e.fun : ''};
+  const b = bonusEquipado(eq), c = cartDe(d), k = 'b:' + hoje, ja = c.g[k] || 0, ganho = Math.max(0, Math.min(b, BONUS_DIA_MAX - ja));
+  if (ganho) c.g[k] = ja + ganho;
+  return {cart: c, ganho, teto: ja + ganho >= BONUS_DIA_MAX};
+}
 /* m = o que se mede; n = quanto precisa; est = estrelas de prêmio; item = avatar ou moldura que libera */
 const CONQUISTAS = [
   {id: 'fases5', m: 'fases', n: 5, est: 5}, {id: 'fases10', m: 'fases', n: 10, est: 10, item: 'av:p21'}, {id: 'fases25', m: 'fases', n: 25, est: 20},
@@ -3263,6 +3485,7 @@ const CONQUISTAS = [
 ];
 const cartDe = d => { const c = d && d.cart || {}; return {g: Object.assign({}, c.g), s: Object.assign({}, c.s), v: Array.isArray(c.v) ? c.v.slice() : []}; };
 const somaVals = o => Object.values(o || {}).reduce((a, b) => a + b, 0);
+const somaPref = (o, p) => Object.keys(o || {}).filter(k => k.startsWith(p)).reduce((a, k) => a + o[k], 0);
 function medidasConta(d, hoje){
   d = d || {};
   return {fases: d.prog ? d.prog.done.length : 0, estrelas: somaVals(d.est), seq: sequenciasDe(d.dias, hoje || '').maior, dias: d.dias ? Object.keys(d.dias).length : 0,
@@ -3276,7 +3499,8 @@ function saldoConta(d){
 /* ganhos por origem, para mostrar de onde vêm as estrelas */
 function origemEstrelas(d){
   const c = cartDe(d), m = medidasConta(d);
-  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), outros: somaVals(c.g), gastas: somaVals(c.s)};
+  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'),
+    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:'), gastas: somaVals(c.s)};
 }
 function itensDe(d){
   const c = cartDe(d), r = new Set(Object.keys(ITENS).filter(k => ITENS[k].livre));
@@ -3500,9 +3724,9 @@ function aplicarIdioma(){
 const A11Y_PADRAO = {dalt: false, cont: matchMedia('(prefers-contrast: more)').matches, texto: false, mov: matchMedia('(prefers-reduced-motion: reduce)').matches};
 let a11y = Object.assign({}, A11Y_PADRAO, store.get('a11y', {}));
 /* ---- tema ---- */
-const TEMAS = ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro'];
+const TEMAS = ['auto', 'madeira', 'pixel', 'escuro', 'claro', 'oceano', 'floresta', 'poente', 'retro', 'pedra', 'papel'];
 const TEMA_PADRAO = 'madeira';
-const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b', pixel: '#a8dcf5'};
+const TEMA_COR = {escuro: '#0c0c12', claro: '#eef0fa', oceano: '#06161f', floresta: '#08150e', poente: '#150a14', retro: '#1f2327', madeira: '#24150b', pixel: '#a8dcf5', pedra: '#1c1f23', papel: '#efe6d3'};
 let tema = store.get('tema', TEMA_PADRAO); if (!TEMAS.includes(tema)) tema = TEMA_PADRAO;
 const mqClaro = matchMedia('(prefers-color-scheme: light)');
 const temaAtivo = () => a11y.cont ? 'escuro' : tema === 'auto' ? (mqClaro.matches ? 'claro' : 'escuro') : tema;
@@ -3564,6 +3788,7 @@ const ICONES = {
   calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',
+  grid:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 12h16M12 4v16"/>',
   trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 3 3M16 6h4v1a3 3 0 0 1-3 3M12 13v4M8 20h8"/>',
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
@@ -3720,6 +3945,25 @@ const HUMORES = {
       {bass:33, pad:[52,57,60], arp:[64,67,69,72,76,79,81]},   // Am
       {bass:41, pad:[53,57,60], arp:[65,67,69,72,74,77,81]},   // F
       {bass:43, pad:[55,59,62], arp:[67,69,71,74,76,79,83]}    // G
+    ]
+  },
+  caverna: {   /* tema Pedra: harpa lenta numa caverna, com gotas pingando */
+    bpm: 56, padV: 0.04, filtro: 750, tipo: 'sine', decay: 3.4, harm: 2, harmV: 0.22, prob: [0.5, 0.32, 0.2], pulso: false, send: 0.85,
+    perc: {tipo: 'tom', f: 1400, v: 0.018, cada: 8, dur: 0.04},
+    acordes: [
+      {bass:38, pad:[50,57,62,65], arp:[62,65,69,72,74,77,81]},   // Dm(add9)
+      {bass:34, pad:[50,58,62,65], arp:[62,65,70,72,74,77,82]},   // Bb
+      {bass:36, pad:[52,55,60,64], arp:[60,64,67,69,72,76,79]},   // C
+      {bass:33, pad:[52,57,60,64], arp:[60,64,67,69,72,76,81]}    // Am
+    ]
+  },
+  origami: {   /* tema Papel: dedilhado leve em escala pentatônica, como um koto */
+    bpm: 80, padV: 0.018, filtro: 2200, tipo: 'triangle', decay: 1.2, harm: 3, harmV: 0.22, prob: [0.82, 0.6, 0.4], pulso: false, send: 0.5,
+    acordes: [
+      {bass:45, pad:[57,64,69], arp:[64,67,69,71,74,76,79]},   // Am pentatônico
+      {bass:41, pad:[53,60,65], arp:[60,62,65,67,69,72,74]},   // F
+      {bass:43, pad:[55,62,67], arp:[62,64,67,69,71,74,76]},   // G
+      {bass:40, pad:[52,59,64], arp:[59,62,64,67,69,71,74]}    // Em
     ]
   },
   madeira: {   /* tema Madeira: marimba e toquinhos de madeira */
@@ -3999,7 +4243,7 @@ function humorDaFase(cur){
   return 'calma';
 }
 /* a música de cada tema (menu → Som → Estilo → "Música do tema") */
-const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel'};
+const TEMA_HUMOR = {escuro: 'noite', claro: 'manha', oceano: 'mare', floresta: 'mata', poente: 'entardecer', retro: 'chip', madeira: 'madeira', pixel: 'pixel', pedra: 'caverna', papel: 'origami'};
 function aplicarHumor(){ Som.aplicarHumor(humorPref === 'auto' ? humorDaFase(S.cur) : humorPref === 'tema' ? TEMA_HUMOR[temaAtivo()] : humorPref); }
 
 function carregar(cur, manter){
@@ -5586,7 +5830,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.8';
+const VERSAO = '2026.11.06.1';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -6021,7 +6265,7 @@ function renderLobby(){
   rk.forEach(r => {
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-    if (r.av) d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+    if (r.av) d.appendChild(avatarEl(visualDe(r), 24));
     d.append(mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
     linhaClicavel(d, r.nome, () => {
@@ -6105,6 +6349,54 @@ function vitoriaCamp(c, res, add, reabrir){
 }
 
 
+/* ======================= Avatares estilo anime (personagens originais do jogo) =======================
+   Desenhos 16×16 em pixel art. '.' = fundo (aparece a cor ou a textura do fundo escolhido). */
+const BASE_COR = {W: '#ffffff', m: '#c2456a', B: '#ff9db5'};
+const AV_ANIME = [
+  {nome: 'Ninja da Névoa', cor: {H: '#23252e', h: '#3a3d4a', S: '#f2c9a0', E: '#1d2433', A: '#8a93a6', P: '#dfe5ee', M: '#2b3550', O: '#2b3550'}, px: [
+    '....H..H..H.....', '...HH.HH.HH.H...', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHHhHHhHHHH..', '..AAAAPPPPAAAA..', '..HSSSSSSSSSSHA.', '..HSSSSSSSSSSH.A',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..MMMMMMMMMMMM..', '...MMMMMMMMMM...', '....MMMMMMMM....', '.....MMMMMM.....', '...OOOOOOOOOO...', '..OOOOOOOOOOOO..']},
+  {nome: 'Menina-gato', cor: {H: '#f07ab0', h: '#d95a95', i: '#ffd1e3', S: '#ffe0c4', E: '#6b2d8f', O: '#6b5bd6', A: '#ffd84d'}, px: [
+    '..HH........HH..', '..HiH......HiH..', '..HiiHHHHHHiiH..', '..HHHHHHHHHHHH..', '..HHHHHHHHHHHH..', '..HHHhHHHHhHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OSSSSO.HH..', '..HOOOOAAOOOOH..', '..OOOOOOOOOOOO..']},
+  {nome: 'Samurai Errante', cor: {H: '#1b1b22', h: '#3a2a22', A: '#c2263a', S: '#e9b88e', E: '#2a1a12', m: '#8a3a2a', O: '#b3262f', o: '#2d2d3a'}, px: [
+    '.......HH.......', '.......HH.......', '......AHHA......', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HShhSSSShhSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSSSH..', '...SSSSmmSSSS...', '....SSSSSSSS....', '...OoOSSSSOoO...', '..OOOoOOOOoOOO..', '.OOOOOoOOoOOOOO.']},
+  {nome: 'Aprendiz de Magia', cor: {A: '#3e63dd', P: '#ffd84d', H: '#8a5a2b', S: '#ffe0c4', E: '#2f6b3a', O: '#5a3fb0'}, px: [
+    '........AA......', '.......AAA......', '......AAAA......', '.....AAAAAA.....', '....AAAAAAAA....', '.AAAPPPPPPPPAAA.', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OOSSOO.HH..', '...OOOOPOOOOO...', '..OOOOOOOOOOOO..']},
+  {nome: 'Piloto de Robô', cor: {A: '#eef2f7', P: '#e5484d', V: '#3fd0ff', H: '#6b3d1f', S: '#f2c9a0', E: '#1f3b73', m: '#a3443a', O: '#2f4a8a'}, px: [
+    '....AAAAAAAA....', '...AAAAAAAAAA...', '..AAAAPPAAAAAA..', '..AAVVVVVVVVAA..', '..AVVVVVVVVVVA..', '..AAHHHHHHHHAA..', '..AHSSSSSSSSHA..', '..ASSSSSSSSSSA..',
+    '..ASEESSSSEESA..', '..ASEWSSSSEWSA..', '..ASSSSSSSSSSA..', '..AASSSmmSSSAA..', '...AASSSSSSAA...', '....OOSSSSOO....', '..OOOPOOOOPOOO..', '..OOOOOOOOOOOO..']},
+  {nome: 'Espadachim de Prata', cor: {H: '#e8edf2', h: '#a9b5c2', S: '#f2c9a0', E: '#2b6fc2', R: '#d14b4b', m: '#a3443a', O: '#22242c', o: '#6b1f2a'}, px: [
+    '..H....H....H...', '..HH..HHH..HH...', '..HHHHHHHHHHHH..', '.HHHHHHHHHHHHHH.', '..HHHHhHHhHHHH..', '.HHHHHHHHHHHHHH.', '..HHSHSSSHSSHH..', '..HShhSSSShhSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSRSH..', '...SSSSmmSSRS...', '....SSSSSSSS....', '.....OSSSSO.....', '...OOOOooOOOO...', '..OOOOOooOOOOO..']},
+  {nome: 'Garota Mágica', cor: {H: '#ffd84d', S: '#ffe6cf', E: '#d6409f', A: '#ffffff', P: '#e5484d', O: '#ff8cc6', o: '#ffffff'}, px: [
+    '................', '....HHHHHHHH....', '...HHHAPPAHHH...', '..HHHHAAAAHHHH..', '..HHHHHHHHHHHH..', '.HHHHHHHHHHHHHH.', 'HHHHSSSSSSSSHHHH', 'HHHSSSSSSSSSSHHH',
+    'HH.SEESSSSEES.HH', 'HH.SEWSSSSEWS.HH', 'HH.BSSSSSSSSB.HH', 'HH..SSSmmSSS..HH', 'HH...SSSSSS...HH', '.H...OPSSPO...H.', '....OOOOOOOO....', '...OOOoOOoOOO...']},
+  {nome: 'Espírito-raposa', cor: {A: '#f28b30', i: '#fff3e0', H: '#f4f1ea', S: '#ffe6cf', E: '#c9461b', R: '#e5484d', O: '#b3262f', o: '#ffd84d'}, px: [
+    '..A..........A..', '..AA........AA..', '..AiA......AiA..', '..AiiHHHHHHiiA..', '..HHHHHHHHHHHH..', '..HHHHHHHHHHHH..', '..HHSSHSSHSSHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSRSSSSSSRSH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OSSSSO.HH..', '..HOOOOooOOOOH..', '..OOOOOooOOOOO..']},
+  {nome: 'Dragãozinho', cor: {A: '#f3e3c3', H: '#3fa45b', h: '#2d7a43', S: '#e9c9a3', E: '#e0a000', R: '#3fa45b', m: '#8a3a2a', O: '#2d7a43', o: '#f3e3c3'}, px: [
+    '..A..........A..', '..AA........AA..', '...AA......AA...', '....AHHHHHHA....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHSSSSSSHHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSRSSSSRSSH..', '..HSSSSmmSSSSH..', '...SSSSSSSSSS...', '...O.OSSSSO.O...', '..OOOOOOOOOOOO..', '.OOOoOOOOOOoOOO.']},
+  {nome: 'Rei das Sombras', cor: {A: '#7a1f2b', H: '#4b2a6b', h: '#2e1a44', S: '#f0d8e6', E: '#e5162f', m: '#6b1f2a', O: '#1a1220', o: '#b3262f'}, px: [
+    '.A............A.', '.AA..........AA.', '..AA.HHHHHH.AA..', '...AHHHHHHHHA...', '..HHHHHHHHHHHH..', '..HHHHhHHhHHHH..', '..HHSHSSSSHSHH..', '..HShhSSSShhSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSSSH..', '..HSSSSmmSSSSH..', '.OHHSSSSSSSSHHO.', '.OOO.oSSSSo.OOO.', '.OOOooooooooOOO.', 'OOOOooooooooOOOO']},
+  {nome: 'Anjo da Aurora', cor: {A: '#ffd84d', H: '#ffe08a', S: '#ffe6cf', E: '#3e8fd6', w: '#c9d6ee', O: '#8fb7ff'}, px: [
+    '....AAAAAAAA....', '...A........A...', '....AAAAAAAA....', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', 'wwHHSSSSSSSSHHww', 'www..OSSSSO..www', 'wwwwOOOOOOOOwwww', '.wwOOOOOOOOOOww.']},
+  {nome: 'Androide', cor: {H: '#c9d1dc', h: '#9aa6b5', S: '#e9eef3', E: '#2fe3ff', R: '#8fa0b3', m: '#7a8a9c', A: '#5d6b7c', P: '#2fe3ff', O: '#3a4656'}, px: [
+    '................', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHhHHHHhHHH..', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
+    '..HSEESSSSEESH..', '..HSEESSSSEESH..', '..HRSSSSSSSSRH..', '..HRSSSmmSSSRH..', '..HHSSSSSSSSHH..', '..H.APSSSSPA.H..', '..AAAAAPPAAAAA..', '..OOOOOOOOOOOO..']}
+];
+/* SVG de um avatar anime (n = 1..12); semFundo: deixa transparente para a textura do fundo aparecer */
+function svgAnime(n, semFundo){
+  const a = AV_ANIME[n - 1] || AV_ANIME[0], cor = Object.assign({}, BASE_COR, a.cor), porCor = {};
+  a.px.forEach((linha, y) => { for (let x = 0; x < 16; x++){ const c = linha[x]; if (c !== '.' && cor[c]) (porCor[cor[c]] = porCor[cor[c]] || []).push(`M${x} ${y}h1v1h-1z`); } });
+  const fundo = semFundo ? '' : '<rect width="16" height="16" fill="#dcecff"/>';
+  return `<svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">${fundo}${Object.keys(porCor).map(c => `<path fill="${c}" d="${porCor[c].join('')}"/>`).join('')}</svg>`;
+}
 /* ======================= Conta (login opcional com o Google) e área do usuário =======================
    O jogo inteiro funciona sem conta. Com ela: apelido, avatar e moldura, estrelas para gastar e o progresso guardado
    na nuvem (juntando o que já existe no aparelho com o que está na nuvem — nunca se perde nada).
@@ -6114,10 +6406,16 @@ const FB_SCRIPTS = ['firebase-app-compat.js', 'firebase-auth-compat.js'].map(f =
 const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebaseapp.com', projectId: 'shapepuzzle-76162'};
 const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
 const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
-const N_AVATARES = 24, N_LIVRES = 6;
+const N_AVATARES = N_AV_P + N_AV_A, N_LIVRES = 6;
 const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
-const MOLDURAS = ['', 'madeira', 'pixel', 'festa', 'ouro', 'gelo', 'fogo', 'arco'];
-const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+const MOLDURAS = Object.keys(ITENS).filter(k => k.startsWith('mold:')).map(k => k.slice(5));
+const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', marmore: 'Mármore', metal: 'Metal', neon: 'Neon', cristal: 'Cristal', lava: 'Lava',
+  galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+const FUNDOS = Object.keys(ITENS).filter(k => k.startsWith('fun:')).map(k => k.slice(4));
+const NOME_FUNDO = {'': 'Fundo padrão', listras: 'Listras', bolinhas: 'Bolinhas', xadrez: 'Xadrez', diagonal: 'Diagonal', ceu: 'Céu', estrelas: 'Noite estrelada', aurora: 'Aurora',
+  oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado'};
+const NOME_CAT = {comum: 'Comum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário'};
+const nomeAvatar = id => id[0] === 'a' ? tr((AV_ANIME[+id.slice(1) - 1] || {}).nome || id) : tr('Avatar {n}', {n: +id.slice(1)});
 /* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
 const NOME_CONQ = {fases5: 'Primeiros passos', fases10: 'Pegando o jeito', fases25: 'Mão na massa', fases50: 'Cinquentão', fases100: 'Centenário',
   estr30: 'Brilho inicial', estr100: 'Caçador de estrelas', estr300: 'Chuva de estrelas', seq3: 'Três dias seguidos', seq7: 'Semana perfeita', seq30: 'Mês de fogo',
@@ -6128,16 +6426,20 @@ const DESC_CONQ = q => q.m === 'fases' ? tr('Conclua {n} fases', {n: q.n}) : q.m
 let conta = store.get('conta', null);   // {uid, nome, av, mold, novo?, sujo?, ultima?, expirou?}
 let fbAuth = null, contaOcupada = false, contaTimer = null;
 /* Perfil deste aparelho: vale para quem joga sem conta (e serve de ponto de partida no primeiro login). */
-let perfil = Object.assign({nome: '', av: 'p1', mold: ''}, store.get('perfil', {}));
-const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold)};
+let perfil = Object.assign({nome: '', av: 'p1', mold: '', fun: ''}, store.get('perfil', {}));
+const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold), fun: fundoValido(perfil.fun)};
 const guardarPerfil = () => store.set('perfil', perfil);
 
 /* ---------- avatar ---------- */
 const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
 const avPadrao = uid => 'p' + (1 + hashTxt(String(uid)) % N_LIVRES);
-const avValido = id => /^p\d{1,2}$/.test(id) && +id.slice(1) >= 1 && +id.slice(1) <= N_AVATARES ? id : 'p1';
-const moldValida = id => MOLDURAS.includes(id) ? id : '';
-function svgAvatar(id){
+const avValido = id => ITENS['av:' + id] ? id : 'p1';
+const moldValida = id => ITENS['mold:' + id] ? id : '';
+const fundoValido = id => ITENS['fun:' + id] ? id : '';
+/* visual que veio de outra pessoa (ranking, salas): só ids conhecidos */
+const visualDe = x => ({av: avValido(x && x.av), mold: moldValida(x && x.mold), fun: fundoValido(x && x.fun)});
+function svgAvatar(id, semFundo){
+  if (String(id)[0] === 'a') return svgAnime(+String(id).slice(1), semFundo);
   const n = +String(id).slice(1) || 1;
   let h = (Math.imul(n, 2654435761) >>> 0) || 1;
   const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
@@ -6147,13 +6449,14 @@ function svgAvatar(id){
   for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
     if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
   }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="${fundo}"/><g fill="${cor}">${r}</g></svg>`;
+  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">${semFundo ? '' : `<rect width="8" height="8" fill="${fundo}"/>`}<g fill="${cor}">${r}</g></svg>`;
 }
 /* Monta o avatar de uma conta ({av, mold}) com a moldura, no tamanho `tam` (px). */
 function avatarEl(c, tam){
-  const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : ''));
+  const fun = c && c.fun ? c.fun : '';
+  const e = mk('span', 'av' + (c && c.mold ? ' m-' + c.mold : '') + (fun ? ' f-' + fun : ''));
   e.style.setProperty('--t', (tam || 40) + 'px');
-  e.innerHTML = svgAvatar(c && c.av ? c.av : 'p1');
+  e.innerHTML = svgAvatar(c && c.av ? c.av : 'p1', !!fun);
   return e;
 }
 
@@ -6171,7 +6474,14 @@ function verificarConquistas(avisar){
   renderConta();
 }
 /* Chamada a cada fase vencida. */
-function aposVitoriaConta(){ verificarConquistas(true); contaAgendar(); }
+function aposVitoriaConta(){
+  const w = $('#winBonus'); if (w){ w.hidden = true; w.textContent = ''; }
+  if (S.cur && S.cur.k !== 'u' && !modoTeste){
+    const r = bonusVitoria(dadosAtuais(), eu(), dataHoje());
+    if (r.ganho){ guardarCart(r.cart); renderConta(); if (w){ w.textContent = tr('Bônus do visual: +{n} ★', {n: r.ganho}) + (r.teto ? ' · ' + tr('limite de hoje atingido') : ''); w.hidden = false; } }
+  }
+  verificarConquistas(true); contaAgendar();
+}
 
 /* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */
 const urlLegal = nome => nome + '.html?l=' + lang;
@@ -6213,19 +6523,21 @@ function textoUltima(){
 function celulaItem(chave, el, rotulo, marcado, d, donos){
   const it = ITENS[chave], tem = donos.has(chave);
   const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', marcado ? 'true' : 'false'); b.dataset.item = chave;
-  b.appendChild(el);
+  b.appendChild(el); b.classList.add('cat-' + it.cat);
+  const cat = tr(NOME_CAT[it.cat]) + (BONUS_CAT[it.cat] ? ' · +' + BONUS_CAT[it.cat] + ' ★' : '');
+  b.title = rotulo + ' — ' + cat;
   if (!tem){
     const l = mk('small', 'cnPreco');
     if (it.preco) l.textContent = '★ ' + it.preco; else l.innerHTML = ic('lock');
     b.appendChild(l); b.classList.add('trava');
-    b.setAttribute('aria-label', rotulo + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
-  } else b.setAttribute('aria-label', rotulo);
+    b.setAttribute('aria-label', rotulo + ' — ' + cat + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
+  } else b.setAttribute('aria-label', rotulo + ' — ' + cat);
   b.onclick = () => tocarItem(chave, rotulo);
   return b;
 }
 function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); return q ? tr(NOME_CONQ[q.id]) : ''; }
 function tocarItem(chave, rotulo){
-  const d = dadosAtuais(), campo = chave.startsWith('av:') ? 'av' : 'mold', id = chave.slice(campo === 'av' ? 3 : 5);
+  const d = dadosAtuais(), campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
   if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
   const it = ITENS[chave];
   if (!it.preco){ aviso('#cnAviso', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)})); return; }
@@ -6252,11 +6564,22 @@ function montarConta(){
     : conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
   estadoConta(conta ? textoUltima() : 'Perfil deste aparelho');
   const ga = $('#cnAvatares'); ga.textContent = '';
-  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), c.av === id, d, donos)); }
+  const ids = [...Array.from({length: N_AV_A}, (_, i) => 'a' + (i + 1)), ...Array.from({length: N_AV_P}, (_, i) => 'p' + (i + 1))];
+  const grupo = t => { const g = mk('p'); g.className = 'cnGrupo'; g.textContent = t; ga.appendChild(g); };
+  grupo(tr('Heróis estilo anime'));
+  ids.forEach((id, k) => {
+    if (k === N_AV_A) grupo(tr('Pixel'));
+    ga.appendChild(celulaItem('av:' + id, avatarEl({av: id, fun: c.fun}, 44), nomeAvatar(id), c.av === id, d, donos));
+  });
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
-  const nAv = [...donos].filter(k => k.startsWith('av:')).length, nMo = [...donos].filter(k => k.startsWith('mold:')).length;
-  $('#cnTitAv').textContent = tr('Avatares') + ' ' + nAv + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + nMo + '/' + MOLDURAS.length;
+  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id, fun: c.fun}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
+  const gf = $('#cnFundos'); gf.textContent = '';
+  FUNDOS.forEach(id => gf.appendChild(celulaItem('fun:' + id, avatarEl({av: c.av, fun: id}, 40), tr(NOME_FUNDO[id]), c.fun === id, d, donos)));
+  const conta3 = p => [...donos].filter(k => k.startsWith(p)).length;
+  $('#cnTitAv').textContent = tr('Avatares') + ' ' + conta3('av:') + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + conta3('mold:') + '/' + MOLDURAS.length;
+  $('#cnTitFun').textContent = tr('Fundos') + ' ' + conta3('fun:') + '/' + FUNDOS.length;
+  const bon = bonusEquipado({av: donos.has('av:' + c.av) ? c.av : '', mold: donos.has('mold:' + c.mold) ? c.mold : '', fun: donos.has('fun:' + c.fun) ? c.fun : ''});
+  $('#cnBonus').textContent = bon ? tr('Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).', {n: bon, m: BONUS_DIA_MAX}) : tr('Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.');
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
   const feitas = cart.v.length;
   $('#cnTitConq').textContent = tr('Conquistas') + ' ' + feitas + '/' + CONQUISTAS.length;
@@ -6272,7 +6595,7 @@ function montarConta(){
     li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
   const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
-  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
 function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
@@ -6323,17 +6646,17 @@ async function contaPosLogin(user){
   const tk = await user.getIdToken();
   const pub = await nv('GET', 'pub/' + user.uid, undefined, tk);
   if (pub && pub.nome){
-    conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
+    conta = Object.assign({uid: user.uid, nome: limparNome(pub.nome) || 'Jogador'}, visualDe(pub));
   } else {
     /* primeira vez: o apelido só vai para a nuvem depois que a pessoa o escolher (a primeira escolha é grátis) */
     let n = nomeValido(perfil.nome) ? perfil.nome : limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
     const temPerfil = !!store.get('perfil', null);
-    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', novo: true};
+    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', fun: temPerfil ? fundoValido(perfil.fun) : '', novo: true};
   }
   aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
   await contaSync({aplicar: true});
 }
-const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || ''}; guardarPerfil(); } };
+const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}; guardarPerfil(); } };
 async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
   guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
@@ -6358,7 +6681,7 @@ const semCfg = d => { const o = JSON.parse(JSON.stringify(d || {})); delete o.cf
 const fasesFeitas = d => Math.min(1000, d && d.prog ? d.prog.done.length : 0);
 async function contaPublicar(tk, dados){
   if (conta.novo) return;   /* sem apelido escolhido ainda: nada público */
-  await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
+  await nv('PUT', 'pub/' + conta.uid, {nome: conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || '', n: fasesFeitas(dados), ts: Date.now()}, tk);
 }
 async function contaSync(op){
   op = op || {};
@@ -6395,12 +6718,13 @@ async function contaPerfilRapido(){
 }
 function mudarPerfil(m){
   if (!conta){
-    for (const k of ['av', 'mold', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
+    for (const k of ['av', 'mold', 'fun', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
     if (m.nome !== undefined && !cpAuth){ cpNome = m.nome; store.set('cpnome', cpNome); }
     guardarPerfil(); renderConta(); montarConta(); return;
   }
   if (m.av !== undefined) conta.av = m.av;
   if (m.mold !== undefined) conta.mold = m.mold;
+  if (m.fun !== undefined) conta.fun = m.fun;
   if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
   conta.sujo = true; salvarConta(); montarConta(); contaPerfilRapido();
 }
@@ -6499,7 +6823,7 @@ async function entrarGeral(sel){
     }
     if (!minha){
       if (!livre) throw erroNuvem('cheio');
-      await nuvem(cpDb, 'PUT', `p/${livre}/${chave}`, {n: conta.nome, ts: Date.now(), av: conta.av, mold: conta.mold || ''}, tk);
+      await nuvem(cpDb, 'PUT', `p/${livre}/${chave}`, {n: conta.nome, ts: Date.now(), av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}, tk);
       minha = livre;
     }
     av('');
@@ -6511,14 +6835,14 @@ async function entrarGeral(sel){
 /* ---------- ranking geral ---------- */
 async function buscarRanking(){
   const r = await nuvem(cpDb, 'GET', 'pub', undefined, undefined, 'orderBy=%22n%22&limitToLast=' + RK_BUSCA) || {};
-  const lista = Object.keys(r).map(uid => { const x = r[uid] || {}; return {uid, n: +x.n || 0, ts: +x.ts || 0, nome: limparNome(String(x.nome || '')), av: x.av, mold: x.mold}; })
+  const lista = Object.keys(r).map(uid => { const x = r[uid] || {}; return {uid, n: +x.n || 0, ts: +x.ts || 0, nome: limparNome(String(x.nome || '')), av: x.av, mold: x.mold, fun: x.fun}; })
     .filter(x => x.nome && x.n > 0);
   return posicaoRanking(lista, conta ? conta.uid : '', RK_BUSCA);
 }
 function linhaRanking(r, euUid){
   const d = mk('div', 'rk' + (r.uid === euUid ? ' eu' : ''));
   d.append(mk('span', 'pos', r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-  d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+  d.appendChild(avatarEl(visualDe(r), 24));
   d.append(mk('span', 'nm', r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
   return d;
 }

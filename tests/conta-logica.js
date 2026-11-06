@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const logic = html.split('// ==LOGIC-START==')[1].split('// ==LOGIC-END==')[0];
-const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, apelidoProibido, ITENS, CONQUISTAS, NOME_CUSTO}')();
+const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, apelidoProibido, ITENS, CONQUISTAS, NOME_CUSTO, bonusVitoria, bonusEquipado, catItem, PRECO_CAT, BONUS_DIA_MAX}')();
 let falhas = 0; const ok = (c, m) => { console.log((c ? '  ok   ' : '  FALHA ') + m); if (!c) falhas++; };
 const base = (extra) => Object.assign({prog: {max: 0, done: []}, est: {}, dias: {}, sem: {}, inf: {feitas: {}, porNivel: {}}, cart: {g: {}, s: {}, v: []}}, extra);
 ok(L.saldoConta(base()) === 0, 'começa com 0 estrelas');
@@ -12,12 +12,25 @@ ok(L.saldoConta({}) === 0 && L.saldoConta(null) === 0, 'dados vazios não quebra
 // itens
 const livres = L.itensDe(base());
 ok(livres.has('av:p1') && livres.has('av:p6') && !livres.has('av:p7') && livres.has('mold:') && livres.has('mold:madeira') && !livres.has('mold:ouro'), 'itens livres no começo');
-let d = base({est: {0: 3, 1: 3, 2: 3, 3: 3, 4: 3, 5: 3}});   // 18 estrelas
+let d = base({est: {0: 3, 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3}});   // 21 estrelas
 let r = L.comprarItem(d, 'av:p7');
-ok(r.cart && r.preco === 15 && r.cart.s['i:av:p7'] === 15, 'compra de avatar de 15 estrelas');
-d.cart = r.cart; ok(L.saldoConta(d) === 3 && L.itensDe(d).has('av:p7'), 'saldo desce e o item passa a ser seu');
+ok(r.cart && r.preco === 20 && r.cart.s['i:av:p7'] === 20, 'compra de avatar raro (20 estrelas)');
+d.cart = r.cart; ok(L.saldoConta(d) === 1 && L.itensDe(d).has('av:p7'), 'saldo desce e o item passa a ser seu');
 ok(L.comprarItem(d, 'av:p7').erro === 'ja-tem', 'não compra duas vezes');
-r = L.comprarItem(d, 'av:p8'); ok(r.erro === 'saldo' && r.falta === 12, 'saldo curto informa quanto falta');
+r = L.comprarItem(d, 'av:p8'); ok(r.erro === 'saldo' && r.falta === 19, 'saldo curto informa quanto falta');
+// categorias: preço e bônus
+ok(L.catItem('av:p1') === 'comum' && L.catItem('av:a1') === 'raro' && L.catItem('av:a9') === 'lendario' && L.catItem('mold:galaxia') === 'lendario' && L.catItem('fun:cosmos') === 'lendario', 'categorias dos itens');
+ok(L.ITENS['av:a5'].preco === L.PRECO_CAT.epico && L.ITENS['mold:ouro'].preco === L.PRECO_CAT.lendario && L.ITENS['fun:xadrez'].preco === L.PRECO_CAT.raro && !L.ITENS['mold:arco'].preco, 'preço segue a categoria (itens de conquista não têm preço)');
+ok(Object.keys(L.ITENS).filter(k => k.startsWith('av:a')).length === 12 && Object.keys(L.ITENS).filter(k => k.startsWith('fun:')).length >= 10, '12 avatares estilo anime e 10+ fundos');
+ok(L.bonusEquipado({av: 'p1', mold: '', fun: ''}) === 0 && L.bonusEquipado({av: 'a1', mold: 'neon', fun: 'cosmos'}) === 1 + 2 + 3, 'bônus soma as categorias equipadas');
+let dv = base({cart: {g: {}, s: {'i:av:a9': 120, 'i:mold:galaxia': 120}, v: []}});
+let bv = L.bonusVitoria(dv, {av: 'a9', mold: 'galaxia', fun: ''}, '2026-11-06');
+ok(bv.ganho === 6 && bv.cart.g['b:2026-11-06'] === 6, 'vitória com visual lendário dá +6 (avatar + moldura)');
+ok(L.bonusVitoria(base(), {av: 'a9', mold: 'galaxia'}, '2026-11-06').ganho === 0, 'item que a pessoa não tem não dá bônus');
+dv.cart = bv.cart; for (let i = 0; i < 10; i++){ bv = L.bonusVitoria(dv, {av: 'a9', mold: 'galaxia'}, '2026-11-06'); dv.cart = bv.cart; }
+ok(dv.cart.g['b:2026-11-06'] === L.BONUS_DIA_MAX && bv.teto && bv.ganho === 0, 'teto diário do bônus');
+ok(L.bonusVitoria(dv, {av: 'a9', mold: 'galaxia'}, '2026-11-07').ganho === 6, 'no dia seguinte o bônus volta');
+ok(L.origemEstrelas(dv).itens === L.BONUS_DIA_MAX - 6 + 6 || L.origemEstrelas(dv).itens === L.BONUS_DIA_MAX, 'origem das estrelas mostra o bônus do visual');
 ok(L.comprarItem(d, 'mold:gelo').erro === 'so-conquista' && L.comprarItem(d, 'av:p99').erro === 'inexistente', 'só por conquista e inexistente não compram');
 // apelido
 d = base({est: {0: 3, 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3, 7: 3, 8: 3, 9: 3, 10: 3}});  // 33

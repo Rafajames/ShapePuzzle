@@ -1,0 +1,28 @@
+/* ======================= Tema Papel =======================
+   Papel de origami: fibras no fundo, cartões dobrados, tabuleiro quadriculado de caderno e peças como papel colorido. */
+html[data-tema="papel"]{
+  --bg:#efe6d3; --bg2:#fbf6ea; --panel:#fffaf0; --line:#cdbf9f; --txt:#2b2418; --mut:#6e6250;
+  --accent:#b8364a; --acc2:#2f6db5; --onacc:#ffffff;
+  --t0:rgba(80,60,20,.035); --t1:rgba(80,60,20,.05); --t2:rgba(80,60,20,.1);
+  --board:#e2d6bd; --cel1:#fffdf7; --cel2:#f8f3e6; --cline:#cdd8ea;
+  --card1:#fffaf0; --card2:#f6eedb; --ovbg:rgba(230,220,196,.8); --toast:#fffaf0; --fieldbg:rgba(255,255,255,.85);
+  --shb:rgba(90,70,30,.22); --shc:rgba(90,70,30,.28);
+  --soft:#3e3526; --strong:#1c160d; --acctxt:#b02f43; --gold:#7f5600; --goldln:rgba(127,86,0,.45);
+  --ok:#1f7a4a; --bad:#c42a4a; --info:#1b5bb5; --staroff:#c9bc9c;
+  --ring:rgba(60,40,10,.3); --gokbg:rgba(60,40,10,.12); --gokln:rgba(60,40,10,.55); --selln:rgba(60,40,10,.7);
+  --handbg:rgba(60,40,10,.22); --handln:rgba(60,40,10,.85);
+}
+html[data-tema="papel"] body{
+  background:repeating-linear-gradient(17deg,rgba(120,90,40,.035) 0 1px,transparent 1px 7px),repeating-linear-gradient(-63deg,rgba(120,90,40,.03) 0 1px,transparent 1px 11px),linear-gradient(180deg,#fbf6ea,#efe6d3) fixed;
+  font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+html[data-tema="papel"] .card{background:linear-gradient(135deg,rgba(255,255,255,.7),transparent 40%),repeating-linear-gradient(17deg,rgba(120,90,40,.03) 0 1px,transparent 1px 7px),var(--card1);border:1px solid #d9ccad;box-shadow:0 1px 0 #fff inset,6px 6px 0 rgba(90,70,30,.12),0 18px 40px rgba(90,70,30,.2)}
+html[data-tema="papel"] :is(.btn,.ib,.tile,.infop,.daily){background:linear-gradient(135deg,#ffffff,#f3ead6);border-color:#d6c8a6;box-shadow:2px 2px 0 rgba(90,70,30,.15)}
+html[data-tema="papel"] :is(.btn,.ib):active{transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(90,70,30,.15)}
+html[data-tema="papel"] .btn.pri{background:linear-gradient(135deg,#c03a4e,#a32a3d);border-color:#8e2233;color:#fff;box-shadow:2px 2px 0 rgba(120,20,30,.3)}
+html[data-tema="papel"] .reserva{background:#f6eedb;border:1px dashed #c9b88f}
+html[data-tema="papel"] #board,html[data-tema="papel"] #edBoard{border-radius:4px;box-shadow:0 0 0 4px #fffdf7,0 0 0 5px #d9ccad,6px 8px 0 5px rgba(90,70,30,.12)}
+html[data-tema="papel"] .cell{box-shadow:inset 0 0 0 1px #d4deef}
+html[data-tema="papel"] .fill{inset:4%;border-radius:6%;background:linear-gradient(135deg,rgba(255,255,255,.35) 0 48%,rgba(0,0,0,.08) 52%),var(--c);box-shadow:1px 2px 0 rgba(60,40,10,.25)}
+html[data-tema="papel"] .pc{border-radius:6%;background:linear-gradient(135deg,rgba(255,255,255,.35) 0 48%,rgba(0,0,0,.08) 52%),var(--c);box-shadow:1px 2px 0 rgba(60,40,10,.25)}
+html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e);color:#fff}

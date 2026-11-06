@@ -95,6 +95,25 @@ const HUMORES = {
       {bass:43, pad:[55,59,62], arp:[67,69,71,74,76,79,83]}    // G
     ]
   },
+  caverna: {   /* tema Pedra: harpa lenta numa caverna, com gotas pingando */
+    bpm: 56, padV: 0.04, filtro: 750, tipo: 'sine', decay: 3.4, harm: 2, harmV: 0.22, prob: [0.5, 0.32, 0.2], pulso: false, send: 0.85,
+    perc: {tipo: 'tom', f: 1400, v: 0.018, cada: 8, dur: 0.04},
+    acordes: [
+      {bass:38, pad:[50,57,62,65], arp:[62,65,69,72,74,77,81]},   // Dm(add9)
+      {bass:34, pad:[50,58,62,65], arp:[62,65,70,72,74,77,82]},   // Bb
+      {bass:36, pad:[52,55,60,64], arp:[60,64,67,69,72,76,79]},   // C
+      {bass:33, pad:[52,57,60,64], arp:[60,64,67,69,72,76,81]}    // Am
+    ]
+  },
+  origami: {   /* tema Papel: dedilhado leve em escala pentatônica, como um koto */
+    bpm: 80, padV: 0.018, filtro: 2200, tipo: 'triangle', decay: 1.2, harm: 3, harmV: 0.22, prob: [0.82, 0.6, 0.4], pulso: false, send: 0.5,
+    acordes: [
+      {bass:45, pad:[57,64,69], arp:[64,67,69,71,74,76,79]},   // Am pentatônico
+      {bass:41, pad:[53,60,65], arp:[60,62,65,67,69,72,74]},   // F
+      {bass:43, pad:[55,62,67], arp:[62,64,67,69,71,74,76]},   // G
+      {bass:40, pad:[52,59,64], arp:[59,62,64,67,69,71,74]}    // Em
+    ]
+  },
   madeira: {   /* tema Madeira: marimba e toquinhos de madeira */
     bpm: 84, padV: 0.02, filtro: 1800, tipo: 'sine', decay: 0.9, harm: 4, harmV: 0.35, prob: [0.75, 0.55, 0.38], pulso: false, send: 0.4,
     perc: {tipo: 'tom', f: 620, v: 0.03, cada: 4, dur: 0.05},
