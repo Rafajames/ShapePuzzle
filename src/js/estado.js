@@ -36,7 +36,7 @@ function aplicarPecas(){
 }
 { const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, LIMITE_FASES - 1)); }
 /* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
-const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
+const TESTE_HASH = '73768fb544ee1b2c35acce1b01216ac8c538024861eceeb0e0b55212bd3bf79a';
 let modoTeste = store.get('teste', false) === true;
 async function hashSenha(t){
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('shapepuzzle-teste:' + t));

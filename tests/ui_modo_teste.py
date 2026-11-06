@@ -2,7 +2,14 @@ import os, sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAIDA = os.path.join(RAIZ, 'tests', 'saida') + os.sep
 os.makedirs(SAIDA, exist_ok=True)
+import re, hashlib
 from playwright.sync_api import sync_playwright
+# a senha de verdade não fica no repositório: o teste troca o "carimbo" do jogo pelo de uma senha só do teste
+SENHA = 'senha-so-do-teste'
+CARIMBO = hashlib.sha256(('shapepuzzle-teste:' + SENHA).encode()).hexdigest()
+def trocar_carimbo(route):
+    r = route.fetch(); corpo = re.sub(r"const TESTE_HASH = '[0-9a-f]+'", "const TESTE_HASH = '" + CARIMBO + "'", r.text())
+    route.fulfill(response=r, body=corpo)
 URL='http://127.0.0.1:8765/index.html'
 falhas=[];erros=[]
 def check(c,m):
@@ -13,7 +20,7 @@ RES="""() => { const j=S.jogo; const occ=j.grade.map(r=>r.map(v=>v!==0)); const 
  let g=0; while(pl.length && g++<200){ const vis=visiveis(S.jogo).map(p=>p.uid); const i=pl.findIndex(x=>vis.includes(x.uid)); const st=pl.splice(i,1)[0];
    const p=S.jogo.reserva.find(q=>q.uid===st.uid); p.formato=st.o; tentarColocar(p,st.px,st.py);} }"""
 with sync_playwright() as pw:
-    b=pw.chromium.launch(); ctx=b.new_context(locale='pt-BR', viewport={'width':390,'height':844}); pg=ctx.new_page()
+    b=pw.chromium.launch(); ctx=b.new_context(locale='pt-BR', viewport={'width':390,'height':844}); pg=ctx.new_page(); ctx.route('**/index.html', trocar_carimbo)
     pg.on('pageerror',lambda e:erros.append(str(e)))
     pg.goto(URL); pg.click('#btnJogar'); pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.wait_for_timeout(200)
     check(pg.locator('#tiles .tile').count()==10 and pg.locator('#tiles .tile:disabled').count()==9,'no início só aparecem 10 fases (as outras ainda não)')
@@ -22,7 +29,7 @@ with sync_playwright() as pw:
     check(pg.is_visible('#ov-teste'),'botão pede a senha')
     pg.fill('#tsSenha','errada'); pg.click('#tsEntrar'); pg.wait_for_timeout(300)
     check('incorreta' in pg.inner_text('#tsAviso').lower() and not pg.evaluate('modoTeste'),'senha errada não libera')
-    pg.fill('#tsSenha','Forma#Teste2026'); pg.keyboard.press('Enter'); pg.wait_for_timeout(500)
+    pg.fill('#tsSenha',SENHA); pg.keyboard.press('Enter'); pg.wait_for_timeout(500)
     check(pg.evaluate('modoTeste') and pg.is_visible('#ov-menu'),'senha certa liga o modo de teste e volta ao menu')
     check(pg.locator('#tiles .tile:disabled').count()==0,'todas as 50 fases liberadas')
     check('Sair do modo de teste' in pg.inner_text('#btnTeste'),'botão vira "Sair do modo de teste"')

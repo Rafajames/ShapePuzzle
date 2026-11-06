@@ -2841,7 +2841,7 @@ function aplicarPecas(){
 }
 { const md = prog.done.length ? Math.max(...prog.done) : -1; prog.max = Math.max(prog.max, Math.min(md + 1, LIMITE_FASES - 1)); }
 /* Modo de teste: libera todas as fases. A senha NÃO fica no código, só o "carimbo" (SHA-256) dela. Não é segurança forte: só impede que o botão seja usado por acaso. */
-const TESTE_HASH = '59fe1f06564d1d56f8d7477fede7e4e2e7683a8a37aea5f1027c91816975c7e6';
+const TESTE_HASH = '73768fb544ee1b2c35acce1b01216ac8c538024861eceeb0e0b55212bd3bf79a';
 let modoTeste = store.get('teste', false) === true;
 async function hashSenha(t){
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('shapepuzzle-teste:' + t));
@@ -4563,7 +4563,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.10';
+const VERSAO = '2026.11.06.11';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, html: '', ultimo: 0, dispensada: ''};
