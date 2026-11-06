@@ -37,7 +37,7 @@ function rankear(camp, jogadores){
     const p = jogadores[key] || {}, f = p.f || {};
     let feitas = 0, tempo = 0, jog = 0;
     for (let i = 0; i < N; i++){ const r = f[i]; if (r && r.t > 0){ feitas++; tempo += r.t; jog += r.j || 0; } }
-    return {key, nome: p.n || key, feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
+    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
   });
   lista.sort((a, b) => b.feitas - a.feitas || a.tempo - b.tempo || a.jog - b.jog || a.ts - b.ts || (a.key < b.key ? -1 : 1));
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
@@ -71,3 +71,28 @@ function lerConviteHash(hash, dbSalvo){
 }
 
 
+
+/* ---- Campeonato geral da semana (salas de até 100 pessoas) e ranking geral ---- */
+const MAX_SALA_GERAL = 100, FASES_GERAL = 5, SALAS_GERAL = 30;
+/* id de 6 caracteres que começa com "0" (os códigos sorteados nunca começam com 0): 0 + semana (3) + sala (2) */
+const idGeral = (semIdx, sala) => '0' + Math.max(0, semIdx).toString(36).toUpperCase().padStart(3, '0').slice(-3) + sala.toString(36).toUpperCase().padStart(2, '0').slice(-2);
+const ehIdGeral = id => /^0[0-9A-Z]{5}$/.test(id || '');
+/* a chave de quem joga uma sala geral é o começo do id da conta (as regras do banco conferem) */
+const chaveGeral = uid => String(uid || '').slice(0, 24);
+/* a sala vale se tem as fases certas, 100 vagas e termina até 8 dias depois de criada */
+function salaGeralValida(c){
+  if (!c || c.geral !== true || c.max !== MAX_SALA_GERAL || !c.sem) return false;
+  const fs = listaDe(c.fases);
+  if (fs.length !== FASES_GERAL) return false;
+  try{ return fs.every(f => f && typeof f.text === 'string' && faseValida(f.text)); }catch(e){ return false; }
+}
+/* fim da semana (domingo à noite, em UTC) a partir de "2026-W45" */
+const fimDaSemana = sem => { const seg = segundaDe(sem); return seg ? (diaNum(seg) + 7) * 86400000 : 0; };
+/* posição (empates dividem a posição) no ranking geral; lista = [{uid, n, ts}] */
+function posicaoRanking(lista, uid, limite){
+  const ord = lista.slice().sort((a, b) => b.n - a.n || (a.ts || 0) - (b.ts || 0) || (a.uid < b.uid ? -1 : 1));
+  ord.forEach((r, i) => { const q = ord[i - 1]; r.pos = q && q.n === r.n ? q.pos : i + 1; });
+  const eu = ord.find(r => r.uid === uid);
+  const corte = ord.length >= limite ? ord[ord.length - 1].n : 0;
+  return {lista: ord, eu: eu || null, corte};
+}

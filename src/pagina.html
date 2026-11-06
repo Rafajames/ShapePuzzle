@@ -76,6 +76,7 @@
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
     <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
+    <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
       <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
@@ -262,6 +263,11 @@
     <button class="ib x" data-close="camps" data-i="close" aria-label="Fechar"></button>
     <h1>Campeonatos</h1>
     <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
+    <h2>Campeonato da semana</h2>
+    <p>Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.</p>
+    <div class="acts"><button class="btn pri" id="cpSemana" data-semana data-i="trophy" style="width:100%">Entrar no campeonato da semana</button></div>
+    <div class="acts"><button class="btn" id="cpRank" data-i="stats" style="width:100%">Ranking geral</button></div>
+    <h2>Entre amigos</h2>
     <div class="acts"><button class="btn" id="cpOff" data-i="qr" style="width:100%">Campeonato sem internet (QR code)</button></div>
     <h2>Seu nome</h2>
     <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
@@ -423,6 +429,18 @@
   </div>
 </div>
 
+<!-- Ranking geral -->
+<div class="ov" id="ov-rank">
+  <div class="card">
+    <button class="ib x" data-close="rank" data-i="close" aria-label="Fechar"></button>
+    <h1>Ranking geral</h1>
+    <p id="rkSub"></p>
+    <div id="rkLista"></div>
+    <p class="aviso" id="rkAviso"></p>
+    <div class="acts"><button class="btn pri" id="rkSemana" data-semana data-i="trophy">Campeonato da semana</button><button class="btn" id="rkAtualizar" data-i="reset">Atualizar</button></div>
+  </div>
+</div>
+
 <!-- Modo de teste -->
 <!-- Estatísticas de um jogador (campeonatos) -->
 <div class="ov" id="ov-jog">
@@ -581,6 +599,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js conta.js ranking.js inicio.js
 </body>
 </html>

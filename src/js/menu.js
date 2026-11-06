@@ -28,7 +28,7 @@ const irInicio = () => { fecharTodos('ov-splash'); renderInicio(); $('#ov-splash
 $('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
-  if (window.__pronto) renderConta();
+  if (window.__pronto){ renderConta(); renderPosicao(); }
   if (!S.jogo) return;
   const volta = prog.done.length > 0 || !!andamento;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');

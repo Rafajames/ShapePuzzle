@@ -10,7 +10,7 @@ let cpPend = store.get('cppend', []);
 const CP = {id: null, db: '', camp: null, jogs: {}, timer: 0, convite: null, fases: []};
 const cpKey = () => normalizarNome(cpNome);
 const erroNuvem = cod => Object.assign(new Error(cod), {cod});
-const MSG_NUVEM = {negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
+const MSG_NUVEM = {sessao: 'Sua sessão do Google acabou. Entre de novo na tela Sua conta.', cheio: 'Todas as salas desta semana estão cheias. Tente de novo na semana que vem.', gerar: 'Não consegui preparar as fases agora. Tente de novo.', negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
 const msgNuvem = e => e && e.cod === 'auth' ? msgAuth(e.auth) : MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
 /* Roda fn(signal) com limite de 9 s; qualquer falha vira um erro com `cod` (tempo, rede, negado, http, auth). */
 async function comTempo(fn){
@@ -19,8 +19,9 @@ async function comTempo(fn){
   catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
   finally{ clearTimeout(to); }
 }
-const nuvem = (db, metodo, caminho, corpo, token) => comTempo(async signal => {
-  const r = await fetch(db + '/' + caminho + '.json' + (token ? '?auth=' + encodeURIComponent(token) : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal, cache: 'no-store'});
+const nuvem = (db, metodo, caminho, corpo, token, q) => comTempo(async signal => {
+  const ps = [token ? 'auth=' + encodeURIComponent(token) : '', q || ''].filter(Boolean).join('&');
+  const r = await fetch(db + '/' + caminho + '.json' + (ps ? '?' + ps : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal, cache: 'no-store'});
   if (r.status === 401 || r.status === 403) throw erroNuvem('negado');
   if (!r.ok) throw erroNuvem('http');
   return r.json();
@@ -74,9 +75,11 @@ const souDono = () => !!(cpAuth && CP.camp && CP.camp.uid === cpAuth.uid);
 /* resultados guardados quando não há internet */
 async function cpEnviarUm(p){
   const cam = `p/${p.id}/${p.key}/f/${p.idx}`;
+  let tk;
+  if (p.geral){ tk = await contaToken(); if (!tk) throw erroNuvem('sessao'); }   /* sala geral: só com a conta Google */
   const atual = await nuvem(p.db, 'GET', cam);
   if (atual && (p.modo === 'primeira' || atual.t <= p.t)) return 'mantido';
-  await nuvem(p.db, 'PUT', cam, {t: p.t, j: p.j});
+  await nuvem(p.db, 'PUT', cam, {t: p.t, j: p.j}, tk);
   return 'ok';
 }
 async function cpDescarregar(){
@@ -147,6 +150,7 @@ $('#cpCriar').onclick = async () => {
 };
 $('#cpEntrar').onclick = () => {
   const id = $('#cpCodigo').value.trim().toUpperCase();
+  if (ehIdGeral(id)){ aviso('#cpAviso', 'Use o botão “Entrar no campeonato da semana”.', 'erro'); return; }
   if (!exigirNome('#cpNome', '#cpAviso')) return;
   if (!codigoValido(id)){ aviso('#cpAviso', 'O código tem 6 letras/números, como ABC234.', 'erro'); return; }
   fechar('camps'); abrirLobby(id, cpDb);

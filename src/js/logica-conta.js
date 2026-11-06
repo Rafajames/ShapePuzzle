@@ -2,7 +2,7 @@
    O saldo nunca é guardado: sai das estrelas das fases + bônus (fase do dia, desafio da semana) + conquistas resgatadas
    + ganhos avulsos (anúncios premiados) − o que foi gasto. Só o que não dá para recalcular fica na "carteira":
    cart = {g: ganhos avulsos {chave: estrelas}, s: gastos {chave: estrelas}, v: conquistas já resgatadas}. */
-const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30;
+const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30, BONUS_CAMP_SEMANA = 10;
 /* Itens: 'av:pN' (avatar) e 'mold:id' (moldura). livre = todo mundo tem; preco = comprado com estrelas; (sem nenhum dos dois) = só por conquista. */
 const ITENS = {};
 for (let i = 1; i <= 24; i++) ITENS['av:p' + i] = i <= 6 ? {livre: true} : i <= 10 ? {preco: 15} : i <= 14 ? {preco: 30} : i <= 18 ? {preco: 60} : {};

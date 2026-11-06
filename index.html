@@ -391,6 +391,12 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnTermos{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px;font-size:13px;color:var(--mut)}
 .cnTermos input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--accent)}.cnTermos a{color:var(--accent)}
 .cnLegal{text-align:center}.cnLegal a{color:var(--accent)}
+/* posição no ranking (tela inicial) e separador do ranking geral */
+.posCard{margin-top:8px;padding:6px 12px}
+.posCard svg{width:22px;height:22px;flex:none}
+.rkSep{text-align:center;color:var(--mut);letter-spacing:4px;padding:2px 0}
+#rkLista{margin:8px 0}
+#rkLista .rk .av{flex:none}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -624,6 +630,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
     <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
+    <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
       <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
@@ -810,6 +817,11 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <button class="ib x" data-close="camps" data-i="close" aria-label="Fechar"></button>
     <h1>Campeonatos</h1>
     <p>Crie um desafio com as suas fases, mande o link e veja o ranking. Não precisa de e-mail nem senha: só o seu nome.</p>
+    <h2>Campeonato da semana</h2>
+    <p>Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.</p>
+    <div class="acts"><button class="btn pri" id="cpSemana" data-semana data-i="trophy" style="width:100%">Entrar no campeonato da semana</button></div>
+    <div class="acts"><button class="btn" id="cpRank" data-i="stats" style="width:100%">Ranking geral</button></div>
+    <h2>Entre amigos</h2>
     <div class="acts"><button class="btn" id="cpOff" data-i="qr" style="width:100%">Campeonato sem internet (QR code)</button></div>
     <h2>Seu nome</h2>
     <input class="field" id="cpNome" maxlength="20" placeholder="Como você aparece no ranking" autocomplete="nickname">
@@ -968,6 +980,18 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
       <button class="btn" id="lbAtualizar" data-i="reset">Atualizar</button>
       <button class="btn" id="lbConvidar" data-i="share">Convidar</button>
     </div>
+  </div>
+</div>
+
+<!-- Ranking geral -->
+<div class="ov" id="ov-rank">
+  <div class="card">
+    <button class="ib x" data-close="rank" data-i="close" aria-label="Fechar"></button>
+    <h1>Ranking geral</h1>
+    <p id="rkSub"></p>
+    <div id="rkLista"></div>
+    <p class="aviso" id="rkAviso"></p>
+    <div class="acts"><button class="btn pri" id="rkSemana" data-semana data-i="trophy">Campeonato da semana</button><button class="btn" id="rkAtualizar" data-i="reset">Atualizar</button></div>
   </div>
 </div>
 
@@ -1426,6 +1450,34 @@ en: {
   "Marque que você leu e aceita os termos para entrar.": "Tick that you have read and accept the terms to sign in.",
   "Esse apelido não é permitido. Escolha outro.": "That nickname is not allowed. Choose another.",
   "Excluir minha conta pela internet": "Delete my account on the web",
+  "Use o botão “Entrar no campeonato da semana”.": "Use the “Join this week’s championship” button.",
+  "Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.": "Join using the “Join this week’s championship” button on the Championships screen.",
+  "Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.": "Nobody is on the ranking yet. Sign in with Google and finish levels to show up here.",
+  "Você ainda não está no top {n}. Conclua mais de {c} fases para entrar.": "You are not in the top {n} yet. Finish more than {c} levels to get in.",
+  "Quem concluiu mais fases. Só aparece quem entrou com a conta Google.": "Who has finished the most levels. Only players signed in with a Google account appear.",
+  "Campeonato da semana completo! +{n} ★": "Weekly championship complete! +{n} ★",
+  "Você está em {a}º no ranking geral e em {b}º de {c} no campeonato da semana.": "You are #{a} in the overall ranking and #{b} of {c} in the weekly championship.",
+  "Você está em {a}º no ranking geral. Entre no campeonato da semana!": "You are #{a} in the overall ranking. Join this week’s championship!",
+  "Você está em {b}º de {c} no campeonato da semana.": "You are #{b} of {c} in the weekly championship.",
+  "Ranking geral": "Overall ranking",
+  "Semana": "Week",
+  "ver": "view",
+  "abrir": "open",
+  "Campeonato da semana": "Weekly championship",
+  "Entrar no campeonato da semana": "Join this week’s championship",
+  "Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.": "Everyone plays the same 5 new levels, in rooms of up to 100 players. A new room every week. Needs a Google account.",
+  "Entre amigos": "With friends",
+  "Sua sessão do Google acabou. Entre de novo na tela Sua conta.": "Your Google session has ended. Sign in again on the Your account screen.",
+  "Todas as salas desta semana estão cheias. Tente de novo na semana que vem.": "All rooms this week are full. Try again next week.",
+  "Não consegui preparar as fases agora. Tente de novo.": "I couldn’t prepare the levels right now. Try again.",
+  "Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.": "Sign in with Google and choose your nickname to play the weekly championship.",
+  "Procurando a sua sala…": "Looking for your room…",
+  "Preparando as fases da semana…": "Preparing this week’s levels…",
+  "Entre com o Google para aparecer no ranking.": "Sign in with Google to appear on the ranking.",
+  "Escolha o seu apelido na tela Sua conta para aparecer no ranking.": "Choose your nickname on the Your account screen to appear on the ranking.",
+  "Sua posição aparece depois da próxima sincronização.": "Your position will show after the next sync.",
+  "Conclua uma fase para entrar no ranking.": "Finish a level to get on the ranking.",
+  "{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo": "{n} of {max} players · {fases} · {prazo} · best time counts",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2157,6 +2209,34 @@ es: {
   "Marque que você leu e aceita os termos para entrar.": "Marca que has leído y aceptas los términos para entrar.",
   "Esse apelido não é permitido. Escolha outro.": "Ese apodo no está permitido. Elige otro.",
   "Excluir minha conta pela internet": "Borrar mi cuenta por internet",
+  "Use o botão “Entrar no campeonato da semana”.": "Usa el botón “Entrar al torneo de la semana”.",
+  "Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.": "Entra con el botón “Entrar al torneo de la semana”, en la pantalla Torneos.",
+  "Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.": "Aún no hay nadie en el ranking. Entra con Google y completa niveles para aparecer aquí.",
+  "Você ainda não está no top {n}. Conclua mais de {c} fases para entrar.": "Todavía no estás en el top {n}. Completa más de {c} niveles para entrar.",
+  "Quem concluiu mais fases. Só aparece quem entrou com a conta Google.": "Quién completó más niveles. Solo aparecen quienes entraron con una cuenta de Google.",
+  "Campeonato da semana completo! +{n} ★": "¡Torneo de la semana completo! +{n} ★",
+  "Você está em {a}º no ranking geral e em {b}º de {c} no campeonato da semana.": "Estás en el puesto {a} del ranking general y en el {b} de {c} en el torneo de la semana.",
+  "Você está em {a}º no ranking geral. Entre no campeonato da semana!": "Estás en el puesto {a} del ranking general. ¡Entra al torneo de la semana!",
+  "Você está em {b}º de {c} no campeonato da semana.": "Estás en el puesto {b} de {c} en el torneo de la semana.",
+  "Ranking geral": "Ranking general",
+  "Semana": "Semana",
+  "ver": "ver",
+  "abrir": "abrir",
+  "Campeonato da semana": "Torneo de la semana",
+  "Entrar no campeonato da semana": "Entrar al torneo de la semana",
+  "Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.": "Todos juegan los mismos 5 niveles nuevos, en salas de hasta 100 personas. Una sala nueva cada semana. Requiere cuenta de Google.",
+  "Entre amigos": "Entre amigos",
+  "Sua sessão do Google acabou. Entre de novo na tela Sua conta.": "Tu sesión de Google terminó. Vuelve a entrar en la pantalla Tu cuenta.",
+  "Todas as salas desta semana estão cheias. Tente de novo na semana que vem.": "Todas las salas de esta semana están llenas. Inténtalo la semana que viene.",
+  "Não consegui preparar as fases agora. Tente de novo.": "No pude preparar los niveles ahora. Inténtalo de nuevo.",
+  "Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.": "Entra con Google y elige tu apodo para jugar el torneo de la semana.",
+  "Procurando a sua sala…": "Buscando tu sala…",
+  "Preparando as fases da semana…": "Preparando los niveles de la semana…",
+  "Entre com o Google para aparecer no ranking.": "Entra con Google para aparecer en el ranking.",
+  "Escolha o seu apelido na tela Sua conta para aparecer no ranking.": "Elige tu apodo en la pantalla Tu cuenta para aparecer en el ranking.",
+  "Sua posição aparece depois da próxima sincronização.": "Tu posición aparecerá tras la próxima sincronización.",
+  "Conclua uma fase para entrar no ranking.": "Completa un nivel para entrar en el ranking.",
+  "{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo": "{n} de {max} personas · {fases} · {prazo} · vale el mejor tiempo",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2972,7 +3052,7 @@ function rankear(camp, jogadores){
     const p = jogadores[key] || {}, f = p.f || {};
     let feitas = 0, tempo = 0, jog = 0;
     for (let i = 0; i < N; i++){ const r = f[i]; if (r && r.t > 0){ feitas++; tempo += r.t; jog += r.j || 0; } }
-    return {key, nome: p.n || key, feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
+    return {key, nome: p.n || key, av: p.av || '', mold: p.mold || '', feitas, tempo, jog, ts: p.ts || 0, completo: feitas === N};
   });
   lista.sort((a, b) => b.feitas - a.feitas || a.tempo - b.tempo || a.jog - b.jog || a.ts - b.ts || (a.key < b.key ? -1 : 1));
   lista.forEach((r, i) => { const q = lista[i - 1]; r.pos = q && q.feitas === r.feitas && q.tempo === r.tempo && q.jog === r.jog ? q.pos : i + 1; });
@@ -3006,6 +3086,31 @@ function lerConviteHash(hash, dbSalvo){
 }
 
 
+
+/* ---- Campeonato geral da semana (salas de até 100 pessoas) e ranking geral ---- */
+const MAX_SALA_GERAL = 100, FASES_GERAL = 5, SALAS_GERAL = 30;
+/* id de 6 caracteres que começa com "0" (os códigos sorteados nunca começam com 0): 0 + semana (3) + sala (2) */
+const idGeral = (semIdx, sala) => '0' + Math.max(0, semIdx).toString(36).toUpperCase().padStart(3, '0').slice(-3) + sala.toString(36).toUpperCase().padStart(2, '0').slice(-2);
+const ehIdGeral = id => /^0[0-9A-Z]{5}$/.test(id || '');
+/* a chave de quem joga uma sala geral é o começo do id da conta (as regras do banco conferem) */
+const chaveGeral = uid => String(uid || '').slice(0, 24);
+/* a sala vale se tem as fases certas, 100 vagas e termina até 8 dias depois de criada */
+function salaGeralValida(c){
+  if (!c || c.geral !== true || c.max !== MAX_SALA_GERAL || !c.sem) return false;
+  const fs = listaDe(c.fases);
+  if (fs.length !== FASES_GERAL) return false;
+  try{ return fs.every(f => f && typeof f.text === 'string' && faseValida(f.text)); }catch(e){ return false; }
+}
+/* fim da semana (domingo à noite, em UTC) a partir de "2026-W45" */
+const fimDaSemana = sem => { const seg = segundaDe(sem); return seg ? (diaNum(seg) + 7) * 86400000 : 0; };
+/* posição (empates dividem a posição) no ranking geral; lista = [{uid, n, ts}] */
+function posicaoRanking(lista, uid, limite){
+  const ord = lista.slice().sort((a, b) => b.n - a.n || (a.ts || 0) - (b.ts || 0) || (a.uid < b.uid ? -1 : 1));
+  ord.forEach((r, i) => { const q = ord[i - 1]; r.pos = q && q.n === r.n ? q.pos : i + 1; });
+  const eu = ord.find(r => r.uid === uid);
+  const corte = ord.length >= limite ? ord[ord.length - 1].n : 0;
+  return {lista: ord, eu: eu || null, corte};
+}
 /* ---- Sequências de dias da fase do dia (lógica pura) ---- */
 const diaNum = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000) : NaN; };
 /* Sequência de números seguidos (dias ou semanas): a atual (que ainda vale se o de hoje não foi jogado) e a maior de todas. */
@@ -3116,7 +3221,7 @@ function somaTexto(t){ let h = 0x811c9dc5; for (let i = 0; i < t.length; i++){ h
    O saldo nunca é guardado: sai das estrelas das fases + bônus (fase do dia, desafio da semana) + conquistas resgatadas
    + ganhos avulsos (anúncios premiados) − o que foi gasto. Só o que não dá para recalcular fica na "carteira":
    cart = {g: ganhos avulsos {chave: estrelas}, s: gastos {chave: estrelas}, v: conquistas já resgatadas}. */
-const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30;
+const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30, BONUS_CAMP_SEMANA = 10;
 /* Itens: 'av:pN' (avatar) e 'mold:id' (moldura). livre = todo mundo tem; preco = comprado com estrelas; (sem nenhum dos dois) = só por conquista. */
 const ITENS = {};
 for (let i = 1; i <= 24; i++) ITENS['av:p' + i] = i <= 6 ? {livre: true} : i <= 10 ? {preco: 15} : i <= 14 ? {preco: 30} : i <= 18 ? {preco: 60} : {};
@@ -4754,7 +4859,7 @@ const irInicio = () => { fecharTodos('ov-splash'); renderInicio(); $('#ov-splash
 $('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
 /* "Continuar" quando já há o que continuar; mostra qual fase */
 function renderInicio(){
-  if (window.__pronto) renderConta();
+  if (window.__pronto){ renderConta(); renderPosicao(); }
   if (!S.jogo) return;
   const volta = prog.done.length > 0 || !!andamento;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
@@ -5455,7 +5560,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.6';
+const VERSAO = '2026.11.05.7';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5577,7 +5682,7 @@ let cpPend = store.get('cppend', []);
 const CP = {id: null, db: '', camp: null, jogs: {}, timer: 0, convite: null, fases: []};
 const cpKey = () => normalizarNome(cpNome);
 const erroNuvem = cod => Object.assign(new Error(cod), {cod});
-const MSG_NUVEM = {negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
+const MSG_NUVEM = {sessao: 'Sua sessão do Google acabou. Entre de novo na tela Sua conta.', cheio: 'Todas as salas desta semana estão cheias. Tente de novo na semana que vem.', gerar: 'Não consegui preparar as fases agora. Tente de novo.', negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
 const msgNuvem = e => e && e.cod === 'auth' ? msgAuth(e.auth) : MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
 /* Roda fn(signal) com limite de 9 s; qualquer falha vira um erro com `cod` (tempo, rede, negado, http, auth). */
 async function comTempo(fn){
@@ -5586,8 +5691,9 @@ async function comTempo(fn){
   catch(e){ throw e && e.cod ? e : erroNuvem(e && e.name === 'AbortError' ? 'tempo' : 'rede'); }
   finally{ clearTimeout(to); }
 }
-const nuvem = (db, metodo, caminho, corpo, token) => comTempo(async signal => {
-  const r = await fetch(db + '/' + caminho + '.json' + (token ? '?auth=' + encodeURIComponent(token) : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal, cache: 'no-store'});
+const nuvem = (db, metodo, caminho, corpo, token, q) => comTempo(async signal => {
+  const ps = [token ? 'auth=' + encodeURIComponent(token) : '', q || ''].filter(Boolean).join('&');
+  const r = await fetch(db + '/' + caminho + '.json' + (ps ? '?' + ps : ''), {method: metodo, body: corpo === undefined ? undefined : JSON.stringify(corpo), signal, cache: 'no-store'});
   if (r.status === 401 || r.status === 403) throw erroNuvem('negado');
   if (!r.ok) throw erroNuvem('http');
   return r.json();
@@ -5641,9 +5747,11 @@ const souDono = () => !!(cpAuth && CP.camp && CP.camp.uid === cpAuth.uid);
 /* resultados guardados quando não há internet */
 async function cpEnviarUm(p){
   const cam = `p/${p.id}/${p.key}/f/${p.idx}`;
+  let tk;
+  if (p.geral){ tk = await contaToken(); if (!tk) throw erroNuvem('sessao'); }   /* sala geral: só com a conta Google */
   const atual = await nuvem(p.db, 'GET', cam);
   if (atual && (p.modo === 'primeira' || atual.t <= p.t)) return 'mantido';
-  await nuvem(p.db, 'PUT', cam, {t: p.t, j: p.j});
+  await nuvem(p.db, 'PUT', cam, {t: p.t, j: p.j}, tk);
   return 'ok';
 }
 async function cpDescarregar(){
@@ -5714,6 +5822,7 @@ $('#cpCriar').onclick = async () => {
 };
 $('#cpEntrar').onclick = () => {
   const id = $('#cpCodigo').value.trim().toUpperCase();
+  if (ehIdGeral(id)){ aviso('#cpAviso', 'Use o botão “Entrar no campeonato da semana”.', 'erro'); return; }
   if (!exigirNome('#cpNome', '#cpAviso')) return;
   if (!codigoValido(id)){ aviso('#cpAviso', 'O código tem 6 letras/números, como ABC234.', 'erro'); return; }
   fechar('camps'); abrirLobby(id, cpDb);
@@ -5855,15 +5964,21 @@ function linhaClicavel(d, nome, abrirFn){
   d.appendChild(mk('span', 'seta', '›')); d.onclick = abrirFn;
   d.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirFn(); } };
 }
+const ehGeral = () => ehIdGeral(CP.id);
+const chaveCamp = () => ehGeral() && conta ? chaveGeral(conta.uid) : cpKey();
 function renderLobby(){
-  const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
-  $('#lbTitulo').textContent = c.nome;
+  const c = CP.camp, key = chaveCamp(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
+  $('#lbTitulo').textContent = ehGeral() ? tr(c.nome) : c.nome;
   $('#lbSub').innerHTML = '';
+  if (ehGeral()) $('#lbSub').append(tr('{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo', {n, max: c.max, fases: qtd(c.fases.length, ' fase', ' fases'), prazo: prazoTxt(c.fim)}));
+  else{
   $('#lbSub').append(tr('Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código', {org: c.org, n, max: c.max, fases: qtd(c.fases.length, ' fase', ' fases'), prazo: prazoTxt(c.fim), modo: tr(c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez')}) + ' ');
   $('#lbSub').appendChild(mk('span', 'cod', CP.id));
+  }
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
-  const dono = souDono(), vazio = n === 0;
-  $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid; if (dono){ $('#lbSouOrgForm').hidden = true; }
+  const geral = ehGeral(), dono = souDono(), vazio = n === 0;
+  if (geral){ $('#lbEntrar').hidden = true; $('#lbConvidar').hidden = true; if (!eu) aviso('#lbAviso', 'Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.', 'erro'); } else $('#lbConvidar').hidden = false;
+  $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid || geral; if (dono){ $('#lbSouOrgForm').hidden = true; }
   $('#lbEditar').disabled = !vazio;
   $('#lbOrgInfo').textContent = tr(vazio ? 'Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.' : 'Já tem gente no campeonato: não dá mais para editar, só excluir.');
   if (!eu && encerrado) $('#lbEntrar').hidden = true;
@@ -5879,7 +5994,9 @@ function renderLobby(){
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
-    d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')), mk('span', 'nm', r.nome),
+    d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
+    if (r.av) d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+    d.append(mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
     linhaClicavel(d, r.nome, () => {
       const chaves = Object.keys(CP.jogs), N = c.fases.length;
@@ -5889,6 +6006,7 @@ function renderLobby(){
     caixa.appendChild(d);
   });
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');
+  if (geral){ guardarPosicaoSala(c, rk, key); conferirBonusSala(c, eu); }
 }
 $('#lbEntrarBtn').onclick = async () => {
   if (!exigirNome('#lbNome', '#lbAviso')) return;
@@ -5940,7 +6058,8 @@ function jogarFaseCamp(i){
 }
 /* ---- resultado ---- */
 async function cpEnviarResultado(c, res){
-  const p = {id: c.camp, db: c.db, key: cpKey(), idx: c.idx, t: res.t, j: res.j, modo: c.modo};
+  const geral = ehIdGeral(c.camp);
+  const p = {id: c.camp, db: c.db, key: geral && conta ? chaveGeral(conta.uid) : cpKey(), idx: c.idx, t: res.t, j: res.j, modo: c.modo, geral};
   if (c.fim && Date.now() > c.fim) return tr('O prazo acabou: este resultado não entra no ranking.');
   try{
     const r = await cpEnviarUm(p);
@@ -6278,6 +6397,177 @@ if (store.get('contaredir')){
   store.set('contaredir', null);
   firebaseAuth().then(a => a.getRedirectResult()).then(r => { if (r && r.user){ abrirConta(); return contaPosLogin(r.user); } }).catch(() => {});
 }
+/* ======================= Ranking geral e campeonato da semana =======================
+   Ranking geral: quem concluiu mais fases (lido do perfil público de cada conta Google).
+   Campeonato da semana: salas de até 100 pessoas, as mesmas 5 fases novas para todo mundo da sala, uma sala nova por semana.
+   Só o necessário é público: apelido, avatar, moldura e quantas fases a pessoa concluiu. */
+const RK_TOP = 100, RK_BUSCA = 200;
+const semanaAgora = () => semanaDe(new Date().toISOString().slice(0, 10));   /* semana em UTC, igual ao fim da sala */
+const idSala = (sem, n) => idGeral(semanaIdx(segundaDe(sem)), n);
+const contaPronta = () => !!conta && !conta.novo;
+let rkPos = store.get('rkpos', null);       /* {ts, geral: {pos, n, de}, sala: {sem, id, pos, de, feitas}} */
+let rkOcupado = false, rkAvisado = false;
+const guardarPos = () => store.set('rkpos', rkPos);
+
+/* ---------- sala da semana ---------- */
+const NIVEIS_GERAL = ['facil', 'medio', 'medio', 'dificil', 'dificil'];
+async function gerarFasesGeral(){
+  const fases = [];
+  for (const nivel of NIVEIS_GERAL){
+    let f = null;
+    for (let t = 0; t < 6 && !f; t++){
+      const g = await Gerador.gerar(novaSeed(), NIVEIS_INF[nivel].o);
+      if (g && g.unica && !BUILTIN.some(b => b.text === g.text) && !fases.some(x => x.text === g.text)) f = {nome: NOME_SORTEADA[nivel], text: g.text};
+    }
+    if (!f) return null;
+    fases.push(f);
+  }
+  return fases;
+}
+async function criarSalaGeral(sem, sala, id, tk){
+  const fases = await gerarFasesGeral(); if (!fases) throw erroNuvem('gerar');
+  const camp = {nome: 'Campeonato da semana', org: 'Shape Puzzle', max: MAX_SALA_GERAL, modo: 'melhor', fim: fimDaSemana(sem), criado: Date.now(), uid: conta.uid, fases, geral: true, sem, sala};
+  try{ await nuvem(cpDb, 'PUT', 'c/' + id, camp, tk); }
+  catch(e){ if (!e || e.cod !== 'negado') throw e; }       /* outra pessoa criou a mesma sala no mesmo instante: vale a dela */
+  const c = await nuvem(cpDb, 'GET', 'c/' + id);
+  if (!c) throw erroNuvem('negado');
+  return c;
+}
+/* a sala é confiável se tem as fases certas e termina no fim desta semana */
+const salaDaSemana = (c, sem) => salaGeralValida(c) && c.sem === sem && c.fim === fimDaSemana(sem);
+/* Acha a sua sala (ou entra na primeira com vaga, criando-a se preciso) e abre a classificação dela. */
+async function entrarGeral(sel){
+  if (rkOcupado) return;
+  const av = (m, t) => aviso(sel, m, t);
+  if (!contaPronta()){ av('Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.', 'erro'); fechar('camps'); fechar('rank'); abrirConta(); return; }
+  if (navigator.onLine === false){ av('Sem conexão com a internet. Confira e tente de novo.', 'erro'); return; }
+  rkOcupado = true; document.querySelectorAll('[data-semana]').forEach(b => { b.disabled = true; });
+  av('Procurando a sua sala…');
+  try{
+    const tk = await contaToken(); if (!tk) throw erroNuvem('sessao');
+    const sem = semanaAgora(), chave = chaveGeral(conta.uid);
+    let livre = null, minha = null;
+    for (let s = 1; s <= SALAS_GERAL && !minha && !livre; s++){
+      const id = idSala(sem, s);
+      let c = await nuvem(cpDb, 'GET', 'c/' + id);
+      if (!c){ av('Preparando as fases da semana…'); c = await criarSalaGeral(sem, s, id, tk); }
+      if (!salaDaSemana(c, sem)) continue;
+      if (await nuvem(cpDb, 'GET', `p/${id}/${chave}`)){ minha = id; break; }
+      const quem = await nuvem(cpDb, 'GET', 'p/' + id, undefined, undefined, 'shallow=true') || {};
+      if (Object.keys(quem).length < MAX_SALA_GERAL) livre = id;
+    }
+    if (!minha){
+      if (!livre) throw erroNuvem('cheio');
+      await nuvem(cpDb, 'PUT', `p/${livre}/${chave}`, {n: conta.nome, ts: Date.now(), av: conta.av, mold: conta.mold || ''}, tk);
+      minha = livre;
+    }
+    av('');
+    fechar('camps'); fechar('rank'); await abrirLobby(minha, cpDb);
+  }catch(e){ av(msgNuvem(e), 'erro'); }
+  rkOcupado = false; document.querySelectorAll('[data-semana]').forEach(b => { b.disabled = false; });
+}
+
+/* ---------- ranking geral ---------- */
+async function buscarRanking(){
+  const r = await nuvem(cpDb, 'GET', 'pub', undefined, undefined, 'orderBy=%22n%22&limitToLast=' + RK_BUSCA) || {};
+  const lista = Object.keys(r).map(uid => { const x = r[uid] || {}; return {uid, n: +x.n || 0, ts: +x.ts || 0, nome: limparNome(String(x.nome || '')), av: x.av, mold: x.mold}; })
+    .filter(x => x.nome && x.n > 0);
+  return posicaoRanking(lista, conta ? conta.uid : '', RK_BUSCA);
+}
+function linhaRanking(r, euUid){
+  const d = mk('div', 'rk' + (r.uid === euUid ? ' eu' : ''));
+  d.append(mk('span', 'pos', r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
+  d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+  d.append(mk('span', 'nm', r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
+  return d;
+}
+function renderRanking(res){
+  const l = $('#rkLista'); l.innerHTML = '';
+  const euUid = conta ? conta.uid : '';
+  if (!res.lista.length) l.innerHTML = '<p class="vazio2">' + tr('Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.') + '</p>';
+  res.lista.slice(0, RK_TOP).forEach(r => l.appendChild(linhaRanking(r, euUid)));
+  const i = res.eu ? res.lista.indexOf(res.eu) : -1;
+  if (i >= RK_TOP){ l.appendChild(mk('div', 'rkSep', '…')); l.appendChild(linhaRanking(res.eu, euUid)); }
+  let msg = '';
+  if (!conta) msg = 'Entre com o Google para aparecer no ranking.';
+  else if (conta.novo) msg = 'Escolha o seu apelido na tela Sua conta para aparecer no ranking.';
+  else if (!res.eu) msg = res.corte && fasesFeitas(dadosAtuais()) > 0 ? tr('Você ainda não está no top {n}. Conclua mais de {c} fases para entrar.', {n: RK_BUSCA, c: res.corte})
+    : fasesFeitas(dadosAtuais()) > 0 ? 'Sua posição aparece depois da próxima sincronização.' : 'Conclua uma fase para entrar no ranking.';
+  aviso('#rkAviso', msg);
+}
+async function carregarRanking(){
+  aviso('#rkAviso', 'Carregando…'); $('#rkAtualizar').disabled = true;
+  try{ const res = await buscarRanking(); renderRanking(res); guardarGeral(res); }
+  catch(e){ aviso('#rkAviso', msgNuvem(e), 'erro'); }
+  $('#rkAtualizar').disabled = false;
+}
+function abrirRanking(){
+  $('#rkSub').textContent = tr('Quem concluiu mais fases. Só aparece quem entrou com a conta Google.');
+  $('#rkLista').innerHTML = ''; abrir('rank'); carregarRanking();
+}
+
+/* ---------- posição guardada (mostrada na tela inicial) ---------- */
+function guardarGeral(res){
+  if (!contaPronta()) return;
+  rkPos = Object.assign({}, rkPos, {ts: Date.now(), geral: res.eu ? {pos: res.eu.pos, n: res.eu.n, de: res.lista.length} : null}); guardarPos(); renderPosicao();
+}
+function guardarPosicaoSala(c, rk, key){
+  const r = rk.find(x => x.key === key); if (!r || !c.sem) return;
+  rkPos = Object.assign({}, rkPos, {sala: {sem: c.sem, id: CP.id, pos: r.pos, de: rk.length, feitas: r.feitas}}); guardarPos(); renderPosicao();
+}
+/* terminou as 5 fases da semana: ganha estrelas (uma vez por sala) */
+function conferirBonusSala(c, eu){
+  if (!eu || !eu.f) return;
+  let feitas = 0; for (let i = 0; i < FASES_GERAL; i++) if (eu.f[i] && eu.f[i].t > 0) feitas++;
+  const k = 'w:' + CP.id;
+  if (feitas < FASES_GERAL || (cart.g || {})[k]) return;
+  const nc = cartDe({cart}); nc.g[k] = BONUS_CAMP_SEMANA;
+  guardarCart(nc); contaAgendar(2000); renderConta();
+  toast(tr('Campeonato da semana completo! +{n} ★', {n: BONUS_CAMP_SEMANA}));
+}
+const salaAtual = () => rkPos && rkPos.sala && rkPos.sala.sem === semanaAgora() ? rkPos.sala : null;
+function textoPosicao(){
+  const g = rkPos && rkPos.geral, s = salaAtual();
+  if (g && s) return tr('Você está em {a}º no ranking geral e em {b}º de {c} no campeonato da semana.', {a: g.pos, b: s.pos, c: s.de});
+  if (g) return tr('Você está em {a}º no ranking geral. Entre no campeonato da semana!', {a: g.pos});
+  if (s) return tr('Você está em {b}º de {c} no campeonato da semana.', {b: s.pos, c: s.de});
+  return '';
+}
+function renderPosicao(){
+  const b = $('#hPos'); if (!b) return;
+  b.textContent = '';
+  const g = contaPronta() && rkPos && rkPos.geral, s = contaPronta() && salaAtual();
+  b.insertAdjacentHTML('afterbegin', ic('trophy'));
+  const t = mk('span', 'cnN');
+  if (g || s){
+    t.textContent = tr('Ranking geral') + ': ' + (g ? g.pos + 'º' : '—') + (s ? ' · ' + tr('Semana') + ': ' + s.pos + 'º/' + s.de : '');
+    b.setAttribute('aria-label', textoPosicao());
+  } else { t.textContent = tr('Ranking geral'); b.setAttribute('aria-label', tr('Ranking geral')); }
+  b.appendChild(t); b.appendChild(mk('small', '', tr(g || s ? 'ver' : 'abrir')));
+}
+/* Ao abrir o jogo: atualiza a posição e avisa onde a pessoa está. */
+async function atualizarPosicao(avisar){
+  if (!contaPronta() || navigator.onLine === false) return;
+  let geral = null, sala = salaAtual();
+  try{
+    const res = await buscarRanking();
+    if (res.eu) geral = {pos: res.eu.pos, n: res.eu.n, de: res.lista.length};
+    if (sala){
+      const jogs = await nuvem(cpDb, 'GET', 'p/' + sala.id) || {}, rk = rankear({fases: new Array(FASES_GERAL)}, jogs), eu = rk.find(x => x.key === chaveGeral(conta.uid));
+      sala = eu ? {sem: sala.sem, id: sala.id, pos: eu.pos, de: rk.length, feitas: eu.feitas} : null;
+    }
+  }catch(e){ return; }
+  rkPos = {ts: Date.now(), geral, sala}; guardarPos(); renderPosicao();
+  const t = textoPosicao(); if (avisar && t) toast(t);
+}
+
+$('#hPos').onclick = abrirRanking;
+$('#rkAtualizar').onclick = carregarRanking;
+$('#cpRank').onclick = () => { fechar('camps'); abrirRanking(); };
+$('#cpSemana').onclick = () => entrarGeral('#cpAviso');
+$('#rkSemana').onclick = () => entrarGeral('#rkAviso');
+renderPosicao();
+if (contaPronta()) setTimeout(() => { if (!rkAvisado){ rkAvisado = true; atualizarPosicao(true); } }, 3500);
 /* ======================= Início ======================= */
 /* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){

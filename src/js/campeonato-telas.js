@@ -134,15 +134,21 @@ function linhaClicavel(d, nome, abrirFn){
   d.appendChild(mk('span', 'seta', '›')); d.onclick = abrirFn;
   d.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirFn(); } };
 }
+const ehGeral = () => ehIdGeral(CP.id);
+const chaveCamp = () => ehGeral() && conta ? chaveGeral(conta.uid) : cpKey();
 function renderLobby(){
-  const c = CP.camp, key = cpKey(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
-  $('#lbTitulo').textContent = c.nome;
+  const c = CP.camp, key = chaveCamp(), eu = CP.jogs[key], n = Object.keys(CP.jogs).length, encerrado = c.fim && Date.now() > c.fim;
+  $('#lbTitulo').textContent = ehGeral() ? tr(c.nome) : c.nome;
   $('#lbSub').innerHTML = '';
+  if (ehGeral()) $('#lbSub').append(tr('{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo', {n, max: c.max, fases: qtd(c.fases.length, ' fase', ' fases'), prazo: prazoTxt(c.fim)}));
+  else{
   $('#lbSub').append(tr('Organizado por {org} · {n} de {max} pessoas · {fases} · {prazo} · {modo} · código', {org: c.org, n, max: c.max, fases: qtd(c.fases.length, ' fase', ' fases'), prazo: prazoTxt(c.fim), modo: tr(c.modo === 'melhor' ? 'vale o melhor tempo' : 'vale a primeira vez')}) + ' ');
   $('#lbSub').appendChild(mk('span', 'cod', CP.id));
+  }
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
-  const dono = souDono(), vazio = n === 0;
-  $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid; if (dono){ $('#lbSouOrgForm').hidden = true; }
+  const geral = ehGeral(), dono = souDono(), vazio = n === 0;
+  if (geral){ $('#lbEntrar').hidden = true; $('#lbConvidar').hidden = true; if (!eu) aviso('#lbAviso', 'Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.', 'erro'); } else $('#lbConvidar').hidden = false;
+  $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid || geral; if (dono){ $('#lbSouOrgForm').hidden = true; }
   $('#lbEditar').disabled = !vazio;
   $('#lbOrgInfo').textContent = tr(vazio ? 'Você pode editar enquanto ninguém entrar. Quando alguém entrar (inclusive você), só dá para excluir.' : 'Já tem gente no campeonato: não dá mais para editar, só excluir.');
   if (!eu && encerrado) $('#lbEntrar').hidden = true;
@@ -158,7 +164,9 @@ function renderLobby(){
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
     const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
-    d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')), mk('span', 'nm', r.nome),
+    d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
+    if (r.av) d.appendChild(avatarEl({av: avValido(r.av), mold: moldValida(r.mold)}, 24));
+    d.append(mk('span', 'nm', r.nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
     linhaClicavel(d, r.nome, () => {
       const chaves = Object.keys(CP.jogs), N = c.fases.length;
@@ -168,6 +176,7 @@ function renderLobby(){
     caixa.appendChild(d);
   });
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');
+  if (geral){ guardarPosicaoSala(c, rk, key); conferirBonusSala(c, eu); }
 }
 $('#lbEntrarBtn').onclick = async () => {
   if (!exigirNome('#lbNome', '#lbAviso')) return;
@@ -219,7 +228,8 @@ function jogarFaseCamp(i){
 }
 /* ---- resultado ---- */
 async function cpEnviarResultado(c, res){
-  const p = {id: c.camp, db: c.db, key: cpKey(), idx: c.idx, t: res.t, j: res.j, modo: c.modo};
+  const geral = ehIdGeral(c.camp);
+  const p = {id: c.camp, db: c.db, key: geral && conta ? chaveGeral(conta.uid) : cpKey(), idx: c.idx, t: res.t, j: res.j, modo: c.modo, geral};
   if (c.fim && Date.now() > c.fim) return tr('O prazo acabou: este resultado não entra no ranking.');
   try{
     const r = await cpEnviarUm(p);
