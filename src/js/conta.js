@@ -137,16 +137,43 @@ function celulaItem(chave, el, rotulo, marcado, d, donos){
   return b;
 }
 function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); return q ? tr(NOME_CONQ[q.id]) : ''; }
+/* Tocar num item: se já é seu, usa na hora; se não, abre o provador (o avatar com o item, antes de comprar). */
 function tocarItem(chave, rotulo){
   const d = dadosAtuais(), campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
   if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
-  const it = ITENS[chave];
-  if (!it.preco){ aviso('#cnAviso', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)})); return; }
-  const r = comprarItem(d, chave);
-  if (r.erro === 'saldo'){ aviso('#cnAviso', tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: r.falta}), 'erro'); return; }
-  if (!r.cart) return;
-  if (!confirm(tr('Liberar “{nome}” por {n} ★? Você tem {s} ★.', {nome: rotulo, n: it.preco, s: saldoConta(d)}))) return;
-  guardarCart(r.cart); mudarPerfil({[campo]: id}); contaAgendar(2000);
+  abrirProvador(chave, rotulo);
+}
+let Prova = null;
+const visualDono = (c, donos) => ({av: donos.has('av:' + c.av) ? c.av : '', mold: donos.has('mold:' + c.mold) ? c.mold : '', fun: donos.has('fun:' + c.fun) ? c.fun : ''});
+function abrirProvador(chave, rotulo){
+  const d = dadosAtuais(), donos = itensDe(d), s = saldoConta(d), c = eu(), it = ITENS[chave];
+  const campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
+  const agora = {av: c.av, mold: c.mold, fun: c.fun}, teste = Object.assign({}, agora, {[campo]: id});
+  Prova = {chave, rotulo, campo, id};
+  $('#pvAntes').textContent = ''; $('#pvAntes').appendChild(avatarEl(agora, 64));
+  $('#pvDepois').textContent = ''; $('#pvDepois').appendChild(avatarEl(teste, 112));
+  $('#pvNome').textContent = rotulo;
+  const cat = $('#pvCat'); cat.className = 'pvCat cat-' + it.cat;
+  cat.textContent = tr(NOME_CAT[it.cat]);
+  const bAntes = bonusEquipado(visualDono(c, donos)), bDepois = bonusEquipado(Object.assign(visualDono(c, donos), {[campo]: id}));
+  $('#pvBonus').textContent = bDepois ? tr('Com este visual: +{n} ★ a cada fase vencida.', {n: bDepois}) + (bAntes && bDepois > bAntes ? ' (' + tr('agora: +{n} ★', {n: bAntes}) + ')' : '') : tr('Item comum: não dá estrelas extras.');
+  const btn = $('#pvComprar');
+  if (it.preco){
+    btn.hidden = false; btn.disabled = s < it.preco;
+    btn.textContent = tr('Comprar por {n} ★', {n: it.preco});
+    aviso('#pvInfo', s < it.preco ? tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: it.preco - s}) : tr('Você tem {s} ★. Depois da compra sobram {r} ★.', {s, r: s - it.preco}), s < it.preco ? 'erro' : '');
+  } else {
+    btn.hidden = true;
+    aviso('#pvInfo', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)}));
+  }
+  abrir('provador');
+}
+function comprarProvado(){
+  if (!Prova) return;
+  const r = comprarItem(dadosAtuais(), Prova.chave);
+  if (!r.cart){ abrirProvador(Prova.chave, Prova.rotulo); return; }
+  guardarCart(r.cart); mudarPerfil({[Prova.campo]: Prova.id}); contaAgendar(2000);
+  fechar('provador'); Prova = null;
   aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
 function montarConta(){
@@ -352,6 +379,8 @@ $('#cnSair').onclick = contaSair;
 $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
 $('#cnNomeOk').onclick = trocarApelido;
+$('#pvComprar').onclick = comprarProvado;
+$('#pvVoltar').onclick = () => { fechar('provador'); Prova = null; };
 $('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
 
 verificarConquistas(false);

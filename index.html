@@ -434,6 +434,15 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnCats span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:5px;vertical-align:-1px}
 .cnBonus{margin:8px 0 0;font-size:13px;color:var(--gold)}
 .winBonus{margin:4px 0 0;font-weight:700;color:var(--gold)}
+/* provador */
+.pvLado{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:6px 0 4px}
+.pvLado figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pvLado figcaption{font-size:12px;color:var(--mut)}
+.pvSeta{font-size:22px;color:var(--mut);align-self:center}
+.pvTit{text-align:center;margin:8px 0 0;font-size:17px}
+.pvCat{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;color:#111;background:var(--cat)}
+.pvCard .cnBonus,.pvCard .aviso{text-align:center}
+#pvComprar[disabled]{opacity:.5}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -1220,6 +1229,23 @@ html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e)
   </div>
 </div>
 
+<!-- Provador: ver o item no seu avatar antes de comprar -->
+<div class="ov" id="ov-provador">
+  <div class="card pvCard">
+    <button class="ib x" data-close="provador" data-i="close" aria-label="Fechar"></button>
+    <h1>Provador</h1>
+    <div class="pvLado">
+      <figure><div id="pvAntes"></div><figcaption>Agora</figcaption></figure>
+      <span class="pvSeta" aria-hidden="true">→</span>
+      <figure><div id="pvDepois"></div><figcaption>Com o item</figcaption></figure>
+    </div>
+    <p class="pvTit"><b id="pvNome"></b> <span id="pvCat" class="pvCat"></span></p>
+    <p class="cnBonus" id="pvBonus"></p>
+    <p class="aviso" id="pvInfo"></p>
+    <div class="acts"><button class="btn pri" id="pvComprar" data-i="star">Comprar</button><button class="btn" id="pvVoltar">Voltar</button></div>
+  </div>
+</div>
+
 <!-- Backup -->
 <div class="ov" id="ov-backup">
   <div class="card">
@@ -1648,6 +1674,16 @@ en: {
   "Papel (origami)": "Paper (origami)",
   "Caverna": "Cave",
   "Origami": "Origami",
+  "Com este visual: +{n} ★ a cada fase vencida.": "With this look: +{n} ★ for every level you beat.",
+  "agora: +{n} ★": "now: +{n} ★",
+  "Item comum: não dá estrelas extras.": "Common item: no extra stars.",
+  "Comprar por {n} ★": "Buy for {n} ★",
+  "Você tem {s} ★. Depois da compra sobram {r} ★.": "You have {s} ★. After buying, {r} ★ are left.",
+  "Provador": "Fitting room",
+  "Agora": "Now",
+  "Com o item": "With the item",
+  "Comprar": "Buy",
+  "Voltar": "Back",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2463,6 +2499,16 @@ es: {
   "Papel (origami)": "Papel (origami)",
   "Caverna": "Cueva",
   "Origami": "Origami",
+  "Com este visual: +{n} ★ a cada fase vencida.": "Con este look: +{n} ★ por cada nivel superado.",
+  "agora: +{n} ★": "ahora: +{n} ★",
+  "Item comum: não dá estrelas extras.": "Objeto común: no da estrellas extra.",
+  "Comprar por {n} ★": "Comprar por {n} ★",
+  "Você tem {s} ★. Depois da compra sobram {r} ★.": "Tienes {s} ★. Después de la compra quedan {r} ★.",
+  "Provador": "Probador",
+  "Agora": "Ahora",
+  "Com o item": "Con el objeto",
+  "Comprar": "Comprar",
+  "Voltar": "Volver",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -5830,7 +5876,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.1';
+const VERSAO = '2026.11.06.2';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -6536,16 +6582,43 @@ function celulaItem(chave, el, rotulo, marcado, d, donos){
   return b;
 }
 function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); return q ? tr(NOME_CONQ[q.id]) : ''; }
+/* Tocar num item: se já é seu, usa na hora; se não, abre o provador (o avatar com o item, antes de comprar). */
 function tocarItem(chave, rotulo){
   const d = dadosAtuais(), campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
   if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
-  const it = ITENS[chave];
-  if (!it.preco){ aviso('#cnAviso', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)})); return; }
-  const r = comprarItem(d, chave);
-  if (r.erro === 'saldo'){ aviso('#cnAviso', tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: r.falta}), 'erro'); return; }
-  if (!r.cart) return;
-  if (!confirm(tr('Liberar “{nome}” por {n} ★? Você tem {s} ★.', {nome: rotulo, n: it.preco, s: saldoConta(d)}))) return;
-  guardarCart(r.cart); mudarPerfil({[campo]: id}); contaAgendar(2000);
+  abrirProvador(chave, rotulo);
+}
+let Prova = null;
+const visualDono = (c, donos) => ({av: donos.has('av:' + c.av) ? c.av : '', mold: donos.has('mold:' + c.mold) ? c.mold : '', fun: donos.has('fun:' + c.fun) ? c.fun : ''});
+function abrirProvador(chave, rotulo){
+  const d = dadosAtuais(), donos = itensDe(d), s = saldoConta(d), c = eu(), it = ITENS[chave];
+  const campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
+  const agora = {av: c.av, mold: c.mold, fun: c.fun}, teste = Object.assign({}, agora, {[campo]: id});
+  Prova = {chave, rotulo, campo, id};
+  $('#pvAntes').textContent = ''; $('#pvAntes').appendChild(avatarEl(agora, 64));
+  $('#pvDepois').textContent = ''; $('#pvDepois').appendChild(avatarEl(teste, 112));
+  $('#pvNome').textContent = rotulo;
+  const cat = $('#pvCat'); cat.className = 'pvCat cat-' + it.cat;
+  cat.textContent = tr(NOME_CAT[it.cat]);
+  const bAntes = bonusEquipado(visualDono(c, donos)), bDepois = bonusEquipado(Object.assign(visualDono(c, donos), {[campo]: id}));
+  $('#pvBonus').textContent = bDepois ? tr('Com este visual: +{n} ★ a cada fase vencida.', {n: bDepois}) + (bAntes && bDepois > bAntes ? ' (' + tr('agora: +{n} ★', {n: bAntes}) + ')' : '') : tr('Item comum: não dá estrelas extras.');
+  const btn = $('#pvComprar');
+  if (it.preco){
+    btn.hidden = false; btn.disabled = s < it.preco;
+    btn.textContent = tr('Comprar por {n} ★', {n: it.preco});
+    aviso('#pvInfo', s < it.preco ? tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: it.preco - s}) : tr('Você tem {s} ★. Depois da compra sobram {r} ★.', {s, r: s - it.preco}), s < it.preco ? 'erro' : '');
+  } else {
+    btn.hidden = true;
+    aviso('#pvInfo', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)}));
+  }
+  abrir('provador');
+}
+function comprarProvado(){
+  if (!Prova) return;
+  const r = comprarItem(dadosAtuais(), Prova.chave);
+  if (!r.cart){ abrirProvador(Prova.chave, Prova.rotulo); return; }
+  guardarCart(r.cart); mudarPerfil({[Prova.campo]: Prova.id}); contaAgendar(2000);
+  fechar('provador'); Prova = null;
   aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
 function montarConta(){
@@ -6751,6 +6824,8 @@ $('#cnSair').onclick = contaSair;
 $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
 $('#cnNomeOk').onclick = trocarApelido;
+$('#pvComprar').onclick = comprarProvado;
+$('#pvVoltar').onclick = () => { fechar('provador'); Prova = null; };
 $('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
 
 verificarConquistas(false);
