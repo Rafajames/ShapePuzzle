@@ -62,7 +62,7 @@
         ".read": true,
         ".write": "auth != null && !newData.exists() && root.child('c').child($id).child('uid').val() === auth.uid",
         "$key": {
-          ".write": "!data.exists() && newData.hasChildren(['n', 'ts']) && !newData.hasChild('f') && root.child('c').child($id).exists() && (!(root.child('c').child($id).child('geral').val() === true) || (auth != null && auth.uid.beginsWith($key) && ($key.length === 24 || $key === auth.uid) && newData.child('ts').val() <= now + 600000))",
+          ".write": "!data.exists() && newData.hasChildren(['n', 'ts']) && !newData.hasChild('f') && root.child('c').child($id).exists() && (!(root.child('c').child($id).child('geral').val() === true) || (auth != null && !root.child('ban').child(auth.uid).exists() && auth.uid.beginsWith($key) && ($key.length === 24 || $key === auth.uid) && newData.child('ts').val() <= now + 600000))",
           ".validate": "$key.length >= 2 && $key.length <= 24",
           "n": {
             ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
@@ -103,7 +103,7 @@
     "pub": {
       "$uid": {
         ".read": true,
-        ".write": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && (!newData.exists() || !root.child('ban').child($uid).exists())",
         ".validate": "newData.hasChildren(['nome', 'av', 'n'])",
         "nome": {
           ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
@@ -153,6 +153,40 @@
         ".read": "$cod.matches(/^[A-Z0-9_-]{3,20}$/)",
         ".write": false
       }
+    },
+    "den": {
+      "$id": {
+        ".write": "!data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['tipo', 'alvo', 'nome', 'motivo', 'ts'])",
+        "tipo": {
+          ".validate": "newData.val() === 'jogador' || newData.val() === 'camp'"
+        },
+        "alvo": {
+          ".validate": "newData.isString() && newData.val().length <= 64"
+        },
+        "sala": {
+          ".validate": "newData.isString() && newData.val().length <= 8"
+        },
+        "nome": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "motivo": {
+          ".validate": "newData.val() === 'nome' || newData.val() === 'trapaca' || newData.val() === 'outro'"
+        },
+        "ts": {
+          ".validate": "newData.isNumber() && newData.val() >= now - 600000 && newData.val() <= now + 600000"
+        },
+        "por": {
+          ".validate": "newData.isString() && (newData.val() === '' || (auth != null && newData.val() === auth.uid))"
+        },
+        "$outro": {
+          ".validate": false
+        }
+      }
+    },
+    "ban": {
+      ".read": false,
+      ".write": false
     }
   }
 }

@@ -71,6 +71,7 @@ const ICONES = {
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   chat:'<path d="M4 5h16v11H9l-5 4V5z"/>',
+  dots:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
   send:'<path d="M21 3L3 11l7 3 3 7 8-18z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
 };
@@ -83,6 +84,7 @@ function toast(msg){
   const el = $('#toast'); el.textContent = tr(msg); el.classList.add('on');
   clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
 }
+let ordemOv = 0;
 /* Diálogos: ao abrir, o foco vai para dentro dele e o fundo fica inerte; ao fechar, o foco volta para onde estava. */
 function prepararDialogos(){
   document.querySelectorAll('.ov').forEach(o => {
@@ -94,7 +96,7 @@ function prepararDialogos(){
   const sinc = () => {
     const agora = new Set([...document.querySelectorAll('.ov.on')]);
     let novo = null;
-    agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; novo = o; } });
+    agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; o._ordem = ++ordemOv; novo = o; } });
     $('#app').inert = agora.size > 0;
     if (novo){
       requestAnimationFrame(() => { const card = novo.querySelector('.card'); const alvo = card && (card.querySelector('[data-close]') || card.querySelector('button:not([hidden]):not([disabled])')); if (alvo) alvo.focus({preventScroll: true}); else if (card){ card.tabIndex = -1; card.focus({preventScroll: true}); } });

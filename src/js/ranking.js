@@ -76,13 +76,17 @@ async function buscarRanking(){
   return posicaoRanking(lista, conta ? conta.uid : '', RK_BUSCA);
 }
 function linhaRanking(r, euUid){
-  const d = mk('div', 'rk' + (r.uid === euUid ? ' eu' : ''));
+  const eu = r.uid === euUid, bl = !eu && bloqueado(r.uid);
+  const d = mk('div', 'rk' + (eu ? ' eu' : '') + (bl ? ' bloq' : ''));
   d.append(mk('span', 'pos', r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-  d.appendChild(avatarEl(visualDe(r), 24));
-  d.append(mk('span', 'nm', r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
+  d.appendChild(avatarEl(bl ? {av: 'p1'} : visualDe(r), 24));
+  d.append(mk('span', 'nm', bl ? tr('Jogador bloqueado') : r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
+  if (!eu) d.appendChild(botaoDenuncia(Object.assign({tipo: 'jogador', chave: r.uid}, visualDe(r), {nome: r.nome})));
   return d;
 }
+const Rk = {ultimo: null};
 function renderRanking(res){
+  Rk.ultimo = res;
   const l = $('#rkLista'); l.innerHTML = '';
   const euUid = conta ? conta.uid : '';
   if (!res.lista.length) l.innerHTML = '<p class="vazio2">' + tr('Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.') + '</p>';

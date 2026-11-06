@@ -70,6 +70,8 @@ def handler(route, req):
         return route.fulfill(status=200, headers=h, body=json.dumps(v), content_type='application/json')
     if req.method == 'PUT':
         v = json.loads(req.post_data); por(p, v); return route.fulfill(status=200, headers=h, body=json.dumps(v), content_type='application/json')
+    if req.method == 'POST':
+        v = json.loads(req.post_data); k = 'id%d' % len(LOG); por(p + [k], v); return route.fulfill(status=200, headers=h, body=json.dumps({'name': k}), content_type='application/json')
     route.fulfill(status=400, headers=h, body='{}')
 
 def novo(b, w=390, h=844, init=FIM + PROG):
@@ -156,6 +158,28 @@ with sync_playwright() as pw:
     # entrar de novo cai na mesma sala (sem duplicar)
     p.evaluate("fecharTodos(); abrir('splash')"); p.click('#hCamp'); p.click('#cpSemana'); p.wait_for_timeout(1800)
     check(len(BANCO['p'][id1]) == 1 and aberta(p, 'lobby') and pegar(['c', p.evaluate("idSala(semanaAgora(), 2)")]) is None, 'entrar de novo volta para a mesma sala, sem criar outra')
+    print('Denunciar e bloquear')
+    BANCO['p'][id1]['zzfeio'] = {'n': 'Feioso', 'ts': 9, 'av': 'a10', 'f': {'0': {'t': 20000, 'j': 30}}}
+    p.evaluate("atualizarLobby()"); p.wait_for_timeout(500)
+    check(p.locator('#lbRank .rk.eu .rkMais').count() == 0 and p.locator('#lbRank .rk:not(.eu) .rkMais').count() == 1, 'cada jogador da sala tem o botão denunciar/bloquear (menos eu)')
+    p.click('#lbRank .rk:not(.eu) .rkMais'); p.wait_for_timeout(300)
+    check(aberta(p, 'denuncia') and 'Feioso' in p.inner_text('#dnNome') and not aberta(p, 'jog'), 'o botão abre denunciar/bloquear (sem abrir as estatísticas)')
+    p.check('[name=dnMot][value=trapaca]'); p.click('#dnEnviar'); p.wait_for_timeout(600)
+    dens = list((BANCO.get('den') or {}).values())
+    check(len(dens) == 1 and dens[0]['alvo'] == 'zzfeio' and dens[0]['motivo'] == 'trapaca' and dens[0]['sala'] == id1 and dens[0]['por'] == 'u123' and 'enviada' in p.inner_text('#dnAviso'), 'denúncia enviada para a moderação: ' + json.dumps(dens))
+    check(p.is_disabled('#dnEnviar'), 'não dá para denunciar a mesma pessoa duas vezes')
+    p.click('#dnBloquear'); p.wait_for_timeout(300)
+    check(p.evaluate("bloqueado('zzfeio')") and 'Jogador bloqueado' in p.inner_text('#lbRank') and 'Feioso' not in p.inner_text('#lbRank'), 'bloquear esconde o nome na sala')
+    p.screenshot(path=SAIDA + 'denuncia.png')
+    p.click('[data-close=denuncia]'); p.evaluate("fecharTodos(); abrir('splash'); abrirConta()"); p.wait_for_timeout(300)
+    p.evaluate("document.querySelector('#cnSecBloq').open = true"); p.wait_for_timeout(150)
+    check(p.is_visible('#cnSecBloq') and 'Feioso' in p.inner_text('#cnBloqLista'), 'Meu perfil lista os bloqueados')
+    p.click('#cnBloqLista button'); p.wait_for_timeout(200)
+    check(not p.evaluate("bloqueado('zzfeio')") and p.is_hidden('#cnSecBloq'), 'desbloquear pelo perfil')
+    p.evaluate("fecharTodos(); abrir('splash')"); p.click('#hPos'); p.wait_for_timeout(900)
+    check(p.locator('#rkLista .rk.eu .rkMais').count() == 0 and p.locator('#rkLista .rk:not(.eu) .rkMais').count() > 0, 'ranking geral também tem denunciar/bloquear')
+    p.locator('#rkLista .rk:not(.eu) .rkMais').first.click(); p.wait_for_timeout(200); p.click('#dnBloquear'); p.wait_for_timeout(300)
+    check(p.locator('#rkLista .rk.bloq').count() == 1, 'bloquear no ranking geral esconde a pessoa'); p.evaluate("bloq = {}; store.set('bloq', bloq)"); p.evaluate("fecharTodos(); abrir('splash')")
     c.close()
 
     print('Aviso ao abrir o jogo')

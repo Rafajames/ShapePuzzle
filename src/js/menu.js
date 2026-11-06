@@ -158,3 +158,22 @@ $('#btnInstalar').onclick = async () => {
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 
+
+/* ---- Voltar do aparelho (deslizar da borda ou botão voltar): volta uma tela, nunca fecha o jogo ----
+   Guardamos sempre uma entrada extra no histórico; quando o aparelho "volta", fechamos a janela de cima
+   (ou voltamos à tela inicial) e guardamos a entrada de novo. */
+function armarVoltar(){ try{ history.pushState({sp: 1}, '', location.href); }catch(e){} }
+function voltarUmaTela(){
+  const abertos = [...document.querySelectorAll('.ov.on')].filter(o => o.id !== 'ov-splash').sort((a, b) => (b._ordem || 0) - (a._ordem || 0));
+  if (abertos.length){
+    const o = abertos[0], x = o.querySelector('[data-close]');
+    if (x && !x.hidden) x.click(); else o.classList.remove('on');
+    return true;
+  }
+  if (!$('#ov-splash').classList.contains('on')){ irInicio(); return true; }
+  return false;     /* já está na tela inicial: fica nela */
+}
+addEventListener('popstate', () => {
+  if (location.hash.length > 1) return;     /* abrir um link do jogo (fase, convite) não é "voltar" */
+  voltarUmaTela(); armarVoltar();
+});

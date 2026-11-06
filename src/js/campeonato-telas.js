@@ -147,6 +147,7 @@ function renderLobby(){
   }
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
   const geral = ehGeral(), dono = souDono(), vazio = n === 0;
+  $('#lbDenunciar').hidden = geral || dono;
   if (geral){ $('#lbEntrar').hidden = true; $('#lbConvidar').hidden = true; if (!eu) aviso('#lbAviso', 'Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.', 'erro'); } else $('#lbConvidar').hidden = false;
   $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid || geral; if (dono){ $('#lbSouOrgForm').hidden = true; }
   $('#lbEditar').disabled = !vazio;
@@ -163,15 +164,17 @@ function renderLobby(){
   const rk = rankear(c, CP.jogs), caixa = $('#lbRank'); caixa.innerHTML = '';
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
-    const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
+    const meu = r.key === key, bl = !meu && bloqueado(r.key), nome = bl ? tr('Jogador bloqueado') : r.nome;
+    const d = mk('div', 'rk' + (meu ? ' eu' : '') + (bl ? ' bloq' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-    if (r.av) d.appendChild(avatarEl(visualDe(r), 24));
-    d.append(mk('span', 'nm', r.nome),
+    if (r.av) d.appendChild(avatarEl(bl ? {av: 'p1'} : visualDe(r), 24));
+    d.append(mk('span', 'nm', nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
-    linhaClicavel(d, r.nome, () => {
+    if (!meu) d.appendChild(botaoDenuncia(Object.assign({tipo: 'jogador', chave: r.key, sala: CP.id}, visualDe(r), {nome: r.nome})));
+    linhaClicavel(d, nome, () => {
       const chaves = Object.keys(CP.jogs), N = c.fases.length;
       const todos = chaves.map(k => Array.from({length: N}, (_, i) => { const x = (CP.jogs[k].f || {})[i]; return x && x.t > 0 ? [x.t, x.j || 0] : null; }));
-      abrirJogador(r.nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
+      abrirJogador(nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
     });
     caixa.appendChild(d);
   });

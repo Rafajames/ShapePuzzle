@@ -431,6 +431,7 @@
     <div class="acts">
       <button class="btn" id="lbAtualizar" data-i="reset">Atualizar</button>
       <button class="btn" id="lbConvidar" data-i="share">Convidar</button>
+      <button class="btn sm" id="lbDenunciar" data-i="chat">Denunciar</button>
     </div>
   </div>
 </div>
@@ -546,6 +547,10 @@
         <ul class="cnOrigem" id="cnOrigem"></ul>
         <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
       </div></details>
+      <details class="sec" id="cnSecBloq" hidden><summary data-i="lock"><span id="cnTitBloq">Jogadores bloqueados</span></summary><div class="sb">
+        <p class="cnDica">Só neste aparelho. Desbloqueie quando quiser.</p>
+        <div id="cnBloqLista"></div>
+      </div></details>
       <div class="cnCupomBox" id="cnCupomBox">
         <h2>Cupom</h2>
         <p class="cnDica">Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.</p>
@@ -567,6 +572,27 @@
       <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <p class="aviso" id="cnAviso"></p>
+  </div>
+</div>
+
+<!-- Denunciar ou bloquear -->
+<div class="ov" id="ov-denuncia">
+  <div class="card">
+    <button class="ib x" data-close="denuncia" data-i="close" aria-label="Fechar"></button>
+    <h1 id="dnTitulo">Denunciar ou bloquear</h1>
+    <div class="dnQuem"><span id="dnAv"></span><b id="dnNome"></b></div>
+    <h2>Denunciar</h2>
+    <p class="cnDica">A denúncia vai para a moderação do jogo. A pessoa denunciada não fica sabendo quem denunciou.</p>
+    <label class="row"><input type="radio" name="dnMot" value="nome" checked> Nome ou imagem ofensiva</label>
+    <label class="row" id="dnMotTrapaca"><input type="radio" name="dnMot" value="trapaca"> Trapaça (resultado impossível)</label>
+    <label class="row"><input type="radio" name="dnMot" value="outro"> Outro motivo</label>
+    <div class="acts"><button class="btn pri" id="dnEnviar" data-i="send">Enviar denúncia</button></div>
+    <div id="dnBloqBox">
+      <h2>Bloquear</h2>
+      <p class="cnDica" id="dnBloqTxt"></p>
+      <div class="acts"><button class="btn" id="dnBloquear" data-i="lock"> Bloquear</button></div>
+    </div>
+    <p class="aviso" id="dnAviso" aria-live="polite"></p>
   </div>
 </div>
 
@@ -634,6 +660,6 @@
 
 @@script qr-code.js
 @@idiomas en.js es.js
-@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js avatares.js conta.js ranking.js inicio.js
+@@script =LOGIC-START logica-fases.js logica-campeonato.js logica-progresso.js logica-conta.js logica-offline.js =LOGIC-END fases.js utilidades.js idiomas.js acessibilidade.js audio.js estado.js andamento.js tabuleiro.js ajuda.js jogadas.js festa.js entrada.js tutorial.js compartilhar.js menu.js infinito.js fases-geradas.js desafios.js estatisticas.js offline.js backup.js atualizacao.js editor.js campeonato.js campeonato-telas.js avatares.js conta.js ranking.js denuncias.js inicio.js
 </body>
 </html>

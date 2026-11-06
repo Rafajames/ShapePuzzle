@@ -234,7 +234,7 @@ function montarConta(){
   [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
-function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
+function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); montarBloqueados(); abrir('conta'); }
 
 /* ---------- Firebase (carregado só quando precisa) ---------- */
 const carregarScript = src => new Promise((ok, no) => {

@@ -40,4 +40,7 @@ else if (!linkInicial && !andamento && alvoB.i >= FASES_FIXAS && !fasesGer[alvoB
 } else carregar(linkInicial || (andamento && andamento.cur) || alvoB);
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 renderInicio();
+/* os links do jogo já foram lidos: limpa o endereço e prepara o "voltar" do aparelho */
+try{ if (location.hash) history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+armarVoltar();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};

@@ -36,7 +36,7 @@ Perguntas fixas:
 - **Classificação indicativa (IARC):** sem violência, sem conteúdo sexual, sem apostas com dinheiro real (estrelas são virtuais e não compram nada com dinheiro); marque que usuários veem apelidos de outros usuários.
 - **Anúncios:** o app contém anúncios (premiados, só quando a pessoa escolhe assistir).
 - **Acesso ao app:** todo o jogo funciona sem login; não é preciso dar conta de teste ao revisor.
-- **Conteúdo gerado por usuários:** apelidos e nomes de campeonatos. Exigências do Google: termos aceitos antes de criar conta (feito), **denunciar** e **bloquear** dentro do app (**fazer junto com o ranking e os amigos, antes de publicar**) e moderação contínua. Já existe filtro de apelidos ofensivos.
+- **Conteúdo gerado por usuários:** apelidos e nomes de campeonatos. Exigências do Google: termos aceitos antes de criar conta (feito), **denunciar** e **bloquear** dentro do app (**feito**: botão ⋯ nos rankings; ver [moderacao.md](moderacao.md)) e moderação contínua. Já existe filtro de apelidos ofensivos.
 - **Compras:** se um dia vender estrelas ou itens por dinheiro, é obrigatório usar o Google Play Billing; estrelas ganhas jogando ou por anúncio não têm esse requisito.
 - **Europa:** declarar a situação de "comerciante" (DSA) se o app tiver monetização; consentimento de anúncios (formulário do Google) para Europa e Reino Unido.
 

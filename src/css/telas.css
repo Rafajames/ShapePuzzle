@@ -259,3 +259,9 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnCupomBox h2{margin:0 0 2px}
 .cnCupomBox .row{margin-top:8px}
 #cnCupom{text-transform:uppercase;letter-spacing:.08em}
+/* denunciar e bloquear */
+.rk .rkMais{width:32px;height:32px;min-width:32px;padding:0;margin-left:4px;opacity:.75;background:transparent;border-color:transparent;box-shadow:none}
+.rk .rkMais:hover{opacity:1}
+.rk .rkMais svg{width:18px;height:18px}
+.rk.bloq .nm{color:var(--mut);font-style:italic}
+.dnQuem{display:flex;align-items:center;gap:8px;margin:6px 0 2px;font-size:17px}

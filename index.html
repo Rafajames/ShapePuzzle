@@ -448,6 +448,12 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnCupomBox h2{margin:0 0 2px}
 .cnCupomBox .row{margin-top:8px}
 #cnCupom{text-transform:uppercase;letter-spacing:.08em}
+/* denunciar e bloquear */
+.rk .rkMais{width:32px;height:32px;min-width:32px;padding:0;margin-left:4px;opacity:.75;background:transparent;border-color:transparent;box-shadow:none}
+.rk .rkMais:hover{opacity:1}
+.rk .rkMais svg{width:18px;height:18px}
+.rk.bloq .nm{color:var(--mut);font-style:italic}
+.dnQuem{display:flex;align-items:center;gap:8px;margin:6px 0 2px;font-size:17px}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -1101,6 +1107,7 @@ html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e)
     <div class="acts">
       <button class="btn" id="lbAtualizar" data-i="reset">Atualizar</button>
       <button class="btn" id="lbConvidar" data-i="share">Convidar</button>
+      <button class="btn sm" id="lbDenunciar" data-i="chat">Denunciar</button>
     </div>
   </div>
 </div>
@@ -1216,6 +1223,10 @@ html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e)
         <ul class="cnOrigem" id="cnOrigem"></ul>
         <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
       </div></details>
+      <details class="sec" id="cnSecBloq" hidden><summary data-i="lock"><span id="cnTitBloq">Jogadores bloqueados</span></summary><div class="sb">
+        <p class="cnDica">Só neste aparelho. Desbloqueie quando quiser.</p>
+        <div id="cnBloqLista"></div>
+      </div></details>
       <div class="cnCupomBox" id="cnCupomBox">
         <h2>Cupom</h2>
         <p class="cnDica">Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.</p>
@@ -1237,6 +1248,27 @@ html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e)
       <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <p class="aviso" id="cnAviso"></p>
+  </div>
+</div>
+
+<!-- Denunciar ou bloquear -->
+<div class="ov" id="ov-denuncia">
+  <div class="card">
+    <button class="ib x" data-close="denuncia" data-i="close" aria-label="Fechar"></button>
+    <h1 id="dnTitulo">Denunciar ou bloquear</h1>
+    <div class="dnQuem"><span id="dnAv"></span><b id="dnNome"></b></div>
+    <h2>Denunciar</h2>
+    <p class="cnDica">A denúncia vai para a moderação do jogo. A pessoa denunciada não fica sabendo quem denunciou.</p>
+    <label class="row"><input type="radio" name="dnMot" value="nome" checked> Nome ou imagem ofensiva</label>
+    <label class="row" id="dnMotTrapaca"><input type="radio" name="dnMot" value="trapaca"> Trapaça (resultado impossível)</label>
+    <label class="row"><input type="radio" name="dnMot" value="outro"> Outro motivo</label>
+    <div class="acts"><button class="btn pri" id="dnEnviar" data-i="send">Enviar denúncia</button></div>
+    <div id="dnBloqBox">
+      <h2>Bloquear</h2>
+      <p class="cnDica" id="dnBloqTxt"></p>
+      <div class="acts"><button class="btn" id="dnBloquear" data-i="lock"> Bloquear</button></div>
+    </div>
+    <p class="aviso" id="dnAviso" aria-live="polite"></p>
   </div>
 </div>
 
@@ -1731,6 +1763,27 @@ en: {
   "Alien": "Alien",
   "Unicórnio": "Unicorn",
   "Dragão": "Dragon",
+  "Denunciar ou bloquear {nome}": "Report or block {nome}",
+  "Denunciar ou bloquear": "Report or block",
+  "Denunciar campeonato": "Report championship",
+  "Você já denunciou. Obrigado!": "You already reported this. Thank you!",
+  "Desbloquear": "Unblock",
+  "Bloquear": "Block",
+  "Essa pessoa está bloqueada neste aparelho.": "This person is blocked on this device.",
+  "O nome e o avatar dessa pessoa deixam de aparecer para você nos rankings.": "This person's name and avatar will no longer show for you in rankings.",
+  "Enviando…": "Sending…",
+  "Denúncia enviada. Obrigado! A moderação vai analisar.": "Report sent. Thank you! Moderation will review it.",
+  "Bloqueado. Você não vai mais ver essa pessoa nos rankings.": "Blocked. You won't see this person in rankings anymore.",
+  "Desbloqueado.": "Unblocked.",
+  "Jogadores bloqueados": "Blocked players",
+  "Jogador bloqueado": "Blocked player",
+  "Denunciar": "Report",
+  "A denúncia vai para a moderação do jogo. A pessoa denunciada não fica sabendo quem denunciou.": "The report goes to the game's moderation. The reported person won't know who reported them.",
+  "Nome ou imagem ofensiva": "Offensive name or image",
+  "Trapaça (resultado impossível)": "Cheating (impossible result)",
+  "Outro motivo": "Other reason",
+  "Enviar denúncia": "Send report",
+  "Só neste aparelho. Desbloqueie quando quiser.": "Only on this device. Unblock whenever you want.",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2592,6 +2645,27 @@ es: {
   "Alien": "Alien",
   "Unicórnio": "Unicornio",
   "Dragão": "Dragón",
+  "Denunciar ou bloquear {nome}": "Denunciar o bloquear a {nome}",
+  "Denunciar ou bloquear": "Denunciar o bloquear",
+  "Denunciar campeonato": "Denunciar torneo",
+  "Você já denunciou. Obrigado!": "Ya lo denunciaste. ¡Gracias!",
+  "Desbloquear": "Desbloquear",
+  "Bloquear": "Bloquear",
+  "Essa pessoa está bloqueada neste aparelho.": "Esta persona está bloqueada en este dispositivo.",
+  "O nome e o avatar dessa pessoa deixam de aparecer para você nos rankings.": "El nombre y el avatar de esta persona dejarán de aparecerte en los rankings.",
+  "Enviando…": "Enviando…",
+  "Denúncia enviada. Obrigado! A moderação vai analisar.": "Denuncia enviada. ¡Gracias! La moderación la revisará.",
+  "Bloqueado. Você não vai mais ver essa pessoa nos rankings.": "Bloqueado. Ya no verás a esta persona en los rankings.",
+  "Desbloqueado.": "Desbloqueado.",
+  "Jogadores bloqueados": "Jugadores bloqueados",
+  "Jogador bloqueado": "Jugador bloqueado",
+  "Denunciar": "Denunciar",
+  "A denúncia vai para a moderação do jogo. A pessoa denunciada não fica sabendo quem denunciou.": "La denuncia va a la moderación del juego. La persona denunciada no sabrá quién la denunció.",
+  "Nome ou imagem ofensiva": "Nombre o imagen ofensiva",
+  "Trapaça (resultado impossível)": "Trampa (resultado imposible)",
+  "Outro motivo": "Otro motivo",
+  "Enviar denúncia": "Enviar denuncia",
+  "Só neste aparelho. Desbloqueie quando quiser.": "Solo en este dispositivo. Desbloquea cuando quieras.",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3939,6 +4013,7 @@ const ICONES = {
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   chat:'<path d="M4 5h16v11H9l-5 4V5z"/>',
+  dots:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
   send:'<path d="M21 3L3 11l7 3 3 7 8-18z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
 };
@@ -3951,6 +4026,7 @@ function toast(msg){
   const el = $('#toast'); el.textContent = tr(msg); el.classList.add('on');
   clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
 }
+let ordemOv = 0;
 /* Diálogos: ao abrir, o foco vai para dentro dele e o fundo fica inerte; ao fechar, o foco volta para onde estava. */
 function prepararDialogos(){
   document.querySelectorAll('.ov').forEach(o => {
@@ -3962,7 +4038,7 @@ function prepararDialogos(){
   const sinc = () => {
     const agora = new Set([...document.querySelectorAll('.ov.on')]);
     let novo = null;
-    agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; novo = o; } });
+    agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; o._ordem = ++ordemOv; novo = o; } });
     $('#app').inert = agora.size > 0;
     if (novo){
       requestAnimationFrame(() => { const card = novo.querySelector('.card'); const alvo = card && (card.querySelector('[data-close]') || card.querySelector('button:not([hidden]):not([disabled])')); if (alvo) alvo.focus({preventScroll: true}); else if (card){ card.tabIndex = -1; card.focus({preventScroll: true}); } });
@@ -5405,6 +5481,25 @@ $('#btnInstalar').onclick = async () => {
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 
+
+/* ---- Voltar do aparelho (deslizar da borda ou botão voltar): volta uma tela, nunca fecha o jogo ----
+   Guardamos sempre uma entrada extra no histórico; quando o aparelho "volta", fechamos a janela de cima
+   (ou voltamos à tela inicial) e guardamos a entrada de novo. */
+function armarVoltar(){ try{ history.pushState({sp: 1}, '', location.href); }catch(e){} }
+function voltarUmaTela(){
+  const abertos = [...document.querySelectorAll('.ov.on')].filter(o => o.id !== 'ov-splash').sort((a, b) => (b._ordem || 0) - (a._ordem || 0));
+  if (abertos.length){
+    const o = abertos[0], x = o.querySelector('[data-close]');
+    if (x && !x.hidden) x.click(); else o.classList.remove('on');
+    return true;
+  }
+  if (!$('#ov-splash').classList.contains('on')){ irInicio(); return true; }
+  return false;     /* já está na tela inicial: fica nela */
+}
+addEventListener('popstate', () => {
+  if (location.hash.length > 1) return;     /* abrir um link do jogo (fase, convite) não é "voltar" */
+  voltarUmaTela(); armarVoltar();
+});
 /* ======================= Modo infinito =======================
    Fases novas geradas na hora (solução única), em segundo plano para o jogo não travar. */
 const NIVEIS_INF = {
@@ -5976,7 +6071,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.3';
+const VERSAO = '2026.11.06.4';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -6393,6 +6488,7 @@ function renderLobby(){
   }
   $('#lbEntrar').hidden = !!eu; $('#lbJogo').hidden = !eu;
   const geral = ehGeral(), dono = souDono(), vazio = n === 0;
+  $('#lbDenunciar').hidden = geral || dono;
   if (geral){ $('#lbEntrar').hidden = true; $('#lbConvidar').hidden = true; if (!eu) aviso('#lbAviso', 'Entre pelo botão “Entrar no campeonato da semana”, na tela Campeonatos.', 'erro'); } else $('#lbConvidar').hidden = false;
   $('#lbOrg').hidden = !dono; $('#lbSouOrg').hidden = dono || !c.uid || geral; if (dono){ $('#lbSouOrgForm').hidden = true; }
   $('#lbEditar').disabled = !vazio;
@@ -6409,15 +6505,17 @@ function renderLobby(){
   const rk = rankear(c, CP.jogs), caixa = $('#lbRank'); caixa.innerHTML = '';
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
   rk.forEach(r => {
-    const d = mk('div', 'rk' + (r.key === key ? ' eu' : ''));
+    const meu = r.key === key, bl = !meu && bloqueado(r.key), nome = bl ? tr('Jogador bloqueado') : r.nome;
+    const d = mk('div', 'rk' + (meu ? ' eu' : '') + (bl ? ' bloq' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-    if (r.av) d.appendChild(avatarEl(visualDe(r), 24));
-    d.append(mk('span', 'nm', r.nome),
+    if (r.av) d.appendChild(avatarEl(bl ? {av: 'p1'} : visualDe(r), 24));
+    d.append(mk('span', 'nm', nome),
       mk('span', 'tm', r.feitas + '/' + c.fases.length + (r.feitas ? ' · ' + fmtTempo(r.tempo) : '')));
-    linhaClicavel(d, r.nome, () => {
+    if (!meu) d.appendChild(botaoDenuncia(Object.assign({tipo: 'jogador', chave: r.key, sala: CP.id}, visualDe(r), {nome: r.nome})));
+    linhaClicavel(d, nome, () => {
       const chaves = Object.keys(CP.jogs), N = c.fases.length;
       const todos = chaves.map(k => Array.from({length: N}, (_, i) => { const x = (CP.jogs[k].f || {})[i]; return x && x.t > 0 ? [x.t, x.j || 0] : null; }));
-      abrirJogador(r.nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
+      abrirJogador(nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
     });
     caixa.appendChild(d);
   });
@@ -6890,7 +6988,7 @@ function montarConta(){
   [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
-function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
+function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); montarBloqueados(); abrir('conta'); }
 
 /* ---------- Firebase (carregado só quando precisa) ---------- */
 const carregarScript = src => new Promise((ok, no) => {
@@ -7136,13 +7234,17 @@ async function buscarRanking(){
   return posicaoRanking(lista, conta ? conta.uid : '', RK_BUSCA);
 }
 function linhaRanking(r, euUid){
-  const d = mk('div', 'rk' + (r.uid === euUid ? ' eu' : ''));
+  const eu = r.uid === euUid, bl = !eu && bloqueado(r.uid);
+  const d = mk('div', 'rk' + (eu ? ' eu' : '') + (bl ? ' bloq' : ''));
   d.append(mk('span', 'pos', r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
-  d.appendChild(avatarEl(visualDe(r), 24));
-  d.append(mk('span', 'nm', r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
+  d.appendChild(avatarEl(bl ? {av: 'p1'} : visualDe(r), 24));
+  d.append(mk('span', 'nm', bl ? tr('Jogador bloqueado') : r.nome), mk('span', 'tm', qtd(r.n, ' fase', ' fases')));
+  if (!eu) d.appendChild(botaoDenuncia(Object.assign({tipo: 'jogador', chave: r.uid}, visualDe(r), {nome: r.nome})));
   return d;
 }
+const Rk = {ultimo: null};
 function renderRanking(res){
+  Rk.ultimo = res;
   const l = $('#rkLista'); l.innerHTML = '';
   const euUid = conta ? conta.uid : '';
   if (!res.lista.length) l.innerHTML = '<p class="vazio2">' + tr('Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.') + '</p>';
@@ -7229,6 +7331,83 @@ $('#cpSemana').onclick = () => entrarGeral('#cpAviso');
 $('#rkSemana').onclick = () => entrarGeral('#rkAviso');
 renderPosicao();
 if (contaPronta()) setTimeout(() => { if (!rkAvisado){ rkAvisado = true; atualizarPosicao(true); } }, 3500);
+/* ======================= Denunciar e bloquear =======================
+   Qualquer pessoa pode denunciar um jogador (apelido, avatar) ou um campeonato. A denúncia vai para "den" no banco,
+   onde só o dono do jogo lê (pelo console do Firebase). Bloquear é só neste aparelho: o nome e o avatar somem dos rankings. */
+let bloq = store.get('bloq', {});                 /* {chave: nome} */
+let denunciados = store.get('denunciados', []);   /* "tipo:alvo" já denunciados (uma vez basta) */
+/* a chave de um jogador: começo do id da conta (salas gerais e ranking) ou a chave do nome (salas entre amigos) */
+const chaveBloq = k => String(k || '').slice(0, 24);
+const bloqueado = k => !!k && Object.prototype.hasOwnProperty.call(bloq, chaveBloq(k));
+const Den = {alvo: null};
+/* botão "⋯" que abre denunciar/bloquear para uma linha de ranking */
+function botaoDenuncia(alvo){
+  const b = icBtn('dots', tr('Denunciar ou bloquear {nome}', {nome: alvo.nome}), e => { e.stopPropagation(); abrirDenuncia(alvo); });
+  b.classList.add('rkMais'); b.onkeydown = e => e.stopPropagation();
+  return b;
+}
+/* alvo = {tipo: 'jogador'|'camp', chave, nome, sala?, av?, mold?, fun?} */
+function abrirDenuncia(alvo){
+  Den.alvo = alvo;
+  const jog = alvo.tipo === 'jogador';
+  $('#dnTitulo').textContent = tr(jog ? 'Denunciar ou bloquear' : 'Denunciar campeonato');
+  $('#dnAv').textContent = ''; if (jog) $('#dnAv').appendChild(avatarEl(visualDe(alvo), 40));
+  $('#dnNome').textContent = alvo.nome;
+  $('#dnBloqBox').hidden = !jog;
+  document.querySelectorAll('[name=dnMot]').forEach((r, i) => { r.checked = i === 0; });
+  $('#dnMotTrapaca').hidden = !jog;
+  const ja = denunciados.includes(alvo.tipo + ':' + chaveBloq(alvo.chave));
+  $('#dnEnviar').disabled = ja;
+  aviso('#dnAviso', ja ? 'Você já denunciou. Obrigado!' : '');
+  renderBloq();
+  abrir('denuncia');
+}
+function renderBloq(){
+  const a = Den.alvo; if (!a || a.tipo !== 'jogador') return;
+  const b = bloqueado(a.chave);
+  $('#dnBloquear').lastChild.textContent = ' ' + tr(b ? 'Desbloquear' : 'Bloquear');
+  $('#dnBloqTxt').textContent = tr(b ? 'Essa pessoa está bloqueada neste aparelho.' : 'O nome e o avatar dessa pessoa deixam de aparecer para você nos rankings.');
+}
+async function enviarDenuncia(){
+  const a = Den.alvo; if (!a) return;
+  const motivo = ([...document.querySelectorAll('[name=dnMot]')].find(r => r.checked) || {}).value || 'outro';
+  $('#dnEnviar').disabled = true; aviso('#dnAviso', 'Enviando…');
+  try{
+    let tk = null, por = '';
+    if (conta){ try{ tk = await contaToken(); if (tk) por = conta.uid; }catch(e){} }
+    await nuvem(cpDb, 'POST', 'den', {tipo: a.tipo, alvo: chaveBloq(a.chave), sala: a.sala || '', nome: String(a.nome || '').slice(0, 40), motivo, ts: Date.now(), por}, tk || undefined);
+    denunciados = [...denunciados, a.tipo + ':' + chaveBloq(a.chave)].slice(-300); store.set('denunciados', denunciados);
+    aviso('#dnAviso', 'Denúncia enviada. Obrigado! A moderação vai analisar.', 'ok');
+  }catch(e){ $('#dnEnviar').disabled = false; aviso('#dnAviso', msgNuvem(e), 'erro'); }
+}
+function alternarBloqueio(){
+  const a = Den.alvo; if (!a || a.tipo !== 'jogador') return;
+  const k = chaveBloq(a.chave);
+  if (bloqueado(k)) delete bloq[k]; else bloq[k] = String(a.nome || '').slice(0, 20);
+  store.set('bloq', bloq); renderBloq();
+  aviso('#dnAviso', bloqueado(k) ? 'Bloqueado. Você não vai mais ver essa pessoa nos rankings.' : 'Desbloqueado.', 'ok');
+  atualizarListasBloq();
+}
+/* redesenha o que estiver aberto (ranking geral, sala, lista de bloqueados) */
+function atualizarListasBloq(){
+  if ($('#ov-lobby').classList.contains('on') && CP.camp) renderLobby();
+  if ($('#ov-rank').classList.contains('on') && Rk.ultimo) renderRanking(Rk.ultimo);
+  if ($('#ov-conta').classList.contains('on')) montarBloqueados();
+}
+/* lista de bloqueados na tela Meu perfil */
+function montarBloqueados(){
+  const ks = Object.keys(bloq), l = $('#cnBloqLista'); l.textContent = '';
+  $('#cnSecBloq').hidden = !ks.length;
+  $('#cnTitBloq').textContent = tr('Jogadores bloqueados') + ' (' + ks.length + ')';
+  ks.forEach(k => {
+    const d = mk('div', 'cust');
+    d.append(mk('span', '', bloq[k] || k), icBtn('close', tr('Desbloquear') + ': ' + (bloq[k] || k), () => { delete bloq[k]; store.set('bloq', bloq); montarBloqueados(); atualizarListasBloq(); }));
+    l.appendChild(d);
+  });
+}
+$('#dnEnviar').onclick = enviarDenuncia;
+$('#dnBloquear').onclick = alternarBloqueio;
+$('#lbDenunciar').onclick = () => { const c = CP.camp; if (c) abrirDenuncia({tipo: 'camp', chave: CP.id, nome: c.nome, sala: CP.id}); };
 /* ======================= Início ======================= */
 /* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){
@@ -7271,6 +7450,9 @@ else if (!linkInicial && !andamento && alvoB.i >= FASES_FIXAS && !fasesGer[alvoB
 } else carregar(linkInicial || (andamento && andamento.cur) || alvoB);
 if (andamento && retomarAndamento(andamento) && !CP.convite){ $('#splashMsg').textContent = tr('Sua fase em andamento foi guardada. Toque em Jogar para continuar.'); $('#splashMsg').hidden = false; }
 renderInicio();
+/* os links do jogo já foram lidos: limpa o endereço e prepara o "voltar" do aparelho */
+try{ if (location.hash) history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+armarVoltar();
 window.__sp = {S, carregar, tentarColocar, dicaDe, gerarFase, BUILTIN, urlFase};
 </script>
 </body>
