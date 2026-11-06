@@ -23,7 +23,7 @@ $('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
 /* Tela inicial: a próxima fase em destaque (miniatura, progresso, Continuar), a fase do dia e os outros modos. */
 function renderInicio(){
   if (window.__pronto){ renderConta(); renderPosicao(); }
-  renderDiaInicio();
+  renderDiaInicio(); renderMissoesInicio(); renderNatalInicio();
   if (!S.jogo) return;
   const volta = prog.done.length > 0 || !!andamento, c = S.cur, j = S.jogo;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
@@ -101,7 +101,7 @@ function abrirMenu(){
   $('#chkMusica').checked = Som.musica(); $('#chkSfx').checked = Som.sfx(); $('#rngVol').value = Math.round(Som.volume() * 100);
   $('#selHumor').value = humorPref;
   $('#selPecas').value = String(pecasPref);
-  $('#chkVibra').checked = vibraOn; $('#rowVibra').hidden = !navigator.vibrate;
+  $('#chkVibra').checked = vibraOn; $('#rowVibra').hidden = !navigator.vibrate; renderLembretes();
   renderAtualizacao(); msgAtualizacao('');
   $('#selIdioma').value = lang; $('#selTema').value = tema; $('#chkDalt').checked = !!a11y.dalt; $('#chkCont').checked = !!a11y.cont; $('#chkTexto').checked = !!a11y.texto; $('#chkMov').checked = !!a11y.mov;
   abrir('menu');

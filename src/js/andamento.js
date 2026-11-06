@@ -1,6 +1,6 @@
 /* ======================= Fase em andamento: guardada para continuar depois ======================= */
 /* Guarda onde cada peça está, o tempo e as jogadas. Ao abrir o jogo de novo, a fase volta como estava. Campeonato e corrida não entram. */
-const ANDA_TIPOS = ['b', 'c', 'd', 's', 'i'];
+const ANDA_TIPOS = ['b', 'c', 'd', 's', 'i', 'n'];
 function dadosAndamento(){
   const c = S.cur, j = S.jogo;
   if (!c || !j) return undefined;

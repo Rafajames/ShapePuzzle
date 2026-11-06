@@ -18,6 +18,14 @@ for (let i = 1; i <= N_AV_A; i++) item('av:a' + i, i <= 4 ? 'raro' : i <= 8 ? 'e
  ['galaxia', 'lendario'], ['ouro', 'lendario'], ['gelo', 'epico', 1], ['fogo', 'epico', 1], ['arco', 'lendario', 1]].forEach(([id, cat, q]) => item('mold:' + id, cat, q));
 [['', 'comum'], ['listras', 'comum'], ['bolinhas', 'comum'], ['xadrez', 'raro'], ['diagonal', 'raro'], ['ceu', 'raro'], ['estrelas', 'epico'], ['aurora', 'epico'],
  ['oceano', 'epico'], ['cosmos', 'lendario'], ['dourado', 'lendario']].forEach(([id, cat]) => item('fun:' + id, cat));
+/* cores das peças (só mudam o visual deste aparelho; não dão bônus) */
+[['padrao', 'comum'], ['pastel', 'raro'], ['terra', 'raro'], ['doce', 'epico'], ['neon', 'epico'], ['joia', 'lendario']].forEach(([id, cat]) => item('cor:' + id, cat));
+/* evento de Natal: presentes do calendário (dia → item) e um item à venda só em dezembro */
+const NATAL_PREMIOS = {7: 'fun:neve', 14: 'cor:natal', 21: 'mold:neve', 25: 'mold:natal'};
+const NATAL_EST = dia => dia === 25 ? 10 : 3, NATAL_DIAS = 25;
+Object.entries(NATAL_PREMIOS).forEach(([dia, k]) => { ITENS[k] = {cat: 'epico', premio: 'natal', dia: +dia}; });
+ITENS['fun:natal'] = {cat: 'epico', preco: PRECO_CAT.epico, ev: 'natal'};
+const eventoAtivo = (ev, hoje) => ev === 'natal' && String(hoje).slice(5, 7) === '12';
 const catItem = chave => (ITENS[chave] || {}).cat || 'comum';
 /* bônus por fase vencida com o visual equipado ({av, mold, fun}) */
 const bonusEquipado = e => !e ? 0 : BONUS_CAT[catItem('av:' + (e.av || ''))] + BONUS_CAT[catItem('mold:' + (e.mold || ''))] + BONUS_CAT[catItem('fun:' + (e.fun || ''))];
@@ -54,7 +62,8 @@ function saldoConta(d){
 function origemEstrelas(d){
   const c = cartDe(d), m = medidasConta(d);
   return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'), cupons: somaPref(c.g, 'c:'),
-    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:') - somaPref(c.g, 'c:'), gastas: somaVals(c.s)};
+    missoes: somaPref(c.g, 'mis:'), natal: somaPref(c.g, 'nat:'),
+    outros: somaVals(c.g) - ['b:', 'w:', 'c:', 'mis:', 'nat:'].reduce((a, p) => a + somaPref(c.g, p), 0), gastas: somaVals(c.s)};
 }
 function itensDe(d){
   const c = cartDe(d), r = new Set(Object.keys(ITENS).filter(k => ITENS[k].livre));
@@ -68,11 +77,12 @@ function resgatarConquistas(d, hoje){
   novas.forEach(q => c.v.push(q.id));
   return {cart: c, novas, estrelas: novas.reduce((a, q) => a + q.est, 0)};
 }
-function comprarItem(d, chave){
+function comprarItem(d, chave, hoje){
   const it = ITENS[chave], c = cartDe(d);
   if (!it) return {erro: 'inexistente'};
   if (itensDe(d).has(chave)) return {erro: 'ja-tem'};
   if (!it.preco) return {erro: 'so-conquista'};
+  if (it.ev && !eventoAtivo(it.ev, hoje)) return {erro: 'evento'};
   if (saldoConta(d) < it.preco) return {erro: 'saldo', falta: it.preco - saldoConta(d)};
   c.s['i:' + chave] = it.preco;
   return {cart: c, preco: it.preco};
@@ -119,6 +129,48 @@ function limparCart(c){
   }
   if (Array.isArray(c.v)) o.v = [...new Set(c.v.filter(id => CONQUISTAS.some(q => q.id === id)))];
   return o;
+}
+
+/* ---- Missões do dia: 3 por dia (sorteadas pela data), cada uma com prêmio; cumprir as 3 dá um bônus ----
+   ev = o que conta (vit: fase vencida, semDica, tres: 3 estrelas, rapida: em menos de 1 min, dia, inf, corrida) */
+const MISSOES = [
+  {id: 'v2', ev: 'vit', n: 2, est: 3}, {id: 'v4', ev: 'vit', n: 4, est: 6},
+  {id: 'sd2', ev: 'semDica', n: 2, est: 4}, {id: 'e1', ev: 'tres', n: 1, est: 3}, {id: 'e3', ev: 'tres', n: 3, est: 6},
+  {id: 'rap', ev: 'rapida', n: 1, est: 4}, {id: 'dia', ev: 'dia', n: 1, est: 3}, {id: 'inf', ev: 'inf', n: 1, est: 3}, {id: 'corr', ev: 'corrida', n: 1, est: 3}
+];
+const MISSAO_BONUS = 5;
+function missoesDoDia(hoje){
+  const rng = mulberry32((parseInt(String(hoje).replace(/-/g, ''), 10) || 1) * 31 + 7);
+  const sorteia = l => l[Math.floor(rng() * l.length)];
+  const r = [sorteia(MISSOES.filter(m => m.ev === 'vit'))];
+  while (r.length < 3){ const m = sorteia(MISSOES.filter(x => x.ev !== 'vit' && !r.some(y => y.ev === x.ev))); r.push(m); }
+  return r;
+}
+/* conta um evento; devolve a carteira com os prêmios novos e a lista do que foi cumprido agora */
+function contarMissao(est, cart0, hoje, ev, n){
+  const e = est && est.d === hoje ? {d: hoje, p: Object.assign({}, est.p)} : {d: hoje, p: {}};
+  const c = cartDe({cart: cart0}), lista = missoesDoDia(hoje), novas = [];
+  lista.forEach(m => {
+    if (m.ev !== ev) return;
+    const antes = e.p[m.id] || 0; e.p[m.id] = Math.min(m.n, antes + (n || 1));
+    const k = 'mis:' + hoje + ':' + m.id;
+    if (e.p[m.id] >= m.n && c.g[k] === undefined){ c.g[k] = m.est; novas.push(m); }
+  });
+  const kt = 'mis:' + hoje + ':todas';
+  let todas = false;
+  if (novas.length && c.g[kt] === undefined && lista.every(m => c.g['mis:' + hoje + ':' + m.id] !== undefined)){ c.g[kt] = MISSAO_BONUS; todas = true; }
+  return {est: e, cart: c, novas, todas};
+}
+/* Calendário de Natal: portas de 1 a 25 de dezembro; a de hoje e as que ficaram para trás podem ser abertas até o fim do mês */
+const natalDiaHoje = hoje => String(hoje).slice(5, 7) === '12' ? Math.min(NATAL_DIAS, +String(hoje).slice(8, 10)) : 0;
+const natalChave = (ano, dia) => 'nat:' + ano + '-' + String(dia).padStart(2, '0');
+function abrirPortaNatal(cart0, ano, dia){
+  const c = cartDe({cart: cart0}), k = natalChave(ano, dia);
+  if (c.g[k] !== undefined) return {cart: c, estrelas: 0, item: null, nova: false};
+  c.g[k] = NATAL_EST(dia);
+  const it = NATAL_PREMIOS[dia] || null;
+  if (it && c.s['i:' + it] === undefined) c.s['i:' + it] = 0;
+  return {cart: c, estrelas: NATAL_EST(dia), item: it, nova: true};
 }
 
 /* ---- Filtro simples de apelidos (palavrões e nomes que imitam o jogo) ---- */

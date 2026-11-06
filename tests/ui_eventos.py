@@ -1,0 +1,107 @@
+# Missões do dia, calendário de Natal, cores das peças e lembretes do app (Capacitor simulado).
+import os, sys, datetime
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SAIDA = os.path.join(RAIZ, 'tests', 'saida') + os.sep
+os.makedirs(SAIDA, exist_ok=True)
+from playwright.sync_api import sync_playwright
+URL = 'http://127.0.0.1:8765/index.html'
+falhas, erros = [], []
+def check(c, m):
+    print(('  ok   ' if c else '  FALHA ') + m)
+    if not c: falhas.append(m)
+INICIO = """try{localStorage.setItem('shapepuzzle.tuto',JSON.stringify({sel:true,giro:true,esp:true,fim:true}));
+localStorage.setItem('shapepuzzle.prog',JSON.stringify({max:5,done:[0,1,2,3,4]}));localStorage.setItem('shapepuzzle.lang',JSON.stringify('pt'))}catch(e){}"""
+APP = """window.__agendados = []; window.__perm = 'prompt';
+window.Capacitor = {isNativePlatform: () => true, Plugins: {App: {addListener: () => ({remove(){}})}, LocalNotifications: {
+  checkPermissions: async () => ({display: window.__perm}), requestPermissions: async () => { window.__pediu = (window.__pediu || 0) + 1; window.__perm = 'granted'; return {display: 'granted'}; },
+  cancel: async () => { window.__agendados = []; }, schedule: async o => { window.__agendados = o.notifications; return {notifications: o.notifications.map(n => ({id: n.id}))}; }}}};"""
+VENCER = "() => { const r = solucaoDe(S.jogo); r.passos.forEach(q => { q.peca.formato = q.o; tentarColocar(q.peca, q.px, q.py); }); }"
+def aberta(p, id): return p.evaluate("id => document.querySelector('#ov-'+id).classList.contains('on')", id)
+def novo(b, quando=None, extra=''):
+    c = b.new_context(locale='pt-BR', viewport={'width': 390, 'height': 844}); c.add_init_script(INICIO + extra)
+    p = c.new_page(); p.on('pageerror', lambda e: erros.append(str(e)))
+    if quando: p.clock.set_system_time(quando)
+    p.goto(URL); p.wait_for_timeout(700); return c, p
+with sync_playwright() as pw:
+    b = pw.chromium.launch()
+    print('Missões do dia')
+    c, p = novo(b, datetime.datetime(2026, 11, 10, 15, 0))
+    m = p.evaluate("missoesDoDia(dataHoje()).map(x => x.id)")
+    check(len(m) == 3 and len(set(m)) == 3 and m[0] in ('v2', 'v4'), 'três missões diferentes, a primeira é vencer fases: ' + str(m))
+    check(p.evaluate("missoesDoDia('2026-11-10').map(x=>x.id).join()") == p.evaluate("missoesDoDia('2026-11-10').map(x=>x.id).join()") and p.evaluate("missoesDoDia('2026-11-10').map(x=>x.id).join() !== missoesDoDia('2026-11-11').map(x=>x.id).join() || missoesDoDia('2026-11-12').map(x=>x.id).join() !== missoesDoDia('2026-11-11').map(x=>x.id).join()"), 'mesmas missões para todos no mesmo dia; mudam com o dia')
+    check(p.is_visible('#hMis') and '0 de 3' in p.inner_text('#hMisSub'), 'tela inicial mostra as missões: ' + p.inner_text('#hMisSub'))
+    s0 = p.evaluate("saldoAtual()")
+    p.click('#btnJogar'); p.evaluate("carregar({k:'b', i:0})"); p.wait_for_timeout(200); p.evaluate(VENCER); p.wait_for_timeout(1300)
+    p.evaluate("fecharTodos(); carregar({k:'b', i:1})"); p.wait_for_timeout(200); p.evaluate(VENCER); p.wait_for_timeout(1300)
+    soma = p.inner_text('#winSoma')
+    check(p.evaluate("cart.g['mis:' + dataHoje() + ':' + missoesDoDia(dataHoje())[0].id] !== undefined") if m[0] == 'v2' else p.evaluate("misEst.p.v4") == 2, 'vencer fases conta para a missão de vencer')
+    if m[0] == 'v2': check('Missões do dia' in soma, 'prêmio da missão aparece somado na vitória: ' + soma.replace('\n', ' | '))
+    check(p.evaluate("saldoAtual()") > s0, 'as estrelas sobem')
+    p.evaluate("fecharTodos(); irInicio()"); p.wait_for_timeout(200); p.click('#hMis'); p.wait_for_timeout(200)
+    check(aberta(p, 'missoes') and p.locator('#msLista li').count() == 3 and 'Missões novas em' in p.inner_text('#msSub'), 'tela das missões com as 3 e o tempo até as novas')
+    p.screenshot(path=SAIDA + 'missoes.png')
+    check(p.evaluate("(()=>{ const c0 = cart; misEst = null; const r = contarMissao(null, {g:{},s:{},v:[]}, '2026-11-10', 'vit', 9); return r.novas.length >= 1 })()"), 'lógica: contar e premiar')
+    c.close()
+
+    print('Calendário de Natal')
+    c, p = novo(b, datetime.datetime(2026, 11, 20, 15, 0))
+    check(p.is_hidden('#hNatal'), 'em novembro o calendário não aparece')
+    check(p.evaluate("!MOLDURAS.filter(id => itemVisivel('mold:' + id, itensDe(dadosAtuais()))).includes('natal')"), 'itens de Natal escondidos fora do evento')
+    c.close()
+    c, p = novo(b, datetime.datetime(2026, 12, 7, 10, 0))
+    check(p.is_visible('#hNatal') and 'Dia 7' in p.inner_text('#hNatalTag'), 'em dezembro aparece com a porta do dia')
+    p.click('#hNatal'); p.wait_for_timeout(200)
+    check(aberta(p, 'natal') and p.locator('#ntGrade .ntPorta').count() == 25 and p.locator('#ntGrade .ntPorta:disabled').count() == 18, '25 portas, as 18 futuras fechadas')
+    p.screenshot(path=SAIDA + 'natal.png')
+    s0 = p.evaluate("saldoAtual()")
+    p.locator('#ntGrade .ntPorta').nth(6).click(); p.wait_for_timeout(400)
+    check(p.evaluate("S.cur.k") == 'n' and 'Natal' in p.inner_text('#titulo'), 'porta abre a fase especial')
+    p.evaluate(VENCER); p.wait_for_timeout(1300)
+    check(p.evaluate("itensDe(dadosAtuais()).has('fun:neve')") and 'Noite de neve' in p.inner_text('#winTexto') and p.evaluate("saldoAtual()") >= s0 + 3, 'dia 7: +3 ★ e o presente (fundo Noite de neve)')
+    check('Calendário de Natal' in p.inner_text('#winSoma') and p.locator('#winActs .btn.pri').inner_text().strip() == 'Calendário de Natal', 'vitória soma o Natal e volta ao calendário')
+    p.screenshot(path=SAIDA + 'natal-vitoria.png')
+    p.evaluate("fecharTodos(); carregar({k:'n', ano: 2026, dia: 7})"); p.wait_for_timeout(200); s1 = p.evaluate("saldoAtual()"); p.evaluate(VENCER); p.wait_for_timeout(1300)
+    check(p.evaluate("cart.g['nat:2026-07']") == 3 and p.evaluate("saldoAtual()") - s1 < 3 + 1 + 20, 'a mesma porta não paga duas vezes')
+    p.evaluate("fecharTodos(); abrirConta('visual'); document.querySelector('#cnSecFun').open = true"); p.wait_for_timeout(200)
+    check(p.locator('#cnFundos button[data-item="fun:natal"]').count() == 1 and p.locator('#cnFundos button[data-item="fun:neve"]:not(.trava)').count() == 1, 'em dezembro: fundo Luzes de Natal à venda e Noite de neve já seu')
+    c.close()
+
+    print('Cores das peças')
+    c, p = novo(b, datetime.datetime(2026, 11, 20, 15, 0), "try{if(!localStorage.getItem('shapepuzzle.cart'))localStorage.setItem('shapepuzzle.cart',JSON.stringify({g:{'a:x':200},s:{},v:[]}))}catch(e){}")
+    p.evaluate("abrirConta('visual'); document.querySelector('#cnSecCor').open = true"); p.wait_for_timeout(200)
+    check(p.locator('#cnCores button').count() == 6, 'seis paletas no perfil (a de Natal só em dezembro)')
+    p.click('#cnCores button[data-item="cor:neon"]'); p.wait_for_timeout(200)
+    check(aberta(p, 'provador') and p.locator('#pvDepois .paleta').count() == 1 and 'não dão estrelas' in p.inner_text('#pvBonus'), 'provador mostra a paleta antes de comprar')
+    p.click('#pvComprar'); p.wait_for_timeout(300)
+    check(p.evaluate("paleta") == 'neon' and p.evaluate("COR[11]") == '#ff2bd6' and p.evaluate("store.get('paleta')") == 'neon', 'comprar aplica as cores nas peças')
+    p.evaluate("fecharTodos(); carregar({k:'b', i:2})"); p.wait_for_timeout(200)
+    check(p.evaluate("getComputedStyle(document.querySelector('#reserva .pc:not(.e)')).getPropertyValue('--c').trim()") in ('#00e5ff', '#45ff1f', '#ff2bd6', '#fff01f'), 'peças desenhadas com a paleta nova')
+    p.reload(); p.wait_for_timeout(600)
+    check(p.evaluate("paleta") == 'neon' and p.evaluate("COR[1]") == '#00e5ff', 'a escolha continua depois de abrir o jogo de novo')
+    p.screenshot(path=SAIDA + 'cores.png')
+    c.close()
+
+    print('Lembretes (app)')
+    c, p = novo(b, datetime.datetime(2026, 11, 20, 15, 0), APP)
+    check(p.evaluate("window.__agendados.length") == 0 and not p.evaluate("window.__pediu"), 'não pede permissão logo ao abrir')
+    p.click('#btnJogar')
+    for i in range(3): p.evaluate("fecharTodos(); carregar({k:'b', i:%d})" % i); p.wait_for_timeout(150); p.evaluate(VENCER); p.wait_for_timeout(1200)
+    p.wait_for_timeout(2500)
+    ag = p.evaluate("window.__agendados.map(n => [n.id, new Date(n.schedule.at).getHours(), n.body])")
+    check(p.evaluate("window.__pediu") == 1 and len(ag) == 7 and all(h == 19 for _, h, _ in ag), 'depois de algumas vitórias pede a permissão e agenda 7 dias às 19h: ' + str(len(ag)))
+    p.evaluate("fecharTodos(); abrirMenu(); document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); p.wait_for_timeout(200)
+    check(p.is_visible('#chkLemb') and p.is_checked('#chkLemb'), 'menu tem a opção de lembrete (só no app)')
+    p.select_option('#selLembHora', '9'); p.wait_for_timeout(300)
+    check(all(new == 9 for new in p.evaluate("window.__agendados.map(n => new Date(n.schedule.at).getHours())")) and p.evaluate("window.__agendados.length") == 6, 'trocar o horário reagenda (hoje às 9h já passou)')
+    p.uncheck('#chkLemb'); p.wait_for_timeout(300)
+    check(p.evaluate("window.__agendados.length") == 0, 'desligar cancela os lembretes')
+    c.close()
+    c, p = novo(b, datetime.datetime(2026, 11, 20, 15, 0))
+    p.evaluate("abrirMenu(); document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); p.wait_for_timeout(200)
+    check(p.is_hidden('#rowLemb'), 'no site (sem o app) a opção não aparece')
+    c.close()
+    b.close()
+print('erros de página:', erros)
+if erros: falhas.append('erros de página')
+print('\nFALHAS:' if falhas else '\nTUDO OK', falhas if falhas else '')
+sys.exit(1 if falhas else 0)

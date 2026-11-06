@@ -41,6 +41,13 @@ Para encerrar um cupom antes da hora: apague o nó dele ou coloque `ate` com a d
 
 **Fundos** (`fun:...`): `listras`, `bolinhas` (livres) · `xadrez`, `diagonal`, `ceu` (raros) · `estrelas`, `aurora`, `oceano` (épicos) · `cosmos`, `dourado` (lendários)
 
+**Cores das peças** (`cor:...`): `pastel`, `terra` (raras) · `doce`, `neon` (épicas) · `joia` (lendária)
+
+**Natal** (presentes do calendário; um cupom também libera): `fun:neve` (dia 7), `cor:natal` (dia 14), `mold:neve` (dia 21), `mold:natal` (dia 25) · `fun:natal` fica à venda só em dezembro
+
+## Cupom de Natal (sugestão)
+Crie em `cupons/NATAL2026`: `estrelas: 25`, `itens: "fun:natal"`, `desde: "2026-12-01"`, `ate: "2026-12-31"`. Divulgue o código no grupo ou nas redes em 1º de dezembro.
+
 ## Limites
 - Sem conta Google, quem apagar os dados do navegador consegue usar o mesmo cupom de novo naquele aparelho. Com a conta, o uso fica guardado na nuvem e vale em todos os aparelhos.
 - Cupom com limite de pessoas (ex.: "os 100 primeiros") precisaria de um servidor; por enquanto use a data `ate` para limitar.

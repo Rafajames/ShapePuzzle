@@ -27,7 +27,7 @@ function destacarEncaixe(idu){
 }
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
-  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
+  selo.innerHTML = ic('check'); selo.append(tr(cv.k === 'b' ? 'Fase ' + (cv.i + 1) : cv.k === 'd' ? 'Dia ' + dataCurta(cv.data) : cv.k === 'n' ? tr('Natal · dia {n}', {n: cv.dia}) : cv.k === 's' ? nomeSemana(cv.semana) : ehCamp(cv) ? 'Fase ' + (cv.idx + 1) + '/' + cv.total : faseDe(cv).nome));
   selo.hidden = false; selo.setAttribute('role', 'button'); selo.tabIndex = 0; selo.setAttribute('aria-label', tr('Ver o resultado'));
 }
 /* depois de fechar o resultado, tocar no selo da fase abre de novo */
@@ -40,10 +40,14 @@ function vencer(){
   $('#board').classList.add('win');
   renderSelo(); Festa.iniciar();
   const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog, saldo0 = saldoAtual(), ganhos = [];
-  let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
+  let novoT = false, novoJ = false, anterior = k ? recs[k] : null; S.presente = null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   if (c.k === 'u') tutorialFeito();
   else { Est.vitorias++; Est.jogadas += j; Est.dicas += S.dicas; if (S.solVista) Est.solucoes++; salvarEst(); }
+  if (c.k !== 'u'){
+    const mis = registrarMissoes([['vit'], ['semDica', S.dicas ? 0 : 1], ['tres', est === 3 ? 1 : 0], ['rapida', t < 60000 ? 1 : 0], ['dia', c.k === 'd' ? 1 : 0], ['inf', c.k === 'i' ? 1 : 0]].filter(x => x[1] !== 0));
+    if (mis) ganhos.push(['Missões do dia', mis]);
+  }
   if (c.k === 'r'){ corridaFeita(); return; }
   if (c.k === 'o') registrarOff(c, t, j);
   if (c.k === 'i') registrarInf(c, t, j, est);
@@ -54,6 +58,7 @@ function vencer(){
     if (!(estrelasFase[c.i] >= est)){ ganhos.push(['Estrelas da fase', est - (estrelasFase[c.i] || 0)]); estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
   if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); ganhos.push(['Fase do dia', BONUS_DIA]); }
+  if (c.k === 'n' && !modoTeste){ const nt = vitoriaNatal(c); if (nt){ ganhos.push(['Calendário de Natal', nt.estrelas]); S.presente = nt.item; } }
   if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); ganhos.push(['Desafio da semana', BONUS_SEMANA]); }
   const bon = aposVitoriaConta(); if (bon) ganhos.push(['Bônus do visual', bon.ganho, bon.teto]);
   { const resto = saldoAtual() - saldo0 - ganhos.reduce((a, g) => a + g[1], 0); if (resto > 0) ganhos.push(['Conquistas', resto]); }
@@ -64,6 +69,8 @@ function vencer(){
   }
   renderTitulo(); renderDica(); renderStats(); renderReserva();
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
+  if (c.k === 'd') agendarLembretes();
+  if (Est.vitorias >= 3) setTimeout(() => pedirLembretes(), 2500);
   setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est, saldo0, saldo1: saldoAtual(), ganhos}), 900);
 }
 /* botão de uma ação da vitória (usado na tela de conclusão e no painel de baixo) */
@@ -75,8 +82,9 @@ function mostrarVitoria(res, reabrir){
   S.ultVit = res;
   const c = S.cur, acts = $('#winActs');
   const ultima = c.k === 'b' && c.i >= LIMITE_FASES - 1;
-  $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
+  $('#winTitulo').textContent = tr(c.k === 'u' ? 'Tutorial concluído!' : ehCamp(c) ? 'Fase ' + (c.idx + 1) + ' concluída!' : c.k === 'i' ? 'Infinito ' + (c.num + 1) + ' concluído!' : ultima ? 'Você dominou todas as formas!' : c.k === 'd' ? 'Fase do dia concluída!' : c.k === 'n' ? tr('Porta {n} do Natal aberta!', {n: c.dia}) : c.k === 's' ? 'Desafio da semana concluído!' : c.k === 'b' ? 'Fase ' + (c.i + 1) + ' concluída!' : 'Fase concluída!');
   $('#winTexto').textContent = tr(c.k === 'u' ? 'Agora você já sabe o básico. Vamos para a Fase 1?' : c.k === 'x' ? 'Enviando o seu resultado…' : ultima ? 'Todas as fases estão completas. Que tal criar as suas?'
+    : c.k === 'n' ? (S.presente ? tr('Presente de Natal: {nome}! Já está em Meu perfil.', {nome: nomeItem(S.presente)}) : c.dia < NATAL_DIAS ? 'Volte amanhã para abrir a próxima porta.' : 'Feliz Natal!')
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
@@ -104,6 +112,7 @@ function mostrarVitoria(res, reabrir){
   const add = (txt, cls, fn, icone) => { S.acoesVit.push({txt, cls, fn, icone}); };
   if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}), 'next');
   if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo), 'next');
+  if (c.k === 'n') add('Calendário de Natal', 'pri', abrirNatal, 'gift');
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
@@ -116,11 +125,12 @@ function mostrarVitoria(res, reabrir){
     if (c.k === 'd') compartilhar('Shape Puzzle', tr('Shape Puzzle — Fase do dia {data}\n⏱ {tempo} · {jog}{dicas}\n🔥 Sequência: {seq}\nConsegue mais rápido?', {data: dataCurta(c.data), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequencia(), ' dia', ' dias')}), base);
     else if (c.k === 's') compartilhar('Shape Puzzle', tr('Shape Puzzle — Desafio da semana {sem}\n⏱ {tempo} · {jog}{dicas}\n🔥 Semanas seguidas: {seq}\nConsegue mais rápido?', {sem: nomeSemana(c.semana), tempo: fmtTempo(res.t), jog: fmtJog(res.j), dicas: S.dicas ? ' · ' + qtd(S.dicas, ' dica', ' dicas') : '', seq: qtd(sequenciasSemanas(sem, dataHoje()).atual, ' semana', ' semanas')}), base);
     else if (c.k === 'b') compartilhar('Shape Puzzle', tr('Passei da fase {n} do Shape Puzzle em {tempo} ({jog})! Tenta aí:', {n: c.i + 1, tempo: fmtTempo(res.t), jog: fmtJog(res.j)}), base);
+    else if (c.k === 'n') compartilhar('Shape Puzzle', tr('Abri a porta {n} do Calendário de Natal do Shape Puzzle em {tempo}! 🎄 Vem jogar também:', {n: c.dia, tempo: fmtTempo(res.t)}), base);
     else if (c.k === 'i') compartilhar('Shape Puzzle', tr('Olha essa fase do modo infinito do Shape Puzzle. Consegue resolver?'), urlFase(c.text, c.nome));
     else compartilhar('Shape Puzzle', tr('Tente a fase "{nome}" que eu criei no Shape Puzzle!', {nome: c.k === 'c' ? custom[c.i].nome : c.nome}), urlFase(faseDe(c).text, c.k === 'c' ? custom[c.i].nome : c.nome));
   };
   compartilharRes.fecha = false;
-  add(c.k === 'd' || c.k === 's' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
+  add(c.k === 'd' || c.k === 's' || c.k === 'n' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
   const jn = () => carregar(S.cur); add('Jogar de novo', '', jn, 'reset');
   if (c.k === 'i') add('Mudar dificuldade', '', abrirInf, 'grid');
   else if (c.k !== 't') add('Fases', '', abrirMenu, 'grid');

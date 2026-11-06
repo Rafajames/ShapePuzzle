@@ -10,10 +10,33 @@ const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-thi
 const N_AVATARES = N_AV_P + N_AV_A, N_LIVRES = 6;
 const MOLDURAS = Object.keys(ITENS).filter(k => k.startsWith('mold:')).map(k => k.slice(5));
 const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', marmore: 'Mármore', metal: 'Metal', neon: 'Neon', cristal: 'Cristal', lava: 'Lava',
-  galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
+  galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris', neve: 'Floco de neve', natal: 'Guirlanda'};
 const FUNDOS = Object.keys(ITENS).filter(k => k.startsWith('fun:')).map(k => k.slice(4));
 const NOME_FUNDO = {'': 'Fundo padrão', listras: 'Listras', bolinhas: 'Bolinhas', xadrez: 'Xadrez', diagonal: 'Diagonal', ceu: 'Céu', estrelas: 'Noite estrelada', aurora: 'Aurora',
-  oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado'};
+  oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado', neve: 'Noite de neve', natal: 'Luzes de Natal'};
+/* cores das peças: a paleta escolhida vale só neste aparelho (COR é usado em todo o desenho das peças) */
+const CORES = Object.keys(ITENS).filter(k => k.startsWith('cor:')).map(k => k.slice(4));
+const NOME_PALETA = {padrao: 'Clássicas', pastel: 'Pastel', terra: 'Terra', doce: 'Doce', neon: 'Neon', joia: 'Joias', natal: 'Natal'};
+const PALETAS = {padrao: {1: '#00beff', 6: '#28e628', 11: '#ff3296', 16: '#ffc800'}, pastel: {1: '#7cc6ee', 6: '#8fdb9b', 11: '#f4a1c3', 16: '#f6d88a'},
+  terra: {1: '#3f88a8', 6: '#76a03c', 11: '#c9553b', 16: '#dca23f'}, doce: {1: '#8a7dff', 6: '#3fdcb0', 11: '#ff6f91', 16: '#ffb547'},
+  neon: {1: '#00e5ff', 6: '#45ff1f', 11: '#ff2bd6', 16: '#fff01f'}, joia: {1: '#1d5fd6', 6: '#0f9d58', 11: '#c2185b', 16: '#f2b705'},
+  natal: {1: '#a8dcff', 6: '#1f9d4c', 11: '#e03131', 16: '#f2c14e'}};
+let paleta = store.get('paleta', 'padrao');
+function aplicarPaleta(id, inicio){
+  if (!PALETAS[id] || (id !== 'padrao' && !itensDe(dadosAtuais()).has('cor:' + id))) id = 'padrao';
+  paleta = id; store.set('paleta', id); Object.assign(COR, PALETAS[id]);
+  if (inicio) return;
+  if (S.jogo){ renderTudo(); if (typeof miniTabuleiro === 'function') miniTabuleiro(); }
+  if ($('#ov-conta').classList.contains('on')) montarConta();
+}
+aplicarPaleta(paleta, true);
+function paletaEl(id, tam){
+  const e = mk('span', 'paleta'); e.style.setProperty('--t', (tam || 40) + 'px');
+  [1, 6, 11, 16].forEach(k => { const q = mk('i'); q.style.background = PALETAS[id][k]; q.dataset.s = k; e.appendChild(q); });
+  return e;
+}
+/* itens do evento: aparecem durante o evento ou para quem já tem */
+const itemVisivel = (k, donos) => { const it = ITENS[k]; return !(it.premio || it.ev) || donos.has(k) || natalAtivo(); };
 const NOME_CAT = {comum: 'Comum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário'};
 const nomeAvatar = id => tr((AVATARES[id] || {}).nome || id);
 /* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
@@ -112,13 +135,13 @@ function celulaItem(chave, el, rotulo, marcado, d, donos){
   const it = ITENS[chave], tem = donos.has(chave);
   const b = mk('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', marcado ? 'true' : 'false'); b.dataset.item = chave;
   b.appendChild(el); b.classList.add('cat-' + it.cat);
-  const cat = tr(NOME_CAT[it.cat]) + (BONUS_CAT[it.cat] ? ' · +' + BONUS_CAT[it.cat] + ' ★' : '');
+  const cat = tr(NOME_CAT[it.cat]) + (BONUS_CAT[it.cat] && !chave.startsWith('cor:') ? ' · +' + BONUS_CAT[it.cat] + ' ★' : '');
   b.title = rotulo + ' — ' + cat;
   if (!tem){
     const l = mk('small', 'cnPreco');
     if (it.preco) l.textContent = '★ ' + it.preco; else l.innerHTML = ic('lock');
     b.appendChild(l); b.classList.add('trava');
-    b.setAttribute('aria-label', rotulo + ' — ' + cat + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : tr('prêmio de conquista')));
+    b.setAttribute('aria-label', rotulo + ' — ' + cat + ' — ' + (it.preco ? tr('custa {n} estrelas', {n: it.preco}) : it.premio ? tr('presente do Calendário de Natal') : tr('prêmio de conquista')));
   } else b.setAttribute('aria-label', rotulo + ' — ' + cat);
   b.onclick = () => tocarItem(chave, rotulo);
   return b;
@@ -127,7 +150,7 @@ function donoDoItem(chave){ const q = CONQUISTAS.find(x => x.item === chave); re
 /* Tocar num item: se já é seu, usa na hora; se não, abre o provador (o avatar com o item, antes de comprar). */
 function tocarItem(chave, rotulo){
   const d = dadosAtuais(), campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
-  if (itensDe(d).has(chave)){ mudarPerfil({[campo]: id}); return; }
+  if (itensDe(d).has(chave)){ if (campo === 'cor') aplicarPaleta(id); else mudarPerfil({[campo]: id}); return; }
   abrirProvador(chave, rotulo);
 }
 let Prova = null;
@@ -137,25 +160,27 @@ function abrirProvador(chave, rotulo){
   const campo = chave.split(':')[0], id = chave.slice(campo.length + 1);
   const agora = {av: c.av, mold: c.mold, fun: c.fun}, teste = Object.assign({}, agora, {[campo]: id});
   Prova = {chave, rotulo, campo, id};
-  $('#pvAntes').textContent = ''; $('#pvAntes').appendChild(avatarEl(agora, 64));
-  $('#pvDepois').textContent = ''; $('#pvDepois').appendChild(avatarEl(teste, 112));
+  const ehCor = campo === 'cor';
+  $('#pvAntes').textContent = ''; $('#pvAntes').appendChild(ehCor ? paletaEl(paleta, 64) : avatarEl(agora, 64));
+  $('#pvDepois').textContent = ''; $('#pvDepois').appendChild(ehCor ? paletaEl(id, 112) : avatarEl(teste, 112));
   $('#pvNome').textContent = rotulo;
   const cat = $('#pvCat'); cat.className = 'pvCat cat-' + it.cat;
   cat.textContent = tr(NOME_CAT[it.cat]);
   const bAntes = bonusEquipado(visualDono(c, donos)), bDepois = bonusEquipado(Object.assign(visualDono(c, donos), {[campo]: id}));
-  $('#pvBonus').textContent = bDepois ? tr('Com este visual: +{n} ★ a cada fase vencida.', {n: bDepois}) + (bAntes && bDepois > bAntes ? ' (' + tr('agora: +{n} ★', {n: bAntes}) + ')' : '') : tr('Item comum: não dá estrelas extras.');
+  $('#pvBonus').textContent = ehCor ? tr('As cores das peças valem neste aparelho e não dão estrelas extras.') : bDepois ? tr('Com este visual: +{n} ★ a cada fase vencida.', {n: bDepois}) + (bAntes && bDepois > bAntes ? ' (' + tr('agora: +{n} ★', {n: bAntes}) + ')' : '') : tr('Item comum: não dá estrelas extras.');
   const btn = $('#pvComprar');
   if (it.preco){
-    btn.hidden = false; btn.disabled = s < it.preco;
+    const fora = it.ev && !natalAtivo();
+    btn.hidden = false; btn.disabled = s < it.preco || fora;
     btn.textContent = tr('Comprar por {n} ★', {n: it.preco});
-    aviso('#pvInfo', s < it.preco ? tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: it.preco - s}) : tr('Você tem {s} ★. Depois da compra sobram {r} ★.', {s, r: s - it.preco}), s < it.preco ? 'erro' : '');
+    if (fora) aviso('#pvInfo', tr('Este item só fica à venda em dezembro.'), 'erro'); else aviso('#pvInfo', s < it.preco ? tr('Faltam {n} ★ para este item. Jogue fases, a fase do dia e o desafio da semana para ganhar mais.', {n: it.preco - s}) : tr('Você tem {s} ★. Depois da compra sobram {r} ★.', {s, r: s - it.preco}), s < it.preco ? 'erro' : '');
   } else {
     btn.hidden = true;
-    aviso('#pvInfo', tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)}));
+    aviso('#pvInfo', it.premio ? tr('Presente do Calendário de Natal: abra a porta do dia {n}.', {n: it.dia}) : tr('Este item é prêmio da conquista “{nome}”.', {nome: donoDoItem(chave)}));
   }
   abrir('provador');
 }
-const nomeItem = k => { const [t, id] = [k.split(':')[0], k.slice(k.indexOf(':') + 1)]; return t === 'av' ? nomeAvatar(id) : tr(t === 'mold' ? NOME_MOLDURA[id] : NOME_FUNDO[id]); };
+const nomeItem = k => { const [t, id] = [k.split(':')[0], k.slice(k.indexOf(':') + 1)]; return t === 'av' ? nomeAvatar(id) : tr(t === 'mold' ? NOME_MOLDURA[id] : t === 'cor' ? NOME_PALETA[id] : NOME_FUNDO[id]); };
 const MSG_CUPOM = {invalido: 'Cupom não encontrado. Confira as letras e os números.', usado: 'Você já usou este cupom.', expirado: 'Este cupom já venceu.', cedo: 'Este cupom ainda não começou a valer.', vazio: 'Este cupom não tem prêmio para você.'};
 let cupomOcupado = false;
 async function usarCupom(){
@@ -179,9 +204,9 @@ async function usarCupom(){
 }
 function comprarProvado(){
   if (!Prova) return;
-  const r = comprarItem(dadosAtuais(), Prova.chave);
+  const r = comprarItem(dadosAtuais(), Prova.chave, hojeEvento());
   if (!r.cart){ abrirProvador(Prova.chave, Prova.rotulo); return; }
-  guardarCart(r.cart); mudarPerfil({[Prova.campo]: Prova.id}); contaAgendar(2000);
+  guardarCart(r.cart); if (Prova.campo === 'cor') aplicarPaleta(Prova.id); else mudarPerfil({[Prova.campo]: Prova.id}); contaAgendar(2000);
   fechar('provador'); Prova = null;
   aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
@@ -209,12 +234,15 @@ function montarConta(){
     ga.appendChild(celulaItem('av:' + id, avatarEl({av: id, fun: c.fun}, 44), nomeAvatar(id), c.av === id, d, donos));
   });
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id, fun: c.fun}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
+  MOLDURAS.filter(id => itemVisivel('mold:' + id, donos)).forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id, fun: c.fun}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
   const gf = $('#cnFundos'); gf.textContent = '';
-  FUNDOS.forEach(id => gf.appendChild(celulaItem('fun:' + id, avatarEl({av: c.av, fun: id}, 40), tr(NOME_FUNDO[id]), c.fun === id, d, donos)));
+  FUNDOS.filter(id => itemVisivel('fun:' + id, donos)).forEach(id => gf.appendChild(celulaItem('fun:' + id, avatarEl({av: c.av, fun: id}, 40), tr(NOME_FUNDO[id]), c.fun === id, d, donos)));
+  const gc = $('#cnCores'); gc.textContent = '';
+  CORES.filter(id => itemVisivel('cor:' + id, donos)).forEach(id => gc.appendChild(celulaItem('cor:' + id, paletaEl(id, 40), tr(NOME_PALETA[id]), paleta === id, d, donos)));
   const conta3 = p => [...donos].filter(k => k.startsWith(p)).length;
-  $('#cnTitAv').textContent = tr('Avatares') + ' ' + conta3('av:') + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + conta3('mold:') + '/' + MOLDURAS.length;
-  $('#cnTitFun').textContent = tr('Fundos') + ' ' + conta3('fun:') + '/' + FUNDOS.length;
+  $('#cnTitAv').textContent = tr('Avatares') + ' ' + conta3('av:') + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + conta3('mold:') + '/' + MOLDURAS.filter(id => itemVisivel('mold:' + id, donos)).length;
+  $('#cnTitFun').textContent = tr('Fundos') + ' ' + conta3('fun:') + '/' + FUNDOS.filter(id => itemVisivel('fun:' + id, donos)).length;
+  $('#cnTitCor').textContent = tr('Cores das peças') + ' ' + conta3('cor:') + '/' + CORES.filter(id => itemVisivel('cor:' + id, donos)).length;
   const bon = bonusEquipado({av: donos.has('av:' + c.av) ? c.av : '', mold: donos.has('mold:' + c.mold) ? c.mold : '', fun: donos.has('fun:' + c.fun) ? c.fun : ''});
   $('#cnBonus').textContent = bon ? tr('Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).', {n: bon, m: BONUS_DIA_MAX}) : tr('Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.');
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
@@ -232,7 +260,7 @@ function montarConta(){
     li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
   const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
-  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Missões do dia', o.missoes], ['Calendário de Natal', o.natal], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
 function abrirConta(aba){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); montarBloqueados(); mostrarAba(typeof aba === 'string' ? aba : 'visual'); abrir('conta'); }

@@ -65,6 +65,7 @@ function fimCorrida(){
   setTimeout(() => mostrarFimCorrida(n, n > antes, antes), 400);
 }
 function mostrarFimCorrida(n, recorde, antes){
+  registrarMissoes([['corrida']]);
   $('#winTitulo').textContent = tr('Tempo esgotado!');
   $('#winTexto').textContent = tr(n ? 'Você resolveu {n} em 3 minutos.' : 'Nenhuma fase dessa vez. Tente de novo!', {n: qtd(n, ' fase', ' fases')});
   $('#winEstrelas').innerHTML = ''; $('#winEstrelas').removeAttribute('aria-label');

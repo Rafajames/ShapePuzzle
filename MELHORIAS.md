@@ -45,3 +45,9 @@ Feitas: **fase do dia** e **fase por link** (já existiam).
 - **Campeonato sem internet por QR code** — _Feito (Campeonatos → Campeonato sem internet)._
 
 - **Fase de tutorial antes da Fase 1** — guiada passo a passo, só para quem está começando. _Feito._
+
+## Engajamento (novembro de 2026)
+- **Missões do dia** — 3 tarefas por dia (iguais para todos, sorteadas pela data), prêmio em estrelas e +5 ★ por cumprir as 3. _Feito._
+- **Lembretes no celular** — no app Android: um aviso por dia no horário escolhido (fase do dia, sequência, porta de Natal). Agendado no próprio aparelho, sem servidor. _Feito._
+- **Evento de Natal** — calendário de 1 a 25 de dezembro com uma fase por dia, estrelas e presentes (dias 7, 14, 21 e 25), neve na tela inicial e fundo à venda só em dezembro. Prévia no modo de teste. _Feito._
+- **Cores das peças** — paletas Pastel, Terra, Doce, Neon e Joias, compradas com estrelas (valem neste aparelho). _Feito._

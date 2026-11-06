@@ -57,6 +57,7 @@ function faseDe(cur){
   if (cur.k === 'b') return BUILTIN[cur.i] || (fasesGer[cur.i] ? {nome: 'fase' + (cur.i + 1), text: fasesGer[cur.i]} : undefined);
   if (cur.k === 'c') return custom[cur.i];
   if (cur.k === 'd') return faseDoDia(cur.data);
+  if (cur.k === 'n') return faseNatal(cur.ano, cur.dia);
   return cur;
 }
 function chaveFase(cur){
@@ -64,6 +65,7 @@ function chaveFase(cur){
   if (cur.k === 'c') return 'c:' + custom[cur.i].nome;
   if (cur.k === 'd') return 'd:' + cur.data;
   if (cur.k === 's') return 's:' + cur.semana;
+  if (cur.k === 'n') return 'n:' + cur.ano + '-' + cur.dia;
   return null;
 }
 function humorDaFase(cur){
@@ -71,6 +73,7 @@ function humorDaFase(cur){
   if (cur.k === 'b') return ['calma', 'animada', 'noturna'][Math.floor(cur.i / 10) % 3];
   if (cur.k === 'd' || ehCamp(cur) || cur.k === 'r') return 'animada';
   if (cur.k === 's') return 'noturna';
+  if (cur.k === 'n') return 'manha';
   return 'calma';
 }
 /* a música de cada tema (menu → Som → Estilo → "Música do tema") */
@@ -114,6 +117,7 @@ function renderTitulo(){
   if (c.k === 'b'){ t1.textContent = tr('Fase ' + (c.i + 1)); t2.textContent = (modoTeste ? tr('teste') + ' · ' : '') + (rotuloModo(S.jogo) || tr('de ' + fasesVisiveis())); }
   else if (c.k === 'c'){ t1.textContent = custom[c.i].nome; t2.textContent = tr('fase personalizada'); }
   else if (c.k === 'd'){ t1.textContent = tr('Fase do dia'); t2.textContent = dataCurta(c.data); }
+  else if (c.k === 'n'){ t1.textContent = tr('Natal · dia {n}', {n: c.dia}); t2.textContent = tr('calendário de Natal'); }
   else if (ehCamp(c)){ t1.textContent = c.campNome; t2.textContent = tr('Fase ' + (c.idx + 1) + ' de ' + c.total); }
   else if (c.k === 'u'){ t1.textContent = tr('Tutorial'); t2.textContent = tr('aprenda a jogar'); }
   else if (c.k === 's'){ t1.textContent = nomeSemana(c.semana); t2.textContent = tr('desafio da semana'); }
