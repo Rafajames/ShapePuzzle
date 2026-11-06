@@ -448,6 +448,8 @@ en: {
   "dicas": "hints",
   "Estrelas da fase": "Level stars",
   "Total": "Total",
+  "Visual": "Look",
+  "Conta": "Account",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",

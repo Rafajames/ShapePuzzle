@@ -1,6 +1,6 @@
 :root{
-  --bg:#0c0c12; --bg2:#1d1d3c; --panel:#1a1a2b; --line:#2c2c44; --txt:#e8e8f4; --mut:#8c8ca8;
-  --accent:#7c6cff; --acc2:#4f8cff; --cell:64px; --mini:30px;
+  --bg:#0c0c12; --bg2:#1d1d3c; --panel:#1a1a2b; --line:#2c2c44; --txt:#e8e8f4; --mut:#a0a0bc;
+  --accent:#6a5af5; --acc2:#3570e0; --cell:64px; --mini:30px;
   /* tema (escuro é o padrão) */
   --t0:rgba(255,255,255,.035); --t1:rgba(255,255,255,.045); --t2:rgba(255,255,255,.1);
   --board:#1a1a2a; --cel1:#1c1c2c; --cel2:#1f1f32; --cline:#30304a;
@@ -32,7 +32,7 @@ html[data-tema="oceano"]{
   --soft:#c4e3ee; --acctxt:#7fe0f5; --staroff:#3f6779;
 }
 html[data-tema="floresta"]{
-  --bg:#08150e; --bg2:#14402a; --line:#265a3b; --txt:#e6f6ec; --mut:#86b196;
+  --bg:#08150e; --bg2:#14402a; --line:#265a3b; --txt:#e6f6ec; --mut:#9cc6aa;
   --accent:#34c77b; --acc2:#7ad13a; --onacc:#04140a;
   --board:#0f2418; --cel1:#12291b; --cel2:#153021; --cline:#245238;
   --card1:#15402a; --card2:#0d2a1b; --ovbg:rgba(3,12,7,.76); --toast:#18432c; --fieldbg:rgba(0,0,0,.3);

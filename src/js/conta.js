@@ -219,7 +219,7 @@ function montarConta(){
   $('#cnBonus').textContent = bon ? tr('Seu visual dá +{n} ★ a cada fase vencida (até {m} ★ por dia).', {n: bon, m: BONUS_DIA_MAX}) : tr('Itens raros, épicos e lendários dão estrelas extras a cada fase vencida.');
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
   const feitas = cart.v.length;
-  $('#cnTitConq').textContent = tr('Conquistas') + ' ' + feitas + '/' + CONQUISTAS.length;
+  $('#cnTitConq').textContent = tr('Conquistas') + ' ' + feitas + '/' + CONQUISTAS.length; $('#cnAbaConqN').textContent = feitas + '/' + CONQUISTAS.length;
   CONQUISTAS.forEach(q => {
     const ok = cart.v.includes(q.id), v = Math.min(q.n, med[q.m]);
     const li = mk('li', ok ? 'ok' : '');
@@ -235,7 +235,20 @@ function montarConta(){
   [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
-function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); montarBloqueados(); abrir('conta'); }
+function abrirConta(aba){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); montarBloqueados(); mostrarAba(typeof aba === 'string' ? aba : 'visual'); abrir('conta'); }
+/* abas do perfil: Visual, Conquistas, Estrelas e Conta */
+function mostrarAba(nome, foco){
+  document.querySelectorAll('#cnAbas [role=tab]').forEach(b => { const on = b.dataset.aba === nome; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; if (on && foco) b.focus(); });
+  document.querySelectorAll('#cnDentro .cnAba').forEach(p => { p.hidden = p.dataset.aba !== nome; });
+}
+$('#cnAbas').addEventListener('click', e => { const b = e.target.closest('[role=tab]'); if (b) mostrarAba(b.dataset.aba); });
+$('#cnAbas').addEventListener('keydown', e => {
+  const t = [...document.querySelectorAll('#cnAbas [role=tab]')], i = t.findIndex(b => b.getAttribute('aria-selected') === 'true');
+  const d = {ArrowRight: 1, ArrowLeft: -1}[e.key]; if (!d) return;
+  e.preventDefault(); mostrarAba(t[(i + d + t.length) % t.length].dataset.aba, true);
+});
+/* abrir uma seção de outra aba (por exemplo, por um link) mostra a aba dela */
+document.querySelectorAll('#cnDentro details.sec').forEach(d => d.addEventListener('toggle', () => { const p = d.closest('.cnAba'); if (d.open && p && p.hidden) mostrarAba(p.dataset.aba); }));
 
 /* ---------- Firebase (carregado só quando precisa) ---------- */
 const carregarScript = src => new Promise((ok, no) => {
@@ -302,7 +315,7 @@ async function contaPosLogin(user){
     const temPerfil = !!store.get('perfil', null);
     conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', fun: temPerfil ? fundoValido(perfil.fun) : '', novo: true};
   }
-  aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
+  aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', ''); if (conta.novo) mostrarAba('visual');
   await contaSync({aplicar: true});
 }
 const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || '', fun: conta.fun || ''}; guardarPerfil(); } };

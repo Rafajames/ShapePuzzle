@@ -24,7 +24,7 @@ html[data-tema="retro"] .card{background:#000;border:4px solid var(--line);box-s
 html[data-tema="retro"] #board,html[data-tema="retro"] #edBoard{box-shadow:0 0 0 4px #000,0 0 0 8px var(--line),0 0 0 12px #000,0 0 0 14px #8a9199}
 html[data-tema="retro"] .cell{box-shadow:none}
 html[data-tema="retro"] .reserva{background:#000;border:3px solid var(--line)}
-html[data-tema="retro"] :is(.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast){border-width:2px}
+html[data-tema="retro"] :is(.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast,.heroi,.diaCard,.abas,.winSoma){border-width:2px}
 html[data-tema="retro"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard){background:#000;box-shadow:inset -3px -3px 0 rgba(255,255,255,.16),inset 3px 3px 0 rgba(255,255,255,.08)}
 html[data-tema="retro"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard):hover{background:#12171c}
 html[data-tema="retro"] :is(.btn,.ib):active{transform:translate(2px,2px)}
@@ -46,3 +46,4 @@ html[data-tema="retro"] #boardWrap{margin:14px auto}
 html[data-tema="retro"] #titulo .t1{letter-spacing:0;font-size:17px}
 @media (max-width:350px){html[data-tema="retro"] #titulo .t1{font-size:14px}html[data-tema="retro"] #titulo .t2{font-size:10px}}
 html[data-tema="retro"] .homeModos .btn{text-transform:none;letter-spacing:0}
+html[data-tema="retro"] .abas [role=tab][aria-selected=true]{background:var(--acc2);color:#fff}

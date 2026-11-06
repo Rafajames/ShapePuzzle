@@ -541,52 +541,66 @@
     <h1>Meu perfil</h1>
     <div id="cnDentro">
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
-      <p class="cnBonus" id="cnBonus"></p>
-      <p class="cnCats"><span class="cat-comum">Comum</span><span class="cat-raro">Raro · +1 ★</span><span class="cat-epico">Épico · +2 ★</span><span class="cat-lendario">Lendário · +3 ★</span></p>
-      <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
-      <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
-        <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
-        <p class="cnDica" id="cnNomeDica"></p>
-      </div></details>
-      <details class="sec" id="cnSecAv"><summary data-i="user"><span id="cnTitAv">Avatares</span></summary><div class="sb">
-        <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
-      </div></details>
-      <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
-        <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
-      </div></details>
-      <details class="sec" id="cnSecFun"><summary data-i="grid"><span id="cnTitFun">Fundos</span></summary><div class="sb">
-        <div class="cnGrade" id="cnFundos" role="radiogroup" aria-label="Fundo do avatar"></div>
-      </div></details>
-      <details class="sec" id="cnSecConq"><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
-        <ul class="cnConq" id="cnConq"></ul>
-      </div></details>
-      <details class="sec" id="cnSecEst"><summary data-i="stats"><span>De onde vêm minhas estrelas</span></summary><div class="sb">
-        <ul class="cnOrigem" id="cnOrigem"></ul>
-        <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
-      </div></details>
-      <details class="sec" id="cnSecBloq" hidden><summary data-i="lock"><span id="cnTitBloq">Jogadores bloqueados</span></summary><div class="sb">
-        <p class="cnDica">Só neste aparelho. Desbloqueie quando quiser.</p>
-        <div id="cnBloqLista"></div>
-      </div></details>
-      <div class="cnCupomBox" id="cnCupomBox">
-        <h2>Cupom</h2>
-        <p class="cnDica">Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.</p>
-        <div class="row"><input class="field" id="cnCupom" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Digite o cupom" aria-label="Cupom"><button class="btn pri" id="cnCupomOk">Usar</button></div>
-        <p class="aviso" id="cnCupomAviso" aria-live="polite"></p>
+      <div class="abas" id="cnAbas" role="tablist" aria-label="Meu perfil">
+        <button type="button" role="tab" data-aba="visual" data-i="user" aria-selected="true">Visual</button>
+        <button type="button" role="tab" data-aba="conq" data-i="trophy"><span>Conquistas</span><small id="cnAbaConqN"></small></button>
+        <button type="button" role="tab" data-aba="est" data-i="star">Estrelas</button>
+        <button type="button" role="tab" data-aba="conta" data-i="lock">Conta</button>
       </div>
-      <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
-        <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
-        <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
-        <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
-      </div></details>
-    </div>
-    <div id="cnFora" class="cnFora">
-      <h2>Entrar com o Google (opcional)</h2>
-      <p>Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.</p>
-      <p id="cnTeaser" class="cnTeaser" hidden></p>
-      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
-      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
-      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
+      <div class="cnAba" data-aba="visual" role="tabpanel">
+        <p class="cnBonus" id="cnBonus"></p>
+        <p class="cnCats"><span class="cat-comum">Comum</span><span class="cat-raro">Raro · +1 ★</span><span class="cat-epico">Épico · +2 ★</span><span class="cat-lendario">Lendário · +3 ★</span></p>
+        <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
+        <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
+          <div class="row"><input class="field" id="cnNome" maxlength="20" autocomplete="off" aria-label="Apelido"><button class="btn pri" id="cnNomeOk">Salvar</button></div>
+          <p class="cnDica" id="cnNomeDica"></p>
+        </div></details>
+        <details class="sec" id="cnSecAv" open><summary data-i="user"><span id="cnTitAv">Avatares</span></summary><div class="sb">
+          <div class="cnGrade" id="cnAvatares" role="radiogroup" aria-label="Avatar"></div>
+        </div></details>
+        <details class="sec" id="cnSecMold"><summary data-i="star"><span id="cnTitMold">Molduras</span></summary><div class="sb">
+          <div class="cnGrade" id="cnMolduras" role="radiogroup" aria-label="Moldura"></div>
+        </div></details>
+        <details class="sec" id="cnSecFun"><summary data-i="grid"><span id="cnTitFun">Fundos</span></summary><div class="sb">
+          <div class="cnGrade" id="cnFundos" role="radiogroup" aria-label="Fundo do avatar"></div>
+        </div></details>
+      </div>
+      <div class="cnAba" data-aba="conq" role="tabpanel" hidden>
+        <details class="sec unica" id="cnSecConq" open><summary data-i="trophy"><span id="cnTitConq">Conquistas</span></summary><div class="sb">
+          <ul class="cnConq" id="cnConq"></ul>
+        </div></details>
+      </div>
+      <div class="cnAba" data-aba="est" role="tabpanel" hidden>
+        <details class="sec unica" id="cnSecEst" open><summary data-i="stats"><span>De onde vêm minhas estrelas</span></summary><div class="sb">
+          <ul class="cnOrigem" id="cnOrigem"></ul>
+          <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
+        </div></details>
+        <div class="cnCupomBox" id="cnCupomBox">
+          <h2>Cupom</h2>
+          <p class="cnDica">Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.</p>
+          <div class="row"><input class="field" id="cnCupom" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Digite o cupom" aria-label="Cupom"><button class="btn pri" id="cnCupomOk">Usar</button></div>
+          <p class="aviso" id="cnCupomAviso" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="cnAba" data-aba="conta" role="tabpanel" hidden>
+        <div id="cnFora" class="cnFora">
+          <h2>Entrar com o Google (opcional)</h2>
+          <p>Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.</p>
+          <p id="cnTeaser" class="cnTeaser" hidden></p>
+          <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
+          <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
+          <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
+        </div>
+        <details class="sec" id="cnSecNuvem" open><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
+          <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
+          <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
+          <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
+        </div></details>
+        <details class="sec" id="cnSecBloq" hidden><summary data-i="lock"><span id="cnTitBloq">Jogadores bloqueados</span></summary><div class="sb">
+          <p class="cnDica">Só neste aparelho. Desbloqueie quando quiser.</p>
+          <div id="cnBloqLista"></div>
+        </div></details>
+      </div>
     </div>
     <p class="aviso" id="cnAviso"></p>
   </div>

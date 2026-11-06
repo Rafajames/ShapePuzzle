@@ -448,6 +448,8 @@ pl: {
   "dicas": "podpowiedzi",
   "Estrelas da fase": "Gwiazdki za poziom",
   "Total": "Razem",
+  "Visual": "Wygląd",
+  "Conta": "Konto",
   "Fases": "Poziomy",
   "Complete uma fase para liberar a próxima.": "Ukończ poziom, żeby odblokować następny.",
   "Fase do dia": "Poziom dnia",

@@ -448,6 +448,8 @@ de: {
   "dicas": "Tipps",
   "Estrelas da fase": "Sterne des Levels",
   "Total": "Gesamt",
+  "Visual": "Look",
+  "Conta": "Konto",
   "Fases": "Level",
   "Complete uma fase para liberar a próxima.": "Schaffe ein Level, um das nächste freizuschalten.",
   "Fase do dia": "Tageslevel",

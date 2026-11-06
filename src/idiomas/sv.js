@@ -448,6 +448,8 @@ sv: {
   "dicas": "ledtrådar",
   "Estrelas da fase": "Nivåns stjärnor",
   "Total": "Totalt",
+  "Visual": "Utseende",
+  "Conta": "Konto",
   "Fases": "Nivåer",
   "Complete uma fase para liberar a próxima.": "Klara en nivå för att låsa upp nästa.",
   "Fase do dia": "Dagens nivå",

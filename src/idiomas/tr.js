@@ -448,6 +448,8 @@ tr: {
   "dicas": "ipucu",
   "Estrelas da fase": "Seviye yıldızları",
   "Total": "Toplam",
+  "Visual": "Görünüm",
+  "Conta": "Hesap",
   "Fases": "Bölümler",
   "Complete uma fase para liberar a próxima.": "Sonrakini açmak için bir bölümü tamamla.",
   "Fase do dia": "Günün bölümü",

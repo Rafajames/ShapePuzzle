@@ -448,6 +448,8 @@ ru: {
   "dicas": "подсказки",
   "Estrelas da fase": "Звёзды за уровень",
   "Total": "Итого",
+  "Visual": "Облик",
+  "Conta": "Аккаунт",
   "Fases": "Уровни",
   "Complete uma fase para liberar a próxima.": "Пройди уровень, чтобы открыть следующий.",
   "Fase do dia": "Уровень дня",

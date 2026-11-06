@@ -172,7 +172,7 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnTopo .av{margin:8px}
 .cnQuem{display:flex;flex-direction:column;min-width:0;flex:1}.cnQuem b{font-size:18px;overflow:hidden;text-overflow:ellipsis}.cnQuem small{color:var(--mut);font-size:12px}
 .cnSaldo{display:flex;flex-direction:column;align-items:center;padding:6px 12px;border-radius:14px;border:1px solid var(--goldln);background:var(--t1);flex:none}
-.cnSaldo b{font-size:22px;color:var(--gold);line-height:1.1}.cnSaldo b::before{content:'★ '}.cnSaldo small{font-size:11px;color:var(--mut)}
+.cnSaldo b{font-size:22px;color:var(--gold);line-height:1.1}.cnSaldo b::before{content:'★ '}.cnSaldo small{font-size:12px;color:var(--mut)}
 .cnBem,.cnTeaser{margin:10px 0;padding:10px 12px;border-radius:12px;border:1px solid var(--goldln);background:var(--t1);font-size:14px}
 .cnDica{margin:8px 0 0;font-size:12px;color:var(--mut)}
 #ov-conta details.sec>summary span{min-width:0}
@@ -180,7 +180,7 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnGrade button{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 2px 4px;border-radius:14px;border:2px solid transparent;background:transparent;cursor:pointer;color:inherit}
 .cnGrade button[aria-checked=true]{border-color:var(--accent);background:var(--t1)}
 .cnGrade button.trava .av{opacity:.5}
-.cnPreco{font-size:11px;font-weight:700;color:var(--gold);min-height:14px;display:flex;align-items:center}.cnPreco svg{width:13px;height:13px;color:var(--mut)}
+.cnPreco{font-size:12px;font-weight:700;color:var(--gold);min-height:14px;display:flex;align-items:center}.cnPreco svg{width:13px;height:13px;color:var(--mut)}
 .cnConq,.cnOrigem{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .cnConq li{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--t0);display:grid;gap:4px}
 .cnConq li.ok{border-color:var(--goldln)}
@@ -349,3 +349,33 @@ body.rm .cell.novo .fill{animation:none}
 .winAcoes .btn.pri{min-height:54px;font-size:18px;font-weight:800}
 .vitAcoes .btn.pri svg.i{order:2}
 @media (max-width:360px){.card.home{padding:16px}.homeModos{gap:6px}}
+
+/* ---------- abas (Meu perfil) ---------- */
+.abas{display:flex;gap:4px;margin:12px 0 2px;padding:4px;border-radius:16px;background:var(--fieldbg);border:1px solid var(--line)}
+.abas [role=tab]{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:54px;padding:6px 2px;border:0;border-radius:12px;background:transparent;color:var(--soft);font:inherit;font-size:12px;font-weight:700;line-height:1.15;cursor:pointer;text-align:center;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word;transition:background .15s,color .15s}
+.abas [role=tab] svg.i{width:20px;height:20px;flex:none}
+.abas [role=tab] small{font-size:11px;font-weight:600;color:var(--mut)}
+.abas [role=tab] small:empty{display:none}
+.abas [role=tab]:hover{background:var(--t1)}
+.abas [role=tab][aria-selected=true]{background:linear-gradient(135deg,var(--accent),var(--acc2));color:var(--onacc);box-shadow:0 2px 8px var(--shb)}
+.abas [role=tab][aria-selected=true] small{color:inherit;opacity:.85}
+.cnAba{animation:fade .18s}
+details.sec.unica{border:0!important;background:none!important;box-shadow:none!important}
+details.sec.unica>summary{display:none}
+details.sec.unica>.sb{padding:4px 0 0}
+.cnAba .cnFora{margin-top:4px;padding-top:0;border-top:0}
+
+/* ---------- pódio do ranking ---------- */
+.podio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end;margin:4px 0 10px}
+.podio .rk{grid-row:1;position:relative;flex-direction:column;justify-content:flex-end;gap:5px;min-width:0;margin:0;padding:12px 6px 10px;text-align:center;border-radius:16px 16px 10px 10px}
+.podio .rk.p1{grid-column:2;min-height:156px;background:linear-gradient(180deg,rgba(255,216,77,.28),var(--t1) 70%);border-color:rgba(255,216,77,.65)}
+.podio .rk.p2{grid-column:1;min-height:132px;background:linear-gradient(180deg,rgba(200,210,225,.24),var(--t1) 70%);border-color:rgba(200,210,225,.55)}
+.podio .rk.p3{grid-column:3;min-height:118px;background:linear-gradient(180deg,rgba(214,140,80,.26),var(--t1) 70%);border-color:rgba(214,140,80,.6)}
+.podio .rk.eu{box-shadow:0 0 0 2px var(--accent)}
+.podio .rk .pos{order:-2;width:auto;font-size:26px;line-height:1}
+.podio .rk .av{order:-1;--t:46px!important}
+.podio .rk.p1 .av{--t:56px!important}
+.podio .rk .nm{flex:none;width:100%;font-size:13px}
+.podio .rk .tm{font-size:12px;text-align:center}
+.podio .rk .rkMais{position:absolute;top:4px;right:4px;margin:0;width:28px;height:28px;min-width:28px}
+.podio .rk .seta{display:none}

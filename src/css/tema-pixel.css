@@ -9,7 +9,7 @@ html[data-tema="pixel"]{
   --card1:#fdf3d8; --card2:#f6e7bd; --ovbg:rgba(20,28,60,.72); --toast:#fdf3d8; --fieldbg:#fffaea;
   --shb:rgba(20,28,60,.35); --shc:rgba(20,28,60,.45);
   --soft:#27356a; --strong:#0f1838; --acctxt:#b0123f; --gold:#7a4f00; --goldln:rgba(122,79,0,.6);
-  --ok:#0a6e3f; --bad:#b3261e; --info:#1257a8; --staroff:#a9b3cf;
+  --ok:#075a33; --bad:#9a1f18; --info:#1257a8; --staroff:#a9b3cf;
   --ring:rgba(29,43,83,.8); --gokbg:rgba(255,255,255,.55); --gokln:#1d2b53; --selln:#1d2b53;
   --handbg:rgba(29,43,83,.35); --handln:#1d2b53;
 }
@@ -24,7 +24,7 @@ html[data-tema="pixel"] body::before{content:"";position:fixed;left:8%;top:9%;wi
     220px 70px #fff,228px 70px #fff,236px 70px #fff,212px 78px #fff,220px 78px #fff,228px 78px #fff,236px 78px #fff,244px 78px #fff,212px 86px #fff,220px 86px #fff,228px 86px #fff,236px 86px #fff,244px 86px #fff,252px 86px #fff}
 html[data-tema="pixel"] :is(h1,h2,.btn,.pill,.tile,summary,.t1,.t2,.rl,.daily b){text-transform:uppercase;letter-spacing:.5px}
 /* contorno com cantos em degrau: quatro sombras sólidas (sem canto) + brilho e sombra de pixel por dentro */
-html[data-tema="pixel"] :is(.card,.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast,.reserva){
+html[data-tema="pixel"] :is(.card,.btn,.ib,.pill,.tile,.field,.pw,.daily,details.sec,.lf,.rk,.cust,.sv,.infop,#toast,.reserva,.heroi,.diaCard,.abas,.winSoma,.miniTab){
   border-color:transparent;
   box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(29,43,83,.14);
 }
@@ -57,3 +57,4 @@ html[data-tema="pixel"] #logo{image-rendering:pixelated}
 html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
 @media (max-width:350px){html[data-tema="pixel"] #titulo .t1{font-size:14px}html[data-tema="pixel"] #titulo .t2{font-size:10px}}
 html[data-tema="pixel"] .homeModos .btn{text-transform:none;letter-spacing:0}
+html[data-tema="pixel"] .podio .rk{border-radius:0}html[data-tema="pixel"] .abas [role=tab]{border-radius:0}html[data-tema="pixel"] .abas [role=tab][aria-selected=true]{background:var(--accent);color:#fff;box-shadow:none}

@@ -448,6 +448,8 @@ uk: {
   "dicas": "підказки",
   "Estrelas da fase": "Зірки за рівень",
   "Total": "Разом",
+  "Visual": "Вигляд",
+  "Conta": "Акаунт",
   "Fases": "Рівні",
   "Complete uma fase para liberar a próxima.": "Пройди рівень, щоб відкрити наступний.",
   "Fase do dia": "Рівень дня",

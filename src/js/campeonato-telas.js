@@ -163,7 +163,7 @@ function renderLobby(){
   });
   const rk = rankear(c, CP.jogs), caixa = $('#lbRank'); caixa.innerHTML = '';
   if (!rk.length) caixa.innerHTML = '<p class="vazio2">' + tr('Ninguém entrou ainda.') + '</p>';
-  rk.forEach(r => {
+  const linhas = rk.map(r => {
     const meu = r.key === key, bl = !meu && bloqueado(r.key), nome = bl ? tr('Jogador bloqueado') : r.nome;
     const d = mk('div', 'rk' + (meu ? ' eu' : '') + (bl ? ' bloq' : ''));
     d.append(mk('span', 'pos', r.feitas && r.pos <= 3 ? ['🥇', '🥈', '🥉'][r.pos - 1] : tr(r.pos + 'º')));
@@ -176,8 +176,9 @@ function renderLobby(){
       const todos = chaves.map(k => Array.from({length: N}, (_, i) => { const x = (CP.jogs[k].f || {})[i]; return x && x.t > 0 ? [x.t, x.j || 0] : null; }));
       abrirJogador(nome, r.feitas ? r.pos : 0, perfilJogador(todos, chaves.indexOf(r.key), N), c.fases.map(f => f.nome));
     });
-    caixa.appendChild(d);
+    return d;
   });
+  montarPodio(caixa, linhas, rk.filter(r => r.feitas).length);
   if (encerrado) aviso('#lbAviso', 'Prazo encerrado. Esse é o resultado final.', '');
   if (geral){ guardarPosicaoSala(c, rk, key); conferirBonusSala(c, eu); }
 }

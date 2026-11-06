@@ -88,7 +88,8 @@ def sec(p, id): p.evaluate("id=>{document.querySelector(id).open=true}", id); p.
 def aberta(p, id): return p.evaluate("id => document.querySelector('#ov-'+id).classList.contains('on')", id)
 
 def entrar(p, apelido):
-    p.click('#hConta'); p.check('#cnTermos'); p.click('#cnEntrar'); p.wait_for_timeout(1000)
+    p.click('#hConta'); p.click('#cnAbas [data-aba=conta]'); p.check('#cnTermos'); p.click('#cnEntrar'); p.wait_for_timeout(1500); p.wait_for_load_state('load')
+    p.evaluate("abrirConta('visual')"); p.wait_for_timeout(200)   # a sincronização pode recarregar a página com o progresso da nuvem
     p.fill('#cnNome', apelido); p.click('#cnNomeOk'); p.wait_for_timeout(800)
     p.evaluate("fecharTodos(); abrir('splash')"); p.wait_for_timeout(200)
 def semear(n):

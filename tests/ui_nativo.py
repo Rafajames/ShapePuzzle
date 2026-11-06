@@ -22,7 +22,7 @@ with sync_playwright() as pw:
     p.evaluate("window.__voltar()"); p.wait_for_timeout(200); check(aberta(p, 'splash'), 'depois volta para a tela inicial')
     p.evaluate("window.__voltar()"); p.wait_for_timeout(200); check(aberta(p, 'splash'), 'na tela inicial não fecha o app')
     check(p.evaluate("!navigator.serviceWorker || !navigator.serviceWorker.controller") and p.is_hidden('#blocoInstalar'), 'no app: sem service worker e sem "Instalar o jogo"')
-    p.click('#hConta'); p.check('#cnTermos'); p.click('#cnEntrar'); p.wait_for_timeout(300)
+    p.click('#hConta'); p.click('#cnAbas [data-aba=conta]'); p.check('#cnTermos'); p.click('#cnEntrar'); p.wait_for_timeout(300)
     check('próxima versão' in p.inner_text('#cnAviso') and p.evaluate("conta") is None, 'login com Google avisa que chega na próxima versão do app')
     print('Atualização baixada pelo app')
     novo = open(RAIZ + '/index.html', encoding='utf8').read().replace("const VERSAO = '", "const VERSAO = '9999.", 1)

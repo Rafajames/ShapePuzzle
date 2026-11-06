@@ -448,6 +448,8 @@ fr: {
   "dicas": "indices",
   "Estrelas da fase": "Étoiles du niveau",
   "Total": "Total",
+  "Visual": "Style",
+  "Conta": "Compte",
   "Fases": "Niveaux",
   "Complete uma fase para liberar a próxima.": "Termine un niveau pour débloquer le suivant.",
   "Fase do dia": "Niveau du jour",

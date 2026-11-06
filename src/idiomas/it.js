@@ -448,6 +448,8 @@ it: {
   "dicas": "aiuti",
   "Estrelas da fase": "Stelle del livello",
   "Total": "Totale",
+  "Visual": "Stile",
+  "Conta": "Account",
   "Fases": "Livelli",
   "Complete uma fase para liberar a próxima.": "Completa un livello per sbloccare il successivo.",
   "Fase do dia": "Livello del giorno",

@@ -40,7 +40,7 @@ const salaDaSemana = (c, sem) => salaGeralValida(c) && c.sem === sem && c.fim ==
 async function entrarGeral(sel){
   if (rkOcupado) return;
   const av = (m, t) => aviso(sel, m, t);
-  if (!contaPronta()){ av('Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.', 'erro'); fechar('camps'); fechar('rank'); abrirConta(); return; }
+  if (!contaPronta()){ av('Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.', 'erro'); fechar('camps'); fechar('rank'); abrirConta('conta'); return; }
   if (navigator.onLine === false){ av('Sem conexão com a internet. Confira e tente de novo.', 'erro'); return; }
   rkOcupado = true; document.querySelectorAll('[data-semana]').forEach(b => { b.disabled = true; });
   av('Procurando a sua sala…');
@@ -68,6 +68,13 @@ async function entrarGeral(sel){
   rkOcupado = false; document.querySelectorAll('[data-semana]').forEach(b => { b.disabled = false; });
 }
 
+/* ---------- pódio: os três primeiros em destaque, o resto em lista ---------- */
+function montarPodio(caixa, linhas, quantos){
+  const n = Math.min(3, quantos);
+  if (n){ const p = mk('div', 'podio'); linhas.slice(0, n).forEach((d, i) => { d.classList.add('p' + (i + 1)); p.appendChild(d); }); caixa.appendChild(p); }
+  linhas.slice(n).forEach(d => caixa.appendChild(d));
+}
+
 /* ---------- ranking geral ---------- */
 async function buscarRanking(){
   const r = await nuvem(cpDb, 'GET', 'pub', undefined, undefined, 'orderBy=%22n%22&limitToLast=' + RK_BUSCA) || {};
@@ -90,7 +97,8 @@ function renderRanking(res){
   const l = $('#rkLista'); l.innerHTML = '';
   const euUid = conta ? conta.uid : '';
   if (!res.lista.length) l.innerHTML = '<p class="vazio2">' + tr('Ninguém no ranking ainda. Entre com o Google e conclua fases para aparecer aqui.') + '</p>';
-  res.lista.slice(0, RK_TOP).forEach(r => l.appendChild(linhaRanking(r, euUid)));
+  const linhas = res.lista.slice(0, RK_TOP).map(r => linhaRanking(r, euUid));
+  montarPodio(l, linhas, linhas.length);
   const i = res.eu ? res.lista.indexOf(res.eu) : -1;
   if (i >= RK_TOP){ l.appendChild(mk('div', 'rkSep', '…')); l.appendChild(linhaRanking(res.eu, euUid)); }
   let msg = '';

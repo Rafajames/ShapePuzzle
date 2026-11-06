@@ -448,6 +448,8 @@ nl: {
   "dicas": "hints",
   "Estrelas da fase": "Sterren van het level",
   "Total": "Totaal",
+  "Visual": "Uiterlijk",
+  "Conta": "Account",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Voltooi een level om het volgende vrij te spelen.",
   "Fase do dia": "Level van de dag",

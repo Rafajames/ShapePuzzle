@@ -448,6 +448,8 @@
   "dicas": "dicas",
   "Estrelas da fase": "Estrelas do nível",
   "Total": "Total",
+  "Visual": "Visual",
+  "Conta": "Conta",
   "Fases": "Níveis",
   "Complete uma fase para liberar a próxima.": "Completa um nível para desbloqueares o seguinte.",
   "Fase do dia": "Nível do dia",

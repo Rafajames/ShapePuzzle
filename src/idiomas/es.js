@@ -448,6 +448,8 @@ es: {
   "dicas": "pistas",
   "Estrelas da fase": "Estrellas del nivel",
   "Total": "Total",
+  "Visual": "Estilo",
+  "Conta": "Cuenta",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",

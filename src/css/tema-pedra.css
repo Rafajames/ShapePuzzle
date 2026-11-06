@@ -1,7 +1,7 @@
 /* ======================= Tema Pedra =======================
    Ardósia e pedras lascadas: cartões como lajes, tabuleiro de ladrilhos e peças como pedras pintadas. */
 html[data-tema="pedra"]{
-  --bg:#1c1f23; --bg2:#33383e; --panel:#2c3035; --line:#5b626b; --txt:#eef0f2; --mut:#aab2bb;
+  --bg:#1c1f23; --bg2:#33383e; --panel:#2c3035; --line:#5b626b; --txt:#eef0f2; --mut:#bac2ca;
   --accent:#7fb3c8; --acc2:#5f93a8; --onacc:#0f1418;
   --t0:rgba(255,255,255,.04); --t1:rgba(255,255,255,.06); --t2:rgba(255,255,255,.12);
   --board:#3a3f45; --cel1:#8d949b; --cel2:#848b92; --cline:#5e656c;

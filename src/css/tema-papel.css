@@ -1,14 +1,14 @@
 /* ======================= Tema Papel =======================
    Papel de origami: fibras no fundo, cartões dobrados, tabuleiro quadriculado de caderno e peças como papel colorido. */
 html[data-tema="papel"]{
-  --bg:#efe6d3; --bg2:#fbf6ea; --panel:#fffaf0; --line:#cdbf9f; --txt:#2b2418; --mut:#6e6250;
+  --bg:#efe6d3; --bg2:#fbf6ea; --panel:#fffaf0; --line:#cdbf9f; --txt:#2b2418; --mut:#5c5242;
   --accent:#b8364a; --acc2:#2f6db5; --onacc:#ffffff;
   --t0:rgba(80,60,20,.035); --t1:rgba(80,60,20,.05); --t2:rgba(80,60,20,.1);
   --board:#e2d6bd; --cel1:#fffdf7; --cel2:#f8f3e6; --cline:#cdd8ea;
   --card1:#fffaf0; --card2:#f6eedb; --ovbg:rgba(230,220,196,.8); --toast:#fffaf0; --fieldbg:rgba(255,255,255,.85);
   --shb:rgba(90,70,30,.22); --shc:rgba(90,70,30,.28);
   --soft:#3e3526; --strong:#1c160d; --acctxt:#b02f43; --gold:#7f5600; --goldln:rgba(127,86,0,.45);
-  --ok:#1f7a4a; --bad:#c42a4a; --info:#1b5bb5; --staroff:#c9bc9c;
+  --ok:#17673d; --bad:#a8223f; --info:#1b5bb5; --staroff:#c9bc9c;
   --ring:rgba(60,40,10,.3); --gokbg:rgba(60,40,10,.12); --gokln:rgba(60,40,10,.55); --selln:rgba(60,40,10,.7);
   --handbg:rgba(60,40,10,.22); --handln:rgba(60,40,10,.85);
 }
