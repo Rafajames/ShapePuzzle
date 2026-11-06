@@ -94,6 +94,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 ## Conta (login opcional com o Google) e área do usuário
 
 - Na tela inicial, **Entrar com Google** (opcional): o jogo guarda o progresso na nuvem, **junta** o que já existe no aparelho com o que está na nuvem (nunca se perde nada) e permite continuar em outro aparelho. Sem conta, o jogo funciona igual.
+- **Meu perfil sem login:** no menu (primeiro item) e na tela inicial, todo jogador tem a sua tela de perfil com avatar, moldura, apelido, conquistas e estrelas, mesmo sem conta. Esse perfil fica só no aparelho (apelido local grátis, vale nos campeonatos) e, no primeiro login com o Google, vira o ponto de partida da conta.
 - **Apelido:** a primeira escolha é grátis; qualquer troca depois custa 30 estrelas. Vale também como nome nos campeonatos.
 - **Estrelas** (moeda): vêm das estrelas das fases (1 a 3), +2 por fase do dia, +5 por desafio da semana e prêmios de conquistas (mais tarde, anúncios premiados). O saldo nunca é guardado: é recalculado (`src/js/logica-conta.js`); só gastos, ganhos avulsos e conquistas resgatadas ficam na carteira (`cart`), que vai junto no backup e na nuvem.
 - **Avatares** (24, em pixel art gerados por código) e **molduras** (8): uns são livres, outros se compram com estrelas e outros são prêmio de conquista (14 conquistas). Sem foto: o jogo não coleta imagens.

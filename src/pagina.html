@@ -75,7 +75,7 @@
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
-    <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
+    <button class="btn contaChip" id="hConta" aria-label="Meu perfil"></button>
     <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
@@ -103,6 +103,7 @@
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
     <button class="ib x" id="btnInicio" data-i="home" aria-label="Tela inicial" title="Tela inicial" style="right:56px"></button>
     <h1>Menu</h1>
+    <button class="daily perfilMenu" id="btnPerfil"><em id="mpAvatar"></em><span class="dtx"><b id="mpNome">Meu perfil</b><small id="mpSub"></small></span><span class="tag" id="mpTag"></span></button>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
     <button class="daily" id="btnSem"><em data-i="star"></em><span class="dtx"><b>Desafio da semana</b><small id="semSub"></small></span><span class="tag" id="semTag"></span></button>
@@ -514,15 +515,8 @@
 <div class="ov" id="ov-conta">
   <div class="card">
     <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
-    <h1>Sua conta</h1>
-    <div id="cnFora">
-      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
-      <p id="cnTeaser" class="cnTeaser" hidden></p>
-      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
-      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
-      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
-    </div>
-    <div id="cnDentro" hidden>
+    <h1>Meu perfil</h1>
+    <div id="cnDentro">
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
       <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
       <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
@@ -547,6 +541,14 @@
         <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
         <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
       </div></details>
+    </div>
+    <div id="cnFora" class="cnFora">
+      <h2>Entrar com o Google (opcional)</h2>
+      <p>Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.</p>
+      <p id="cnTeaser" class="cnTeaser" hidden></p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
+      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <p class="aviso" id="cnAviso"></p>
   </div>

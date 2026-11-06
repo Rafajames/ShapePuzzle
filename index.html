@@ -397,6 +397,12 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .rkSep{text-align:center;color:var(--mut);letter-spacing:4px;padding:2px 0}
 #rkLista{margin:8px 0}
 #rkLista .rk .av{flex:none}
+/* atalho "Meu perfil" no menu */
+.perfilMenu{margin-top:4px;margin-bottom:12px}
+.perfilMenu em{display:flex;flex:none}
+.perfilMenu .av{margin:0}
+.perfilMenu b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cnFora{margin-top:18px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--mut) 35%,transparent)}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -629,7 +635,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
     <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
     <p id="jogarSub" class="jogarSub" hidden></p>
-    <button class="btn contaChip" id="hConta" aria-label="Entrar com Google"></button>
+    <button class="btn contaChip" id="hConta" aria-label="Meu perfil"></button>
     <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
     <div class="homeGrade">
       <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
@@ -657,6 +663,7 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
     <button class="ib x" data-close="menu" data-i="close" aria-label="Fechar"></button>
     <button class="ib x" id="btnInicio" data-i="home" aria-label="Tela inicial" title="Tela inicial" style="right:56px"></button>
     <h1>Menu</h1>
+    <button class="daily perfilMenu" id="btnPerfil"><em id="mpAvatar"></em><span class="dtx"><b id="mpNome">Meu perfil</b><small id="mpSub"></small></span><span class="tag" id="mpTag"></span></button>
     <div class="atalhos">
     <button class="daily" id="btnDia"><em data-i="calendar"></em><span class="dtx"><b>Fase do dia</b><small id="diaSub"></small></span><span class="tag" id="diaTag"></span></button>
     <button class="daily" id="btnSem"><em data-i="star"></em><span class="dtx"><b>Desafio da semana</b><small id="semSub"></small></span><span class="tag" id="semTag"></span></button>
@@ -1068,15 +1075,8 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
 <div class="ov" id="ov-conta">
   <div class="card">
     <button class="ib x" data-close="conta" data-i="close" aria-label="Fechar"></button>
-    <h1>Sua conta</h1>
-    <div id="cnFora">
-      <p>Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.</p>
-      <p id="cnTeaser" class="cnTeaser" hidden></p>
-      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
-      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
-      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
-    </div>
-    <div id="cnDentro" hidden>
+    <h1>Meu perfil</h1>
+    <div id="cnDentro">
       <div class="cnTopo"><div id="cnAvatar"></div><div class="cnQuem"><b id="cnNomeTxt"></b><small id="cnEstado"></small></div><div class="cnSaldo" aria-live="polite"><b id="cnSaldo">0</b><small>estrelas</small></div></div>
       <div id="cnBemvindo" class="cnBem" hidden><b>Bem-vindo!</b> Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.</div>
       <details class="sec" id="cnSecNome" open><summary data-i="edit"><span>Apelido</span></summary><div class="sb">
@@ -1101,6 +1101,14 @@ html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
         <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
         <p class="cnDica cnLegal"><a data-lk="privacidade" target="_blank" rel="noopener">Política de Privacidade</a> · <a data-lk="termos" target="_blank" rel="noopener">Termos de Uso</a></p>
       </div></details>
+    </div>
+    <div id="cnFora" class="cnFora">
+      <h2>Entrar com o Google (opcional)</h2>
+      <p>Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.</p>
+      <p id="cnTeaser" class="cnTeaser" hidden></p>
+      <p>Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.</p>
+      <label class="cnTermos" id="cnTermosL"><input type="checkbox" id="cnTermos"><span id="cnTermosT"></span></label>
+      <div class="acts"><button class="btn pri" id="cnEntrar" data-i="user" disabled>Entrar com o Google</button></div>
     </div>
     <p class="aviso" id="cnAviso"></p>
   </div>
@@ -1467,17 +1475,26 @@ en: {
   "Entrar no campeonato da semana": "Join this week’s championship",
   "Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.": "Everyone plays the same 5 new levels, in rooms of up to 100 players. A new room every week. Needs a Google account.",
   "Entre amigos": "With friends",
-  "Sua sessão do Google acabou. Entre de novo na tela Sua conta.": "Your Google session has ended. Sign in again on the Your account screen.",
+  "Sua sessão do Google acabou. Entre de novo na tela Meu perfil.": "Your Google session has ended. Sign in again on the My profile screen.",
   "Todas as salas desta semana estão cheias. Tente de novo na semana que vem.": "All rooms this week are full. Try again next week.",
   "Não consegui preparar as fases agora. Tente de novo.": "I couldn’t prepare the levels right now. Try again.",
   "Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.": "Sign in with Google and choose your nickname to play the weekly championship.",
   "Procurando a sua sala…": "Looking for your room…",
   "Preparando as fases da semana…": "Preparing this week’s levels…",
   "Entre com o Google para aparecer no ranking.": "Sign in with Google to appear on the ranking.",
-  "Escolha o seu apelido na tela Sua conta para aparecer no ranking.": "Choose your nickname on the Your account screen to appear on the ranking.",
+  "Escolha o seu apelido na tela Meu perfil para aparecer no ranking.": "Choose your nickname on the My profile screen to appear on the ranking.",
   "Sua posição aparece depois da próxima sincronização.": "Your position will show after the next sync.",
   "Conclua uma fase para entrar no ranking.": "Finish a level to get on the ranking.",
   "{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo": "{n} of {max} players · {fases} · {prazo} · best time counts",
+  "Jogador": "Player",
+  "Suas {n} ★ vão junto para a conta.": "Your {n} ★ come along to the account.",
+  "Seu apelido": "Your nickname",
+  "Grátis neste aparelho. Ao entrar com o Google, ele vira o seu apelido público.": "Free on this device. When you sign in with Google, it becomes your public nickname.",
+  "Apelido salvo neste aparelho.": "Nickname saved on this device.",
+  "Perfil deste aparelho": "Profile on this device",
+  "Entrar com o Google (opcional)": "Sign in with Google (optional)",
+  "Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.": "Your profile already works on this device. With a Google account you keep your progress in the cloud, continue on another device, appear on the overall ranking and play the weekly championship.",
+  "Avatar, moldura, conquistas e estrelas": "Avatar, frame, achievements and stars",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2226,17 +2243,26 @@ es: {
   "Entrar no campeonato da semana": "Entrar al torneo de la semana",
   "Todo mundo joga as mesmas 5 fases novas, em salas de até 100 pessoas. Uma sala nova a cada semana. Precisa da conta Google.": "Todos juegan los mismos 5 niveles nuevos, en salas de hasta 100 personas. Una sala nueva cada semana. Requiere cuenta de Google.",
   "Entre amigos": "Entre amigos",
-  "Sua sessão do Google acabou. Entre de novo na tela Sua conta.": "Tu sesión de Google terminó. Vuelve a entrar en la pantalla Tu cuenta.",
+  "Sua sessão do Google acabou. Entre de novo na tela Meu perfil.": "Tu sesión de Google terminó. Vuelve a entrar en la pantalla Mi perfil.",
   "Todas as salas desta semana estão cheias. Tente de novo na semana que vem.": "Todas las salas de esta semana están llenas. Inténtalo la semana que viene.",
   "Não consegui preparar as fases agora. Tente de novo.": "No pude preparar los niveles ahora. Inténtalo de nuevo.",
   "Entre com a conta Google e escolha o seu apelido para disputar o campeonato da semana.": "Entra con Google y elige tu apodo para jugar el torneo de la semana.",
   "Procurando a sua sala…": "Buscando tu sala…",
   "Preparando as fases da semana…": "Preparando los niveles de la semana…",
   "Entre com o Google para aparecer no ranking.": "Entra con Google para aparecer en el ranking.",
-  "Escolha o seu apelido na tela Sua conta para aparecer no ranking.": "Elige tu apodo en la pantalla Tu cuenta para aparecer en el ranking.",
+  "Escolha o seu apelido na tela Meu perfil para aparecer no ranking.": "Elige tu apodo en la pantalla Mi perfil para aparecer en el ranking.",
   "Sua posição aparece depois da próxima sincronização.": "Tu posición aparecerá tras la próxima sincronización.",
   "Conclua uma fase para entrar no ranking.": "Completa un nivel para entrar en el ranking.",
   "{n} de {max} pessoas · {fases} · {prazo} · vale o melhor tempo": "{n} de {max} personas · {fases} · {prazo} · vale el mejor tiempo",
+  "Jogador": "Jugador",
+  "Suas {n} ★ vão junto para a conta.": "Tus {n} ★ pasan a la cuenta.",
+  "Seu apelido": "Tu apodo",
+  "Grátis neste aparelho. Ao entrar com o Google, ele vira o seu apelido público.": "Gratis en este dispositivo. Al entrar con Google, se convierte en tu apodo público.",
+  "Apelido salvo neste aparelho.": "Apodo guardado en este dispositivo.",
+  "Perfil deste aparelho": "Perfil de este dispositivo",
+  "Entrar com o Google (opcional)": "Entrar con Google (opcional)",
+  "Seu perfil já funciona neste aparelho. Com a conta Google você guarda o progresso na nuvem, continua em outro aparelho, aparece no ranking geral e disputa o campeonato da semana.": "Tu perfil ya funciona en este dispositivo. Con una cuenta de Google guardas el progreso en la nube, sigues en otro dispositivo, apareces en el ranking general y juegas el torneo de la semana.",
+  "Avatar, moldura, conquistas e estrelas": "Avatar, marco, logros y estrellas",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -5560,7 +5586,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.05.7';
+const VERSAO = '2026.11.05.8';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -5682,7 +5708,7 @@ let cpPend = store.get('cppend', []);
 const CP = {id: null, db: '', camp: null, jogs: {}, timer: 0, convite: null, fases: []};
 const cpKey = () => normalizarNome(cpNome);
 const erroNuvem = cod => Object.assign(new Error(cod), {cod});
-const MSG_NUVEM = {sessao: 'Sua sessão do Google acabou. Entre de novo na tela Sua conta.', cheio: 'Todas as salas desta semana estão cheias. Tente de novo na semana que vem.', gerar: 'Não consegui preparar as fases agora. Tente de novo.', negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
+const MSG_NUVEM = {sessao: 'Sua sessão do Google acabou. Entre de novo na tela Meu perfil.', cheio: 'Todas as salas desta semana estão cheias. Tente de novo na semana que vem.', gerar: 'Não consegui preparar as fases agora. Tente de novo.', negado: 'Não foi possível concluir. Tente de novo em instantes.', rede: 'Sem conexão com a internet. Confira e tente de novo.', tempo: 'A conexão demorou demais. Tente de novo.', http: 'O serviço de campeonatos está com problema agora. Tente de novo mais tarde.'};
 const msgNuvem = e => e && e.cod === 'auth' ? msgAuth(e.auth) : MSG_NUVEM[e && e.cod] || 'Algo deu errado. Tente de novo.';
 /* Roda fn(signal) com limite de 9 s; qualquer falha vira um erro com `cod` (tempo, rede, negado, http, auth). */
 async function comTempo(fn){
@@ -6101,6 +6127,10 @@ const DESC_CONQ = q => q.m === 'fases' ? tr('Conclua {n} fases', {n: q.n}) : q.m
   : tr('Conclua {n} fases no modo infinito', {n: q.n});
 let conta = store.get('conta', null);   // {uid, nome, av, mold, novo?, sujo?, ultima?, expirou?}
 let fbAuth = null, contaOcupada = false, contaTimer = null;
+/* Perfil deste aparelho: vale para quem joga sem conta (e serve de ponto de partida no primeiro login). */
+let perfil = Object.assign({nome: '', av: 'p1', mold: ''}, store.get('perfil', {}));
+const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold)};
+const guardarPerfil = () => store.set('perfil', perfil);
 
 /* ---------- avatar ---------- */
 const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
@@ -6135,7 +6165,7 @@ function verificarConquistas(avisar){
   const r = resgatarConquistas(dadosAtuais(), dataHoje());
   if (!r.novas.length) return;
   guardarCart(r.cart);
-  if (avisar && conta){
+  if (avisar){
     toast(r.novas.length === 1 ? tr('Conquista: {nome}! +{n} ★', {nome: tr(NOME_CONQ[r.novas[0].id]), n: r.estrelas}) : tr('{k} conquistas novas! +{n} ★', {k: r.novas.length, n: r.estrelas}));
   }
   renderConta();
@@ -6155,17 +6185,20 @@ function montarTermos(){
 
 /* ---------- tela inicial e área do usuário ---------- */
 function renderConta(){
-  const b = $('#hConta'); if (!b) return;
   ligarLinksLegais();
-  b.textContent = '';
-  const s = saldoAtual();
-  if (!conta){
-    b.innerHTML = ic('user'); b.appendChild(mk('span', '', tr('Entrar com Google'))); b.appendChild(mk('small', '', s > 0 ? '★ ' + s : tr('opcional')));
-    b.setAttribute('aria-label', tr('Entrar com Google'));
-  } else {
-    b.appendChild(avatarEl(conta, 30));
-    const nm = mk('span', 'cnN', conta.nome); b.appendChild(nm);
-    b.appendChild(mk('small', '', '★ ' + s)); b.setAttribute('aria-label', tr('Meu perfil') + ': ' + conta.nome + ', ' + s + ' ' + tr('estrelas'));
+  const c = eu(), s = saldoAtual(), b = $('#hConta');
+  if (b){
+    b.textContent = '';
+    b.appendChild(avatarEl(c, 30)); b.appendChild(mk('span', 'cnN', c.nome)); b.appendChild(mk('small', '', '★ ' + s));
+    b.setAttribute('aria-label', tr('Meu perfil') + ': ' + c.nome + ', ' + s + ' ' + tr('estrelas'));
+  }
+  const m = $('#btnPerfil');
+  if (m){
+    $('#mpAvatar').textContent = ''; $('#mpAvatar').appendChild(avatarEl(c, 44));
+    $('#mpNome').textContent = c.nome;
+    $('#mpSub').textContent = tr('Avatar, moldura, conquistas e estrelas');
+    $('#mpTag').textContent = '★ ' + s;
+    m.setAttribute('aria-label', tr('Meu perfil') + ': ' + c.nome + ', ' + s + ' ' + tr('estrelas'));
   }
   if ($('#ov-conta').classList.contains('on')) montarConta();
 }
@@ -6204,24 +6237,24 @@ function tocarItem(chave, rotulo){
   aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
 function montarConta(){
-  $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
-  const s = saldoAtual();
-  if (!conta){
-    montarTermos();
-    const t = $('#cnTeaser'); t.hidden = s <= 0; t.textContent = s > 0 ? tr('Você já tem {n} ★ esperando por você.', {n: s}) : ''; return;
-  }
+  const c = eu(), s = saldoAtual();
+  $('#cnFora').hidden = !!conta; $('#cnSecNuvem').hidden = !conta;
+  if (!conta) montarTermos();
+  const t = $('#cnTeaser'); t.hidden = !!conta || s <= 0; t.textContent = !conta && s > 0 ? tr('Suas {n} ★ vão junto para a conta.', {n: s}) : '';
   const d = dadosAtuais(), donos = itensDe(d);
-  $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(conta, 64));
-  $('#cnNomeTxt').textContent = conta.nome; $('#cnSaldo').textContent = s;
-  if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta.nome;
-  $('#cnBemvindo').hidden = !conta.novo;
-  $('#cnNomeOk').textContent = tr(conta.novo ? 'Confirmar apelido' : 'Trocar por {n} ★', {n: NOME_CUSTO});
-  $('#cnNomeDica').textContent = conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
-  estadoConta(textoUltima());
+  $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(c, 64));
+  $('#cnNomeTxt').textContent = c.nome; $('#cnSaldo').textContent = s;
+  if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta ? conta.nome : perfil.nome;
+  $('#cnNome').placeholder = tr('Seu apelido');
+  $('#cnBemvindo').hidden = !(conta && conta.novo);
+  $('#cnNomeOk').textContent = tr(!conta ? 'Salvar' : conta.novo ? 'Confirmar apelido' : 'Trocar por {n} ★', {n: NOME_CUSTO});
+  $('#cnNomeDica').textContent = !conta ? tr('Grátis neste aparelho. Ao entrar com o Google, ele vira o seu apelido público.')
+    : conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
+  estadoConta(conta ? textoUltima() : 'Perfil deste aparelho');
   const ga = $('#cnAvatares'); ga.textContent = '';
-  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), conta.av === id, d, donos)); }
+  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), c.av === id, d, donos)); }
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: conta.av, mold: id}, 40), tr(NOME_MOLDURA[id]), conta.mold === id, d, donos)));
+  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
   const nAv = [...donos].filter(k => k.startsWith('av:')).length, nMo = [...donos].filter(k => k.startsWith('mold:')).length;
   $('#cnTitAv').textContent = tr('Avatares') + ' ' + nAv + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + nMo + '/' + MOLDURAS.length;
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
@@ -6293,15 +6326,17 @@ async function contaPosLogin(user){
     conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
   } else {
     /* primeira vez: o apelido só vai para a nuvem depois que a pessoa o escolher (a primeira escolha é grátis) */
-    let n = limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
-    conta = {uid: user.uid, nome: n, av: avPadrao(user.uid), mold: '', novo: true};
+    let n = nomeValido(perfil.nome) ? perfil.nome : limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
+    const temPerfil = !!store.get('perfil', null);
+    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', novo: true};
   }
   aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
   await contaSync({aplicar: true});
 }
+const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || ''}; guardarPerfil(); } };
 async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
-  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
+  guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
 }
 /* Apaga tudo da nuvem e a própria conta. Pede para confirmar com o Google antes (o Firebase exige um login recente para isso). */
 async function contaApagar(){
@@ -6314,7 +6349,7 @@ async function contaApagar(){
     for (const c of ['pub', 'priv']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
     await u.delete();
   }catch(e){ aviso('#cnAviso', 'Não consegui apagar agora. Confira a internet e tente de novo.', 'erro'); return; }
-  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
+  guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
 }
 
 /* ---------- sincronização ---------- */
@@ -6359,7 +6394,11 @@ async function contaPerfilRapido(){
   catch(e){ conta.sujo = true; store.set('conta', conta); estadoConta('Sem conexão agora. Tentamos de novo mais tarde.'); }
 }
 function mudarPerfil(m){
-  if (!conta) return;
+  if (!conta){
+    for (const k of ['av', 'mold', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
+    if (m.nome !== undefined && !cpAuth){ cpNome = m.nome; store.set('cpnome', cpNome); }
+    guardarPerfil(); renderConta(); montarConta(); return;
+  }
   if (m.av !== undefined) conta.av = m.av;
   if (m.mold !== undefined) conta.mold = m.mold;
   if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
@@ -6369,6 +6408,7 @@ function trocarApelido(){
   const n = limparNome($('#cnNome').value);
   if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no apelido.', 'erro'); return; }
   if (apelidoProibido(n)){ aviso('#cnAviso', 'Esse apelido não é permitido. Escolha outro.', 'erro'); return; }
+  if (!conta){ mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo neste aparelho.', 'ok'); return; }
   if (conta.novo){
     conta.novo = false; mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo. Bom jogo!', 'ok'); contaAgendar(1500); return;
   }
@@ -6380,6 +6420,7 @@ function trocarApelido(){
 }
 
 $('#hConta').onclick = abrirConta;
+$('#btnPerfil').onclick = () => { fechar('menu'); abrirConta(); };
 $('#cnEntrar').onclick = contaEntrar;
 $('#cnTermos').onchange = montarTermos;
 $('#cnSair').onclick = contaSair;
@@ -6490,7 +6531,7 @@ function renderRanking(res){
   if (i >= RK_TOP){ l.appendChild(mk('div', 'rkSep', '…')); l.appendChild(linhaRanking(res.eu, euUid)); }
   let msg = '';
   if (!conta) msg = 'Entre com o Google para aparecer no ranking.';
-  else if (conta.novo) msg = 'Escolha o seu apelido na tela Sua conta para aparecer no ranking.';
+  else if (conta.novo) msg = 'Escolha o seu apelido na tela Meu perfil para aparecer no ranking.';
   else if (!res.eu) msg = res.corte && fasesFeitas(dadosAtuais()) > 0 ? tr('Você ainda não está no top {n}. Conclua mais de {c} fases para entrar.', {n: RK_BUSCA, c: res.corte})
     : fasesFeitas(dadosAtuais()) > 0 ? 'Sua posição aparece depois da próxima sincronização.' : 'Conclua uma fase para entrar no ranking.';
   aviso('#rkAviso', msg);

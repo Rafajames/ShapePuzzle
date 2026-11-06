@@ -91,7 +91,7 @@ function renderRanking(res){
   if (i >= RK_TOP){ l.appendChild(mk('div', 'rkSep', '…')); l.appendChild(linhaRanking(res.eu, euUid)); }
   let msg = '';
   if (!conta) msg = 'Entre com o Google para aparecer no ranking.';
-  else if (conta.novo) msg = 'Escolha o seu apelido na tela Sua conta para aparecer no ranking.';
+  else if (conta.novo) msg = 'Escolha o seu apelido na tela Meu perfil para aparecer no ranking.';
   else if (!res.eu) msg = res.corte && fasesFeitas(dadosAtuais()) > 0 ? tr('Você ainda não está no top {n}. Conclua mais de {c} fases para entrar.', {n: RK_BUSCA, c: res.corte})
     : fasesFeitas(dadosAtuais()) > 0 ? 'Sua posição aparece depois da próxima sincronização.' : 'Conclua uma fase para entrar no ranking.';
   aviso('#rkAviso', msg);

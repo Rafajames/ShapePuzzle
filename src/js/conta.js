@@ -20,6 +20,10 @@ const DESC_CONQ = q => q.m === 'fases' ? tr('Conclua {n} fases', {n: q.n}) : q.m
   : tr('Conclua {n} fases no modo infinito', {n: q.n});
 let conta = store.get('conta', null);   // {uid, nome, av, mold, novo?, sujo?, ultima?, expirou?}
 let fbAuth = null, contaOcupada = false, contaTimer = null;
+/* Perfil deste aparelho: vale para quem joga sem conta (e serve de ponto de partida no primeiro login). */
+let perfil = Object.assign({nome: '', av: 'p1', mold: ''}, store.get('perfil', {}));
+const eu = () => conta || {nome: perfil.nome || tr('Jogador'), av: avValido(perfil.av), mold: moldValida(perfil.mold)};
+const guardarPerfil = () => store.set('perfil', perfil);
 
 /* ---------- avatar ---------- */
 const hashTxt = t => { let h = 2166136261; for (let i = 0; i < t.length; i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; };
@@ -54,7 +58,7 @@ function verificarConquistas(avisar){
   const r = resgatarConquistas(dadosAtuais(), dataHoje());
   if (!r.novas.length) return;
   guardarCart(r.cart);
-  if (avisar && conta){
+  if (avisar){
     toast(r.novas.length === 1 ? tr('Conquista: {nome}! +{n} ★', {nome: tr(NOME_CONQ[r.novas[0].id]), n: r.estrelas}) : tr('{k} conquistas novas! +{n} ★', {k: r.novas.length, n: r.estrelas}));
   }
   renderConta();
@@ -74,17 +78,20 @@ function montarTermos(){
 
 /* ---------- tela inicial e área do usuário ---------- */
 function renderConta(){
-  const b = $('#hConta'); if (!b) return;
   ligarLinksLegais();
-  b.textContent = '';
-  const s = saldoAtual();
-  if (!conta){
-    b.innerHTML = ic('user'); b.appendChild(mk('span', '', tr('Entrar com Google'))); b.appendChild(mk('small', '', s > 0 ? '★ ' + s : tr('opcional')));
-    b.setAttribute('aria-label', tr('Entrar com Google'));
-  } else {
-    b.appendChild(avatarEl(conta, 30));
-    const nm = mk('span', 'cnN', conta.nome); b.appendChild(nm);
-    b.appendChild(mk('small', '', '★ ' + s)); b.setAttribute('aria-label', tr('Meu perfil') + ': ' + conta.nome + ', ' + s + ' ' + tr('estrelas'));
+  const c = eu(), s = saldoAtual(), b = $('#hConta');
+  if (b){
+    b.textContent = '';
+    b.appendChild(avatarEl(c, 30)); b.appendChild(mk('span', 'cnN', c.nome)); b.appendChild(mk('small', '', '★ ' + s));
+    b.setAttribute('aria-label', tr('Meu perfil') + ': ' + c.nome + ', ' + s + ' ' + tr('estrelas'));
+  }
+  const m = $('#btnPerfil');
+  if (m){
+    $('#mpAvatar').textContent = ''; $('#mpAvatar').appendChild(avatarEl(c, 44));
+    $('#mpNome').textContent = c.nome;
+    $('#mpSub').textContent = tr('Avatar, moldura, conquistas e estrelas');
+    $('#mpTag').textContent = '★ ' + s;
+    m.setAttribute('aria-label', tr('Meu perfil') + ': ' + c.nome + ', ' + s + ' ' + tr('estrelas'));
   }
   if ($('#ov-conta').classList.contains('on')) montarConta();
 }
@@ -123,24 +130,24 @@ function tocarItem(chave, rotulo){
   aviso('#cnAviso', tr('Liberado! Sobraram {n} ★.', {n: saldoAtual()}), 'ok');
 }
 function montarConta(){
-  $('#cnFora').hidden = !!conta; $('#cnDentro').hidden = !conta;
-  const s = saldoAtual();
-  if (!conta){
-    montarTermos();
-    const t = $('#cnTeaser'); t.hidden = s <= 0; t.textContent = s > 0 ? tr('Você já tem {n} ★ esperando por você.', {n: s}) : ''; return;
-  }
+  const c = eu(), s = saldoAtual();
+  $('#cnFora').hidden = !!conta; $('#cnSecNuvem').hidden = !conta;
+  if (!conta) montarTermos();
+  const t = $('#cnTeaser'); t.hidden = !!conta || s <= 0; t.textContent = !conta && s > 0 ? tr('Suas {n} ★ vão junto para a conta.', {n: s}) : '';
   const d = dadosAtuais(), donos = itensDe(d);
-  $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(conta, 64));
-  $('#cnNomeTxt').textContent = conta.nome; $('#cnSaldo').textContent = s;
-  if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta.nome;
-  $('#cnBemvindo').hidden = !conta.novo;
-  $('#cnNomeOk').textContent = tr(conta.novo ? 'Confirmar apelido' : 'Trocar por {n} ★', {n: NOME_CUSTO});
-  $('#cnNomeDica').textContent = conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
-  estadoConta(textoUltima());
+  $('#cnAvatar').textContent = ''; $('#cnAvatar').appendChild(avatarEl(c, 64));
+  $('#cnNomeTxt').textContent = c.nome; $('#cnSaldo').textContent = s;
+  if (document.activeElement !== $('#cnNome')) $('#cnNome').value = conta ? conta.nome : perfil.nome;
+  $('#cnNome').placeholder = tr('Seu apelido');
+  $('#cnBemvindo').hidden = !(conta && conta.novo);
+  $('#cnNomeOk').textContent = tr(!conta ? 'Salvar' : conta.novo ? 'Confirmar apelido' : 'Trocar por {n} ★', {n: NOME_CUSTO});
+  $('#cnNomeDica').textContent = !conta ? tr('Grátis neste aparelho. Ao entrar com o Google, ele vira o seu apelido público.')
+    : conta.novo ? tr('Grátis agora. Depois, cada troca custa {n} ★.', {n: NOME_CUSTO}) : tr('Cada troca de apelido custa {n} ★.', {n: NOME_CUSTO});
+  estadoConta(conta ? textoUltima() : 'Perfil deste aparelho');
   const ga = $('#cnAvatares'); ga.textContent = '';
-  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), conta.av === id, d, donos)); }
+  for (let i = 1; i <= N_AVATARES; i++){ const id = 'p' + i; ga.appendChild(celulaItem('av:' + id, avatarEl({av: id}, 44), tr('Avatar {n}', {n: i}), c.av === id, d, donos)); }
   const gm = $('#cnMolduras'); gm.textContent = '';
-  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: conta.av, mold: id}, 40), tr(NOME_MOLDURA[id]), conta.mold === id, d, donos)));
+  MOLDURAS.forEach(id => gm.appendChild(celulaItem('mold:' + id, avatarEl({av: c.av, mold: id}, 40), tr(NOME_MOLDURA[id]), c.mold === id, d, donos)));
   const nAv = [...donos].filter(k => k.startsWith('av:')).length, nMo = [...donos].filter(k => k.startsWith('mold:')).length;
   $('#cnTitAv').textContent = tr('Avatares') + ' ' + nAv + '/' + N_AVATARES; $('#cnTitMold').textContent = tr('Molduras') + ' ' + nMo + '/' + MOLDURAS.length;
   const med = medidasConta(d, dataHoje()), lc = $('#cnConq'); lc.textContent = '';
@@ -212,15 +219,17 @@ async function contaPosLogin(user){
     conta = {uid: user.uid, nome: limparNome(pub.nome) || 'Jogador', av: avValido(pub.av), mold: moldValida(pub.mold)};
   } else {
     /* primeira vez: o apelido só vai para a nuvem depois que a pessoa o escolher (a primeira escolha é grátis) */
-    let n = limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
-    conta = {uid: user.uid, nome: n, av: avPadrao(user.uid), mold: '', novo: true};
+    let n = nomeValido(perfil.nome) ? perfil.nome : limparNome(String(user.displayName || '').split(' ')[0]); if (n.length < 2) n = 'Jogador';
+    const temPerfil = !!store.get('perfil', null);
+    conta = {uid: user.uid, nome: n, av: temPerfil ? avValido(perfil.av) : avPadrao(user.uid), mold: temPerfil ? moldValida(perfil.mold) : '', novo: true};
   }
   aplicarNomeCamp(); salvarConta(); montarConta(); aviso('#cnAviso', '');
   await contaSync({aplicar: true});
 }
+const guardarVisual = () => { if (conta){ perfil = {nome: conta.novo ? perfil.nome : conta.nome, av: conta.av, mold: conta.mold || ''}; guardarPerfil(); } };
 async function contaSair(){
   try{ const a = await Promise.race([firebaseAuth(), new Promise((_, no) => setTimeout(() => no(), 4000))]); await a.signOut(); }catch(e){}
-  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
+  guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Você saiu. O progresso continua neste aparelho.', 'ok');
 }
 /* Apaga tudo da nuvem e a própria conta. Pede para confirmar com o Google antes (o Firebase exige um login recente para isso). */
 async function contaApagar(){
@@ -233,7 +242,7 @@ async function contaApagar(){
     for (const c of ['pub', 'priv']) await nv('DELETE', c + '/' + conta.uid, undefined, tk);
     await u.delete();
   }catch(e){ aviso('#cnAviso', 'Não consegui apagar agora. Confira a internet e tente de novo.', 'erro'); return; }
-  conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
+  guardarVisual(); conta = null; store.set('conta', null); renderConta(); montarConta(); aviso('#cnAviso', 'Sua conta e seus dados foram apagados da nuvem.', 'ok');
 }
 
 /* ---------- sincronização ---------- */
@@ -278,7 +287,11 @@ async function contaPerfilRapido(){
   catch(e){ conta.sujo = true; store.set('conta', conta); estadoConta('Sem conexão agora. Tentamos de novo mais tarde.'); }
 }
 function mudarPerfil(m){
-  if (!conta) return;
+  if (!conta){
+    for (const k of ['av', 'mold', 'nome']) if (m[k] !== undefined) perfil[k] = m[k];
+    if (m.nome !== undefined && !cpAuth){ cpNome = m.nome; store.set('cpnome', cpNome); }
+    guardarPerfil(); renderConta(); montarConta(); return;
+  }
   if (m.av !== undefined) conta.av = m.av;
   if (m.mold !== undefined) conta.mold = m.mold;
   if (m.nome !== undefined){ conta.nome = m.nome; aplicarNomeCamp(); }
@@ -288,6 +301,7 @@ function trocarApelido(){
   const n = limparNome($('#cnNome').value);
   if (!nomeValido(n)){ aviso('#cnAviso', 'Use de 2 a 20 letras ou números no apelido.', 'erro'); return; }
   if (apelidoProibido(n)){ aviso('#cnAviso', 'Esse apelido não é permitido. Escolha outro.', 'erro'); return; }
+  if (!conta){ mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo neste aparelho.', 'ok'); return; }
   if (conta.novo){
     conta.novo = false; mudarPerfil({nome: n}); aviso('#cnAviso', 'Apelido salvo. Bom jogo!', 'ok'); contaAgendar(1500); return;
   }
@@ -299,6 +313,7 @@ function trocarApelido(){
 }
 
 $('#hConta').onclick = abrirConta;
+$('#btnPerfil').onclick = () => { fechar('menu'); abrirConta(); };
 $('#cnEntrar').onclick = contaEntrar;
 $('#cnTermos').onchange = montarTermos;
 $('#cnSair').onclick = contaSair;

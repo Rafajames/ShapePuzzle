@@ -208,3 +208,9 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .rkSep{text-align:center;color:var(--mut);letter-spacing:4px;padding:2px 0}
 #rkLista{margin:8px 0}
 #rkLista .rk .av{flex:none}
+/* atalho "Meu perfil" no menu */
+.perfilMenu{margin-top:4px;margin-bottom:12px}
+.perfilMenu em{display:flex;flex:none}
+.perfilMenu .av{margin:0}
+.perfilMenu b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cnFora{margin-top:18px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--mut) 35%,transparent)}
