@@ -5,15 +5,9 @@ $('#btnDica').onclick = acaoDica;
 $('#btnDesfazer').onclick = acaoDesfazer;
 $('#btnReset').onclick = () => { if (ehCamp(S.cur)){ carregar(S.cur, true); toast('Tabuleiro limpo. O tempo do campeonato continua correndo.'); } else carregar(S.cur); };
 $('#btnMenu').onclick = () => abrirMenu();
-function iconeMusica(){
-  const b = $('#btnMusica'); b.classList.toggle('off', !Som.musica());
-  b.innerHTML = ic(Som.musica() ? 'note' : 'noteoff');
-  b.setAttribute('aria-pressed', Som.musica());
-}
-$('#btnMusica').onclick = () => { Som.setMusica(!Som.musica()); iconeMusica(); $('#chkMusica').checked = Som.musica(); };
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => fechar(b.dataset.close));
 document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'ov-splash' && o.id !== 'ov-win') o.classList.remove('on'); }));
-function sairDaAbertura(){ Som.iniciar(); aplicarHumor(); fechar('splash'); iconeMusica(); }
+function sairDaAbertura(){ Som.iniciar(); aplicarHumor(); fechar('splash'); }
 $('#btnJogar').onclick = () => { sairDaAbertura(); if (CP.convite){ const c = CP.convite; CP.convite = null; abrirLobby(c.id, c.db); }
   if (OFF.pendente){ const id = OFF.pendente; OFF.pendente = null; abrirOffV(id); } };
 /* atalhos da tela inicial: se há um convite esperando, ele vem primeiro */
@@ -26,16 +20,61 @@ $('#hEst').onclick = atalhoInicio(() => $('#btnEst').onclick());
 $('#hMenu').onclick = atalhoInicio(() => abrirMenu());
 const irInicio = () => { fecharTodos('ov-splash'); renderInicio(); $('#ov-splash').classList.add('on'); };
 $('#btnInicio').onclick = irInicio; $('#btnCasa').onclick = irInicio;
-/* "Continuar" quando já há o que continuar; mostra qual fase */
+/* Tela inicial: a próxima fase em destaque (miniatura, progresso, Continuar), a fase do dia e os outros modos. */
 function renderInicio(){
   if (window.__pronto){ renderConta(); renderPosicao(); }
+  renderDiaInicio();
   if (!S.jogo) return;
-  const volta = prog.done.length > 0 || !!andamento;
+  const volta = prog.done.length > 0 || !!andamento, c = S.cur, j = S.jogo;
   $('#jogarTxt').textContent = tr(volta ? 'Continuar' : 'Jogar');
-  const sub = $('#jogarSub'), c = S.cur;
+  const sub = $('#jogarSub');
   const txt = !volta ? '' : c && c.k === 'b' ? tr('Fase ' + (c.i + 1)) : c && c.k === 'u' ? '' : tr('Sua fase em andamento');
   sub.textContent = txt; sub.hidden = !txt;
+  $('#hRotulo').textContent = tr(!volta ? 'Comece aqui' : j.mapa.size || (c && c.k !== 'b') ? 'Em andamento' : 'Próxima fase');
+  $('#hDesc').textContent = volta ? S.n + '×' + S.n + ' · ' + qtd(j.total, ' peça', ' peças') : tr('Preencha todo o tabuleiro com as peças.');
+  const est = c && c.k === 'b' ? estrelasFase[c.i] || 0 : 0, he = $('#hEstr');
+  he.hidden = !est;
+  if (est){
+    he.innerHTML = [1, 2, 3].map(n => ic('star').replace('class="i"', 'class="i' + (n <= est ? ' on' : '') + '"')).join('');
+    he.setAttribute('aria-label', tr(est === 1 ? '1 estrela de 3' : est + ' estrelas de 3')); he.setAttribute('role', 'img');
+  }
+  const total = fasesVisiveis(), feitas = Math.min(prog.done.length, total);
+  $('#hProg').hidden = !volta;
+  $('#hProgTxt').textContent = tr('{a} de {b}', {a: feitas, b: total});
+  $('#hProgBar').style.width = Math.round(feitas / Math.max(1, total) * 100) + '%';
+  miniTabuleiro();
 }
+/* miniatura do tabuleiro atual: peças já encaixadas e as estrelas que faltam cobrir */
+function miniTabuleiro(){
+  const m = $('#hMini'), j = S.jogo; m.textContent = ''; m.style.setProperty('--n', S.n);
+  for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++){
+    const idu = j.grade[y][x], est = j.gab[y][x], c = mk('i');
+    if (idu){ const p = j.mapa.get(idu); c.className = 'f'; c.style.setProperty('--c', COR[p ? p.id : 1]); }
+    else if (est){ c.className = 's'; c.style.setProperty('--c', COR[est]); }
+    m.appendChild(c);
+  }
+}
+/* cartão da fase do dia: data, sequência, contagem até a meia-noite e o prêmio */
+function renderDiaInicio(){
+  const agora = new Date(), hoje = dataHoje(), feito = dias[hoje], seq = sequencia();
+  let mes = '';
+  try{ mes = agora.toLocaleDateString(document.documentElement.lang || undefined, {month: 'short'}).replace('.', ''); }catch(e){}
+  $('#hDiaMes').textContent = mes; $('#hDiaNum').textContent = String(agora.getDate()).padStart(2, '0');
+  $('#hDiaSeq').textContent = seq ? '🔥 ' + qtd(seq, ' dia', ' dias') + ' · ' : '';
+  const b = $('#hDia'); b.classList.toggle('feito', !!feito); b.dataset.hoje = hoje;
+  $('#hDiaPremio').textContent = feito ? '' : '+' + BONUS_DIA + ' ★';
+  $('#hDiaTag').textContent = feito ? '✓ ' + fmtTempo(feito.t) : tr('Jogar');
+  relogioDia();
+}
+function relogioDia(){
+  const a = new Date(), meia = new Date(a.getFullYear(), a.getMonth(), a.getDate() + 1), s = Math.max(0, Math.floor((meia - a) / 1000));
+  const t = String(Math.floor(s / 3600)).padStart(2, '0') + ':' + String(Math.floor(s / 60) % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  $('#hDiaRel').textContent = tr(dias[dataHoje()] ? 'nova em {t}' : 'termina em {t}', {t});
+}
+setInterval(() => {
+  if (!$('#ov-splash').classList.contains('on') || document.hidden) return;
+  if ($('#hDia').dataset.hoje !== dataHoje()) renderDiaInicio(); else relogioDia();
+}, 1000);
 
 /* ---- menu ---- */
 function renderDiario(){
@@ -84,7 +123,7 @@ $('#btnDia').onclick = () => {
   fechar('menu'); toast('Preparando a fase do dia…');
   setTimeout(() => carregar({k: 'd', data: dataHoje()}), 30);
 };
-$('#chkMusica').onchange = e => { Som.setMusica(e.target.checked); iconeMusica(); };
+$('#chkMusica').onchange = e => Som.setMusica(e.target.checked);
 const salvarA11y = (k, v) => { a11y[k] = v; store.set('a11y', a11y); aplicarA11y(); aplicarHumor(); };
 $('#selTema').onchange = e => { tema = e.target.value; store.set('tema', tema); aplicarTema(); aplicarHumor(); anunciar(tr('Tema alterado.')); };
 if (mqClaro.addEventListener) mqClaro.addEventListener('change', () => { if (tema === 'auto') aplicarHumor(); });

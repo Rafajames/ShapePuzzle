@@ -147,6 +147,19 @@ function renderStats(){
   const k = S.cur && chaveFase(S.cur), r = k && recs[k];
   $('#pRec').hidden = !r; if (r) $('#stRec').textContent = fmtTempo(r.t) + ' · ' + r.j;
   $('#pDica').hidden = !S.dicas; $('#stDica').textContent = qtd(S.dicas, ' dica', ' dicas');
+  renderMeta();
+}
+/* meta de estrelas: quantas ainda dá para ganhar e até quantas jogadas */
+function renderMeta(){
+  const j = S.jogo, c = S.cur, el = $('#pMeta');
+  const pode = j && c && c.k !== 'r' && c.k !== 'u' && !S.venceu ? estrelasDe(S.jog + j.reserva.length, j.total, S.dicas) : 1;
+  const lim = pode === 3 ? j.total : Math.ceil(j.total * 1.5), chave = pode + ':' + lim + ':' + lang;
+  if (el.dataset.k === chave) return;
+  el.dataset.k = chave; el.hidden = pode < 2;
+  if (pode < 2) return;
+  $('#stMetaEst').innerHTML = ic('star').repeat(pode);
+  $('#stMeta').textContent = tr('até {n} jogadas', {n: lim});
+  el.setAttribute('aria-label', tr(pode === 3 ? '3 estrelas até {n} jogadas' : '2 estrelas até {n} jogadas', {n: lim}));
 }
 setInterval(tick, 250);
 

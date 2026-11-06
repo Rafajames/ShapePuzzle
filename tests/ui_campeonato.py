@@ -188,7 +188,7 @@ with sync_playwright() as pw:
     check(B.evaluate('S.t.acum') >= t2, 'limpar tabuleiro não zera o tempo')
     B.evaluate(RESOLVER); B.wait_for_timeout(1300)
     check(B.is_visible('#ov-win'), 'tela de vitória aparece')
-    check(B.inner_text('#winTitulo').startswith('Fase 1 conclu'), 'título de vitória mostra o número da fase')
+    check(B.evaluate("document.querySelector('#winTitulo').textContent").startswith('Fase 1 conclu'), 'título de vitória mostra o número da fase')
     check('enviado' in B.inner_text('#winTexto').lower(), 'resultado enviado: ' + B.inner_text('#winTexto'))
     r = BANCO['p'][cod]['beto']['f']['0']; check(r['t'] > 2000 and r['j'] >= 6, 'banco recebeu tempo e jogadas: %s' % r)
     check(B.locator('#winActs .btn:has-text("Jogar de novo")').count() == 0 and B.locator('#winActs .btn:has-text("Compartilhar")').count() == 0, 'sem botões de modo solo na vitória')

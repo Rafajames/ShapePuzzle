@@ -45,6 +45,7 @@ const ICONES = {
   upload:'<path d="M12 16V5M7 9l5-5 5 5M5 20h14"/>',
   trash:'<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',
   play:'<path d="M8 5l11 7-11 7z"/>',
+  next:'<path d="M5 12h14M13 6l6 6-6 6"/>',
   note:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
   noteoff:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path d="M3 3l18 18"/>',
   rotate:'<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>',
@@ -99,7 +100,7 @@ function prepararDialogos(){
     agora.forEach(o => { if (!abertos.has(o)){ o._foco = document.activeElement; o._ordem = ++ordemOv; novo = o; } });
     $('#app').inert = agora.size > 0;
     if (novo){
-      requestAnimationFrame(() => { const card = novo.querySelector('.card'); const alvo = card && (card.querySelector('[data-close]') || card.querySelector('button:not([hidden]):not([disabled])')); if (alvo) alvo.focus({preventScroll: true}); else if (card){ card.tabIndex = -1; card.focus({preventScroll: true}); } });
+      requestAnimationFrame(() => { const card = novo.querySelector('.card'); const alvo = card && (card.querySelector('[data-close]') || card.querySelector('[data-foco]') || card.querySelector('button:not([hidden]):not([disabled])')); if (alvo) alvo.focus({preventScroll: true}); else if (card){ card.tabIndex = -1; card.focus({preventScroll: true}); } });
     } else if (!agora.size){
       abertos.forEach(o => { if (!agora.has(o) && o._foco && o._foco.isConnected && o._foco !== document.body){ try{ o._foco.focus({preventScroll: true}); }catch(e){} } });
     }

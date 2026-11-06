@@ -72,7 +72,8 @@ with sync_playwright() as pw:
         while not pg.evaluate("S.venceu") and n < 40:
             pg.evaluate(COLOCA); n += 1
         pg.wait_for_selector('#ov-win.on', timeout=5000); pg.wait_for_timeout(300)
-        check(pg.inner_text('#winTitulo') == {'en': 'Level 1 complete!', 'es': '¡Nivel 1 completado!'}[lg], 'título da vitória: ' + pg.inner_text('#winTitulo'))
+        tit = pg.evaluate("document.querySelector('#winTitulo').textContent")
+        check(tit == {'en': 'Level 1 complete!', 'es': '¡Nivel 1 completado!'}[lg], 'título da vitória: ' + tit)
         sobras(pg, 'vitória em ' + nome)
         check(pg.evaluate("document.querySelector('#winEstrelas').getAttribute('aria-label')") in ('3 stars out of 3', '3 estrellas de 3'), 'estrelas para leitor de tela')
         pg.evaluate("document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'))")

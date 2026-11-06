@@ -81,10 +81,12 @@ with sync_playwright() as p:
     check(pg.evaluate('Som.humorAtual()') == 'calma', 'voltar ao Automático retorna ao clima da fase')
     check(pg.evaluate('store.get("humor")') == 'auto', 'escolha de estilo salva')
     pg.keyboard.press('Escape')
-    pg.click('#btnMusica'); pg.wait_for_timeout(100)
-    check(pg.evaluate('Som.musica()') is False, 'botão do topo desliga a música')
-    pg.click('#btnMusica'); pg.wait_for_timeout(200)
+    check(pg.locator('#btnMusica').count() == 0, 'a música fica no menu (o topo do jogo tem só Desfazer, Dica e Reiniciar)')
+    pg.click('#btnMenu'); pg.evaluate("document.querySelectorAll('#ov-menu details.sec').forEach(d=>d.open=true)"); pg.uncheck('#chkMusica'); pg.wait_for_timeout(100)
+    check(pg.evaluate('Som.musica()') is False, 'o menu desliga a música')
+    pg.check('#chkMusica'); pg.wait_for_timeout(200)
     check(pg.evaluate('Som.musica()') is True and pg.evaluate('Som.humorAtual()') == 'calma', 'e liga de novo')
+    pg.evaluate("fechar('menu')")
 
     # ---------------------------------------------------------------- 3. dica + girar/espelhar + toque
     print('3. Dica, girar/espelhar e encaixe por toque (fase 2)')

@@ -18,10 +18,10 @@ html[data-tema="madeira"] body{
 }
 html[data-tema="madeira"] :is(h1,.t1){text-shadow:0 -1px 0 rgba(0,0,0,.55),0 1px 0 rgba(255,225,170,.18)}
 html[data-tema="madeira"] .card{background:repeating-linear-gradient(90deg,rgba(0,0,0,.07) 0 1px,transparent 1px 8px),linear-gradient(180deg,var(--card1),var(--card2));border:2px solid #7a5030;box-shadow:inset 0 1px 0 rgba(255,225,170,.2),0 0 0 3px #2a170a,0 24px 60px rgba(0,0,0,.6)}
-html[data-tema="madeira"] :is(.btn,.ib,.tile,.infop,.daily){background:linear-gradient(180deg,#6a4426,#523319);border-color:#8f6238;box-shadow:inset 0 1px 0 rgba(255,225,170,.22),0 2px 0 #2a170a}
-html[data-tema="madeira"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:linear-gradient(180deg,#7a5130,#5d3b1f)}
+html[data-tema="madeira"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard){background:linear-gradient(180deg,#6a4426,#523319);border-color:#8f6238;box-shadow:inset 0 1px 0 rgba(255,225,170,.22),0 2px 0 #2a170a}
+html[data-tema="madeira"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard):hover{background:linear-gradient(180deg,#7a5130,#5d3b1f)}
 html[data-tema="madeira"] :is(.btn,.ib):active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,225,170,.22),0 0 0 #2a170a}
-html[data-tema="madeira"] .btn.pri{background:linear-gradient(180deg,#f2ab57,#d0782a);border-color:#ffd49a;color:#24120a;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #7a3d10}
+html[data-tema="madeira"] :is(.btn.pri,.diaBtn){background:linear-gradient(180deg,#f2ab57,#d0782a);border-color:#ffd49a;color:#24120a;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #7a3d10}
 html[data-tema="madeira"] .reserva{background:linear-gradient(180deg,#43291a,#331e10);border:2px solid #6b4426;box-shadow:inset 0 3px 10px rgba(0,0,0,.45)}
 html[data-tema="madeira"] #board,html[data-tema="madeira"] #edBoard{border-radius:10px;box-shadow:0 0 0 6px #6b4426,0 0 0 8px #2a170a,0 16px 34px rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.3)}
 html[data-tema="madeira"] .cell{background-image:linear-gradient(90deg,rgba(120,70,20,.12),transparent 45%,rgba(120,70,20,.08));box-shadow:inset 0 0 0 1px rgba(110,70,30,.55)}

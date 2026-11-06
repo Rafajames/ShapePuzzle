@@ -309,6 +309,7 @@ const Som = (() => {
     flip:    () => tom(620, {f2:420, dur:.07, vol:.10, tipo:'triangle'}),
     soltar:  () => tom(500, {f2:300, dur:.10, vol:.10}),
     invalido:() => tom(190, {f2:130, dur:.16, vol:.07, tipo:'sawtooth'}),
+    estrela: n => tom([880, 1108.7, 1318.5][n - 1] || 1318.5, {tipo:'triangle', dur:.28, vol:.10}),
     dica(){ tom(784, {dur:.35, vol:.12, tipo:'triangle'}); tom(1175, {t:.09, dur:.45, vol:.10, tipo:'triangle'}); },
     encaixar(){ tom(300, {dur:.14, vol:.22}); tom(450, {t:.05, dur:.2, vol:.18}); tom(110, {f2:70, dur:.12, vol:.25}); },
     vitoria(){ [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => { tom(f, {tipo:'triangle', dur:1.1, vol:.16, t:i * .11}); tom(f * 2, {dur:.8, vol:.04, t:i * .11}); }); }

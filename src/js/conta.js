@@ -60,14 +60,15 @@ function verificarConquistas(avisar){
   }
   renderConta();
 }
-/* Chamada a cada fase vencida. */
+/* Chamada a cada fase vencida; devolve o bônus do visual ganho (aparece na soma da tela de vitória). */
 function aposVitoriaConta(){
-  const w = $('#winBonus'); if (w){ w.hidden = true; w.textContent = ''; }
+  let bon = null;
   if (S.cur && S.cur.k !== 'u' && !modoTeste){
     const r = bonusVitoria(dadosAtuais(), eu(), dataHoje());
-    if (r.ganho){ guardarCart(r.cart); renderConta(); if (w){ w.textContent = tr('Bônus do visual: +{n} ★', {n: r.ganho}) + (r.teto ? ' · ' + tr('limite de hoje atingido') : ''); w.hidden = false; } }
+    if (r.ganho){ guardarCart(r.cart); renderConta(); bon = {ganho: r.ganho, teto: r.teto}; }
   }
   verificarConquistas(true); contaAgendar();
+  return bon;
 }
 
 /* ---------- páginas públicas (privacidade, termos, excluir conta) ---------- */

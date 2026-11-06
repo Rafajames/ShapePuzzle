@@ -29,11 +29,11 @@ html[data-tema="pixel"] :is(.card,.btn,.ib,.pill,.tile,.field,.pw,.daily,details
   box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(29,43,83,.14);
 }
 html[data-tema="pixel"] .card{background:var(--card1);margin-top:3px;margin-bottom:3px;box-shadow:-4px 0 0 0 var(--line),4px 0 0 0 var(--line),0 -4px 0 0 var(--line),0 4px 0 0 var(--line),inset 0 4px 0 rgba(255,255,255,.6),inset 0 -4px 0 rgba(29,43,83,.1),8px 12px 0 0 rgba(20,28,60,.35)}
-html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily){background:#fff;color:var(--txt)}
-html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily):hover{background:#fff6cf}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard){background:#fff;color:var(--txt)}
+html[data-tema="pixel"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard):hover{background:#fff6cf}
 html[data-tema="pixel"] :is(.btn,.ib):active{transform:translateY(3px);box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 -3px 0 rgba(29,43,83,.14)}
-html[data-tema="pixel"] .btn.pri{background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
-html[data-tema="pixel"] .btn.pri:hover{background:#e63b5f}
+html[data-tema="pixel"] :is(.btn.pri,.diaBtn){background:var(--accent);color:#fff;box-shadow:-3px 0 0 0 var(--line),3px 0 0 0 var(--line),0 -3px 0 0 var(--line),0 3px 0 0 var(--line),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(0,0,0,.25)}
+html[data-tema="pixel"] :is(.btn.pri,.diaBtn):hover{background:#e63b5f}
 html[data-tema="pixel"] .pill{background:#fff6dc;color:var(--txt)}
 html[data-tema="pixel"] .pill.rec{background:#ffeab0;color:var(--gold)}
 html[data-tema="pixel"] .pill.dc{color:var(--info)}
@@ -56,3 +56,4 @@ html[data-tema="pixel"] .pw.sel{box-shadow:0 0 0 3px var(--line)}
 html[data-tema="pixel"] #logo{image-rendering:pixelated}
 html[data-tema="pixel"] #titulo .t1{letter-spacing:0;font-size:17px}
 @media (max-width:350px){html[data-tema="pixel"] #titulo .t1{font-size:14px}html[data-tema="pixel"] #titulo .t2{font-size:10px}}
+html[data-tema="pixel"] .homeModos .btn{text-transform:none;letter-spacing:0}

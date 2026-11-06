@@ -68,6 +68,7 @@ function mostrarFimCorrida(n, recorde, antes){
   $('#winTitulo').textContent = tr('Tempo esgotado!');
   $('#winTexto').textContent = tr(n ? 'Você resolveu {n} em 3 minutos.' : 'Nenhuma fase dessa vez. Tente de novo!', {n: qtd(n, ' fase', ' fases')});
   $('#winEstrelas').innerHTML = ''; $('#winEstrelas').removeAttribute('aria-label');
+  $('#winElogio').textContent = ''; $('#winSoma').hidden = true; $('#winBadge').classList.remove('novo');
   const r = $('#winRes'); r.innerHTML = ''; const pill = mk('span', 'pill'); pill.innerHTML = ic('trophy'); pill.append(String(n)); r.appendChild(pill);
   $('#winBadge').textContent = tr(recorde && n ? 'Novo recorde da corrida!' : 'Seu recorde: {n}', {n: String(corr.melhor)});
   const acts = $('#winActs'); acts.innerHTML = '';

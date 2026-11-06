@@ -46,7 +46,7 @@ body.compacto .reserva{margin-top:8px;padding:8px}body.compacto .reserva h2{marg
 .star{position:absolute;left:50%;top:50%;width:30%;height:30%;transform:translate(-50%,-50%);border-radius:50%;display:none;
   background:var(--c);box-shadow:0 0 0 3px var(--ring),0 0 12px var(--c)}
 .cell.gok::after,.cell.gbad::after{content:"";position:absolute;inset:4%;border-radius:24%;pointer-events:none}
-.cell.gok::after{background:var(--gokbg);outline:2px solid var(--gokln)}
+.cell.gok::after{background:var(--gokbg);outline:2px dashed var(--gokln);outline-offset:-1px}
 .cell.gbad::after{background:rgba(255,60,80,.28);outline:2px solid rgba(255,90,110,.65)}
 .cell.dica::before{content:"";position:absolute;inset:6%;border-radius:24%;pointer-events:none;z-index:1;
   border:2px dashed var(--c);background:color-mix(in srgb,var(--c) 24%,transparent);animation:pulse 1s infinite}

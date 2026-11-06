@@ -2,7 +2,7 @@
 /* Tamanho do tabuleiro: o maior que ainda deixa a tela inteira visível, sem rolar. */
 function ajustar(){
   const r = document.documentElement.style;
-  const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.5) + 'px'); fitFileiras(); };
+  const pos = v => { S.cell = v; r.setProperty('--cell', v + 'px'); r.setProperty('--mini', Math.round(v * 0.54) + 'px'); fitFileiras(); };
   pos(30); void document.body.offsetWidth;   /* encolhe antes de medir: um tabuleiro largo demais faz o celular alargar a janela */
   const c0 = Math.max(30, Math.min(96, Math.floor((Math.min(innerWidth, 560) - 32) / S.n)));
   const cheio = () => document.documentElement.scrollHeight > innerHeight;
@@ -22,11 +22,6 @@ aplicarA11y();
 ajustar(); window.__pronto = true;
 if (NATIVO) try{ localStorage.removeItem('sp-boot-falhas'); }catch(e){}   /* o carregador do app conta inícios que falharam */
 montarBoard();
-(() => {
-  const l = $('#logo');
-  [[[[1,1],[1,0]], 1], [[[1,1,1],[0,1,0]], 11], [[[1,0],[1,1]], 6], [[[1,1],[1,0]], 16]].forEach(([f, id]) => l.appendChild(pecaEl(f, id, 'mini')));
-})();
-iconeMusica();
 OFF.pendente = lerLinkOff();
 const linkInicial = OFF.pendente ? null : lerLink();
 if (linkInicial) $('#splashMsg').hidden = false;

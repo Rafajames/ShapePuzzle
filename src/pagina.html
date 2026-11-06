@@ -30,7 +30,6 @@
       <button class="ib" id="btnDesfazer" data-i="undo" aria-label="Desfazer (Z)" title="Desfazer (Z)" disabled></button>
       <button class="ib" id="btnDica" data-i="bulb" aria-label="Dica (H)" title="Dica (H)"></button>
       <button class="ib" id="btnReset" data-i="reset" aria-label="Reiniciar" title="Reiniciar"></button>
-      <button class="ib" id="btnMusica" data-i="note" aria-label="Música"></button>
     </div>
   </header>
 
@@ -40,6 +39,7 @@
       <span class="pill"><em data-i="swap"></em><span id="stJog">0 jogadas</span></span>
       <span class="pill rec" id="pRec" hidden><em data-i="trophy"></em><span id="stRec"></span></span>
       <span class="pill dc" id="pDica" hidden><em data-i="bulb"></em><span id="stDica"></span></span>
+      <span class="pill meta" id="pMeta" hidden><span class="metaEst" id="stMetaEst" aria-hidden="true"></span><span id="stMeta"></span></span>
     </div>
     <div id="boardWrap"><div id="board" role="group" tabindex="0"></div><div id="selo" hidden></div></div>
     <div class="tools">
@@ -69,22 +69,40 @@
 <!-- Tela inicial -->
 <div class="ov on" id="ov-splash">
   <div class="card home">
-    <div id="logo"></div>
-    <h1 style="text-align:center">Shape Puzzle</h1>
-    <p style="text-align:center">Preencha todo o tabuleiro com as peças.</p>
-    <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
-    <button class="btn pri" id="btnJogar" data-i="play" style="width:100%;padding:14px;font-size:16px"><span id="jogarTxt">Jogar</span></button>
-    <p id="jogarSub" class="jogarSub" hidden></p>
-    <button class="btn contaChip" id="hConta" aria-label="Meu perfil"></button>
-    <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
-    <div class="homeGrade">
-      <button class="btn" id="hDia" data-i="calendar">Fase do dia</button>
-      <button class="btn" id="hSem" data-i="star">Desafio da semana</button>
-      <button class="btn" id="hInf" data-i="infinity">Modo infinito</button>
-      <button class="btn" id="hCamp" data-i="trophy">Campeonatos</button>
-      <button class="btn" id="hEst" data-i="stats">Estatísticas</button>
-      <button class="btn" id="hMenu" data-i="menu">Menu</button>
+    <div class="homeTopo">
+      <button class="btn contaChip" id="hConta" aria-label="Meu perfil"></button>
+      <button class="ib" id="hMenu" data-i="menu" aria-label="Menu" title="Menu"></button>
     </div>
+    <h1 class="homeTit">Shape Puzzle</h1>
+    <div id="splashMsg" hidden>Alguém compartilhou uma fase com você! Toque em Jogar para abrir.</div>
+    <section class="heroi" aria-labelledby="jogarTxt">
+      <div class="heroiTopo">
+        <div class="miniTab" id="hMini" aria-hidden="true"></div>
+        <div class="heroiInfo">
+          <span class="eyebrow" id="hRotulo">Próxima fase</span>
+          <b class="heroiFase" id="jogarSub" hidden></b>
+          <span class="heroiDesc" id="hDesc">Preencha todo o tabuleiro com as peças.</span>
+          <span class="heroiEst" id="hEstr" hidden></span>
+        </div>
+      </div>
+      <div class="heroiProg" id="hProg" hidden>
+        <div class="hpTxt"><span>Progresso</span><b id="hProgTxt"></b></div>
+        <div class="barra"><i id="hProgBar"></i></div>
+      </div>
+      <button class="btn pri" id="btnJogar" data-i="play" data-foco><span id="jogarTxt">Jogar</span></button>
+    </section>
+    <button class="diaCard" id="hDia">
+      <span class="diaData" aria-hidden="true"><small id="hDiaMes"></small><b id="hDiaNum"></b></span>
+      <span class="diaTx"><b>Fase do dia</b><small><span id="hDiaSeq"></span><span id="hDiaRel"></span></small></span>
+      <span class="diaFim"><small class="diaPremio" id="hDiaPremio"></small><span class="diaBtn" id="hDiaTag">Jogar</span></span>
+    </button>
+    <div class="homeModos">
+      <button class="btn" id="hInf" data-i="infinity" aria-label="Modo infinito" title="Modo infinito">Infinito</button>
+      <button class="btn" id="hSem" data-i="star" aria-label="Desafio da semana" title="Desafio da semana">Semana</button>
+      <button class="btn" id="hCamp" data-i="trophy" aria-label="Campeonatos" title="Campeonatos">Torneios</button>
+      <button class="btn" id="hEst" data-i="stats" aria-label="Estatísticas" title="Estatísticas">Estatísticas</button>
+    </div>
+    <button class="btn contaChip posCard" id="hPos" aria-live="polite"></button>
     <details class="como">
       <summary>Como jogar</summary>
       <ul class="how">
@@ -93,7 +111,6 @@
         <li><b>3</b><span>Cada estrela precisa ser coberta por uma peça da mesma cor. Toque numa peça já encaixada para tirá-la.</span></li>
       </ul>
     </details>
-    <p style="text-align:center;margin-top:12px;font-size:12px">♪ Com música ambiente — dá para desligar no botão do topo. No iPhone, tire o modo silencioso.</p>
   </div>
 </div>
 
@@ -222,14 +239,14 @@
 <div class="ov" id="ov-win">
   <div class="card vit" id="cardWin">
     <button class="ib x" data-close="win" data-i="close" aria-label="Fechar"></button>
-    <div class="big" data-i="check"></div>
-    <h1 id="winTitulo">Fase concluída!</h1>
-    <div class="estrelas" id="winEstrelas" aria-live="polite"></div>
-    <p class="winBonus" id="winBonus" hidden></p>
+    <h1 class="eyebrow" id="winTitulo">Fase concluída!</h1>
+    <div class="estrelas" id="winEstrelas" role="img"></div>
+    <p class="winElogio" id="winElogio" aria-hidden="true"></p>
     <p id="winTexto"></p>
     <div class="res" id="winRes"></div>
     <div class="badge" id="winBadge"></div>
-    <div class="acts" id="winActs"></div>
+    <div class="winSoma" id="winSoma" hidden></div>
+    <div class="vitAcoes winAcoes" id="winActs"></div>
   </div>
 </div>
 

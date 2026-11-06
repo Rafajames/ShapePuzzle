@@ -17,9 +17,9 @@ html[data-tema="pedra"] body{
     radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/7px 7px,linear-gradient(180deg,#33383e,#1c1f23) fixed;
 }
 html[data-tema="pedra"] .card{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/6px 6px,linear-gradient(160deg,var(--card1),var(--card2));border:2px solid #5b626b;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 0 3px #15181b,0 24px 60px rgba(0,0,0,.6)}
-html[data-tema="pedra"] :is(.btn,.ib,.tile,.infop,.daily){background:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px) 0 0/5px 5px,linear-gradient(180deg,#5a6168,#464c52);border-color:#737b83;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 #15181b}
+html[data-tema="pedra"] :is(.btn,.ib,.tile,.infop,.daily,.diaCard){background:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px) 0 0/5px 5px,linear-gradient(180deg,#5a6168,#464c52);border-color:#737b83;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 #15181b}
 html[data-tema="pedra"] :is(.btn,.ib):active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 0 #15181b}
-html[data-tema="pedra"] .btn.pri{background:linear-gradient(180deg,#9fd0e2,#6aa1b6);border-color:#c8ecf8;color:#0f1418;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #2c4a56}
+html[data-tema="pedra"] :is(.btn.pri,.diaBtn){background:linear-gradient(180deg,#9fd0e2,#6aa1b6);border-color:#c8ecf8;color:#0f1418;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 0 #2c4a56}
 html[data-tema="pedra"] .reserva{background:linear-gradient(180deg,#30353a,#26292d);border:2px solid #4c5258;box-shadow:inset 0 3px 10px rgba(0,0,0,.45)}
 html[data-tema="pedra"] #board,html[data-tema="pedra"] #edBoard{border-radius:8px;box-shadow:0 0 0 6px #4c5258,0 0 0 8px #15181b,0 16px 34px rgba(0,0,0,.55)}
 html[data-tema="pedra"] .cell{background-image:radial-gradient(circle at 30% 25%,rgba(255,255,255,.12),transparent 45%),radial-gradient(circle at 75% 80%,rgba(0,0,0,.12),transparent 40%);box-shadow:inset 0 0 0 1px rgba(40,44,48,.6),inset 0 -2px 0 rgba(0,0,0,.12)}

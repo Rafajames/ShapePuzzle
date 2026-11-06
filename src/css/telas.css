@@ -14,7 +14,6 @@
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .acts .btn{flex:1}
 
-#logo{display:flex;gap:6px;justify-content:center;align-items:flex-end;margin:4px 0 18px;--mini:26px}
 .how{list-style:none;padding:0;margin:16px 0 20px;display:grid;gap:10px}
 .how li{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--soft);line-height:1.45}
 .how b{flex:none;width:26px;height:26px;border-radius:9px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--acctxt);display:grid;place-items:center;font-size:13px}
@@ -107,8 +106,6 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 
 .conf{pointer-events:none;position:absolute;left:50%;top:40%;width:9px;height:14px;border-radius:2px;opacity:0;animation:conf 1.3s ease-out forwards}
 .vit{text-align:center;overflow:hidden}
-.vit .big{width:68px;height:68px;border-radius:50%;margin:2px auto 14px;display:grid;place-items:center;background:linear-gradient(135deg,#1fd18a,#00beff);color:#05121a}
-.vit .big svg.i{width:36px;height:36px;stroke-width:2.6}
 .vit .res{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
 .estrelas{display:flex;justify-content:center;gap:6px;margin:-4px 0 10px}
 .estrelas svg.i{width:38px;height:38px;fill:none;stroke:var(--staroff);stroke-width:1.6;stroke-linejoin:round;transform:scale(.9)}
@@ -140,17 +137,11 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 main{touch-action:pan-y}
 
 
-.home .jogarSub{margin:6px 0 0;text-align:center;font-size:13px;color:var(--soft)}
-.homeGrade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
-.homeGrade .btn{min-width:0;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto;justify-content:flex-start;padding:11px 12px;font-size:13px;gap:8px;text-align:left;line-height:1.2}
-.homeGrade .btn svg.i{flex:none}
-details.como{margin-top:14px}
+details.como{margin-top:0}
 details.como>summary{cursor:pointer;font-size:13px;color:var(--soft);text-align:center;padding:6px;list-style:none}
 details.como>summary::-webkit-details-marker{display:none}
 details.como .how{margin:10px 0 0}
-@media (max-height:640px){.home #logo{display:none}}
 
-.home #btnJogar{margin-top:14px}
 
 #festa{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
 #selo[role=button]{cursor:pointer;pointer-events:auto}
@@ -243,7 +234,6 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .cnCats{display:flex;flex-wrap:wrap;gap:6px 12px;margin:4px 0 0;font-size:12px;color:var(--mut)}
 .cnCats span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:5px;vertical-align:-1px}
 .cnBonus{margin:8px 0 0;font-size:13px;color:var(--gold)}
-.winBonus{margin:4px 0 0;font-weight:700;color:var(--gold)}
 /* provador */
 .pvLado{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:6px 0 4px}
 .pvLado figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -266,4 +256,96 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .dnQuem{display:flex;align-items:center;gap:8px;margin:6px 0 2px;font-size:17px}
 /* idiomas com palavras longas (alemão, russo…): hifeniza em vez de quebrar no meio da palavra */
 .daily b,.daily small,.tile,.atalhos .daily{hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
-@media (max-width:360px){.homeGrade .btn{font-size:12px;padding:10px 9px;gap:6px}}
+
+/* ---------- tela inicial: próxima fase em destaque, fase do dia e modos ---------- */
+.home{display:flex;flex-direction:column;gap:12px}
+.home #splashMsg{margin:0}
+.homeTopo{display:flex;align-items:center;gap:10px}
+.homeTopo .contaChip{flex:1;min-width:0;margin:0;min-height:52px;border-radius:999px;padding:6px 14px 6px 6px}
+.homeTopo .contaChip small{color:var(--gold);font-weight:800;font-size:15px}
+.homeTopo #hMenu{width:52px;height:52px;flex:none;border-radius:16px}
+.card h1.homeTit{text-align:center;font-size:30px;margin:0}
+.heroi{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:20px;border:1px solid var(--line);background:var(--t1);box-shadow:inset 0 1px 0 var(--t2)}
+.heroiTopo{display:flex;gap:14px;align-items:center}
+.miniTab{--n:5;width:108px;height:108px;flex:none;box-sizing:border-box;padding:5px;border-radius:12px;background:var(--board);box-shadow:0 0 0 2px var(--line),inset 0 2px 6px rgba(0,0,0,.3);display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px}
+.miniTab i{border-radius:3px;background:var(--cel1)}
+.miniTab i:nth-child(even){background:var(--cel2)}
+.miniTab i.s{background-image:radial-gradient(circle,var(--c) 0 26%,transparent 30%)}
+.miniTab i.f{background:var(--c);box-shadow:inset 0 -2px 0 rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.3)}
+.heroiInfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--acctxt)}
+.heroiFase{font-size:28px;line-height:1.05;color:var(--strong);overflow-wrap:break-word}
+.heroiDesc{font-size:14px;color:var(--soft);line-height:1.35}
+.heroiEst{display:flex;gap:2px}
+.heroiEst svg.i,.metaEst svg.i{width:20px;height:20px;fill:none;stroke:var(--staroff);stroke-width:1.6;stroke-linejoin:round}
+.heroiEst svg.i.on,.metaEst svg.i{fill:#ffd84d;stroke:#e0a800}
+.heroiProg{display:flex;flex-direction:column;gap:6px}
+.hpTxt{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--soft)}
+.hpTxt b{color:var(--strong)}
+.barra{height:9px;border-radius:999px;background:var(--fieldbg);box-shadow:inset 0 1px 2px rgba(0,0,0,.35);overflow:hidden}
+.barra i{display:block;height:100%;min-width:6px;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--acc2))}
+.home #btnJogar{width:100%;min-height:56px;font-size:19px;font-weight:800;border-radius:16px}
+.home #btnJogar svg.i{width:22px;height:22px}
+.diaCard{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border-radius:18px;border:1px solid var(--line);background:var(--t1);color:var(--txt);font:inherit;text-align:left;cursor:pointer;transition:background .15s,transform .1s}
+.diaCard:hover{background:var(--t2)}
+.diaCard:active{transform:scale(.98)}
+.diaData{width:50px;height:50px;flex:none;border-radius:13px;background:var(--fieldbg);box-shadow:inset 0 2px 4px rgba(0,0,0,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;gap:2px}
+.diaData small{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--acctxt)}
+.diaData b{font-size:21px;color:var(--strong)}
+.diaTx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.diaTx b{font-size:16px;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.diaTx small{font-size:12.5px;color:var(--soft);font-variant-numeric:tabular-nums}
+.diaFim{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.diaPremio{font-size:13px;font-weight:800;color:var(--gold)}
+.diaPremio:empty{display:none}
+.diaBtn{padding:9px 14px;border-radius:12px;font-weight:800;font-size:14px;white-space:nowrap;background:linear-gradient(135deg,var(--accent),var(--acc2));color:var(--onacc)}
+:root .home .diaCard.feito .diaBtn{background:var(--fieldbg);color:var(--ok);box-shadow:none;border-color:transparent}
+.homeModos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.homeModos .btn{flex-direction:column;gap:6px;min-width:0;min-height:70px;padding:8px 2px;font-size:11px;font-weight:700;line-height:1.15;text-align:center;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.homeModos .btn svg.i{width:24px;height:24px;flex:none;color:var(--acctxt)}
+.home .posCard{margin:0}
+@media (max-height:700px){.card h1.homeTit{display:none}.miniTab{width:92px;height:92px}.heroiFase{font-size:24px}}
+
+/* ---------- tabuleiro: grupo de botões, meta de estrelas, peça que acabou de encaixar ---------- */
+.top .nav{gap:0}
+.top .nav .ib{border-radius:0;margin-left:-1px}
+.top .nav .ib:first-child{border-radius:14px 0 0 14px;margin-left:0}
+.top .nav .ib:last-child{border-radius:0 14px 14px 0}
+.pill.meta{color:var(--gold)}
+.metaEst{display:inline-flex}
+.metaEst svg.i{width:13px;height:13px}
+.cell.novo{z-index:2}
+.cell.novo .fill{animation:encaixa .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes encaixa{0%{transform:scale(.55);filter:brightness(1.7)}55%{transform:scale(1.1);filter:brightness(1.35) drop-shadow(0 0 6px var(--c))}100%{transform:scale(1);filter:none}}
+body.rm .cell.novo .fill{animation:none}
+.tools .btn{min-height:48px;padding:12px 20px;font-size:15px}
+
+/* ---------- vitória ---------- */
+.vit{display:flex;flex-direction:column;align-items:center;gap:10px}
+.card h1.eyebrow{margin:8px 44px 0;font-size:15px;letter-spacing:.02em;text-transform:none}
+.vit .estrelas:empty,.vit .winElogio:empty{display:none}
+.vit .estrelas{margin:0;gap:2px;align-items:flex-end;min-height:84px}
+.vit .estrelas svg.i{width:62px;height:62px}
+.vit .estrelas svg.i.e2{width:80px;height:80px}
+.vit .estrelas svg.i.e1{rotate:-12deg;translate:0 4px}
+.vit .estrelas svg.i.e3{rotate:12deg;translate:0 4px}
+.vit .estrelas svg.i.on{stroke:#fff3c4;stroke-width:.8;filter:drop-shadow(0 3px 0 rgba(154,90,16,.75)) drop-shadow(0 0 12px rgba(255,211,106,.6))}
+.vit .winElogio{margin:0;font-size:32px;font-weight:800;line-height:1.1;color:var(--strong)}
+.vit .res{margin:0}
+.resChip{display:flex;flex-direction:column;align-items:center;padding:7px 14px;border-radius:14px;background:var(--fieldbg);line-height:1.2}
+.resChip b{font-size:18px;color:var(--strong);font-variant-numeric:tabular-nums}
+.resChip small{font-size:12px;color:var(--mut)}
+.vit .badge{margin:0}
+.vit .badge:empty{display:none}
+.vit .badge.novo{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:14px;background:linear-gradient(180deg,#ffd36a,#e8963a);color:#24120a}
+.vit .badge.novo svg.i{width:18px;height:18px;flex:none}
+.winSoma{width:100%;box-sizing:border-box;border-radius:16px;background:var(--fieldbg);padding:10px 14px;display:flex;flex-direction:column;gap:7px;font-size:14px;text-align:left}
+.somaL{display:flex;justify-content:space-between;gap:10px;color:var(--soft)}
+.somaL b{color:var(--gold);white-space:nowrap}
+.somaT{border-top:1px solid var(--line);padding-top:8px;align-items:baseline;color:var(--strong);font-weight:700}
+.somaV{font-weight:400;color:var(--soft);white-space:nowrap}
+.somaV b{font-size:19px}
+.winAcoes{margin-top:2px}
+.winAcoes .btn.pri{min-height:54px;font-size:18px;font-weight:800}
+.vitAcoes .btn.pri svg.i{order:2}
+@media (max-width:360px){.card.home{padding:16px}.homeModos{gap:6px}}

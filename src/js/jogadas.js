@@ -12,9 +12,18 @@ function tentarColocar(p, gx, gy){
   S.sel = S.jogo.fila === 1 ? S.jogo.reserva[0] || null : null; limparGhost();
   Som.encaixar(); vibrar(14);
   { const falta = S.jogo.total - S.jogo.mapa.size; anunciar(falta ? tr(falta === 1 ? 'Peça encaixada. Falta 1 peça.' : 'Peça encaixada. Faltam {n} peças.', {n: falta}) : tr('Peça encaixada.')); }
-  renderBoard(); renderReserva(); renderDica(); renderStats();
+  renderBoard(); destacarEncaixe(S.ultimaIdu); renderReserva(); renderDica(); renderStats();
   if (concluido(S.jogo)) vencer();
   return true;
+}
+/* a peça que acabou de encaixar "salta" e brilha por um instante */
+function destacarEncaixe(idu){
+  if (a11y.mov) return;
+  const g = S.jogo.grade;
+  for (let y = 0; y < S.n; y++) for (let x = 0; x < S.n; x++) if (g[y][x] === idu){
+    const c = cellEl(x, y); c.classList.remove('novo'); void c.offsetWidth; c.classList.add('novo');
+    setTimeout(() => c.classList.remove('novo'), 650);
+  }
 }
 function renderSelo(){
   const cv = S.cur, selo = $('#selo'); if (!S.venceu || !cv || cv.k === 'r') return;
@@ -30,7 +39,7 @@ function vencer(){
   S.venceu = true; atualizarDesfazer(); anunciar(tr('Fase concluída!'));
   $('#board').classList.add('win');
   renderSelo(); Festa.iniciar();
-  const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog;
+  const c = S.cur, k = chaveFase(c), t = Math.round(tempoMs()), j = S.jog, saldo0 = saldoAtual(), ganhos = [];
   let novoT = false, novoJ = false, anterior = k ? recs[k] : null;
   const est = estrelasDe(j, S.jogo.total, S.dicas);
   if (c.k === 'u') tutorialFeito();
@@ -42,11 +51,12 @@ function vencer(){
     if (!prog.done.includes(c.i)) prog.done.push(c.i);
     prog.max = Math.max(prog.max, Math.min(c.i + 1, LIMITE_FASES - 1));
     store.set('prog', prog);
-    if (!(estrelasFase[c.i] >= est)){ estrelasFase[c.i] = est; store.set('est', estrelasFase); }
+    if (!(estrelasFase[c.i] >= est)){ ganhos.push(['Estrelas da fase', est - (estrelasFase[c.i] || 0)]); estrelasFase[c.i] = est; store.set('est', estrelasFase); }
   }
-  if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); }
-  if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); }
-  aposVitoriaConta();
+  if (c.k === 'd' && !dias[c.data]){ dias[c.data] = {t, j, d: S.dicas}; store.set('dias', dias); ganhos.push(['Fase do dia', BONUS_DIA]); }
+  if (c.k === 's' && !sem[c.semana]){ sem[c.semana] = {t, j, d: S.dicas}; store.set('sem', sem); ganhos.push(['Desafio da semana', BONUS_SEMANA]); }
+  const bon = aposVitoriaConta(); if (bon) ganhos.push(['Bônus do visual', bon.ganho, bon.teto]);
+  { const resto = saldoAtual() - saldo0 - ganhos.reduce((a, g) => a + g[1], 0); if (resto > 0) ganhos.push(['Conquistas', resto]); }
   if (k && !S.dicas && !modoTeste){
     if (!recs[k]) recs[k] = {t, j};
     else { if (t < recs[k].t){ recs[k].t = t; novoT = true; } if (j < recs[k].j){ recs[k].j = j; novoJ = true; } }
@@ -54,7 +64,7 @@ function vencer(){
   }
   renderTitulo(); renderDica(); renderStats(); renderReserva();
   setTimeout(() => { Som.vitoria(); vibrar([40, 60, 40, 60, 140]); }, 120);
-  setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est}), 900);
+  setTimeout(() => mostrarVitoria({t, j, novoT, novoJ, anterior, est, saldo0, saldo1: saldoAtual(), ganhos}), 900);
 }
 /* botão de uma ação da vitória (usado na tela de conclusão e no painel de baixo) */
 function botaoAcao(a){
@@ -70,20 +80,30 @@ function mostrarVitoria(res, reabrir){
     : c.k === 'd' ? 'Volte amanhã para um novo desafio.' : c.k === 's' ? 'Volte na semana que vem para um novo desafio.'
     : (c.k === 't' && !c.shared) ? 'Sua fase tem solução. Pode salvar e compartilhar.' : 'Mandou bem!');
   const re = $('#winEstrelas'); re.innerHTML = '';
-  for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i' + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
+  for (let n = 1; n <= 3; n++) re.insertAdjacentHTML('beforeend', ic('star').replace('class="i"', 'class="i e' + n + (n <= res.est ? ' on' : '') + '" style="--d:' + (0.15 + n * 0.22).toFixed(2) + 's"'));
   re.setAttribute('aria-label', tr(res.est === 1 ? '1 estrela de 3' : res.est + ' estrelas de 3'));
+  if (!reabrir && !a11y.mov) for (let n = 1; n <= res.est; n++) setTimeout(() => Som.estrela && Som.estrela(n), (0.15 + n * 0.22) * 1000);
+  $('#winElogio').textContent = tr(res.est === 3 ? 'Perfeito!' : res.est === 2 ? 'Muito bem!' : 'Conseguiu!');
   const r = $('#winRes'); r.innerHTML = '';
-  const pill = (icone, txt) => { const s = mk('span', 'pill'); s.innerHTML = ic(icone); s.append(txt); r.appendChild(s); };
-  pill('clock', fmtTempo(res.t)); pill('swap', fmtJog(res.j)); if (S.dicas) pill('bulb', qtd(S.dicas, ' dica', ' dicas'));
-  const k = chaveFase(c);
-  $('#winBadge').textContent = tr(!k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
-    : (res.novoT || res.novoJ) ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
+  const chip = (valor, rotulo) => { const s = mk('span', 'resChip'); s.appendChild(mk('b', '', valor)); s.appendChild(mk('small', '', rotulo)); r.appendChild(s); };
+  chip(fmtTempo(res.t), tr('tempo')); chip(String(res.j), tr(res.j === 1 ? 'jogada' : 'jogadas')); if (S.dicas) chip(String(S.dicas), tr(S.dicas === 1 ? 'dica' : 'dicas'));
+  const k = chaveFase(c), novo = !S.dicas && (res.novoT || res.novoJ), bd = $('#winBadge');
+  bd.textContent = tr(!k ? '' : S.dicas ? 'Com dica — esta partida não conta para recorde.'
+    : novo ? (res.novoT && res.novoJ ? 'Novo recorde de tempo e de jogadas!' : res.novoT ? 'Novo recorde de tempo!' : 'Novo recorde de jogadas!')
     : !res.anterior ? 'Primeiro registro desta fase.' : 'Seu recorde: ' + fmtTempo(recs[k].t) + ' · ' + fmtJog(recs[k].j));
+  bd.classList.toggle('novo', !!novo); if (novo) bd.insertAdjacentHTML('afterbegin', ic('trophy'));
+  const so = $('#winSoma'), gs = (res.ganhos || []).filter(g => g[1] > 0); so.textContent = ''; so.hidden = !gs.length;
+  if (gs.length){
+    const linha = (txt, valor, total) => { const l = mk('div', total ? 'somaL somaT' : 'somaL'); l.appendChild(mk('span', '', txt)); l.appendChild(valor); so.appendChild(l); };
+    gs.forEach(([rot, n, teto]) => linha(tr(rot) + (teto ? ' (' + tr('limite de hoje atingido') + ')' : ''), mk('b', '', '+' + n + ' ★')));
+    const v = mk('span', 'somaV'); v.append(res.saldo0 + ' → '); v.appendChild(mk('b', '', res.saldo1 + ' ★'));
+    linha(tr('Total'), v, true);
+  }
   acts.innerHTML = '';
   S.acoesVit = [];
   const add = (txt, cls, fn, icone) => { S.acoesVit.push({txt, cls, fn, icone}); };
-  if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}));
-  if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo));
+  if (c.k === 'b' && !ultima) add('Próxima fase', 'pri', () => carregar({k: 'b', i: c.i + 1}), 'next');
+  if (c.k === 'i') add('Próxima fase', 'pri', () => jogarInfinito(c.modo), 'next');
   if (c.k === 't' && !c.shared) add('Voltar ao editor', 'pri', () => abrir('editor'));
   if (c.k === 't' && c.shared) add('Salvar em Minhas fases', 'pri', () => { salvarCustom(c.nome, c.text); toast('Fase salva em Minhas fases'); });
   if (ultima) add('Criar fase', 'pri', () => abrirEditor());
@@ -101,9 +121,9 @@ function mostrarVitoria(res, reabrir){
   };
   compartilharRes.fecha = false;
   add(c.k === 'd' || c.k === 's' ? 'Compartilhar resultado' : c.k === 'b' ? 'Desafiar um amigo' : 'Compartilhar fase', '', compartilharRes, 'share');
-  const jn = () => carregar(S.cur); add('Jogar de novo', '', jn);
-  if (c.k === 'i') add('Mudar dificuldade', '', abrirInf);
-  else if (c.k !== 't') add('Fases', '', abrirMenu);
+  const jn = () => carregar(S.cur); add('Jogar de novo', '', jn, 'reset');
+  if (c.k === 'i') add('Mudar dificuldade', '', abrirInf, 'grid');
+  else if (c.k !== 't') add('Fases', '', abrirMenu, 'grid');
   }
   add('Início', '', irInicio, 'home');
   S.acoesVit.forEach(a => acts.appendChild(botaoAcao(a)));
