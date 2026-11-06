@@ -93,7 +93,6 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .ib:hover{background:var(--t2)}
 .ib:active{transform:scale(.94)}
 .ib:disabled{opacity:.28;cursor:default;pointer-events:none}
-.ib.glow{background:linear-gradient(135deg,#1fd18a,#00beff);border-color:transparent;color:#05121a;animation:pulse 1.4s infinite}
 .ib.off{color:var(--mut)}
 .nav{display:flex;align-items:center;gap:6px}
 #titulo{flex:1;min-width:0;text-align:center;line-height:1.15;padding:0 4px}
@@ -303,7 +302,6 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 .estrelas svg.i{width:38px;height:38px;fill:none;stroke:var(--staroff);stroke-width:1.6;stroke-linejoin:round;transform:scale(.9)}
 .estrelas svg.i.on{fill:#ffd84d;stroke:#ffd84d;animation:estPop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:var(--d,0s)}
 @keyframes estPop{0%{transform:scale(.2) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
-.estTxt{font-size:13px;color:var(--mut);margin:-2px 0 8px}
 .tile .est{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:9px;line-height:1;color:var(--gold);letter-spacing:1px}
 .vit .badge{font-size:13px;font-weight:700;color:var(--gold);margin-top:8px}
 
@@ -1421,13 +1419,11 @@ en: {
   "Esse código não parece ser de um campeonato do Shape Puzzle.": "That code doesn't look like a Shape Puzzle championship.",
   "Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "That code is from a version this game doesn't know. Update the game and try again.",
   "Fase do jogo": "Game level",
-  "Fases do jogo (de fácil a difícil)": "Game levels (easy to hard)",
   "Isso não parece um código de campeonato do Shape Puzzle.": "That doesn't look like a Shape Puzzle championship code.",
   "Juntar": "Merge",
   "Juntar o resultado de outra pessoa": "Add another person's result",
   "Meus campeonatos sem internet": "My offline championships",
   "Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.": "Show the QR code to each person: they scan it with their phone camera and join as themselves.",
-  "No máximo 12 jogadores, contando com você.": "At most 12 players, counting you.",
   "O campeonato precisa de 1 a 8 fases.": "The championship needs 1 to 8 levels.",
   "O campeonato precisa de 2 a 12 jogadores.": "The championship needs 2 to 12 players.",
   "Os nomes dos jogadores estão repetidos ou inválidos.": "The player names are repeated or invalid.",
@@ -1520,50 +1516,36 @@ en: {
   "Pixel Art": "Pixel Art",
   "Ver o resultado": "See the result",
   "Sua conta": "Your account",
-  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.": "Signing in is optional. With a Google account you keep your progress in the cloud and continue on another device.",
   "Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.": "Your name and avatar are visible to other players. The game never sees your password or your email.",
   "Entrar com o Google": "Sign in with Google",
-  "Entrar com Google": "Sign in with Google",
   "opcional": "optional",
   "Meu perfil": "My profile",
-  "Nome de usuário": "Username",
   "Avatar": "Avatar",
-  "Usar uma foto": "Use a photo",
   "Moldura": "Frame",
-  "Progresso na nuvem": "Progress in the cloud",
   "Sincronizar agora": "Sync now",
   "Sair desta conta": "Sign out",
-  "Apagar meus dados da nuvem": "Delete my cloud data",
   "Sincronizado às {hora}": "Synced at {hora}",
   "Entre de novo para sincronizar.": "Sign in again to sync.",
   "Há mudanças para enviar à nuvem.": "There are changes to send to the cloud.",
   "Ainda não sincronizado.": "Not synced yet.",
-  "Minha foto": "My photo",
   "Avatar {n}": "Avatar {n}",
   "Sem moldura": "No frame",
   "Ouro": "Gold",
   "Pixel": "Pixel",
   "Festa": "Party",
-  "Em breve": "Coming soon",
   "Abrindo o login do Google…": "Opening Google sign-in…",
   "Login cancelado.": "Sign-in cancelled.",
   "Conectando…": "Connecting…",
   "Este endereço ainda não foi liberado para o login. Avise o dono do jogo.": "This address is not enabled for sign-in yet. Tell the game's owner.",
   "Não consegui entrar agora. Confira a internet e tente de novo.": "I couldn't sign in right now. Check your connection and try again.",
   "Você saiu. O progresso continua neste aparelho.": "You signed out. Your progress stays on this device.",
-  "Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.": "Delete your profile and saved progress from the cloud? Progress on this device stays.",
   "Não consegui apagar agora. Confira a internet e tente de novo.": "I couldn't delete right now. Check your connection and try again.",
-  "Seus dados foram apagados da nuvem.": "Your data was deleted from the cloud.",
   "Sincronizando…": "Syncing…",
   "Progresso da nuvem recebido! Reiniciando o jogo…": "Cloud progress received! Restarting the game…",
   "Há progresso novo na nuvem. Toque em Sincronizar agora para recebê-lo.": "There is new progress in the cloud. Tap Sync now to get it.",
   "A nuvem recusou a gravação. Tente sair e entrar de novo.": "The cloud refused the save. Try signing out and in again.",
   "Sem conexão agora. Tentamos de novo mais tarde.": "No connection right now. We'll try again later.",
   "Use de 2 a 20 letras ou números no nome.": "Use 2 to 20 letters or numbers for the name.",
-  "Nome salvo.": "Name saved.",
-  "Foto salva.": "Photo saved.",
-  "Não consegui usar essa imagem. Tente outra.": "I couldn't use that image. Try another.",
-  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.": "Signing in is optional. With a Google account you keep your progress in the cloud, continue on another device, collect stars to unlock avatars and frames and, soon, appear in the ranking and challenge friends.",
   "Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.": "Your nickname and avatar are visible to other players. Your email and password are never shown to anyone.",
   "Bem-vindo!": "Welcome!",
   "Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.": "Choose your nickname. The first choice is free; after that, changing it costs stars.",
@@ -1784,8 +1766,9 @@ en: {
   "Outro motivo": "Other reason",
   "Enviar denúncia": "Send report",
   "Só neste aparelho. Desbloqueie quando quiser.": "Only on this device. Unblock whenever you want.",
-  "Ver atualizações na Play Store": "See updates on the Play Store",
   "O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.": "Google sign-in is coming to the app in the next version. Meanwhile, everything is saved on this device.",
+  "Baixando a versão nova…": "Downloading the new version…",
+  "Não deu para baixar agora. Confira a conexão com a internet.": "Couldn't download now. Check your internet connection.",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -1821,7 +1804,6 @@ en: {
   "Instalar": "Install",
   "Instalar o jogo no aparelho": "Install the game on your device",
   "No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.": "On iPhone: tap Share, then “Add to Home Screen”.",
-  "Rever o tutorial dos gestos": "Replay the gesture tutorial",
   "Zerar progresso": "Reset progress",
   "Modo de teste": "Test mode",
   "Sair do modo de teste": "Exit test mode",
@@ -1891,7 +1873,6 @@ en: {
   "Como você aparece no ranking": "How you appear on the leaderboard",
   "Senha de organizador (mínimo 6 caracteres)": "Organizer password (at least 6 characters)",
   "Repita a senha para criar a conta": "Repeat the password to create the account",
-  "Chave da API do app web (apiKey)": "Web app API key (apiKey)",
   "Ex.: Copa da família": "E.g.: Family Cup",
   "Senha de organizador": "Organizer password",
   "Senha": "Password",
@@ -2050,8 +2031,6 @@ en: {
   "Sortear uma nova fase": "Draw a new level",
   "Fácil (5×5)": "Easy (5×5)",
   "Média (5×5)": "Medium (5×5)",
-  "Difícil (6×6, fila)": "Hard (6×6, queue)",
-  "Não consegui sortear agora. Tente de novo.": "I couldn't draw one right now. Try again.",
   "A sessão de organizador acabou. Feche, abra Campeonatos e entre com a senha.": "The organizer session has ended. Close this, open Tournaments and sign in with your password.",
   "Salvando…": "Saving…",
   "Criando…": "Creating…",
@@ -2175,8 +2154,6 @@ en: {
   "Começa fácil e sobe a cada 5 fases": "Starts easy and goes up every 5 levels",
   "5×5, com muitas estrelas-guia": "5×5, with many guide stars",
   "5×5, com poucas estrelas-guia": "5×5, with few guide stars",
-  "6×6, só 3 peças por vez": "6×6, only 3 pieces at a time",
-  "7×7, só 2 peças por vez": "7×7, only 2 pieces at a time",
   "1 feita": "1 done",
   "{n} feitas": "{n} done",
   "Geral": "Overall",
@@ -2305,13 +2282,11 @@ es: {
   "Esse código não parece ser de um campeonato do Shape Puzzle.": "Ese código no parece ser de un torneo de Shape Puzzle.",
   "Esse código é de uma versão que este jogo não conhece. Atualize o jogo e tente de novo.": "Ese código es de una versión que este juego no conoce. Actualiza el juego e inténtalo de nuevo.",
   "Fase do jogo": "Nivel del juego",
-  "Fases do jogo (de fácil a difícil)": "Niveles del juego (de fácil a difícil)",
   "Isso não parece um código de campeonato do Shape Puzzle.": "Eso no parece un código de torneo de Shape Puzzle.",
   "Juntar": "Unir",
   "Juntar o resultado de outra pessoa": "Sumar el resultado de otra persona",
   "Meus campeonatos sem internet": "Mis torneos sin internet",
   "Mostre o QR a cada pessoa: ela escaneia com a câmera do celular e já entra como ela mesma.": "Muestra el QR a cada persona: lo escanea con la cámara del celular y entra como ella misma.",
-  "No máximo 12 jogadores, contando com você.": "Máximo 12 jugadores, contándote a ti.",
   "O campeonato precisa de 1 a 8 fases.": "El torneo necesita de 1 a 8 niveles.",
   "O campeonato precisa de 2 a 12 jogadores.": "El torneo necesita de 2 a 12 jugadores.",
   "Os nomes dos jogadores estão repetidos ou inválidos.": "Los nombres de los jugadores están repetidos o no son válidos.",
@@ -2404,50 +2379,36 @@ es: {
   "Pixel Art": "Pixel Art",
   "Ver o resultado": "Ver el resultado",
   "Sua conta": "Tu cuenta",
-  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho e, nas próximas etapas, aparece no ranking e desafia amigos.": "Iniciar sesión es opcional. Con una cuenta de Google guardas tu progreso en la nube y continúas en otro dispositivo.",
   "Seu nome e seu avatar ficam visíveis para outros jogadores. O jogo nunca vê sua senha nem seu e-mail.": "Tu nombre y tu avatar son visibles para otros jugadores. El juego nunca ve tu contraseña ni tu correo.",
   "Entrar com o Google": "Entrar con Google",
-  "Entrar com Google": "Entrar con Google",
   "opcional": "opcional",
   "Meu perfil": "Mi perfil",
-  "Nome de usuário": "Nombre de usuario",
   "Avatar": "Avatar",
-  "Usar uma foto": "Usar una foto",
   "Moldura": "Marco",
-  "Progresso na nuvem": "Progreso en la nube",
   "Sincronizar agora": "Sincronizar ahora",
   "Sair desta conta": "Salir de esta cuenta",
-  "Apagar meus dados da nuvem": "Borrar mis datos de la nube",
   "Sincronizado às {hora}": "Sincronizado a las {hora}",
   "Entre de novo para sincronizar.": "Entra de nuevo para sincronizar.",
   "Há mudanças para enviar à nuvem.": "Hay cambios para enviar a la nube.",
   "Ainda não sincronizado.": "Aún sin sincronizar.",
-  "Minha foto": "Mi foto",
   "Avatar {n}": "Avatar {n}",
   "Sem moldura": "Sin marco",
   "Ouro": "Oro",
   "Pixel": "Píxel",
   "Festa": "Fiesta",
-  "Em breve": "Próximamente",
   "Abrindo o login do Google…": "Abriendo el acceso de Google…",
   "Login cancelado.": "Acceso cancelado.",
   "Conectando…": "Conectando…",
   "Este endereço ainda não foi liberado para o login. Avise o dono do jogo.": "Esta dirección aún no está habilitada para el acceso. Avisa al dueño del juego.",
   "Não consegui entrar agora. Confira a internet e tente de novo.": "No pude entrar ahora. Revisa tu conexión e inténtalo de nuevo.",
   "Você saiu. O progresso continua neste aparelho.": "Saliste. Tu progreso sigue en este dispositivo.",
-  "Apagar da nuvem seu perfil e o progresso guardado? O progresso deste aparelho continua.": "¿Borrar de la nube tu perfil y el progreso guardado? El progreso de este dispositivo se mantiene.",
   "Não consegui apagar agora. Confira a internet e tente de novo.": "No pude borrar ahora. Revisa tu conexión e inténtalo de nuevo.",
-  "Seus dados foram apagados da nuvem.": "Tus datos fueron borrados de la nube.",
   "Sincronizando…": "Sincronizando…",
   "Progresso da nuvem recebido! Reiniciando o jogo…": "¡Progreso de la nube recibido! Reiniciando el juego…",
   "Há progresso novo na nuvem. Toque em Sincronizar agora para recebê-lo.": "Hay progreso nuevo en la nube. Toca Sincronizar ahora para recibirlo.",
   "A nuvem recusou a gravação. Tente sair e entrar de novo.": "La nube rechazó el guardado. Prueba salir y entrar de nuevo.",
   "Sem conexão agora. Tentamos de novo mais tarde.": "Sin conexión ahora. Lo intentaremos más tarde.",
   "Use de 2 a 20 letras ou números no nome.": "Usa de 2 a 20 letras o números en el nombre.",
-  "Nome salvo.": "Nombre guardado.",
-  "Foto salva.": "Foto guardada.",
-  "Não consegui usar essa imagem. Tente outra.": "No pude usar esa imagen. Prueba otra.",
-  "Entrar é opcional. Com a conta Google você guarda seu progresso na nuvem, continua em outro aparelho, junta estrelas para liberar avatares e molduras e, nas próximas etapas, aparece no ranking e desafia amigos.": "Iniciar sesión es opcional. Con una cuenta de Google guardas tu progreso en la nube, continúas en otro dispositivo, juntas estrellas para desbloquear avatares y marcos y, pronto, apareces en el ranking y desafías a tus amigos.",
   "Seu nome e seu avatar ficam visíveis para outros jogadores. Seu e-mail e sua senha não aparecem para ninguém.": "Tu apodo y tu avatar son visibles para otros jugadores. Tu correo y tu contraseña no se muestran a nadie.",
   "Bem-vindo!": "¡Bienvenido!",
   "Escolha seu apelido. A primeira escolha é grátis; depois, trocar custa estrelas.": "Elige tu apodo. La primera elección es gratis; después, cambiarlo cuesta estrellas.",
@@ -2668,8 +2629,9 @@ es: {
   "Outro motivo": "Otro motivo",
   "Enviar denúncia": "Enviar denuncia",
   "Só neste aparelho. Desbloqueie quando quiser.": "Solo en este dispositivo. Desbloquea cuando quieras.",
-  "Ver atualizações na Play Store": "Ver actualizaciones en Play Store",
   "O login com o Google chega ao app na próxima versão. Enquanto isso, tudo fica salvo neste aparelho.": "El inicio de sesión con Google llegará a la app en la próxima versión. Mientras tanto, todo queda guardado en este dispositivo.",
+  "Baixando a versão nova…": "Descargando la versión nueva…",
+  "Não deu para baixar agora. Confira a conexão com a internet.": "No se pudo descargar ahora. Revisa tu conexión a internet.",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -2705,7 +2667,6 @@ es: {
   "Instalar": "Instalar",
   "Instalar o jogo no aparelho": "Instalar el juego en el dispositivo",
   "No iPhone: toque em Compartilhar e depois em “Adicionar à Tela de Início”.": "En iPhone: toca Compartir y luego “Añadir a pantalla de inicio”.",
-  "Rever o tutorial dos gestos": "Repetir el tutorial de gestos",
   "Zerar progresso": "Reiniciar progreso",
   "Modo de teste": "Modo de prueba",
   "Sair do modo de teste": "Salir del modo de prueba",
@@ -2775,7 +2736,6 @@ es: {
   "Como você aparece no ranking": "Cómo apareces en el ranking",
   "Senha de organizador (mínimo 6 caracteres)": "Contraseña de organizador (mínimo 6 caracteres)",
   "Repita a senha para criar a conta": "Repite la contraseña para crear la cuenta",
-  "Chave da API do app web (apiKey)": "Clave de API de la app web (apiKey)",
   "Ex.: Copa da família": "Ej.: Copa de la familia",
   "Senha de organizador": "Contraseña de organizador",
   "Senha": "Contraseña",
@@ -2934,8 +2894,6 @@ es: {
   "Sortear uma nova fase": "Sortear un nuevo nivel",
   "Fácil (5×5)": "Fácil (5×5)",
   "Média (5×5)": "Medio (5×5)",
-  "Difícil (6×6, fila)": "Difícil (6×6, cola)",
-  "Não consegui sortear agora. Tente de novo.": "No pude sortear ahora. Inténtalo de nuevo.",
   "A sessão de organizador acabou. Feche, abra Campeonatos e entre com a senha.": "La sesión de organizador terminó. Cierra, abre Torneos y entra con la contraseña.",
   "Salvando…": "Guardando…",
   "Criando…": "Creando…",
@@ -3059,8 +3017,6 @@ es: {
   "Começa fácil e sobe a cada 5 fases": "Empieza fácil y sube cada 5 niveles",
   "5×5, com muitas estrelas-guia": "5×5, con muchas estrellas guía",
   "5×5, com poucas estrelas-guia": "5×5, con pocas estrellas guía",
-  "6×6, só 3 peças por vez": "6×6, solo 3 piezas a la vez",
-  "7×7, só 2 peças por vez": "7×7, solo 2 piezas a la vez",
   "1 feita": "1 hecho",
   "{n} feitas": "{n} hechos",
   "Geral": "General",
@@ -3658,7 +3614,6 @@ const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30, BONUS_CAMP_SEMANA = 10;
 /* Itens: 'av:pN' / 'av:aN' (avatar), 'mold:id' (moldura) e 'fun:id' (fundo do avatar).
    Cada item tem uma categoria. A categoria define o preço em estrelas e o bônus que o item dá, equipado, a cada fase vencida.
    comum = todo mundo tem; conq = só por conquista (sem preço). */
-const CATEGORIAS = ['comum', 'raro', 'epico', 'lendario'];
 const PRECO_CAT = {raro: 20, epico: 50, lendario: 120};
 const BONUS_CAT = {comum: 0, raro: 1, epico: 2, lendario: 3};
 const BONUS_DIA_MAX = 30;      /* teto diário do bônus dos itens (repetir fase fácil não vira fábrica de estrelas) */
@@ -3870,7 +3825,6 @@ const $ = s => document.querySelector(s);
 /* NATIVO: o jogo está rodando dentro do app Android (Capacitor). SITE: endereço público, usado em links e páginas. */
 const NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 const SITE = 'https://rafajames.github.io/ShapePuzzle/';
-const LOJA = 'https://play.google.com/store/apps/details?id=io.github.rafajames.shapepuzzle';
 /* mk('div', 'classe', 'texto'): cria um elemento. icBtn: botão só de ícone. fecharTodos: fecha os painéis abertos (menos o `poupar`). */
 const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
 const icBtn = (icone, rotulo, fn, titulo) => { const b = mk('button', 'ib'); b.innerHTML = ic(icone); b.setAttribute('aria-label', rotulo); if (titulo) b.title = titulo; b.onclick = fn; return b; };
@@ -6083,17 +6037,27 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.5';
+const VERSAO = '2026.11.06.6';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
-const Upd = {nova: null, ultimo: 0, dispensada: ''};
+const Upd = {nova: null, html: '', ultimo: 0, dispensada: ''};
+/* No site, compara com o index.html publicado. No app, com o do site público: o app baixa a versão nova e guarda. */
 async function versaoRemota(){
-  const r = await fetch(location.pathname + '?chk=' + Date.now(), {cache: 'no-store'});
+  const r = await fetch((NATIVO ? SITE + 'index.html' : location.pathname) + '?chk=' + Date.now(), {cache: 'no-store'});
   if (!r.ok) throw new Error('http ' + r.status);
-  const m = (await r.text()).match(/const VERSAO = '([^']+)'/);
+  const html = await r.text(), m = html.match(/const VERSAO = '([^']+)'/);
   if (!m) throw new Error('sem versão');
+  if (NATIVO) Upd.html = html;
   return m[1];
 }
+/* App: a versão baixada fica no IndexedDB; o carregador do app abre a mais nova entre ela e a que veio no app. */
+const guardarJogoBaixado = (v, html) => new Promise((ok, erro) => {
+  const r = indexedDB.open('shapepuzzle-app', 1);
+  r.onupgradeneeded = () => r.result.createObjectStore('jogo');
+  r.onerror = () => erro(r.error);
+  r.onsuccess = () => { const t = r.result.transaction('jogo', 'readwrite'); t.objectStore('jogo').put({v, html, ts: Date.now()}, 'html'); t.oncomplete = () => ok(); t.onerror = () => erro(t.error); };
+});
+const jogoInteiro = (html, v) => html.length > 100000 && html.includes("const VERSAO = '" + v + "'") && /<\/html>\s*$/.test(html);
 /* Devolve 'nova' | 'atual' | 'erro'. Em modo silencioso só mostra o aviso quando há versão nova. */
 async function verificarAtualizacao(silencioso){
   Upd.ultimo = Date.now();
@@ -6116,6 +6080,14 @@ function mostrarAvisoAtualizacao(){
 }
 async function aplicarAtualizacao(){
   if (S.cur && ehCamp(S.cur) && !S.venceu){ toast('Termine o campeonato antes de atualizar.'); return; }
+  if (NATIVO){
+    try{
+      if (!Upd.html || !jogoInteiro(Upd.html, Upd.nova)) await versaoRemota();
+      if (!jogoInteiro(Upd.html, Upd.nova)) throw new Error('download incompleto');
+      msgAtualizacao('Baixando a versão nova…'); await guardarJogoBaixado(Upd.nova, Upd.html);
+    }catch(e){ msgAtualizacao('Não deu para baixar agora. Confira a conexão com a internet.', 'erro'); toast('Não deu para baixar agora. Confira a conexão com a internet.'); return; }
+    location.reload(); return;
+  }
   try{
     await fetch(location.pathname, {cache: 'reload'});                      // atualiza o cache do navegador
     if ('caches' in window){ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
@@ -6125,11 +6097,10 @@ async function aplicarAtualizacao(){
 }
 function renderAtualizacao(){
   $('#verTxt').textContent = tr('Versão {v}', {v: VERSAO});
-  const b = $('#btnAtualizar'); b.lastChild.textContent = tr(NATIVO ? 'Ver atualizações na Play Store' : Upd.nova ? 'Atualizar agora' : 'Verificar atualizações');
+  const b = $('#btnAtualizar'); b.lastChild.textContent = tr(Upd.nova ? 'Atualizar agora' : 'Verificar atualizações');
 }
 function msgAtualizacao(txt, cls){ const m = $('#updMsg'); m.textContent = txt ? tr(txt) : ''; m.className = cls || ''; }
 $('#btnAtualizar').onclick = async () => {
-  if (NATIVO){ window.open(LOJA, '_blank'); return; }
   if (Upd.nova){ aplicarAtualizacao(); return; }
   const b = $('#btnAtualizar'); b.disabled = true; msgAtualizacao('Procurando…');
   const r = await verificarAtualizacao(false); b.disabled = false;
@@ -6139,7 +6110,7 @@ $('#btnAtualizar').onclick = async () => {
 };
 $('#updSim').onclick = aplicarAtualizacao;
 $('#updNao').onclick = () => { Upd.dispensada = Upd.nova || ''; $('#upd').hidden = true; };
-if (!NATIVO && location.protocol.startsWith('http')){
+if (location.protocol.startsWith('http')){
   setTimeout(() => verificarAtualizacao(true), 5000);
   setInterval(() => verificarAtualizacao(true), 30 * 60 * 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - Upd.ultimo > 10 * 60 * 1000) verificarAtualizacao(true); });
@@ -7444,6 +7415,7 @@ pintarIcones();
 registrarI18n(); aplicarIdioma(); prepararDialogos();
 aplicarA11y();
 ajustar(); window.__pronto = true;
+if (NATIVO) try{ localStorage.removeItem('sp-boot-falhas'); }catch(e){}   /* o carregador do app conta inícios que falharam */
 montarBoard();
 (() => {
   const l = $('#logo');

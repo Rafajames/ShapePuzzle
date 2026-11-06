@@ -20,6 +20,7 @@ pintarIcones();
 registrarI18n(); aplicarIdioma(); prepararDialogos();
 aplicarA11y();
 ajustar(); window.__pronto = true;
+if (NATIVO) try{ localStorage.removeItem('sp-boot-falhas'); }catch(e){}   /* o carregador do app conta inícios que falharam */
 montarBoard();
 (() => {
   const l = $('#logo');

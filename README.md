@@ -40,7 +40,6 @@ Versão web em um único `index.html` (sem instalar nada), que roda no computado
 | `sw.js`, `manifest.webmanifest`, `icon-*.png` | Instalar como app e jogar offline |
 | `firebase-rules.json`, `CAMPEONATOS.md` | Regras e guia do banco dos campeonatos |
 | `tests/` | Testes automáticos (rodam no GitHub a cada publicação) |
-| `fases-web/` | Fases 31–50 em `.txt` (cópia de referência; já estão no `index.html`) |
 | `java-original/` | Primeira versão em Java Swing — não é usada pelo jogo web ([veja o README dela](java-original/README.md)) |
 | `MELHORIAS.md` | Lista de ideias e o que já foi feito |
 
@@ -99,6 +98,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 - **Estrelas** (moeda): vêm das estrelas das fases (1 a 3), +2 por fase do dia, +5 por desafio da semana e prêmios de conquistas (mais tarde, anúncios premiados). O saldo nunca é guardado: é recalculado (`src/js/logica-conta.js`); só gastos, ganhos avulsos e conquistas resgatadas ficam na carteira (`cart`), que vai junto no backup e na nuvem.
 - **Avatares** (36 desenhos em vetor, todos originais: 24 bichos e pessoas e 12 heróis estilo anime), **molduras** (14, várias com textura: mármore, metal, neon, cristal, lava, galáxia…) e **fundos do avatar** (11 texturas). Uns são livres, outros se compram com estrelas e outros são prêmio de conquista (14 conquistas). Sem foto: o jogo não coleta imagens.
 - **Denunciar e bloquear:** em todo ranking há o botão ⋯ ao lado de cada jogador (denunciar ou bloquear); campeonatos entre amigos têm o botão Denunciar. As denúncias vão para o banco e a moderação é feita pelo console — veja [docs/moderacao.md](docs/moderacao.md).
+- **No app Android:** o jogo confere a versão do site e baixa a nova sozinho (botão Atualizar), sem esperar a Play Store.
 - **Voltar do aparelho:** deslizar da borda (ou o botão voltar do Android) fecha a janela aberta ou volta para a tela inicial; o jogo não fecha.
 - **Cupons:** no fim de Meu perfil há um campo de cupom, que pode dar estrelas, avatares, molduras e fundos. Os cupons são criados no console do Firebase — veja [docs/cupons.md](docs/cupons.md).
 - **Categorias:** comum (grátis), raro (20 ★), épico (50 ★) e lendário (120 ★). Equipados, os itens dão estrelas extras a cada fase vencida: +1 raro, +2 épico, +3 lendário (somando avatar, moldura e fundo), com teto de 30 ★ por dia.
@@ -110,7 +110,7 @@ O menu abre com quatro atalhos (**Fase do dia**, **Modo infinito**, **Estatísti
 
 ## Testes automáticos
 
-A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução, QR code, atualização, modo infinito, estatísticas e backup). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`).
+A cada publicação o GitHub roda todos os testes (lógica das fases, regras do banco, telas no celular e no computador, gestos, campeonatos, tutorial, idiomas, temas, acessibilidade, dica, solução, QR code, atualização, modo infinito, estatísticas e backup). Para rodar na sua máquina: `npm install` e `bash tests/rodar.sh` (precisa de Node, Python e `pip install playwright && playwright install chromium`). Os testes de tela rodam 3 de cada vez (uns 5 minutos); `PARALELO=1 bash tests/rodar.sh` roda um por vez.
 
 ## Extras de jogo
 

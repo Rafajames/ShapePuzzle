@@ -1,5 +1,6 @@
 # O jogo rodando dentro do app Android (Capacitor simulado): links públicos, voltar pelo plugin, login e atualização pela loja.
-import sys
+import os, sys
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from playwright.sync_api import sync_playwright
 URL = 'http://127.0.0.1:8765/index.html'
 falhas, erros = [], []
@@ -23,7 +24,19 @@ with sync_playwright() as pw:
     check(p.evaluate("!navigator.serviceWorker || !navigator.serviceWorker.controller") and p.is_hidden('#blocoInstalar'), 'no app: sem service worker e sem "Instalar o jogo"')
     p.click('#hConta'); p.check('#cnTermos'); p.click('#cnEntrar'); p.wait_for_timeout(300)
     check('próxima versão' in p.inner_text('#cnAviso') and p.evaluate("conta") is None, 'login com Google avisa que chega na próxima versão do app')
-    p.evaluate("fecharTodos(); renderAtualizacao()"); check('Play Store' in p.evaluate("document.querySelector('#btnAtualizar').textContent"), 'atualização pela Play Store')
+    print('Atualização baixada pelo app')
+    novo = open(RAIZ + '/index.html', encoding='utf8').read().replace("const VERSAO = '", "const VERSAO = '9999.", 1)
+    v9 = '9999.' + p.evaluate("VERSAO")
+    p.route('https://rafajames.github.io/ShapePuzzle/index.html*', lambda route: route.fulfill(status=200, body=novo, content_type='text/html', headers={'Access-Control-Allow-Origin': '*'}))
+    r = p.evaluate("verificarAtualizacao(true)"); p.wait_for_timeout(300)
+    check(r == 'nova' and p.is_visible('#upd'), 'no app, procura a versão nova no site público e avisa')
+    p.evaluate("window.__marca = 1"); p.evaluate("aplicarAtualizacao()"); p.wait_for_timeout(1200)
+    guardado = p.evaluate("new Promise(ok => { const r = indexedDB.open('shapepuzzle-app', 1); r.onsuccess = () => { const t = r.result.transaction('jogo').objectStore('jogo').get('html'); t.onsuccess = () => ok(t.result ? [t.result.v, t.result.html.length] : null); }; })")
+    check(guardado and guardado[0] == v9 and guardado[1] > 400000, 'baixou a versão inteira e guardou no aparelho: ' + str(guardado and guardado[0]))
+    check(p.evaluate("window.__marca") is None, 'depois recarrega para abrir a versão nova')
+    p.route('https://rafajames.github.io/ShapePuzzle/index.html*', lambda route: route.fulfill(status=200, body=novo[:5000], content_type='text/html', headers={'Access-Control-Allow-Origin': '*'}))
+    p.wait_for_timeout(600); p.evaluate("Upd.nova = '9999.1'; Upd.html = ''; window.__marca = 2"); p.evaluate("aplicarAtualizacao()"); p.wait_for_timeout(800)
+    check(p.evaluate("window.__marca") == 2 and 'baixar' in p.inner_text('#updMsg'), 'download cortado não é usado (avisa e não recarrega)')
     b.close()
 print('\nERROS DE PÁGINA:', erros if erros else 'nenhum')
 if falhas or erros: print('UI NATIVO: COM FALHAS'); sys.exit(1)

@@ -4,7 +4,6 @@
 .ib:hover{background:var(--t2)}
 .ib:active{transform:scale(.94)}
 .ib:disabled{opacity:.28;cursor:default;pointer-events:none}
-.ib.glow{background:linear-gradient(135deg,#1fd18a,#00beff);border-color:transparent;color:#05121a;animation:pulse 1.4s infinite}
 .ib.off{color:var(--mut)}
 .nav{display:flex;align-items:center;gap:6px}
 #titulo{flex:1;min-width:0;text-align:center;line-height:1.15;padding:0 4px}

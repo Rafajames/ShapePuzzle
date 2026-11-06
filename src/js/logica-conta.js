@@ -6,7 +6,6 @@ const BONUS_DIA = 2, BONUS_SEMANA = 5, NOME_CUSTO = 30, BONUS_CAMP_SEMANA = 10;
 /* Itens: 'av:pN' / 'av:aN' (avatar), 'mold:id' (moldura) e 'fun:id' (fundo do avatar).
    Cada item tem uma categoria. A categoria define o preço em estrelas e o bônus que o item dá, equipado, a cada fase vencida.
    comum = todo mundo tem; conq = só por conquista (sem preço). */
-const CATEGORIAS = ['comum', 'raro', 'epico', 'lendario'];
 const PRECO_CAT = {raro: 20, epico: 50, lendario: 120};
 const BONUS_CAT = {comum: 0, raro: 1, epico: 2, lendario: 3};
 const BONUS_DIA_MAX = 30;      /* teto diário do bônus dos itens (repetir fase fácil não vira fábrica de estrelas) */

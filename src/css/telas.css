@@ -114,7 +114,6 @@ body.tg .sv b{font-size:26px}body.tg .sv span{font-size:15px}
 .estrelas svg.i{width:38px;height:38px;fill:none;stroke:var(--staroff);stroke-width:1.6;stroke-linejoin:round;transform:scale(.9)}
 .estrelas svg.i.on{fill:#ffd84d;stroke:#ffd84d;animation:estPop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:var(--d,0s)}
 @keyframes estPop{0%{transform:scale(.2) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
-.estTxt{font-size:13px;color:var(--mut);margin:-2px 0 8px}
 .tile .est{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:9px;line-height:1;color:var(--gold);letter-spacing:1px}
 .vit .badge{font-size:13px;font-weight:700;color:var(--gold);margin-top:8px}
 
