@@ -12,7 +12,7 @@ jobs:
       - run: npm install
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: pip install playwright && playwright install --with-deps chromium
+      - run: pip install playwright opencv-python-headless && playwright install --with-deps chromium
       - run: bash tests/rodar.sh
       - uses: actions/upload-artifact@v4
         if: failure()
