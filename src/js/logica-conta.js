@@ -54,8 +54,8 @@ function saldoConta(d){
 /* ganhos por origem, para mostrar de onde vêm as estrelas */
 function origemEstrelas(d){
   const c = cartDe(d), m = medidasConta(d);
-  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'),
-    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:'), gastas: somaVals(c.s)};
+  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'), cupons: somaPref(c.g, 'c:'),
+    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:') - somaPref(c.g, 'c:'), gastas: somaVals(c.s)};
 }
 function itensDe(d){
   const c = cartDe(d), r = new Set(Object.keys(ITENS).filter(k => ITENS[k].livre));
@@ -77,6 +77,23 @@ function comprarItem(d, chave){
   if (saldoConta(d) < it.preco) return {erro: 'saldo', falta: it.preco - saldoConta(d)};
   c.s['i:' + chave] = it.preco;
   return {cart: c, preco: it.preco};
+}
+/* ---- cupons (criados no console do Firebase em cupons/CODIGO = {estrelas, itens: "av:a1,mold:neon", ate: "2026-12-31"}) ---- */
+const normalizarCupom = t => String(t || '').toUpperCase().replace(/\s+/g, '').slice(0, 20);
+const cupomValido = c => /^[A-Z0-9_-]{3,20}$/.test(c);
+function aplicarCupom(d, codigo, cupom, hoje){
+  const c = cartDe(d), k = 'c:' + codigo;
+  if (!cupom || typeof cupom !== 'object') return {erro: 'invalido'};
+  if (c.g[k] !== undefined) return {erro: 'usado'};
+  if (cupom.ate && String(cupom.ate) < hoje) return {erro: 'expirado'};
+  if (cupom.desde && String(cupom.desde) > hoje) return {erro: 'cedo'};
+  const estrelas = Math.max(0, Math.min(1000, Math.round(+cupom.estrelas || 0)));
+  const donos = itensDe(d), itens = String(cupom.itens || '').split(',').map(x => x.trim()).filter(x => ITENS[x] && !donos.has(x));
+  const jaTinha = String(cupom.itens || '').split(',').map(x => x.trim()).filter(x => ITENS[x] && donos.has(x));
+  if (!estrelas && !itens.length && !jaTinha.length) return {erro: 'vazio'};
+  c.g[k] = estrelas;
+  itens.forEach(x => { c.s['i:' + x] = 0; });       /* item de presente: fica seu sem gastar estrelas */
+  return {cart: c, estrelas, itens, jaTinha};
 }
 const trocasDeApelido = d => Object.keys(cartDe(d).s).filter(k => k.startsWith('n:')).length;
 function pagarApelido(d){

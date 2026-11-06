@@ -170,7 +170,7 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .contaChip small{margin-left:auto;color:var(--mut);font-size:12px;white-space:nowrap}
 .contaChip .cnN{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:5px;vertical-align:middle}
-.av svg{display:block;width:100%;height:100%;image-rendering:pixelated}
+.av svg{display:block;width:100%;height:100%}
 .av.m-madeira{box-shadow:0 0 0 2px #7a4b1f,0 0 0 4px #e0b36a}
 .av.m-ouro{box-shadow:0 0 0 2px #b8860b,0 0 0 4px #ffd84d,0 0 9px #ffd84d}
 .av.m-pixel{box-shadow:0 0 0 3px #1b2a49,0 0 0 5px #5ec2ff}
@@ -254,3 +254,8 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .pvCat{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;color:#111;background:var(--cat)}
 .pvCard .cnBonus,.pvCard .aviso{text-align:center}
 #pvComprar[disabled]{opacity:.5}
+/* cupom */
+.cnCupomBox{margin-top:14px;padding:12px;border-radius:14px;border:1px dashed var(--goldln);background:var(--t0)}
+.cnCupomBox h2{margin:0 0 2px}
+.cnCupomBox .row{margin-top:8px}
+#cnCupom{text-transform:uppercase;letter-spacing:.08em}

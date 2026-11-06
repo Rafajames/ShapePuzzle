@@ -359,7 +359,7 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .contaChip small{margin-left:auto;color:var(--mut);font-size:12px;white-space:nowrap}
 .contaChip .cnN{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .av{--t:40px;display:inline-block;width:var(--t);height:var(--t);border-radius:22%;overflow:hidden;flex:none;position:relative;background:#fff6dc;margin:5px;vertical-align:middle}
-.av svg{display:block;width:100%;height:100%;image-rendering:pixelated}
+.av svg{display:block;width:100%;height:100%}
 .av.m-madeira{box-shadow:0 0 0 2px #7a4b1f,0 0 0 4px #e0b36a}
 .av.m-ouro{box-shadow:0 0 0 2px #b8860b,0 0 0 4px #ffd84d,0 0 9px #ffd84d}
 .av.m-pixel{box-shadow:0 0 0 3px #1b2a49,0 0 0 5px #5ec2ff}
@@ -443,6 +443,11 @@ body.compacto .vitAcoes{gap:6px;margin-top:4px}body.compacto .vitAcoes .btn{padd
 .pvCat{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;color:#111;background:var(--cat)}
 .pvCard .cnBonus,.pvCard .aviso{text-align:center}
 #pvComprar[disabled]{opacity:.5}
+/* cupom */
+.cnCupomBox{margin-top:14px;padding:12px;border-radius:14px;border:1px dashed var(--goldln);background:var(--t0)}
+.cnCupomBox h2{margin:0 0 2px}
+.cnCupomBox .row{margin-top:8px}
+#cnCupom{text-transform:uppercase;letter-spacing:.08em}
 /* ---- acessibilidade ---- */
 .sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 :focus-visible{outline:3px solid var(--strong);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 85%,transparent)}
@@ -1211,6 +1216,12 @@ html[data-tema="papel"] #selo{background:linear-gradient(135deg,#e46374,#c23a4e)
         <ul class="cnOrigem" id="cnOrigem"></ul>
         <p class="cnDica">Jogue fases, a fase do dia e o desafio da semana, e complete conquistas para ganhar mais.</p>
       </div></details>
+      <div class="cnCupomBox" id="cnCupomBox">
+        <h2>Cupom</h2>
+        <p class="cnDica">Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.</p>
+        <div class="row"><input class="field" id="cnCupom" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Digite o cupom" aria-label="Cupom"><button class="btn pri" id="cnCupomOk">Usar</button></div>
+        <p class="aviso" id="cnCupomAviso" aria-live="polite"></p>
+      </div>
       <details class="sec" id="cnSecNuvem"><summary data-i="download"><span>Conta e nuvem</span></summary><div class="sb">
         <div class="acts"><button class="btn" id="cnSync" data-i="download">Sincronizar agora</button></div>
         <div class="acts"><button class="btn sm" id="cnSair">Sair desta conta</button><button class="btn sm" id="cnApagar">Apagar minha conta e meus dados</button></div>
@@ -1684,6 +1695,42 @@ en: {
   "Com o item": "With the item",
   "Comprar": "Buy",
   "Voltar": "Back",
+  "Cupom aplicado! Você ganhou: {p}.": "Coupon applied! You got: {p}.",
+  "nada novo (você já tinha os itens)": "nothing new (you already had the items)",
+  "Cupom aplicado!": "Coupon applied!",
+  "Bichos e pessoas": "Animals and people",
+  "Cupom não encontrado. Confira as letras e os números.": "Coupon not found. Check the letters and numbers.",
+  "Você já usou este cupom.": "You have already used this coupon.",
+  "Este cupom já venceu.": "This coupon has expired.",
+  "Este cupom ainda não começou a valer.": "This coupon is not valid yet.",
+  "Este cupom não tem prêmio para você.": "This coupon has no reward for you.",
+  "Digite o cupom (de 3 a 20 letras ou números).": "Type the coupon (3 to 20 letters or numbers).",
+  "Conferindo o cupom…": "Checking the coupon…",
+  "Cupons": "Coupons",
+  "Cupom": "Coupon",
+  "Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.": "Got a coupon? It can give stars, avatars, frames or backgrounds.",
+  "Digite o cupom": "Type the coupon",
+  "Usar": "Use",
+  "Gatinho": "Kitten",
+  "Cãozinho": "Puppy",
+  "Ursinho": "Little Bear",
+  "Coelha": "Bunny",
+  "Raposa": "Fox",
+  "Panda": "Panda",
+  "Sapinho": "Little Frog",
+  "Leão": "Lion",
+  "Hamster": "Hamster",
+  "Astronauta": "Astronaut",
+  "Tigre": "Tiger",
+  "Lobo": "Wolf",
+  "Pirata": "Pirate",
+  "Maga do Fogo": "Fire Mage",
+  "Rainha": "Queen",
+  "Detetive": "Detective",
+  "Robozinho": "Little Robot",
+  "Alien": "Alien",
+  "Unicórnio": "Unicorn",
+  "Dragão": "Dragon",
   "Fases": "Levels",
   "Complete uma fase para liberar a próxima.": "Complete a level to unlock the next one.",
   "Fase do dia": "Daily level",
@@ -2509,6 +2556,42 @@ es: {
   "Com o item": "Con el objeto",
   "Comprar": "Comprar",
   "Voltar": "Volver",
+  "Cupom aplicado! Você ganhou: {p}.": "¡Cupón aplicado! Ganaste: {p}.",
+  "nada novo (você já tinha os itens)": "nada nuevo (ya tenías los objetos)",
+  "Cupom aplicado!": "¡Cupón aplicado!",
+  "Bichos e pessoas": "Animales y personas",
+  "Cupom não encontrado. Confira as letras e os números.": "Cupón no encontrado. Revisa las letras y los números.",
+  "Você já usou este cupom.": "Ya usaste este cupón.",
+  "Este cupom já venceu.": "Este cupón ya venció.",
+  "Este cupom ainda não começou a valer.": "Este cupón aún no es válido.",
+  "Este cupom não tem prêmio para você.": "Este cupón no tiene premio para ti.",
+  "Digite o cupom (de 3 a 20 letras ou números).": "Escribe el cupón (de 3 a 20 letras o números).",
+  "Conferindo o cupom…": "Comprobando el cupón…",
+  "Cupons": "Cupones",
+  "Cupom": "Cupón",
+  "Tem um cupom? Ele pode dar estrelas, avatares, molduras ou fundos.": "¿Tienes un cupón? Puede dar estrellas, avatares, marcos o fondos.",
+  "Digite o cupom": "Escribe el cupón",
+  "Usar": "Usar",
+  "Gatinho": "Gatito",
+  "Cãozinho": "Perrito",
+  "Ursinho": "Osito",
+  "Coelha": "Conejita",
+  "Raposa": "Zorro",
+  "Panda": "Panda",
+  "Sapinho": "Ranita",
+  "Leão": "León",
+  "Hamster": "Hámster",
+  "Astronauta": "Astronauta",
+  "Tigre": "Tigre",
+  "Lobo": "Lobo",
+  "Pirata": "Pirata",
+  "Maga do Fogo": "Maga del Fuego",
+  "Rainha": "Reina",
+  "Detetive": "Detective",
+  "Robozinho": "Robotito",
+  "Alien": "Alien",
+  "Unicórnio": "Unicornio",
+  "Dragão": "Dragón",
   "Fases": "Niveles",
   "Complete uma fase para liberar a próxima.": "Completa un nivel para desbloquear el siguiente.",
   "Fase do dia": "Nivel del día",
@@ -3545,8 +3628,8 @@ function saldoConta(d){
 /* ganhos por origem, para mostrar de onde vêm as estrelas */
 function origemEstrelas(d){
   const c = cartDe(d), m = medidasConta(d);
-  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'),
-    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:'), gastas: somaVals(c.s)};
+  return {fases: m.estrelas, dias: BONUS_DIA * m.dias, sem: BONUS_SEMANA * m.sem, conquistas: CONQUISTAS.filter(q => c.v.includes(q.id)).reduce((a, q) => a + q.est, 0), itens: somaPref(c.g, 'b:'), semana: somaPref(c.g, 'w:'), cupons: somaPref(c.g, 'c:'),
+    outros: somaVals(c.g) - somaPref(c.g, 'b:') - somaPref(c.g, 'w:') - somaPref(c.g, 'c:'), gastas: somaVals(c.s)};
 }
 function itensDe(d){
   const c = cartDe(d), r = new Set(Object.keys(ITENS).filter(k => ITENS[k].livre));
@@ -3568,6 +3651,23 @@ function comprarItem(d, chave){
   if (saldoConta(d) < it.preco) return {erro: 'saldo', falta: it.preco - saldoConta(d)};
   c.s['i:' + chave] = it.preco;
   return {cart: c, preco: it.preco};
+}
+/* ---- cupons (criados no console do Firebase em cupons/CODIGO = {estrelas, itens: "av:a1,mold:neon", ate: "2026-12-31"}) ---- */
+const normalizarCupom = t => String(t || '').toUpperCase().replace(/\s+/g, '').slice(0, 20);
+const cupomValido = c => /^[A-Z0-9_-]{3,20}$/.test(c);
+function aplicarCupom(d, codigo, cupom, hoje){
+  const c = cartDe(d), k = 'c:' + codigo;
+  if (!cupom || typeof cupom !== 'object') return {erro: 'invalido'};
+  if (c.g[k] !== undefined) return {erro: 'usado'};
+  if (cupom.ate && String(cupom.ate) < hoje) return {erro: 'expirado'};
+  if (cupom.desde && String(cupom.desde) > hoje) return {erro: 'cedo'};
+  const estrelas = Math.max(0, Math.min(1000, Math.round(+cupom.estrelas || 0)));
+  const donos = itensDe(d), itens = String(cupom.itens || '').split(',').map(x => x.trim()).filter(x => ITENS[x] && !donos.has(x));
+  const jaTinha = String(cupom.itens || '').split(',').map(x => x.trim()).filter(x => ITENS[x] && donos.has(x));
+  if (!estrelas && !itens.length && !jaTinha.length) return {erro: 'vazio'};
+  c.g[k] = estrelas;
+  itens.forEach(x => { c.s['i:' + x] = 0; });       /* item de presente: fica seu sem gastar estrelas */
+  return {cart: c, estrelas, itens, jaTinha};
 }
 const trocasDeApelido = d => Object.keys(cartDe(d).s).filter(k => k.startsWith('n:')).length;
 function pagarApelido(d){
@@ -5876,7 +5976,7 @@ $('#bkSubst').onclick = () => {
 
 /* ======================= Atualização do jogo =======================
    VERSAO: aumente a cada publicação (AAAA.MM.DD.N). O jogo compara com a do index.html que está no ar. */
-const VERSAO = '2026.11.06.2';
+const VERSAO = '2026.11.06.3';
 const numVersao = v => String(v).split('.').map(n => parseInt(n, 10) || 0);
 function versaoMaior(a, b){ const x = numVersao(a), y = numVersao(b); for (let i = 0; i < Math.max(x.length, y.length); i++){ const d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0; } return false; }
 const Upd = {nova: null, ultimo: 0, dispensada: ''};
@@ -6395,53 +6495,164 @@ function vitoriaCamp(c, res, add, reabrir){
 }
 
 
-/* ======================= Avatares estilo anime (personagens originais do jogo) =======================
-   Desenhos 16×16 em pixel art. '.' = fundo (aparece a cor ou a textura do fundo escolhido). */
-const BASE_COR = {W: '#ffffff', m: '#c2456a', B: '#ff9db5'};
-const AV_ANIME = [
-  {nome: 'Ninja da Névoa', cor: {H: '#23252e', h: '#3a3d4a', S: '#f2c9a0', E: '#1d2433', A: '#8a93a6', P: '#dfe5ee', M: '#2b3550', O: '#2b3550'}, px: [
-    '....H..H..H.....', '...HH.HH.HH.H...', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHHhHHhHHHH..', '..AAAAPPPPAAAA..', '..HSSSSSSSSSSHA.', '..HSSSSSSSSSSH.A',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..MMMMMMMMMMMM..', '...MMMMMMMMMM...', '....MMMMMMMM....', '.....MMMMMM.....', '...OOOOOOOOOO...', '..OOOOOOOOOOOO..']},
-  {nome: 'Menina-gato', cor: {H: '#f07ab0', h: '#d95a95', i: '#ffd1e3', S: '#ffe0c4', E: '#6b2d8f', O: '#6b5bd6', A: '#ffd84d'}, px: [
-    '..HH........HH..', '..HiH......HiH..', '..HiiHHHHHHiiH..', '..HHHHHHHHHHHH..', '..HHHHHHHHHHHH..', '..HHHhHHHHhHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OSSSSO.HH..', '..HOOOOAAOOOOH..', '..OOOOOOOOOOOO..']},
-  {nome: 'Samurai Errante', cor: {H: '#1b1b22', h: '#3a2a22', A: '#c2263a', S: '#e9b88e', E: '#2a1a12', m: '#8a3a2a', O: '#b3262f', o: '#2d2d3a'}, px: [
-    '.......HH.......', '.......HH.......', '......AHHA......', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HShhSSSShhSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSSSH..', '...SSSSmmSSSS...', '....SSSSSSSS....', '...OoOSSSSOoO...', '..OOOoOOOOoOOO..', '.OOOOOoOOoOOOOO.']},
-  {nome: 'Aprendiz de Magia', cor: {A: '#3e63dd', P: '#ffd84d', H: '#8a5a2b', S: '#ffe0c4', E: '#2f6b3a', O: '#5a3fb0'}, px: [
-    '........AA......', '.......AAA......', '......AAAA......', '.....AAAAAA.....', '....AAAAAAAA....', '.AAAPPPPPPPPAAA.', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OOSSOO.HH..', '...OOOOPOOOOO...', '..OOOOOOOOOOOO..']},
-  {nome: 'Piloto de Robô', cor: {A: '#eef2f7', P: '#e5484d', V: '#3fd0ff', H: '#6b3d1f', S: '#f2c9a0', E: '#1f3b73', m: '#a3443a', O: '#2f4a8a'}, px: [
-    '....AAAAAAAA....', '...AAAAAAAAAA...', '..AAAAPPAAAAAA..', '..AAVVVVVVVVAA..', '..AVVVVVVVVVVA..', '..AAHHHHHHHHAA..', '..AHSSSSSSSSHA..', '..ASSSSSSSSSSA..',
-    '..ASEESSSSEESA..', '..ASEWSSSSEWSA..', '..ASSSSSSSSSSA..', '..AASSSmmSSSAA..', '...AASSSSSSAA...', '....OOSSSSOO....', '..OOOPOOOOPOOO..', '..OOOOOOOOOOOO..']},
-  {nome: 'Espadachim de Prata', cor: {H: '#e8edf2', h: '#a9b5c2', S: '#f2c9a0', E: '#2b6fc2', R: '#d14b4b', m: '#a3443a', O: '#22242c', o: '#6b1f2a'}, px: [
-    '..H....H....H...', '..HH..HHH..HH...', '..HHHHHHHHHHHH..', '.HHHHHHHHHHHHHH.', '..HHHHhHHhHHHH..', '.HHHHHHHHHHHHHH.', '..HHSHSSSHSSHH..', '..HShhSSSShhSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSRSH..', '...SSSSmmSSRS...', '....SSSSSSSS....', '.....OSSSSO.....', '...OOOOooOOOO...', '..OOOOOooOOOOO..']},
-  {nome: 'Garota Mágica', cor: {H: '#ffd84d', S: '#ffe6cf', E: '#d6409f', A: '#ffffff', P: '#e5484d', O: '#ff8cc6', o: '#ffffff'}, px: [
-    '................', '....HHHHHHHH....', '...HHHAPPAHHH...', '..HHHHAAAAHHHH..', '..HHHHHHHHHHHH..', '.HHHHHHHHHHHHHH.', 'HHHHSSSSSSSSHHHH', 'HHHSSSSSSSSSSHHH',
-    'HH.SEESSSSEES.HH', 'HH.SEWSSSSEWS.HH', 'HH.BSSSSSSSSB.HH', 'HH..SSSmmSSS..HH', 'HH...SSSSSS...HH', '.H...OPSSPO...H.', '....OOOOOOOO....', '...OOOoOOoOOO...']},
-  {nome: 'Espírito-raposa', cor: {A: '#f28b30', i: '#fff3e0', H: '#f4f1ea', S: '#ffe6cf', E: '#c9461b', R: '#e5484d', O: '#b3262f', o: '#ffd84d'}, px: [
-    '..A..........A..', '..AA........AA..', '..AiA......AiA..', '..AiiHHHHHHiiA..', '..HHHHHHHHHHHH..', '..HHHHHHHHHHHH..', '..HHSSHSSHSSHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSRSSSSSSRSH..', '..HSSSSmmSSSSH..', '..HHSSSSSSSSHH..', '..HH.OSSSSO.HH..', '..HOOOOooOOOOH..', '..OOOOOooOOOOO..']},
-  {nome: 'Dragãozinho', cor: {A: '#f3e3c3', H: '#3fa45b', h: '#2d7a43', S: '#e9c9a3', E: '#e0a000', R: '#3fa45b', m: '#8a3a2a', O: '#2d7a43', o: '#f3e3c3'}, px: [
-    '..A..........A..', '..AA........AA..', '...AA......AA...', '....AHHHHHHA....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHSSSSSSHHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSRSSSSRSSH..', '..HSSSSmmSSSSH..', '...SSSSSSSSSS...', '...O.OSSSSO.O...', '..OOOOOOOOOOOO..', '.OOOoOOOOOOoOOO.']},
-  {nome: 'Rei das Sombras', cor: {A: '#7a1f2b', H: '#4b2a6b', h: '#2e1a44', S: '#f0d8e6', E: '#e5162f', m: '#6b1f2a', O: '#1a1220', o: '#b3262f'}, px: [
-    '.A............A.', '.AA..........AA.', '..AA.HHHHHH.AA..', '...AHHHHHHHHA...', '..HHHHHHHHHHHH..', '..HHHHhHHhHHHH..', '..HHSHSSSSHSHH..', '..HShhSSSShhSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HSSSSSSSSSSH..', '..HSSSSmmSSSSH..', '.OHHSSSSSSSSHHO.', '.OOO.oSSSSo.OOO.', '.OOOooooooooOOO.', 'OOOOooooooooOOOO']},
-  {nome: 'Anjo da Aurora', cor: {A: '#ffd84d', H: '#ffe08a', S: '#ffe6cf', E: '#3e8fd6', w: '#c9d6ee', O: '#8fb7ff'}, px: [
-    '....AAAAAAAA....', '...A........A...', '....AAAAAAAA....', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEWSSSSEWSH..', '..HBSSSSSSSSBH..', '..HSSSSmmSSSSH..', 'wwHHSSSSSSSSHHww', 'www..OSSSSO..www', 'wwwwOOOOOOOOwwww', '.wwOOOOOOOOOOww.']},
-  {nome: 'Androide', cor: {H: '#c9d1dc', h: '#9aa6b5', S: '#e9eef3', E: '#2fe3ff', R: '#8fa0b3', m: '#7a8a9c', A: '#5d6b7c', P: '#2fe3ff', O: '#3a4656'}, px: [
-    '................', '....HHHHHHHH....', '...HHHHHHHHHH...', '..HHHHHHHHHHHH..', '..HHHhHHHHhHHH..', '..HHHHHHHHHHHH..', '..HHSSSSSSSSHH..', '..HSSSSSSSSSSH..',
-    '..HSEESSSSEESH..', '..HSEESSSSEESH..', '..HRSSSSSSSSRH..', '..HRSSSmmSSSRH..', '..HHSSSSSSSSHH..', '..H.APSSSSPA.H..', '..AAAAAPPAAAAA..', '..OOOOOOOOOOOO..']}
-];
-/* SVG de um avatar anime (n = 1..12); semFundo: deixa transparente para a textura do fundo aparecer */
-function svgAnime(n, semFundo){
-  const a = AV_ANIME[n - 1] || AV_ANIME[0], cor = Object.assign({}, BASE_COR, a.cor), porCor = {};
-  a.px.forEach((linha, y) => { for (let x = 0; x < 16; x++){ const c = linha[x]; if (c !== '.' && cor[c]) (porCor[cor[c]] = porCor[cor[c]] || []).push(`M${x} ${y}h1v1h-1z`); } });
-  const fundo = semFundo ? '' : '<rect width="16" height="16" fill="#dcecff"/>';
-  return `<svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">${fundo}${Object.keys(porCor).map(c => `<path fill="${c}" d="${porCor[c].join('')}"/>`).join('')}</svg>`;
+/* ======================= Avatares em vetor (personagens originais do jogo) =======================
+   Cada avatar é montado em camadas num quadro de 100×100: fundo, cabelo de trás, corpo, orelhas, rosto, cabelo da frente e acessórios.
+   Ids fixos (p1–p24 e a1–a12) para que as compras e o perfil público continuem valendo. */
+const PELE = {clara: '#ffe1c7', media: '#f2c39b', morena: '#c98d62', escura: '#8d5a3b', palida: '#f6e3ec', metal: '#dfe6ee', verde: '#9be07a'};
+const escurecer = (hex, f) => { const n = parseInt(hex.slice(1), 16), c = s => Math.max(0, Math.min(255, Math.round(((n >> s) & 255) * f))); return '#' + [16, 8, 0].map(s => c(s).toString(16).padStart(2, '0')).join(''); };
+const espelharX = d => d.replace(/(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/g, (_, x, y) => (100 - +x) + ' ' + y);
+
+/* ---- peças ---- */
+const CAB_TRAS = {
+  longo: 'M21 52C19 27 34 15 50 15C66 15 81 27 79 52L82 92C70 97 30 97 18 92Z',
+  medio: 'M22 52C20 27 34 16 50 16C66 16 80 27 78 52L79 74C70 79 30 79 21 74Z',
+  rabo: 'M66 26C88 26 95 50 86 76C82 64 80 52 72 42Z',
+  maria: 'M27 38C9 40 4 64 12 86C17 72 22 60 31 50Z',
+  coque: 'M50 3A9 9 0 1 1 49.9 3Z'
+};
+const CAB_FRENTE = {
+  curto: 'M25 53C22 30 35 19 50 19C65 19 78 30 75 53C73 45 70 39 66 36C63 41 57 42 53 38C50 42 44 43 40 39C36 43 30 44 27 42C26 46 25.5 49 25 53Z',
+  espetado: 'M25 51C24 37 28 29 33 25L29 11L40 19L44 6L51 17L58 6L61 19L71 11L68 25C73 29 76 37 75 51C72 43 68 38 64 35C61 40 56 41 52 37C49 41 43 42 40 38C36 42 30 43 27 41Z',
+  franja: 'M24 57C21 30 35 18 50 18C65 18 79 30 76 57L72 57C72 48 70 42 67 38L33 38C30 42 28 48 28 57Z',
+  lateral: 'M25 54C22 30 36 18 52 18C69 19 79 32 75 54C72 42 64 35 54 34C45 34 36 39 30 47C28 49 26 51 25 54Z',
+  repartido: 'M24 55C21 30 35 18 50 18C65 18 79 30 76 55C74 45 70 39 64 36C59 34 53 33 50 38C47 33 41 34 36 36C30 39 26 45 24 55Z',
+  topete: 'M26 50C24 33 32 24 44 21C42 14 52 9 62 13C58 15 57 18 60 21C71 25 77 35 74 50C71 42 66 37 60 35C55 39 46 40 41 36C36 40 31 42 28 41Z'
+};
+const olho = (cx, cy, iris, estilo) => {
+  if (estilo === 'feliz') return `<path d="M${cx - 4.5} ${cy + 1}Q${cx} ${cy - 4.5} ${cx + 4.5} ${cy + 1}" fill="none" stroke="#2a1d1a" stroke-width="2.2" stroke-linecap="round"/>`;
+  const ry = estilo === 'serio' ? 4.2 : 5.6, rx = estilo === 'serio' ? 4 : 4.4;
+  const brilho = estilo === 'brilho' ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 2}" ry="${ry + 2}" fill="${iris}" opacity=".35"/>` : '';
+  return brilho + `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#2a1d1a"/><ellipse cx="${cx}" cy="${cy + 1}" rx="${rx - 1}" ry="${ry - 1.4}" fill="${iris}"/>`
+    + `<ellipse cx="${cx}" cy="${cy + 1.6}" rx="${rx - 2.4}" ry="${ry - 3}" fill="${escurecer(iris, .55)}"/>`
+    + `<circle cx="${cx - 1.5}" cy="${cy - 1.9}" r="1.6" fill="#fff"/><circle cx="${cx + 1.6}" cy="${cy + 2}" r=".8" fill="#fff" opacity=".9"/>`
+    + `<path d="M${cx - rx - .6} ${cy - ry + 1.8}Q${cx} ${cy - ry - 1.6} ${cx + rx + .6} ${cy - ry + 1.8}" fill="none" stroke="#2a1d1a" stroke-width="1.6" stroke-linecap="round"/>`;
+};
+const ORELHA = {
+  gato: (c, i) => `<path d="M27 40L29 14L46 29Z" fill="${c}"/><path d="M31 35L32 21L41 29Z" fill="${i}"/>` + `<path d="${espelharX('M27 40L29 14L46 29Z')}" fill="${c}"/><path d="${espelharX('M31 35L32 21L41 29Z')}" fill="${i}"/>`,
+  raposa: (c, i) => `<path d="M25 42L25 8L47 28Z" fill="${c}"/><path d="M29 36L29 16L41 28Z" fill="${i}"/>` + `<path d="${espelharX('M25 42L25 8L47 28Z')}" fill="${c}"/><path d="${espelharX('M29 36L29 16L41 28Z')}" fill="${i}"/>`,
+  urso: (c, i) => `<circle cx="29" cy="29" r="9" fill="${c}"/><circle cx="29" cy="29" r="4.5" fill="${i}"/><circle cx="71" cy="29" r="9" fill="${c}"/><circle cx="71" cy="29" r="4.5" fill="${i}"/>`,
+  coelho: (c, i) => `<ellipse cx="38" cy="14" rx="6" ry="16" fill="${c}" transform="rotate(-10 38 14)"/><ellipse cx="38" cy="15" rx="3" ry="11" fill="${i}" transform="rotate(-10 38 15)"/>`
+    + `<ellipse cx="62" cy="14" rx="6" ry="16" fill="${c}" transform="rotate(10 62 14)"/><ellipse cx="62" cy="15" rx="3" ry="11" fill="${i}" transform="rotate(10 62 15)"/>`,
+  cao: (c) => `<ellipse cx="24" cy="50" rx="8" ry="16" fill="${c}" transform="rotate(18 24 50)"/><ellipse cx="76" cy="50" rx="8" ry="16" fill="${c}" transform="rotate(-18 76 50)"/>`,
+  redonda: (c, i) => `<circle cx="30" cy="33" r="6.5" fill="${c}"/><circle cx="30" cy="33" r="3.2" fill="${i}"/><circle cx="70" cy="33" r="6.5" fill="${c}"/><circle cx="70" cy="33" r="3.2" fill="${i}"/>`,
+  pessoa: (c) => `<ellipse cx="26" cy="56" rx="4" ry="5.5" fill="${c}"/><ellipse cx="74" cy="56" rx="4" ry="5.5" fill="${c}"/>`
+};
+/* acessórios: cada um devolve SVG desenhado por cima do rosto (ou atrás, quando a chave termina em "Tras") */
+const ACC = {
+  asasTras: () => `<path d="M30 70C12 60 2 70 4 88C10 82 16 84 22 90C24 82 28 78 34 78Z" fill="#eef3ff" stroke="#c9d6ee"/><path d="${espelharX('M30 70C12 60 2 70 4 88C10 82 16 84 22 90C24 82 28 78 34 78Z')}" fill="#eef3ff" stroke="#c9d6ee"/>`,
+  capaTras: c => `<path d="M14 100L22 66L50 74L78 66L86 100Z" fill="${c}"/><path d="M22 66L30 58L36 72Z M78 66L70 58L64 72Z" fill="${escurecer(c, .7)}"/>`,
+  jubaTras: c => Array.from({length: 14}, (_, i) => { const a = i / 14 * Math.PI * 2; return `<circle cx="${50 + 30 * Math.cos(a)}" cy="${50 + 30 * Math.sin(a)}" r="11" fill="${c}"/>`; }).join('') + `<circle cx="50" cy="50" r="31" fill="${c}"/>`,
+  aureola: () => `<ellipse cx="50" cy="10" rx="17" ry="5" fill="none" stroke="#ffd84d" stroke-width="3.2"/><ellipse cx="50" cy="10" rx="17" ry="5" fill="none" stroke="#fff6b0" stroke-width="1"/>`,
+  chifres: c => `<path d="M33 30C27 22 26 12 31 5C33 14 38 20 41 25Z" fill="${c}"/><path d="${espelharX('M33 30C27 22 26 12 31 5C33 14 38 20 41 25Z')}" fill="${c}"/>`,
+  chifresCurvos: c => `<path d="M31 33C20 30 14 18 18 6C20 16 28 22 37 25Z" fill="${c}"/><path d="${espelharX('M31 33C20 30 14 18 18 6C20 16 28 22 37 25Z')}" fill="${c}"/>`,
+  chifreUnico: () => `<path d="M50 4L55 28L45 28Z" fill="#ffd84d"/><path d="M47 23L54 20M46 17L53 14M48 11L52 9" stroke="#e0a800" stroke-width="1.4"/>`,
+  bandana: (c, p) => `<path d="M24 40C34 33 66 33 76 40L76 46C66 40 34 40 24 46Z" fill="${c}"/><rect x="42" y="35.5" width="16" height="8" rx="1.5" fill="${p || '#dfe5ee'}"/><path d="M76 42L88 38L86 46Z M76 44L86 52L80 54Z" fill="${c}"/>`,
+  mascara: c => `<path d="M24 58C30 62 70 62 76 58C76 70 66 78 50 78C34 78 24 70 24 58Z" fill="${c}"/>`,
+  chapeuMago: (c, p) => `<path d="M14 36C30 30 70 30 86 36C78 40 22 40 14 36Z" fill="${c}"/><path d="M28 34L52 0L74 34Z" fill="${c}"/><path d="M60 8C68 6 72 12 66 14" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/><path d="M29 31C42 27 60 27 72 31L71 35C60 31 42 31 30 35Z" fill="${p}"/><path d="M50 14l2 4l4 .5l-3 3l1 4l-4-2l-4 2l1-4l-3-3l4-.5Z" fill="${p}"/>`,
+  capacete: (c, v) => `<path d="M20 56C18 28 32 14 50 14C68 14 82 28 80 56L76 56C76 36 66 25 50 25C34 25 24 36 24 56Z" fill="${c}"/><path d="M26 33C34 25 66 25 74 33L72 41C64 35 36 35 28 41Z" fill="${v}" opacity=".85"/><rect x="46" y="15" width="8" height="8" rx="2" fill="#e5484d"/>`,
+  tiara: (c, p) => `<path d="M34 30L40 22L45 28L50 18L55 28L60 22L66 30C58 28 42 28 34 30Z" fill="${c}"/><circle cx="50" cy="25" r="2.6" fill="${p}"/>`,
+  coroa: () => `<path d="M33 30L34 14L42 22L50 10L58 22L66 14L67 30Z" fill="#ffd84d" stroke="#d9a400" stroke-width="1.2"/><circle cx="50" cy="20" r="2.4" fill="#e5484d"/><circle cx="40" cy="26" r="1.7" fill="#3e8fd6"/><circle cx="60" cy="26" r="1.7" fill="#46a758"/>`,
+  bone: c => `<path d="M24 42C24 22 36 16 50 16C64 16 76 22 76 42Z" fill="${c}"/><path d="M50 40C62 38 80 38 90 44C80 46 64 46 50 44Z" fill="${escurecer(c, .75)}"/><circle cx="50" cy="17" r="2.5" fill="${escurecer(c, .75)}"/>`,
+  chapeuDetetive: c => `<ellipse cx="50" cy="34" rx="34" ry="6" fill="${escurecer(c, .8)}"/><path d="M28 34C28 18 38 12 50 12C62 12 72 18 72 34Z" fill="${c}"/><path d="M29 29C40 26 60 26 71 29L71 33C60 30 40 30 29 33Z" fill="#2a1d1a"/>`,
+  bandanaPirata: c => `<path d="M24 44C22 24 36 17 50 17C64 17 78 24 76 44C64 38 36 38 24 44Z" fill="${c}"/><circle cx="36" cy="30" r="2" fill="#fff"/><circle cx="56" cy="27" r="2" fill="#fff"/><circle cx="66" cy="34" r="1.6" fill="#fff"/><path d="M76 40L88 46L82 50Z" fill="${c}"/>`,
+  tapaOlho: () => `<path d="M26 42L74 66" stroke="#1b1b22" stroke-width="1.6"/><ellipse cx="60" cy="56" rx="6" ry="5.5" fill="#1b1b22"/>`,
+  oculos: c => `<circle cx="40" cy="55" r="7.5" fill="rgba(255,255,255,.18)" stroke="${c}" stroke-width="2.2"/><circle cx="60" cy="55" r="7.5" fill="rgba(255,255,255,.18)" stroke="${c}" stroke-width="2.2"/><path d="M47.5 55H52.5M32.5 54L26 52M67.5 54L74 52" stroke="${c}" stroke-width="2"/>`,
+  capaceteEspacial: () => `<circle cx="50" cy="52" r="34" fill="rgba(190,230,255,.22)" stroke="#e8eef6" stroke-width="4"/><path d="M30 34C36 26 44 23 52 23" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>`,
+  antena: (c, p) => `<path d="M50 24V9" stroke="${c}" stroke-width="2.5"/><circle cx="50" cy="8" r="4" fill="${p}"/>`,
+  antenas: (c, p) => `<path d="M40 28L32 10M60 28L68 10" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/><circle cx="32" cy="9" r="4" fill="${p}"/><circle cx="68" cy="9" r="4" fill="${p}"/>`,
+  cicatriz: () => `<path d="M64 60L69 68M63 64L67 62M65.5 66L69.5 64" stroke="#c2423e" stroke-width="1.5" stroke-linecap="round"/>`,
+  marcasRaposa: () => `<path d="M30 62L38 61M30 65L37 64" stroke="#e5484d" stroke-width="1.8" stroke-linecap="round"/><path d="${espelharX('M30 62L38 61M30 65L37 64')}" stroke="#e5484d" stroke-width="1.8" stroke-linecap="round"/>`,
+  linhasRobo: () => `<path d="M29 64H36M64 64H71M33 44V48M67 44V48" stroke="#8fa0b3" stroke-width="1.4" stroke-linecap="round"/>`,
+  listrasTigre: () => `<path d="M50 27L47 35L53 35Z M38 30L42 38M62 30L58 38 M26 56L33 57M26 61L32 60M74 56L67 57M74 61L68 60" stroke="#3b2416" stroke-width="2.4" stroke-linecap="round" fill="#3b2416"/>`,
+  sininho: () => `<circle cx="50" cy="83" r="4" fill="#ffd84d" stroke="#d9a400"/><path d="M48 84H52" stroke="#9a6a00"/>`,
+  golaAlta: c => `<path d="M30 78L36 66L50 76L64 66L70 78L50 86Z" fill="${c}"/>`,
+  ombreiras: c => `<path d="M14 92C14 82 22 78 32 78L36 90Z" fill="${c}"/><path d="${espelharX('M14 92C14 82 22 78 32 78L36 90Z')}" fill="${c}"/>`,
+  espinhos: c => `<path d="M44 20L48 12L52 20Z M54 19L58 12L61 21Z M35 23L37 15L42 22Z" fill="${c}"/>`
+};
+/* d = {pele, cab: [estiloFrente, cor], tras, olhos: [cor, estilo], roupa: [cor, cor2], orelha: [tipo, cor, interna], bicho: {...}, acc: [[nome, ...args]], fundo} */
+function montarAvatar(d, semFundo){
+  const pele = d.pele || PELE.clara, sombra = escurecer(pele, .9), cab = d.cab || [], corCab = cab[1] || '#3b2a20';
+  const acc = (d.acc || []), tras = acc.filter(a => a[0].endsWith('Tras')), frente = acc.filter(a => !a[0].endsWith('Tras'));
+  const r = [];
+  if (!semFundo) r.push(`<rect width="100" height="100" fill="${d.fundo || '#dcecff'}"/>`);
+  tras.forEach(a => r.push(ACC[a[0]](...a.slice(1))));
+  (d.tras || []).forEach(t => { r.push(`<path d="${CAB_TRAS[t]}" fill="${corCab}"/>`); if (t === 'rabo' || t === 'maria') r.push(`<path d="${espelharX(CAB_TRAS[t])}" fill="${t === 'maria' ? corCab : 'none'}"/>`); });
+  const [roupa, roupa2] = d.roupa || ['#5a6fd6', '#ffffff'];
+  r.push(`<rect x="43" y="68" width="14" height="14" rx="3" fill="${sombra}"/>`);
+  r.push(`<path d="M14 100C15 85 28 78 50 78C72 78 85 85 86 100Z" fill="${roupa}"/><path d="M40 78Q50 88 60 78" fill="none" stroke="${roupa2}" stroke-width="3"/>`);
+  const b = d.bicho;
+  const [tipoOr, corOr, intOr] = d.orelha || ['pessoa', pele];
+  r.push(ORELHA[tipoOr](corOr || (b ? b.pelo : pele), intOr || '#ffb7c9'));
+  if (d.robo) r.push(`<rect x="24" y="26" width="52" height="50" rx="14" fill="${d.robo}"/><rect x="29" y="40" width="42" height="24" rx="10" fill="#1c2733"/>`);
+  else r.push(`<ellipse cx="50" cy="51" rx="25" ry="26" fill="${b ? b.pelo : pele}"/>`);
+  if (b){
+    if (b.mancha) r.push(`<ellipse cx="39" cy="55" rx="8" ry="10" fill="${b.mancha}" transform="rotate(20 39 55)"/><ellipse cx="61" cy="55" rx="8" ry="10" fill="${b.mancha}" transform="rotate(-20 61 55)"/>`);
+    if (b.bochecha) r.push(`<ellipse cx="33" cy="64" rx="9" ry="7" fill="${b.bochecha}"/><ellipse cx="67" cy="64" rx="9" ry="7" fill="${b.bochecha}"/>`);
+    r.push(`<ellipse cx="50" cy="65" rx="11" ry="8" fill="${b.focinho}"/><ellipse cx="50" cy="60.5" rx="3.6" ry="2.6" fill="${b.nariz || '#3a2a2a'}"/>`);
+    r.push(`<path d="M50 63V65.5M50 65.5Q47 68.5 44.5 66.5M50 65.5Q53 68.5 55.5 66.5" fill="none" stroke="#3a2a2a" stroke-width="1.4" stroke-linecap="round"/>`);
+    if (b.bigode) r.push(`<path d="M38 63L28 61M38 66L28 67M62 63L72 61M62 66L72 67" stroke="${b.bigode}" stroke-width="1.1" stroke-linecap="round"/>`);
+  }
+  const [iris, estilo] = d.olhos || ['#5a3a22', 'normal'];
+  if (d.robo){ r.push(`<rect x="34" y="47" width="10" height="9" rx="3" fill="${iris}"/><rect x="56" y="47" width="10" height="9" rx="3" fill="${iris}"/><rect x="42" y="68" width="16" height="3" rx="1.5" fill="${escurecer(d.robo, .7)}"/>`); }
+  else {
+    r.push(olho(40, 54, iris, estilo), olho(60, 54, iris, estilo));
+    if (d.sobr) r.push(`<path d="M34 ${d.sobr === 'brava' ? 43 : 45}L45 ${d.sobr === 'brava' ? 46 : 44.5}M66 ${d.sobr === 'brava' ? 43 : 45}L55 ${d.sobr === 'brava' ? 46 : 44.5}" stroke="${escurecer(corCab, .8)}" stroke-width="2.2" stroke-linecap="round"/>`);
+    if (!b){
+      r.push(`<ellipse cx="33" cy="63" rx="4" ry="2.2" fill="#ff8fa8" opacity="${d.blush === false ? 0 : .5}"/><ellipse cx="67" cy="63" rx="4" ry="2.2" fill="#ff8fa8" opacity="${d.blush === false ? 0 : .5}"/>`);
+      r.push(d.boca === 'aberta' ? `<path d="M45.5 65Q50 72 54.5 65Z" fill="#9b2f3f"/>` : d.boca === 'reta' ? `<path d="M46.5 67H53.5" stroke="#8a4a3a" stroke-width="1.8" stroke-linecap="round"/>`
+        : `<path d="M46 66Q50 69.5 54 66" fill="none" stroke="#8a4a3a" stroke-width="1.8" stroke-linecap="round"/>`);
+    }
+  }
+  if (cab[0]) r.push(`<path d="${CAB_FRENTE[cab[0]]}" fill="${corCab}"/><path d="${CAB_FRENTE[cab[0]]}" fill="none" stroke="${escurecer(corCab, .78)}" stroke-width="1" opacity=".6"/>`);
+  if ((d.tras || []).includes('coque')) r.push(`<path d="M42 12H58" stroke="${escurecer(corCab, .7)}" stroke-width="3" stroke-linecap="round"/>`);
+  frente.forEach(a => r.push(ACC[a[0]](...a.slice(1))));
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${r.join('')}</svg>`;
+}
+const BICHO = (pelo, focinho, o) => Object.assign({pelo, focinho}, o);
+/* nomes e desenhos. p1–p6 são livres; os demais seguem as categorias de logica-conta.js */
+const AVATARES = {
+  p1: {nome: 'Léo', cab: ['curto', '#4a2e1f'], olhos: ['#6b4a2a'], roupa: ['#3e8fd6', '#ffffff'], fundo: '#dff1ff'},
+  p2: {nome: 'Bia', cab: ['franja', '#c8692c'], tras: ['rabo'], olhos: ['#3f7a3a'], roupa: ['#e5484d', '#ffffff'], fundo: '#ffe7e3'},
+  p3: {nome: 'Gatinho', bicho: BICHO('#f2a65a', '#fff1df', {bigode: '#7a4b2a', nariz: '#e5738a'}), orelha: ['gato', '#f2a65a', '#ffc9d6'], olhos: ['#5bbf6a'], roupa: ['#46a758', '#fff'], fundo: '#e8f7e2'},
+  p4: {nome: 'Cãozinho', bicho: BICHO('#d9b48a', '#fff4e6'), orelha: ['cao', '#8a5a3b'], olhos: ['#5a3a22'], roupa: ['#d9960b', '#fff'], fundo: '#fff3d6'},
+  p5: {nome: 'Ursinho', bicho: BICHO('#a87452', '#e8c9a6'), orelha: ['urso', '#a87452', '#e8c9a6'], olhos: ['#3a2618'], roupa: ['#8e4ec6', '#fff'], fundo: '#efe4fb'},
+  p6: {nome: 'Coelha', bicho: BICHO('#f4f1ee', '#ffffff', {nariz: '#e5738a', bigode: '#c9b8b0'}), orelha: ['coelho', '#f4f1ee', '#ffc9d6'], olhos: ['#d6409f'], roupa: ['#12a594', '#fff'], fundo: '#ffe9f3'},
+  p7: {nome: 'Raposa', bicho: BICHO('#f07a2a', '#fff3e6', {bigode: '#8a3a12'}), orelha: ['raposa', '#f07a2a', '#fff3e6'], olhos: ['#d9960b'], roupa: ['#2f4a8a', '#fff'], fundo: '#fff0e0'},
+  p8: {nome: 'Panda', bicho: BICHO('#ffffff', '#ffffff', {mancha: '#2b2b33'}), orelha: ['urso', '#2b2b33', '#4a4a55'], olhos: ['#5a3a22'], roupa: ['#46a758', '#fff'], fundo: '#e3f5e1'},
+  p9: {nome: 'Sapinho', bicho: BICHO('#7ccf5a', '#c8f0a8', {bochecha: '#ffb3c1'}), orelha: ['redonda', '#7ccf5a', '#7ccf5a'], olhos: ['#2a1d1a', 'feliz'], roupa: ['#d9960b', '#fff'], fundo: '#e6f7ff'},
+  p10: {nome: 'Leão', bicho: BICHO('#f2bd5a', '#fff1d6', {bigode: '#8a5a1f'}), orelha: ['redonda', '#f2bd5a', '#d98a3a'], olhos: ['#8a5a1f'], roupa: ['#b3262f', '#fff'], acc: [['jubaTras', '#b8662a']], fundo: '#fff3d6'},
+  p11: {nome: 'Davi', pele: PELE.morena, cab: ['curto', '#1b1b22'], olhos: ['#4a2e1f'], roupa: ['#e5484d', '#fff'], acc: [['bone', '#2f4a8a']], fundo: '#ffe9d6'},
+  p12: {nome: 'Lia', pele: PELE.clara, cab: ['repartido', '#2a1d1a'], tras: ['medio'], olhos: ['#3e63dd'], roupa: ['#8e4ec6', '#fff'], acc: [['oculos', '#3a2a5a']], fundo: '#ece6ff'},
+  p13: {nome: 'Hamster', bicho: BICHO('#e8b98a', '#fff6ea', {bochecha: '#f6d2b0', nariz: '#e5738a', bigode: '#a8865a'}), orelha: ['redonda', '#e8b98a', '#ffc9d6'], olhos: ['#2a1d1a'], roupa: ['#3e8fd6', '#fff'], fundo: '#fff7e0'},
+  p14: {nome: 'Astronauta', pele: PELE.media, cab: ['lateral', '#6b3d1f'], olhos: ['#2f6b9a'], roupa: ['#e8eef6', '#e5484d'], acc: [['capaceteEspacial']], fundo: '#1b2350'},
+  p15: {nome: 'Tigre', bicho: BICHO('#f28c28', '#fff3e6', {bigode: '#3b2416'}), orelha: ['redonda', '#f28c28', '#fff3e6'], olhos: ['#3fa45b'], roupa: ['#1b1b22', '#f28c28'], acc: [['listrasTigre']], fundo: '#e6f7e8'},
+  p16: {nome: 'Lobo', bicho: BICHO('#8a94a3', '#e9edf2', {bigode: '#3a4250'}), orelha: ['raposa', '#8a94a3', '#e9edf2'], olhos: ['#3fb7e6', 'serio'], roupa: ['#2b3550', '#8a94a3'], fundo: '#e1e8f2'},
+  p17: {nome: 'Pirata', pele: PELE.media, cab: ['curto', '#3b2a20'], olhos: ['#4a2e1f', 'serio'], sobr: 'brava', boca: 'aberta', roupa: ['#1b1b22', '#e5484d'], acc: [['bandanaPirata', '#c2263a'], ['tapaOlho']], fundo: '#d8f0ff'},
+  p18: {nome: 'Maga do Fogo', pele: PELE.escura, cab: ['franja', '#1b1b22'], tras: ['longo'], olhos: ['#e5484d'], roupa: ['#b3262f', '#ffd84d'], acc: [['tiara', '#ffd84d', '#ff6a00']], fundo: '#ffe3d6'},
+  p19: {nome: 'Rainha', pele: PELE.clara, cab: ['repartido', '#f2d06b'], tras: ['longo'], olhos: ['#3e63dd'], roupa: ['#8e4ec6', '#ffd84d'], acc: [['coroa']], fundo: '#f3e9ff'},
+  p20: {nome: 'Detetive', pele: PELE.media, cab: ['curto', '#4a2e1f'], olhos: ['#4a2e1f', 'serio'], boca: 'reta', roupa: ['#8a6a4a', '#e8dcc8'], acc: [['chapeuDetetive', '#8a6a4a']], fundo: '#efe6d6'},
+  p21: {nome: 'Robozinho', robo: '#c9d4df', olhos: ['#2fe3ff'], roupa: ['#5d6b7c', '#2fe3ff'], acc: [['antena', '#8fa0b3', '#e5484d']], fundo: '#e3f3ff'},
+  p22: {nome: 'Alien', pele: PELE.verde, olhos: ['#1b1b22', 'serio'], blush: false, roupa: ['#5b2ced', '#2be0ff'], acc: [['antenas', '#6fbf4a', '#ffd84d']], fundo: '#120a2e'},
+  p23: {nome: 'Unicórnio', bicho: BICHO('#ffffff', '#fff4fb', {nariz: '#f2a6c4'}), orelha: ['raposa', '#ffffff', '#ffd1e6'], cab: ['lateral', '#c58bff'], olhos: ['#d6409f'], roupa: ['#ff8cc6', '#fff'], acc: [['chifreUnico']], fundo: '#e9f0ff'},
+  p24: {nome: 'Dragão', bicho: BICHO('#46a758', '#c8f0a8', {nariz: '#2d7a43'}), orelha: ['redonda', '#46a758', '#2d7a43'], olhos: ['#e0a000', 'serio'], roupa: ['#2d7a43', '#ffd84d'], acc: [['chifres', '#f3e3c3'], ['espinhos', '#ffd84d']], fundo: '#fff3d6'},
+  /* heróis estilo anime */
+  a1: {nome: 'Ninja da Névoa', pele: PELE.media, cab: ['espetado', '#23252e'], olhos: ['#3a4a6a', 'serio'], sobr: 'brava', roupa: ['#2b3550', '#8a93a6'], acc: [['mascara', '#2b3550'], ['bandana', '#4a5266', '#dfe5ee']], fundo: '#d9e3f0'},
+  a2: {nome: 'Menina-gato', pele: PELE.clara, cab: ['franja', '#f07ab0'], tras: ['medio'], orelha: ['gato', '#f07ab0', '#ffd1e3'], olhos: ['#8e4ec6'], boca: 'aberta', roupa: ['#6b5bd6', '#ffd84d'], acc: [['sininho']], fundo: '#fde7f2'},
+  a3: {nome: 'Samurai Errante', pele: PELE.media, cab: ['repartido', '#1b1b22'], tras: ['coque'], olhos: ['#3a2a1f', 'serio'], sobr: 'brava', boca: 'reta', roupa: ['#b3262f', '#2d2d3a'], acc: [['ombreiras', '#2d2d3a']], fundo: '#f3e3d0'},
+  a4: {nome: 'Aprendiz de Magia', pele: PELE.clara, cab: ['franja', '#8a5a2b'], tras: ['longo'], olhos: ['#3fa45b'], roupa: ['#5a3fb0', '#ffd84d'], acc: [['chapeuMago', '#3e63dd', '#ffd84d']], fundo: '#e7e9ff'},
+  a5: {nome: 'Piloto de Robô', pele: PELE.media, cab: ['lateral', '#6b3d1f'], olhos: ['#2f5aa8'], boca: 'aberta', roupa: ['#2f4a8a', '#e5484d'], acc: [['capacete', '#eef2f7', '#3fd0ff']], fundo: '#dff3ff'},
+  a6: {nome: 'Espadachim de Prata', pele: PELE.clara, cab: ['espetado', '#e8edf2'], olhos: ['#2b6fc2', 'serio'], sobr: 'brava', boca: 'reta', roupa: ['#22242c', '#6b1f2a'], acc: [['cicatriz']], fundo: '#2a2f45'},
+  a7: {nome: 'Garota Mágica', pele: PELE.clara, cab: ['franja', '#ffd24d'], tras: ['maria'], olhos: ['#d6409f'], boca: 'aberta', roupa: ['#ff8cc6', '#ffffff'], acc: [['tiara', '#ffffff', '#e5484d']], fundo: '#ffe3f1'},
+  a8: {nome: 'Espírito-raposa', pele: PELE.clara, cab: ['repartido', '#f4f1ea'], tras: ['longo'], orelha: ['raposa', '#f28b30', '#fff3e0'], olhos: ['#c9461b'], roupa: ['#b3262f', '#ffd84d'], acc: [['marcasRaposa']], fundo: '#2b1a2e'},
+  a9: {nome: 'Dragãozinho', pele: '#ead2b0', cab: ['espetado', '#3fa45b'], olhos: ['#e0a000', 'serio'], roupa: ['#2d7a43', '#f3e3c3'], acc: [['chifres', '#f3e3c3']], fundo: '#fff3d6'},
+  a10: {nome: 'Rei das Sombras', pele: PELE.palida, cab: ['repartido', '#4b2a6b'], tras: ['medio'], olhos: ['#e5162f', 'serio'], sobr: 'brava', boca: 'reta', blush: false, roupa: ['#1a1220', '#b3262f'], acc: [['capaTras', '#1a1220'], ['chifresCurvos', '#7a1f2b'], ['golaAlta', '#2e1a3a']], fundo: '#1b1230'},
+  a11: {nome: 'Anjo da Aurora', pele: PELE.clara, cab: ['franja', '#ffe08a'], tras: ['longo'], olhos: ['#3e8fd6', 'feliz'], roupa: ['#ffffff', '#ffd84d'], acc: [['asasTras'], ['aureola']], fundo: '#fff4dc'},
+  a12: {nome: 'Androide', pele: PELE.metal, cab: ['lateral', '#c9d1dc'], olhos: ['#2fe3ff', 'brilho'], blush: false, boca: 'reta', roupa: ['#3a4656', '#2fe3ff'], acc: [['linhasRobo']], fundo: '#18212c'}
+};
+const SVG_AV = {};
+function svgAvatar(id, semFundo){
+  const k = (AVATARES[id] ? id : 'p1') + (semFundo ? '_' : '');
+  return SVG_AV[k] || (SVG_AV[k] = montarAvatar(AVATARES[id] || AVATARES.p1, semFundo));
 }
 /* ======================= Conta (login opcional com o Google) e área do usuário =======================
    O jogo inteiro funciona sem conta. Com ela: apelido, avatar e moldura, estrelas para gastar e o progresso guardado
@@ -6453,7 +6664,6 @@ const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebasea
 const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
 const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
 const N_AVATARES = N_AV_P + N_AV_A, N_LIVRES = 6;
-const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
 const MOLDURAS = Object.keys(ITENS).filter(k => k.startsWith('mold:')).map(k => k.slice(5));
 const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', marmore: 'Mármore', metal: 'Metal', neon: 'Neon', cristal: 'Cristal', lava: 'Lava',
   galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
@@ -6461,7 +6671,7 @@ const FUNDOS = Object.keys(ITENS).filter(k => k.startsWith('fun:')).map(k => k.s
 const NOME_FUNDO = {'': 'Fundo padrão', listras: 'Listras', bolinhas: 'Bolinhas', xadrez: 'Xadrez', diagonal: 'Diagonal', ceu: 'Céu', estrelas: 'Noite estrelada', aurora: 'Aurora',
   oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado'};
 const NOME_CAT = {comum: 'Comum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário'};
-const nomeAvatar = id => id[0] === 'a' ? tr((AV_ANIME[+id.slice(1) - 1] || {}).nome || id) : tr('Avatar {n}', {n: +id.slice(1)});
+const nomeAvatar = id => tr((AVATARES[id] || {}).nome || id);
 /* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
 const NOME_CONQ = {fases5: 'Primeiros passos', fases10: 'Pegando o jeito', fases25: 'Mão na massa', fases50: 'Cinquentão', fases100: 'Centenário',
   estr30: 'Brilho inicial', estr100: 'Caçador de estrelas', estr300: 'Chuva de estrelas', seq3: 'Três dias seguidos', seq7: 'Semana perfeita', seq30: 'Mês de fogo',
@@ -6484,19 +6694,6 @@ const moldValida = id => ITENS['mold:' + id] ? id : '';
 const fundoValido = id => ITENS['fun:' + id] ? id : '';
 /* visual que veio de outra pessoa (ranking, salas): só ids conhecidos */
 const visualDe = x => ({av: avValido(x && x.av), mold: moldValida(x && x.mold), fun: fundoValido(x && x.fun)});
-function svgAvatar(id, semFundo){
-  if (String(id)[0] === 'a') return svgAnime(+String(id).slice(1), semFundo);
-  const n = +String(id).slice(1) || 1;
-  let h = (Math.imul(n, 2654435761) >>> 0) || 1;
-  const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
-  for (let i = 0; i < 6; i++) rnd();
-  const cor = PALETA_AV[(n - 1) % PALETA_AV.length], fundo = n > 12 ? '#2b2540' : '#fff6dc';
-  let r = '';
-  for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
-    if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
-  }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">${semFundo ? '' : `<rect width="8" height="8" fill="${fundo}"/>`}<g fill="${cor}">${r}</g></svg>`;
-}
 /* Monta o avatar de uma conta ({av, mold}) com a moldura, no tamanho `tam` (px). */
 function avatarEl(c, tam){
   const fun = c && c.fun ? c.fun : '';
@@ -6613,6 +6810,28 @@ function abrirProvador(chave, rotulo){
   }
   abrir('provador');
 }
+const nomeItem = k => { const [t, id] = [k.split(':')[0], k.slice(k.indexOf(':') + 1)]; return t === 'av' ? nomeAvatar(id) : tr(t === 'mold' ? NOME_MOLDURA[id] : NOME_FUNDO[id]); };
+const MSG_CUPOM = {invalido: 'Cupom não encontrado. Confira as letras e os números.', usado: 'Você já usou este cupom.', expirado: 'Este cupom já venceu.', cedo: 'Este cupom ainda não começou a valer.', vazio: 'Este cupom não tem prêmio para você.'};
+let cupomOcupado = false;
+async function usarCupom(){
+  if (cupomOcupado) return;
+  const cod = normalizarCupom($('#cnCupom').value), av = (m, t) => aviso('#cnCupomAviso', m, t);
+  if (!cupomValido(cod)){ av('Digite o cupom (de 3 a 20 letras ou números).', 'erro'); return; }
+  if (cart.g['c:' + cod] !== undefined){ av(MSG_CUPOM.usado, 'erro'); return; }
+  cupomOcupado = true; $('#cnCupomOk').disabled = true; av('Conferindo o cupom…');
+  try{
+    const cupom = await nuvem(cpDb, 'GET', 'cupons/' + cod);
+    const r = aplicarCupom(dadosAtuais(), cod, cupom, dataHoje());
+    if (r.erro){ av(MSG_CUPOM[r.erro], 'erro'); return; }
+    guardarCart(r.cart); contaAgendar(2000); renderConta(); montarConta(); $('#cnCupom').value = '';
+    const partes = [];
+    if (r.estrelas) partes.push('+' + r.estrelas + ' ★');
+    if (r.itens.length) partes.push(r.itens.map(nomeItem).join(', '));
+    av(tr('Cupom aplicado! Você ganhou: {p}.', {p: partes.join(' · ') || tr('nada novo (você já tinha os itens)')}), 'ok');
+    toast(tr('Cupom aplicado!'));
+  }catch(e){ av(msgNuvem(e), 'erro'); }
+  finally{ cupomOcupado = false; $('#cnCupomOk').disabled = false; }
+}
 function comprarProvado(){
   if (!Prova) return;
   const r = comprarItem(dadosAtuais(), Prova.chave);
@@ -6641,7 +6860,7 @@ function montarConta(){
   const grupo = t => { const g = mk('p'); g.className = 'cnGrupo'; g.textContent = t; ga.appendChild(g); };
   grupo(tr('Heróis estilo anime'));
   ids.forEach((id, k) => {
-    if (k === N_AV_A) grupo(tr('Pixel'));
+    if (k === N_AV_A) grupo(tr('Bichos e pessoas'));
     ga.appendChild(celulaItem('av:' + id, avatarEl({av: id, fun: c.fun}, 44), nomeAvatar(id), c.av === id, d, donos));
   });
   const gm = $('#cnMolduras'); gm.textContent = '';
@@ -6668,7 +6887,7 @@ function montarConta(){
     li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
   const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
-  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
 function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
@@ -6825,6 +7044,8 @@ $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
 $('#cnNomeOk').onclick = trocarApelido;
 $('#pvComprar').onclick = comprarProvado;
+$('#cnCupomOk').onclick = usarCupom;
+$('#cnCupom').onkeydown = e => { if (e.key === 'Enter') usarCupom(); };
 $('#pvVoltar').onclick = () => { fechar('provador'); Prova = null; };
 $('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
 

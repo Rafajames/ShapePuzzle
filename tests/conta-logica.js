@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const logic = html.split('// ==LOGIC-START==')[1].split('// ==LOGIC-END==')[0];
-const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, apelidoProibido, ITENS, CONQUISTAS, NOME_CUSTO, bonusVitoria, bonusEquipado, catItem, PRECO_CAT, BONUS_DIA_MAX}')();
+const L = new Function(logic + ';return {saldoConta, itensDe, comprarItem, pagarApelido, resgatarConquistas, conquistasNovas, juntarCart, limparCart, juntarDados, limparBackup, medidasConta, origemEstrelas, trocasDeApelido, apelidoProibido, ITENS, CONQUISTAS, NOME_CUSTO, bonusVitoria, bonusEquipado, catItem, PRECO_CAT, BONUS_DIA_MAX, aplicarCupom, normalizarCupom, cupomValido}')();
 let falhas = 0; const ok = (c, m) => { console.log((c ? '  ok   ' : '  FALHA ') + m); if (!c) falhas++; };
 const base = (extra) => Object.assign({prog: {max: 0, done: []}, est: {}, dias: {}, sem: {}, inf: {feitas: {}, porNivel: {}}, cart: {g: {}, s: {}, v: []}}, extra);
 ok(L.saldoConta(base()) === 0, 'começa com 0 estrelas');
@@ -62,4 +62,16 @@ const jun = L.juntarDados(L.limparBackup(env).dados, {prog: {max: 5, done: [0, 1
 ok(jun.cart.s['n:1'] === 30 && jun.cart.s['n:2'] === 30 && jun.prog.done.length === 5, 'juntar dois aparelhos junta também a carteira');
 ok(L.apelidoProibido('p0rr4') && L.apelidoProibido('F u c k') && L.apelidoProibido('Admin') && L.apelidoProibido('shape_puzzle') && L.apelidoProibido('Pütä'.replace('ü','u').replace('ä','a')), 'filtro barra palavrões, truques com símbolos e nomes que imitam o jogo');
 ok(!L.apelidoProibido('Maria Luz') && !L.apelidoProibido('Computador') && !L.apelidoProibido('Ana123') && !L.apelidoProibido('Estrela'), 'não barra apelidos normais (Computador, Estrela…)');
+// cupons
+ok(L.normalizarCupom(' bem vindo ') === 'BEMVINDO' && L.cupomValido('BEM-VINDO_1') && !L.cupomValido('AB') && !L.cupomValido('a.b$c'), 'código do cupom normalizado e validado');
+let dc = base({est: {0: 3}});
+let rc = L.aplicarCupom(dc, 'BEMVINDO', {estrelas: 50, itens: 'av:a9, mold:neon,inexistente'}, '2026-11-06');
+ok(rc.cart && rc.estrelas === 50 && rc.itens.join() === 'av:a9,mold:neon', 'cupom dá estrelas e itens válidos (ignora id desconhecido)');
+dc.cart = rc.cart; ok(L.saldoConta(dc) === 3 + 50 && L.itensDe(dc).has('av:a9') && L.itensDe(dc).has('mold:neon'), 'saldo sobe e os itens viram seus sem gastar estrelas');
+ok(L.aplicarCupom(dc, 'BEMVINDO', {estrelas: 50}, '2026-11-06').erro === 'usado', 'cada cupom vale uma vez');
+ok(L.aplicarCupom(dc, 'NATAL', {estrelas: 10, ate: '2026-11-05'}, '2026-11-06').erro === 'expirado' && L.aplicarCupom(dc, 'NATAL', {estrelas: 10, desde: '2026-12-01'}, '2026-11-06').erro === 'cedo', 'cupom vencido ou que ainda não começou');
+ok(L.aplicarCupom(dc, 'X1X', null, '2026-11-06').erro === 'invalido' && L.aplicarCupom(dc, 'X2X', {estrelas: 0, itens: 'nada'}, '2026-11-06').erro === 'vazio', 'cupom inexistente ou sem prêmio');
+ok(L.aplicarCupom(dc, 'MUITO', {estrelas: 99999}, '2026-11-06').estrelas === 1000, 'cupom limitado a 1000 estrelas');
+const lc = L.limparCart(dc.cart); ok(lc.g['c:BEMVINDO'] === 50 && lc.s['i:av:a9'] === 0, 'cupom e presentes sobrevivem à limpeza da carteira (backup e nuvem)');
+ok(L.origemEstrelas(dc).cupons === 50, 'origem das estrelas mostra os cupons');
 console.log(falhas ? '\nCONTA-LOGICA: ' + falhas + ' FALHA(S)' : '\nCONTA-LOGICA: TUDO OK'); process.exit(falhas ? 1 : 0);

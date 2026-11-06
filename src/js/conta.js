@@ -8,7 +8,6 @@ const FB_CONFIG = {apiKey: NUVEM_CHAVE, authDomain: 'shapepuzzle-76162.firebasea
 const COD_FECHOU = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'], COD_DOMINIO = 'auth/unauthorized-domain';
 const COD_BLOQUEOU = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'];
 const N_AVATARES = N_AV_P + N_AV_A, N_LIVRES = 6;
-const PALETA_AV = ['#e5484d', '#f76b15', '#d9960b', '#46a758', '#12a594', '#3e63dd', '#8e4ec6', '#d6409f', '#6c5340', '#0090ff', '#30a46c', '#ad7f58'];
 const MOLDURAS = Object.keys(ITENS).filter(k => k.startsWith('mold:')).map(k => k.slice(5));
 const NOME_MOLDURA = {'': 'Sem moldura', madeira: 'Madeira', pixel: 'Pixel', festa: 'Festa', marmore: 'Mármore', metal: 'Metal', neon: 'Neon', cristal: 'Cristal', lava: 'Lava',
   galaxia: 'Galáxia', ouro: 'Ouro', gelo: 'Gelo', fogo: 'Fogo', arco: 'Arco-íris'};
@@ -16,7 +15,7 @@ const FUNDOS = Object.keys(ITENS).filter(k => k.startsWith('fun:')).map(k => k.s
 const NOME_FUNDO = {'': 'Fundo padrão', listras: 'Listras', bolinhas: 'Bolinhas', xadrez: 'Xadrez', diagonal: 'Diagonal', ceu: 'Céu', estrelas: 'Noite estrelada', aurora: 'Aurora',
   oceano: 'Oceano', cosmos: 'Cosmos', dourado: 'Dourado'};
 const NOME_CAT = {comum: 'Comum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário'};
-const nomeAvatar = id => id[0] === 'a' ? tr((AV_ANIME[+id.slice(1) - 1] || {}).nome || id) : tr('Avatar {n}', {n: +id.slice(1)});
+const nomeAvatar = id => tr((AVATARES[id] || {}).nome || id);
 /* nome e texto de cada conquista (os números e os prêmios ficam em logica-conta.js) */
 const NOME_CONQ = {fases5: 'Primeiros passos', fases10: 'Pegando o jeito', fases25: 'Mão na massa', fases50: 'Cinquentão', fases100: 'Centenário',
   estr30: 'Brilho inicial', estr100: 'Caçador de estrelas', estr300: 'Chuva de estrelas', seq3: 'Três dias seguidos', seq7: 'Semana perfeita', seq30: 'Mês de fogo',
@@ -39,19 +38,6 @@ const moldValida = id => ITENS['mold:' + id] ? id : '';
 const fundoValido = id => ITENS['fun:' + id] ? id : '';
 /* visual que veio de outra pessoa (ranking, salas): só ids conhecidos */
 const visualDe = x => ({av: avValido(x && x.av), mold: moldValida(x && x.mold), fun: fundoValido(x && x.fun)});
-function svgAvatar(id, semFundo){
-  if (String(id)[0] === 'a') return svgAnime(+String(id).slice(1), semFundo);
-  const n = +String(id).slice(1) || 1;
-  let h = (Math.imul(n, 2654435761) >>> 0) || 1;
-  const rnd = () => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h; };
-  for (let i = 0; i < 6; i++) rnd();
-  const cor = PALETA_AV[(n - 1) % PALETA_AV.length], fundo = n > 12 ? '#2b2540' : '#fff6dc';
-  let r = '';
-  for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++){
-    if ((rnd() % 100) < (y === 0 || y === 7 ? 35 : 58)) r += `<rect x="${x}" y="${y}" width="1" height="1"/><rect x="${7 - x}" y="${y}" width="1" height="1"/>`;
-  }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">${semFundo ? '' : `<rect width="8" height="8" fill="${fundo}"/>`}<g fill="${cor}">${r}</g></svg>`;
-}
 /* Monta o avatar de uma conta ({av, mold}) com a moldura, no tamanho `tam` (px). */
 function avatarEl(c, tam){
   const fun = c && c.fun ? c.fun : '';
@@ -168,6 +154,28 @@ function abrirProvador(chave, rotulo){
   }
   abrir('provador');
 }
+const nomeItem = k => { const [t, id] = [k.split(':')[0], k.slice(k.indexOf(':') + 1)]; return t === 'av' ? nomeAvatar(id) : tr(t === 'mold' ? NOME_MOLDURA[id] : NOME_FUNDO[id]); };
+const MSG_CUPOM = {invalido: 'Cupom não encontrado. Confira as letras e os números.', usado: 'Você já usou este cupom.', expirado: 'Este cupom já venceu.', cedo: 'Este cupom ainda não começou a valer.', vazio: 'Este cupom não tem prêmio para você.'};
+let cupomOcupado = false;
+async function usarCupom(){
+  if (cupomOcupado) return;
+  const cod = normalizarCupom($('#cnCupom').value), av = (m, t) => aviso('#cnCupomAviso', m, t);
+  if (!cupomValido(cod)){ av('Digite o cupom (de 3 a 20 letras ou números).', 'erro'); return; }
+  if (cart.g['c:' + cod] !== undefined){ av(MSG_CUPOM.usado, 'erro'); return; }
+  cupomOcupado = true; $('#cnCupomOk').disabled = true; av('Conferindo o cupom…');
+  try{
+    const cupom = await nuvem(cpDb, 'GET', 'cupons/' + cod);
+    const r = aplicarCupom(dadosAtuais(), cod, cupom, dataHoje());
+    if (r.erro){ av(MSG_CUPOM[r.erro], 'erro'); return; }
+    guardarCart(r.cart); contaAgendar(2000); renderConta(); montarConta(); $('#cnCupom').value = '';
+    const partes = [];
+    if (r.estrelas) partes.push('+' + r.estrelas + ' ★');
+    if (r.itens.length) partes.push(r.itens.map(nomeItem).join(', '));
+    av(tr('Cupom aplicado! Você ganhou: {p}.', {p: partes.join(' · ') || tr('nada novo (você já tinha os itens)')}), 'ok');
+    toast(tr('Cupom aplicado!'));
+  }catch(e){ av(msgNuvem(e), 'erro'); }
+  finally{ cupomOcupado = false; $('#cnCupomOk').disabled = false; }
+}
 function comprarProvado(){
   if (!Prova) return;
   const r = comprarItem(dadosAtuais(), Prova.chave);
@@ -196,7 +204,7 @@ function montarConta(){
   const grupo = t => { const g = mk('p'); g.className = 'cnGrupo'; g.textContent = t; ga.appendChild(g); };
   grupo(tr('Heróis estilo anime'));
   ids.forEach((id, k) => {
-    if (k === N_AV_A) grupo(tr('Pixel'));
+    if (k === N_AV_A) grupo(tr('Bichos e pessoas'));
     ga.appendChild(celulaItem('av:' + id, avatarEl({av: id, fun: c.fun}, 44), nomeAvatar(id), c.av === id, d, donos));
   });
   const gm = $('#cnMolduras'); gm.textContent = '';
@@ -223,7 +231,7 @@ function montarConta(){
     li.appendChild(mk('small', 'cnQv', v + '/' + q.n)); lc.appendChild(li);
   });
   const o = origemEstrelas(d), lo = $('#cnOrigem'); lo.textContent = '';
-  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
+  [['Estrelas das fases', o.fases], ['Fase do dia', o.dias], ['Desafio da semana', o.sem], ['Conquistas', o.conquistas], ['Bônus do visual', o.itens], ['Campeonato da semana', o.semana], ['Cupons', o.cupons], ['Outros ganhos', o.outros], ['Gastas', -o.gastas]]
     .forEach(([n, v]) => { if (v || n === 'Estrelas das fases'){ const li = mk('li'); li.appendChild(mk('span', '', tr(n))); li.appendChild(mk('b', '', (v > 0 && n !== 'Estrelas das fases' ? '+' : '') + v + ' ★')); lo.appendChild(li); } });
 }
 function abrirConta(){ aviso('#cnAviso', ''); verificarConquistas(false); montarConta(); abrir('conta'); }
@@ -380,6 +388,8 @@ $('#cnApagar').onclick = contaApagar;
 $('#cnSync').onclick = async () => { aviso('#cnAviso', ''); await contaSync({aplicar: true}); };
 $('#cnNomeOk').onclick = trocarApelido;
 $('#pvComprar').onclick = comprarProvado;
+$('#cnCupomOk').onclick = usarCupom;
+$('#cnCupom').onkeydown = e => { if (e.key === 'Enter') usarCupom(); };
 $('#pvVoltar').onclick = () => { fechar('provador'); Prova = null; };
 $('#cnNome').onkeydown = e => { if (e.key === 'Enter') $('#cnNomeOk').click(); };
 

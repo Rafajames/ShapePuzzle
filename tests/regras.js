@@ -80,6 +80,11 @@ chk(!w(db(bg2),{uid:'v'.repeat(28)},'/p/'+GID+'/'+K+'/f/0',{t:9000,j:20}),'não 
 chk(!w(db(bg2),jog,'/p/'+GID+'/'+K+'/f/0',{t:3000,j:20}),'tempo abaixo de 4 s recusado');
 chk(!w(db(bg2),jog,'/p/'+GID+'/'+K+'/f/0',{t:9000,j:3}),'menos de 5 jogadas recusado');
 chk(r(db({pub:{a:{nome:'Ana',n:3,ts:1}}}),null,'/pub'),'ranking geral (perfis públicos) pode ser lido');
+console.log('Cupons');
+const bc={cupons:{BEMVINDO:{estrelas:50}}};
+chk(r(db(bc),null,'/cupons/BEMVINDO'),'qualquer um lê um cupom pelo código');
+chk(!r(db(bc),null,'/cupons'),'ninguém lista os cupons');
+chk(!w(db(bc),jog,'/cupons/BEMVINDO',{estrelas:9999})&&!w(db(),jog,'/cupons/NOVO',{estrelas:1}),'jogador não cria nem muda cupom (só pelo console)');
 console.log('Raiz');
 chk(!w(db(),dono,'/x',1),'nada fora de c e p');
 chk(!w(db(),dono,'/',{}),'não dá para apagar/escrever a raiz');
